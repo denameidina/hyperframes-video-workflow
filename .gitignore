@@ -6,8 +6,9 @@ node_modules/
 .env.*
 
 # raw inputs and rendered/intermediate video work
-raw/
-videos/
+/raw/
+/videos/
+/references/
 
 # media/render artifacts if created outside videos/
 *.mp4

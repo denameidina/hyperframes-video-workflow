@@ -8,6 +8,73 @@ Before editing any Dena Meidina social video, read:
 
 Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, caption style, edit pipeline, and HyperFrames layer contract. Do not ask the user to re-explain the style unless the uploaded video creates a real ambiguity.
 
+## Dena Agent Workflow Discipline
+
+For Dena Meidina social-video work, use the specialized agents in `docs/agents/` as the operating workflow. These files are not optional notes; they are the project contract for planning, editing, assembling, and reviewing videos.
+
+Start by reading the local workflow skill:
+
+`docs/skills/dena-video-editing-workflow/SKILL.md`
+
+Use that skill as the router, then read the specific agent file for the current stage.
+
+### Mandatory Agent Order
+
+Default full workflow:
+
+1. `docs/agents/01-creative-director.md`
+2. `docs/agents/02-transcript-cut-agent.md`
+3. `docs/agents/03-caption-subtitle-agent.md`
+4. `docs/agents/04-asset-generation-agent.md`
+5. `docs/agents/05-motion-overlay-agent.md`
+6. `docs/agents/06-hyperframes-assembly-agent.md`
+7. `docs/agents/07-qa-review-agent.md`
+
+Run the agents sequentially unless the user explicitly requests a narrow technical fix. Do not jump to assembly before creative direction, cut logic, captions, assets, and motion have either been completed or explicitly marked unnecessary.
+
+### Routing Rules
+
+- New raw video, reference video, "make this viral", "edit like this", hook/style direction, or format choice: start with Agent 01.
+- Silence cuts, transcript, filler removal, pacing, content structure, or processed media: use Agent 02.
+- Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, or CTA text: use Agent 03.
+- Screenshots, generated stills/video, b-roll, diagrams, UI mockups, stickers, textures, or proof visuals: use Agent 04.
+- Overlay timing, pattern interrupts, zooms, effects, cards, progress bars, or transition behavior: use Agent 05.
+- Editing `index.html`, `compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, or local asset wiring: use Agent 06 and the relevant HyperFrames skill.
+- Final approval, punch list, render readiness, platform readiness, or regression review: use Agent 07.
+
+### Discipline Rules
+
+1. Before acting as an agent, read that agent's markdown file completely.
+2. Read all required upstream files listed by that agent before making decisions.
+3. Produce the expected handoff artifacts for that agent in `videos/<slug>/` whenever a slug exists.
+4. If an upstream artifact is missing, either create it with the correct upstream agent first or write a readiness/blocker note. Do not silently invent missing decisions.
+5. Keep each agent inside its responsibility boundary. For example, Agent 05 may design motion timing, but Agent 06 implements it in HyperFrames.
+6. QA findings must route fixes back to the owning agent instead of becoming vague "polish" work.
+7. If the user says "lanjut agent berikutnya", continue to the next numbered file in `docs/agents/` and keep the same level of detail.
+
+### Minimum Handoff Chain
+
+For a complete social video, expect this chain:
+
+- `creative-brief.md`
+- `edit-decision-notes.md`
+- `caption-plan.md`
+- `caption-beats.json`
+- `asset-plan.md` and `asset-manifest.json`, when assets are needed
+- `motion-plan.md`
+- `overlay-timeline.json`
+- `assembly-notes.md`
+- `assembly-checklist.md`
+- `qa-report.md`
+- `qa-punch-list.md`
+- `final-approval.md`, only after QA passes
+
+### Interaction With HyperFrames
+
+Agent 06 does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow Agent 06. After editing any `.html` composition, run `npm run check` before reporting completion.
+
+Docs-only edits to `docs/agents/*.md`, `AGENTS.md`, or `CLAUDE.md` do not require `npm run check` unless they also modify `.html` composition files.
+
 ## Skills — USE THESE FIRST
 
 **Always invoke the relevant skill before writing or modifying compositions.** Skills encode framework-specific patterns (e.g., `window.__timelines` registration, `data-*` attribute semantics, shader-compatible CSS rules) that are NOT in generic web docs. Skipping them produces broken compositions.

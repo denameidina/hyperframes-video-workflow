@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dena Video Editing Workflow"
+  short_description: "Discipline workflow for Dena social edits"
+  default_prompt: "Use $dena-video-editing-workflow to run the Dena social video edit workflow."
