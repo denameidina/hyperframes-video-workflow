@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "DENA_LEARNING_DOC_HOOK_EVENT=user_prompt_submit /usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/ensure-learning-docs.py\"",
+            "timeout": 10,
+            "statusMessage": "Tracking learning docs"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "DENA_LEARNING_DOC_HOOK_EVENT=stop /usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/ensure-learning-docs.py\"",
+            "timeout": 15,
+            "statusMessage": "Checking learning docs"
+          }
+        ]
+      }
+    ]
+  }
+}

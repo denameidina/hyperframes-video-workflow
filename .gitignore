@@ -9,6 +9,7 @@ node_modules/
 /raw/
 /videos/
 /references/
+/renders/
 
 # media/render artifacts if created outside videos/
 *.mp4

@@ -179,6 +179,7 @@ Best for:
 Rules:
 
 - Must be grounded in the brief.
+- Codex image generation is allowed for generated stills and bitmap support assets.
 - Avoid fake dashboards unless explicitly stylized as abstract.
 - Avoid robot faces, neon sci-fi clutter, and generic AI stock imagery.
 - Do not generate a fake Dena likeness unless explicitly requested and approved.
@@ -343,6 +344,7 @@ Each asset needs:
 When preparing assets:
 
 - Use project-local output paths.
+- Move Codex-generated project assets into `videos/<slug>/assets/`; do not leave referenced files only in the Codex default output folder.
 - Keep originals if useful.
 - Export web/render-friendly formats.
 - Prefer PNG for overlays/stills.

@@ -55,6 +55,15 @@ Before working, read:
 
 If `processed.mp4` does not exist, the agent may still produce a provisional caption plan, but it must clearly mark the plan as provisional.
 
+## Caption Timing Lock
+
+Final caption timing must follow the locked processed video, not the raw timeline.
+
+- Create provisional captions only before cut lock.
+- After `processed.mp4` changes, regenerate or realign `caption-beats.json` against that processed video.
+- Do not reuse old caption times from a previous cut unless the processed media is unchanged.
+- If many captions feel off-timeline, route back to Transcript/Cut Agent first; do not hand-nudge every beat around an unstable cut.
+
 ## Core Principle
 
 Captions are not just transcription.
@@ -99,6 +108,7 @@ Required outputs:
 
 - `caption-plan.md`
 - `caption-beats.json`
+- `publish-captions.md`
 
 Optional outputs:
 
@@ -557,6 +567,20 @@ Avoid:
 - `Like, comment, share, follow, save semuanya.`
 - corporate CTA
 - aggressive sales pitch
+
+## Platform Publish Caption Rules
+
+Create `publish-captions.md` for the upload copy.
+
+Rules:
+
+- Instagram caption must be max `1200` characters.
+- TikTok caption must be max `4000` characters.
+- Include the video's core learning, not just a teaser.
+- Keep Dena's Indonesian voice: direct, practical, founder/developer, not corporate.
+- Use one clear CTA.
+- Use only relevant hashtags; avoid hashtag stuffing.
+- Include character counts for both captions before handoff.
 
 ## Relationship To HyperFrames
 

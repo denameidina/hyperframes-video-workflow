@@ -60,6 +60,7 @@ For a complete social video, expect this chain:
 - `edit-decision-notes.md`
 - `caption-plan.md`
 - `caption-beats.json`
+- `publish-captions.md`
 - `asset-plan.md` and `asset-manifest.json`, when assets are needed
 - `motion-plan.md`
 - `overlay-timeline.json`

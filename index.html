@@ -1,51 +1,484 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, height=1080">
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Dena - AI Editing Workflow Compact Plus</title>
+    <script src="vendor/gsap.min.js"></script>
     <style>
       * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
       }
+
       html,
       body {
         margin: 0;
-        width: 1920px;
-        height: 1080px;
+        width: 1080px;
+        height: 1920px;
         overflow: hidden;
         background: #000;
+        font-family: Arial, Helvetica, sans-serif;
       }
-      body {
-        font-family: "Inter", sans-serif;
+
+      [data-composition-id] {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #050505;
+        --white: #ffffff;
+        --black: #050505;
+        --yellow: #facc15;
+        --safe-bottom: 250px;
       }
-      code,
-      pre,
-      .monospace {
-        font-family: "JetBrains Mono", monospace;
+
+      .clip {
+        position: absolute;
+      }
+
+      .base-video {
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform-origin: center center;
+      }
+
+      audio.clip {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .anim-in {
+        opacity: 0;
+      }
+
+      .caption {
+        left: 76px;
+        right: 76px;
+        bottom: var(--safe-bottom);
+        z-index: 40;
+        display: block;
+        min-height: 112px;
+        color: var(--white);
+        font-size: 66px;
+        font-weight: 900;
+        line-height: 0.98;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        overflow-wrap: anywhere;
+        text-shadow:
+          0 5px 0 #000,
+          0 10px 22px rgba(0, 0, 0, 0.64);
+        -webkit-text-stroke: 2px #000;
+      }
+
+      .highlight {
+        color: var(--yellow);
+      }
+
+      .hook-card,
+      .cta-card,
+      .takeaway-card {
+        z-index: 50;
+        color: var(--white);
+        background: rgba(0, 0, 0, 0.9);
+        border: 3px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42);
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .hook-card {
+        top: 130px;
+        right: 70px;
+        left: 70px;
+        padding: 28px 36px;
+        border-radius: 28px;
+        font-size: 54px;
+        font-weight: 950;
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      .cta-card {
+        top: 1038px;
+        right: 108px;
+        left: 108px;
+        padding: 42px;
+        border-radius: 30px;
+        font-size: 68px;
+        font-weight: 950;
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      .takeaway-card {
+        top: 138px;
+        left: 80px;
+        right: 80px;
+        padding: 28px 34px;
+        border-radius: 26px;
+        font-size: 44px;
+        font-weight: 950;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .line {
+        display: block;
+      }
+
+      .progress-bar {
+        top: 0;
+        left: 0;
+        z-index: 30;
+        width: 100%;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .progress-fill {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--yellow);
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+
+      .flash {
+        inset: 0;
+        z-index: 35;
+        background: rgba(250, 204, 21, 0.32);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .asset-card,
+      .proof-card,
+      .privacy-mask,
+      .feature-chips {
+        z-index: 20;
+      }
+
+      .asset-card,
+      .proof-card {
+        margin: 0;
+        overflow: hidden;
+        border-radius: 28px;
+        background: rgba(0, 0, 0, 0.84);
+        border: 3px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 20px 46px rgba(0, 0, 0, 0.44);
+      }
+
+      .asset-card {
+        top: 118px;
+        left: 70px;
+        width: 940px;
+      }
+
+      .asset-card img,
+      .proof-card img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .tool-badges {
+        top: 184px;
+        left: 72px;
+        z-index: 20;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .chip {
+        min-width: 148px;
+        padding: 16px 20px;
+        border-radius: 22px;
+        background: rgba(0, 0, 0, 0.82);
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        color: var(--white);
+        font-size: 28px;
+        font-weight: 900;
+        line-height: 1;
+        text-align: center;
+        text-transform: uppercase;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.34);
+      }
+
+      .chip.active {
+        background: var(--yellow);
+        border-color: var(--yellow);
+        color: var(--black);
+      }
+
+      .privacy-mask {
+        top: 132px;
+        right: 54px;
+        width: 430px;
+        padding: 22px 24px;
+        border-radius: 24px;
+        background: rgba(0, 0, 0, 0.76);
+        border: 2px solid rgba(250, 204, 21, 0.5);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.34);
+        color: var(--white);
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .privacy-mask h2 {
+        margin: 0 0 8px;
+        color: var(--yellow);
+        font-size: 30px;
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .privacy-mask p {
+        margin: 0 auto 14px;
+        color: #f5f5f5;
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .mask-steps {
+        display: grid;
+        margin: 0 auto;
+        gap: 8px;
+      }
+
+      .mask-step {
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: rgba(23, 23, 23, 0.84);
+        border: 2px solid rgba(250, 204, 21, 0.55);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .proof-card {
+        top: 142px;
+        right: 56px;
+        width: 430px;
+      }
+
+      .proof-card figcaption {
+        padding: 14px 18px 16px;
+        color: var(--yellow);
+        font-size: 24px;
+        font-weight: 900;
+        line-height: 1;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .feature-chips {
+        top: 150px;
+        right: 74px;
+        left: 74px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .feature-chips .chip {
+        flex: 1;
+        min-width: 0;
+        padding: 20px 12px;
+        font-size: 27px;
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-199x" id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
-      
-      
+    <main id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="59.1">
+      <video
+        id="base-video"
+        class="clip base-video"
+        data-start="0"
+        data-duration="59.1"
+        data-track-index="1"
+        src="videos/0702-2/processed-compact-plus.mp4"
+        muted
+        playsinline
+      ></video>
 
-      <!--
-        Add your clips here. Example:
-        <div id="title" class="clip" data-start="0" data-duration="5" data-track-index="1"
-             style="font-size: 64px; color: #fff; padding: 40px">
-          Hello World
+      <audio
+        id="base-audio"
+        class="clip"
+        data-start="0"
+        data-duration="59.1"
+        data-track-index="0"
+        src="videos/0702-2/audio-compact-sync.m4a"
+      ></audio>
+
+      <div id="progress-bar" class="clip progress-bar" data-start="0" data-duration="59.1" data-track-index="3">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+
+      <div id="hook-001" class="clip hook-card" data-start="0" data-duration="3.2" data-track-index="5">
+        <span class="line">VIDEO NUMPUK</span>
+        <span class="line">KARENA <span class="highlight">MALAS EDIT?</span></span>
+        <span class="line">GUE BIKIN <span class="highlight">AI WORKFLOW.</span></span>
+      </div>
+
+      <div id="cap-001" class="clip caption anim-in" data-start="0.66" data-duration="1.7" data-track-index="2"><span class="highlight">KENAPA</span> BEBERAPA WAKTU</div>
+      <div id="cap-002" class="clip caption anim-in" data-start="2.47" data-duration="1.79" data-track-index="2">SAYA <span class="highlight">NGGAK</span> POSTING-POSTING</div>
+      <div id="cap-003" class="clip caption anim-in" data-start="4.26" data-duration="1.38" data-track-index="2">KARENA SAYA <span class="highlight">MALES</span></div>
+      <div id="cap-004" class="clip caption anim-in" data-start="6.33" data-duration="1.27" data-track-index="2">MALES UNTUK <span class="highlight">EDITNYA</span></div>
+      <div id="cap-005" class="clip caption anim-in" data-start="8.46" data-duration="0.98" data-track-index="2">VIDEONYA <span class="highlight">NUMPUK</span></div>
+      <div id="cap-006" class="clip caption anim-in" data-start="10.56" data-duration="1.66" data-track-index="2">MENGGUNAKAN <span class="highlight">HYPERFRAMES</span></div>
+      <div id="cap-007" class="clip caption anim-in" data-start="13.44" data-duration="1.82" data-track-index="2">LALU PAKAI <span class="highlight">CODEX</span></div>
+      <div id="cap-008" class="clip caption anim-in" data-start="16.86" data-duration="1.3" data-track-index="2">SAYA <span class="highlight">TRAINING</span></div>
+      <div id="cap-009" class="clip caption anim-in" data-start="18.8" data-duration="0.95" data-track-index="2"><span class="highlight">CODEX</span>-NYA</div>
+      <div id="cap-010" class="clip caption anim-in" data-start="20.48" data-duration="2.3" data-track-index="2">SURUH BIKIN <span class="highlight">AGENT.MD</span></div>
+      <div id="cap-011" class="clip caption anim-in" data-start="23.26" data-duration="1.72" data-track-index="2"><span class="highlight">DOKUMEN</span>-DOKUMENNYA</div>
+      <div id="cap-012" class="clip caption anim-in" data-start="24.99" data-duration="1.06" data-track-index="2">AKU <span class="highlight">BUTUHIN</span></div>
+      <div id="cap-013" class="clip caption anim-in" data-start="26.46" data-duration="1.8" data-track-index="2"><span class="highlight">AGENT</span>-AGENTNYA APA AJA</div>
+      <div id="cap-014" class="clip caption anim-in" data-start="29.39" data-duration="1.36" data-track-index="2">DIA BUATKAN <span class="highlight">SKILL</span></div>
+      <div id="cap-015" class="clip caption anim-in" data-start="30.76" data-duration="1.03" data-track-index="2"><span class="highlight">SKILLS</span> INI</div>
+      <div id="cap-016" class="clip caption anim-in" data-start="32.47" data-duration="1.45" data-track-index="2">DI<span class="highlight">TRAINING</span> DARI</div>
+      <div id="cap-017" class="clip caption anim-in" data-start="34.17" data-duration="2.47" data-track-index="2"><span class="highlight">VIDEO</span> YANG AKU SHARE</div>
+      <div id="cap-018" class="clip caption anim-in" data-start="36.69" data-duration="1.6" data-track-index="2"><span class="highlight">SEBELUMNYA</span></div>
+      <div id="cap-019" class="clip caption anim-in" data-start="39.2" data-duration="1.28" data-track-index="2">HASIL <span class="highlight">EDITING</span>-NYA</div>
+      <div id="cap-020" class="clip caption anim-in" data-start="40.86" data-duration="1.37" data-track-index="2">DIBUATKAN <span class="highlight">CODEX</span></div>
+      <div id="cap-021" class="clip caption anim-in" data-start="42.9" data-duration="1.76" data-track-index="2">MENGGUNAKAN <span class="highlight">HYPERFRAMES</span></div>
+      <div id="cap-022" class="clip caption anim-in" data-start="45.85" data-duration="0.86" data-track-index="2">ADA <span class="highlight">EFFECT</span>-NYA</div>
+      <div id="cap-023" class="clip caption anim-in" data-start="47.14" data-duration="1.64" data-track-index="2">ADA <span class="highlight">CAPTION</span> DI BAWAH</div>
+      <div id="cap-024" class="clip caption anim-in" data-start="50.35" data-duration="1.44" data-track-index="2">TERUS ADA <span class="highlight">ASSET</span></div>
+      <div id="cap-025" class="clip caption anim-in" data-start="51.8" data-duration="1.59" data-track-index="2"><span class="highlight">GENERATION</span>-NYA</div>
+      <div id="cap-026" class="clip caption anim-in" data-start="54.31" data-duration="1.17" data-track-index="2"><span class="highlight">MOTION</span> OVERLAY</div>
+
+      <figure id="bottleneck-card" class="clip asset-card anim-in" data-start="4.25" data-duration="5.6" data-track-index="4">
+        <img src="videos/0702-2/assets/editing-bottleneck.svg" alt="" />
+      </figure>
+
+      <figure id="tool-stack-card" class="clip asset-card anim-in" data-start="10.4" data-duration="5.7" data-track-index="4">
+        <img src="videos/0702-2/assets/tool-stack.svg" alt="" />
+      </figure>
+
+      <div id="tool-badges" class="clip tool-badges anim-in" data-start="11.55" data-duration="4.3" data-track-index="8">
+        <div class="chip active">HyperFrames</div>
+        <div class="chip">Codex</div>
+      </div>
+
+      <figure id="workflow-card" class="clip asset-card anim-in" data-start="16.8" data-duration="3.65" data-track-index="4">
+        <img src="videos/0702-2/assets/workflow-pipeline.svg" alt="" />
+      </figure>
+
+      <section id="privacy-mask" class="clip privacy-mask anim-in" data-start="20.48" data-duration="18" data-track-index="6">
+        <h2>TRAINING STYLE</h2>
+        <p>Source code tetap kelihatan; card cuma jadi konteks.</p>
+        <div class="mask-steps">
+          <div class="mask-step">IG / TIKTOK REFERENCES</div>
+          <div class="mask-step">AGENTS.MD + DOCS</div>
+          <div class="mask-step">SOURCE CODE VISIBLE</div>
         </div>
-      -->
-    </div>
+      </section>
+
+      <figure id="proof-card" class="clip proof-card anim-in" data-start="38.84" data-duration="5.82" data-track-index="4">
+        <img src="videos/0702-2/assets/monitor-proof-blurred.jpg" alt="" />
+        <figcaption>Real workflow</figcaption>
+      </figure>
+
+      <div id="feature-chips" class="clip feature-chips anim-in" data-start="45.85" data-duration="11.4" data-track-index="4">
+        <div id="chip-effect" class="chip">Effect</div>
+        <div id="chip-caption" class="chip">Caption</div>
+        <div id="chip-asset" class="chip">Asset</div>
+        <div id="chip-motion" class="chip">Motion</div>
+        <div id="chip-cut" class="chip">Cut</div>
+      </div>
+
+      <figure id="transcript-card" class="clip asset-card anim-in" data-start="57.45" data-duration="1.65" data-track-index="4">
+        <img src="videos/0702-2/assets/transcript-cut-flow.svg" alt="" />
+      </figure>
+
+      <div id="cta-001" class="clip cta-card anim-in" data-start="57.95" data-duration="1.15" data-track-index="5">
+        <span class="line">MAU BREAKDOWN?</span>
+        <span class="line">KOMEN <span class="highlight">"MAU"</span></span>
+      </div>
+
+      <div id="flash-layer" class="clip flash" data-start="0" data-duration="59.1" data-track-index="7"></div>
+    </main>
 
     <script>
       window.__timelines = window.__timelines || {};
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.from("#title", { opacity: 0, y: -50, duration: 1 }, 0);
+      const enterEase = "power2.out";
+      const duration = 59.1;
+
+      document.querySelectorAll(".caption").forEach((el) => {
+        const start = Number.parseFloat(el.dataset.start);
+        tl.fromTo(
+          el,
+          { autoAlpha: 0, y: 18, scale: 0.96 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.14, ease: enterEase },
+          start
+        );
+      });
+
+      tl.fromTo("#progress-fill", { scaleX: 0 }, { scaleX: 1, duration, ease: "none" }, 0);
+
+      document.querySelectorAll(".asset-card, .proof-card, .privacy-mask, .tool-badges, .feature-chips, .takeaway-card").forEach((el) => {
+        const start = Number.parseFloat(el.dataset.start);
+        tl.fromTo(
+          el,
+          { autoAlpha: 0, y: -22, scale: 0.96 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.28, ease: enterEase },
+          start
+        );
+      });
+
+      tl.set("#flash-layer", { autoAlpha: 0 }, 0);
+      [4.25, 10.4, 16.8, 20.48, 29.39, 32.47, 38.84, 45.85, 57.45, 57.95].forEach((start) => {
+        tl.fromTo("#flash-layer", { autoAlpha: 0.75 }, { autoAlpha: 0, duration: 0.12, ease: "power2.out" }, start);
+        tl.set("#flash-layer", { autoAlpha: 0 }, start + 0.12);
+      });
+
+      [
+        [2.47, 1.045, 0.35],
+        [10.4, 1.025, 0.3],
+        [16.8, 1.04, 0.3],
+        [29.39, 1.025, 0.3],
+        [38.84, 1.035, 0.3],
+        [45.85, 1.04, 0.35],
+        [57.45, 1.05, 0.4],
+      ].forEach(([start, scale, inDur]) => {
+        tl.to("#base-video", { scale, duration: inDur, ease: "power2.out" }, start);
+        tl.to("#base-video", { scale: 1, duration: 0.6, ease: "power2.out" }, start + 2.3);
+      });
+
+      tl.from("#feature-chips .chip", { y: -12, autoAlpha: 0, duration: 0.16, stagger: 0.09 }, 45.85);
+      [
+        ["#chip-effect", 45.85],
+        ["#chip-caption", 47.14],
+        ["#chip-asset", 51.37],
+        ["#chip-motion", 54.31],
+        ["#chip-cut", 57.45],
+      ].forEach(([selector, start]) => {
+        tl.to(selector, { backgroundColor: "#facc15", color: "#050505", borderColor: "#facc15", duration: 0.12 }, start);
+        tl.to(selector, { backgroundColor: "rgba(0,0,0,0.82)", color: "#ffffff", borderColor: "rgba(255,255,255,0.18)", duration: 0.22 }, start + 1.1);
+      });
+
+      tl.fromTo(
+        "#cta-001",
+        { autoAlpha: 0, y: 22, scale: 0.94 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.28, ease: enterEase },
+        57.95
+      );
+
       window.__timelines["main"] = tl;
     </script>
   </body>

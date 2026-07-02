@@ -151,6 +151,20 @@ Use thresholds as starting points, not rigid rules.
 
 Generate word-level transcript when possible.
 
+Use project-local Whisper, not a global binary:
+
+```bash
+ffmpeg -y -i videos/<slug>/<input-media> -ar 16000 -ac 1 videos/<slug>/audio.wav
+
+vendor/whisper.cpp/build/bin/whisper-cli \
+  -m vendor/whisper.cpp/models/ggml-large-v3-turbo.bin \
+  -f videos/<slug>/audio.wav \
+  -l id \
+  --prompt "Dena Meidina, HyperFrames, Codex, AGENTS.md, skills, motion overlay, transcript cut, IG, TikTok, AI workflow" \
+  -oj -ojf \
+  -of videos/<slug>/transcript-large-v3-turbo
+```
+
 Preferred output:
 
 `videos/<slug>/transcript.json`
@@ -233,6 +247,15 @@ Keep filler when:
 - It supports a self-aware/human moment.
 
 Dena's voice should remain human, not corporate.
+
+## Cut Intensity Defaults
+
+Default to `light-medium` for Dena raw talking-head fixes unless the user explicitly asks for aggressive viral pacing.
+
+- Remove long silence, obvious repeated starts, and filler that blocks the point.
+- Keep natural pauses, context, and human delivery when they make the story easier to follow.
+- Do not compress a raw clip to a target duration just to make it feel fast.
+- If a previous edit was "too cut", rebuild from raw or the cut list with fewer removals instead of patching caption timing around the bad cut.
 
 ## Silence Rules
 

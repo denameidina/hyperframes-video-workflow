@@ -276,6 +276,16 @@ Default visual language for tech/founder monologues:
 - Minimal accent lines.
 - Screenshots and UI cards when context demands.
 
+Revision learnings from raw talking-head workflow edits:
+
+- If feedback says the video feels boring, first add purposeful motion and pattern interrupts before changing the core story.
+- If feedback says too much transcript was cut, restore only the missing context. Keep the compact version if it feels denser and more rewatchable; do not lengthen just to prove the transcript was preserved.
+- If image assets are needed, prefer manual screenshots, UI crops, simple diagrams, or hand-authored SVG cards. Avoid generic AI b-roll that looks detached from the actual workflow.
+- Use subtle SFX for transitions, card hits, and emphasis only when it supports the speech. Do not cover the talking-head audio.
+- If SFX feedback says there is no sound, measure the SFX stem and final render audio before approval. Too-quiet cues should be treated as missing, then boosted until they are audible but still under speech.
+- If caption, asset, and motion timing feels detached, regenerate timing from the locked processed audio transcript and use one shared cue map for captions, cards, feature chips, zooms, and SFX.
+- If raw footage intentionally shows source code/editor proof, do not cover it with a large context/privacy card. Put a compact callout in unused top/side space and blur private data upstream only when needed.
+
 ## CTA Defaults
 
 End with one CTA, not three.
@@ -288,6 +298,15 @@ Choose by content:
 - Family/lifestyle vlog: "Menurut lo, simple moment kayak gini worth it nggak?"
 
 CTA should feel conversational and match Dena's voice.
+
+## Platform Publish Caption Defaults
+
+For every finished social video, include `publish-captions.md`:
+
+- Instagram caption: max `1200` characters.
+- TikTok caption: max `4000` characters.
+- Both captions must include the video's core learning, one clear CTA, and character counts.
+- Keep the copy in Dena's natural Indonesian voice; avoid corporate promo language and hashtag stuffing.
 
 ## Social Findings From Public Samples
 
@@ -328,6 +347,7 @@ Expected files:
 - `creative-brief.md`.
 - `caption-plan.md`.
 - `caption-beats.json`.
+- `publish-captions.md`.
 - `asset-plan.md` and `asset-manifest.json`, when assets are needed.
 - `motion-plan.md`.
 - `overlay-timeline.json`.

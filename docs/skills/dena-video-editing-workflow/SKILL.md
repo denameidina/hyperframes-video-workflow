@@ -40,6 +40,23 @@ Use exactly the agent that owns the current decision:
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
 
+## Lean Fixing Defaults
+
+Use this when fixing a previous Dena edit, or when the user says the result was over-cut, captions drifted, or the process burned too much time/token.
+
+- Do not rerun the full agent chain by default. Reuse existing artifacts, route only the broken part, and update downstream files that depend on it.
+- Treat "boring motion", "too much transcript was cut", "needs non-slop assets", and "no sound effects" as one targeted revision path: keep the compact cut as the baseline when it feels denser, Agent 02 restores only missing context, Agent 04 creates local/manual explanatory assets when useful, Agent 05 adds purposeful motion plus SFX timing, Agent 06 assembles, and Agent 07 re-verifies.
+- Default recut intensity is `light-medium`: remove long silence, heavy filler, and clear repetition only. Do not force a viral hard-cut unless the user asks for aggressive pacing.
+- Lock the base cut before final captions. If `processed.mp4` changes, regenerate or realign `caption-beats.json` from the processed video instead of manually nudging old raw-timeline captions.
+- If captions, assets, motion, or SFX feel out of sync after a compact recut, transcribe the locked processed audio and retime `caption-beats.json`, `overlay-timeline.json`, HTML clips, and SFX cues from the same cue map.
+- If the user wants source code/editor footage visible as proof, keep overlays as compact callouts in unused top/side space. Do not use large privacy/context masks that hide the proof moment.
+- Preview with frame grabs/contact sheets first. Run full render only after cut, captions, and overlays look correct, then rerender only for blocker/major fixes.
+- For Dena raw talking-head clips, preserve natural context without killing density. A compact 55-70s cut can beat a fuller 80-100s cut when the lesson still lands.
+- If the user says SFX has no sound, verify both the solo SFX stem and the final render audio with a level scan. File existence is not enough; cues that peak too low are effectively missing.
+- For transcript quality, use the project-local Whisper install in `vendor/whisper.cpp` with `ggml-large-v3-turbo.bin`; convert source audio to WAV first and pass an Indonesian/domain-term prompt.
+- If a longer HyperFrames render stalls in default low-memory mode after passing check/snapshot review, retry the final render with `PRODUCER_LOW_MEMORY_MODE=false` and document the workaround in `render-review.md`.
+- When a session produces a workflow learning, update the relevant docs in the same turn; the project-local `.codex` Stop hook enforces this for learning prompts and workflow/config changes.
+
 ## Non-Negotiables
 
 - Use Indonesian by default and preserve Dena's natural register.
@@ -60,6 +77,7 @@ videos/<slug>/creative-brief.md
 videos/<slug>/edit-decision-notes.md
 videos/<slug>/caption-plan.md
 videos/<slug>/caption-beats.json
+videos/<slug>/publish-captions.md
 videos/<slug>/asset-plan.md
 videos/<slug>/asset-manifest.json
 videos/<slug>/motion-plan.md

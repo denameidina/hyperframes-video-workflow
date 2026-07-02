@@ -17,7 +17,7 @@ Use this reference when deciding which Dena video agent to run and what artifact
 3. `docs/agents/03-caption-subtitle-agent.md`
    - Owns: caption text, phrase grouping, highlights, ASR correction, caption timing.
    - Reads: creative brief, cut notes, transcript.
-   - Writes: `caption-plan.md`, `caption-beats.json`.
+   - Writes: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`.
 
 4. `docs/agents/04-asset-generation-agent.md`
    - Owns: screenshots, generated stills/video, b-roll, diagrams, UI crops, proof visuals.
