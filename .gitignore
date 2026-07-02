@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# local environment
+.env
+.env.*
+
+# raw inputs and rendered/intermediate video work
+raw/
+videos/
+
+# media/render artifacts if created outside videos/
+*.mp4
+*.mov
+*.m4v
+*.webm
+*.mp3
+*.wav
+*.m4a
+
+# caches and temporary files
+.DS_Store
+.cache/
+tmp/
+temp/
+*.log
