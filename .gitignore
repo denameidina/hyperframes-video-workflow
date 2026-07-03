@@ -4,6 +4,7 @@ node_modules/
 # local environment
 .env
 .env.*
+!.env.example
 
 # raw inputs and rendered/intermediate video work
 /raw/*
@@ -30,3 +31,6 @@ node_modules/
 tmp/
 temp/
 *.log
+
+# Whisper
+vendor/whisper.cpp

@@ -12,7 +12,6 @@ import {
   buildTargetAccounts,
   basicAuthHeader,
   createSchedules,
-  createR2Client,
   loadConfig,
   makePublishKey,
   parseArgs,
@@ -126,67 +125,60 @@ test("duplicate guard compares publish key and respects force", () => {
   assert.equal(shouldSkipPublish(receipt, "different", false), false);
 });
 
-test("createR2Client uses Cloudflare R2 endpoint and auto region", async () => {
-  const client = createR2Client({
-    cloudflareAccountId: "cf_account",
-    r2AccessKeyId: "r2_access",
-    r2SecretAccessKey: "r2_secret",
-  });
-  assert.equal(await client.config.region(), "auto");
-  assert.equal((await client.config.endpoint()).hostname, "cf_account.r2.cloudflarestorage.com");
-});
-
-test("uploadToR2 skips existing object when force is false", async () => {
-  const calls = [];
-  const s3 = {
-    async send(command) {
-      calls.push(command.constructor.name);
-      return { ETag: "\"existing\"" };
-    },
-  };
-
-  const result = await uploadToR2({
-    s3,
-    bucket: "bucket",
-    key: "final-renders/0702-2/final.mp4",
-    file: "unused.mp4",
-    force: false,
-  });
-
-  assert.deepEqual(calls, ["HeadObjectCommand"]);
-  assert.deepEqual(result, { uploaded: false });
-});
-
-test("uploadToR2 uploads missing object with video/mp4 content type", async () => {
+test("uploadToR2 uploads with Wrangler and video/mp4 content type", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "r2-upload-"));
   const file = path.join(dir, "final.mp4");
   await writeFile(file, "fake mp4 bytes");
 
-  const commands = [];
-  const s3 = {
-    async send(command) {
-      commands.push(command);
-      if (command.constructor.name === "HeadObjectCommand") {
-        const error = new Error("missing");
-        error.name = "NotFound";
-        throw error;
-      }
-      return { ETag: "\"uploaded\"" };
-    },
-  };
-
+  const calls = [];
   const result = await uploadToR2({
-    s3,
     bucket: "bucket",
     key: "final-renders/0702-2/final.mp4",
     file,
     force: false,
+    runCommand: async (command, args) => {
+      calls.push({ command, args });
+      return { stdout: "ok", stderr: "" };
+    },
   });
 
-  assert.equal(result.uploaded, true);
-  assert.equal(commands[1].input.ContentType, "video/mp4");
-  assert.equal(commands[1].input.Bucket, "bucket");
-  assert.equal(commands[1].input.Key, "final-renders/0702-2/final.mp4");
+  assert.deepEqual(result, { uploaded: true });
+  assert.deepEqual(calls, [
+    {
+      command: "npx",
+      args: [
+        "wrangler",
+        "r2",
+        "object",
+        "put",
+        "bucket/final-renders/0702-2/final.mp4",
+        "--file",
+        file,
+        "--content-type",
+        "video/mp4",
+      ],
+    },
+  ]);
+});
+
+test("uploadToR2 passes Wrangler force flag when requested", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "r2-upload-force-"));
+  const file = path.join(dir, "final.mp4");
+  await writeFile(file, "fake mp4 bytes");
+
+  const calls = [];
+  await uploadToR2({
+    bucket: "bucket",
+    key: "final-renders/0702-2/final.mp4",
+    file,
+    force: true,
+    runCommand: async (command, args) => {
+      calls.push({ command, args });
+      return { stdout: "ok", stderr: "" };
+    },
+  });
+
+  assert.equal(calls[0].args.at(-1), "--force");
 });
 
 test("verifyPublicUrl accepts 200 and 206 responses", async () => {
@@ -308,9 +300,6 @@ function envFixture(overrides = {}) {
     REPLIZ_API_BASE_URL: "https://api.repliz.test",
     REPLIZ_ACCESS_KEY: "access",
     REPLIZ_SECRET_KEY: "secret",
-    CLOUDFLARE_ACCOUNT_ID: "cf_account",
-    R2_ACCESS_KEY_ID: "r2_access",
-    R2_SECRET_ACCESS_KEY: "r2_secret",
     R2_BUCKET: "bucket",
     R2_PUBLIC_BASE_URL: "https://media.example.com",
     R2_PREFIX: "final-renders",
@@ -337,18 +326,7 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
     JSON.stringify({ post: { description: "Caption final", tags: ["editing"] } }),
   );
 
-  const s3Calls = [];
-  const s3 = {
-    async send(command) {
-      s3Calls.push(command.constructor.name);
-      if (command.constructor.name === "HeadObjectCommand") {
-        const error = new Error("missing");
-        error.name = "NotFound";
-        throw error;
-      }
-      return { ETag: "\"uploaded\"" };
-    },
-  };
+  const wranglerCalls = [];
 
   const fetchCalls = [];
   const fetchImpl = async (url, options = {}) => {
@@ -372,7 +350,10 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   const first = await runPublish({
     argv: ["--slug", slugDir, "--file", renderFile],
     env: envFixture(),
-    s3,
+    runCommand: async (command, args) => {
+      wranglerCalls.push({ command, args });
+      return { stdout: "ok", stderr: "" };
+    },
     fetchImpl,
     now: new Date("2026-07-03T01:39:08.119Z"),
     sleep: async () => {},
@@ -381,12 +362,17 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   assert.equal(first.skipped, false);
   assert.equal(first.receipt.schedules.length, 2);
   assert.equal(first.receipt.videoUrl, "https://media.example.com/final-renders/0702-2/final.mp4");
-  assert.deepEqual(s3Calls, ["HeadObjectCommand", "PutObjectCommand"]);
+  assert.equal(wranglerCalls.length, 1);
+  assert.equal(wranglerCalls[0].command, "npx");
+  assert.equal(wranglerCalls[0].args[4], "bucket/final-renders/0702-2/final.mp4");
 
   const second = await runPublish({
     argv: ["--slug", slugDir, "--file", renderFile],
     env: envFixture(),
-    s3,
+    runCommand: async (command, args) => {
+      wranglerCalls.push({ command, args });
+      return { stdout: "ok", stderr: "" };
+    },
     fetchImpl,
     now: new Date("2026-07-03T01:39:08.119Z"),
     sleep: async () => {},

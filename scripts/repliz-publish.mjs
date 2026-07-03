@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
+import { execFile } from "node:child_process";
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import {
-  HeadObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 const TARGET_ENV = [
   ["facebook", "REPLIZ_FACEBOOK_ACCOUNT_ID"],
@@ -163,40 +161,22 @@ export function buildSchedulePayload({ accountId, post, videoUrl, now = new Date
   };
 }
 
-export function createR2Client({ cloudflareAccountId, r2AccessKeyId, r2SecretAccessKey }) {
-  return new S3Client({
-    region: "auto",
-    endpoint: `https://${cloudflareAccountId}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: r2AccessKeyId,
-      secretAccessKey: r2SecretAccessKey,
-    },
-  });
-}
-
-function isMissingObject(error) {
-  return error?.name === "NotFound" || error?.$metadata?.httpStatusCode === 404;
-}
-
-export async function uploadToR2({ s3, bucket, key, file, force }) {
-  if (!force) {
-    try {
-      await s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
-      return { uploaded: false };
-    } catch (error) {
-      if (!isMissingObject(error)) throw error;
-    }
-  }
-
+export async function uploadToR2({ bucket, key, file, force, runCommand = execFileAsync }) {
   await access(file);
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: createReadStream(file),
-      ContentType: "video/mp4",
-    }),
-  );
+  const args = [
+    "wrangler",
+    "r2",
+    "object",
+    "put",
+    `${bucket}/${key}`,
+    "--file",
+    file,
+    "--content-type",
+    "video/mp4",
+  ];
+  if (force) args.push("--force");
+
+  await runCommand("npx", args);
 
   return { uploaded: true };
 }
@@ -337,9 +317,6 @@ export function loadConfig(env) {
     "REPLIZ_API_BASE_URL",
     "REPLIZ_ACCESS_KEY",
     "REPLIZ_SECRET_KEY",
-    "CLOUDFLARE_ACCOUNT_ID",
-    "R2_ACCESS_KEY_ID",
-    "R2_SECRET_ACCESS_KEY",
     "R2_BUCKET",
     "R2_PUBLIC_BASE_URL",
   ];
@@ -350,9 +327,6 @@ export function loadConfig(env) {
     replizApiBaseUrl: env.REPLIZ_API_BASE_URL.trim(),
     replizAccessKey: env.REPLIZ_ACCESS_KEY.trim(),
     replizSecretKey: env.REPLIZ_SECRET_KEY.trim(),
-    cloudflareAccountId: env.CLOUDFLARE_ACCOUNT_ID.trim(),
-    r2AccessKeyId: env.R2_ACCESS_KEY_ID.trim(),
-    r2SecretAccessKey: env.R2_SECRET_ACCESS_KEY.trim(),
     r2Bucket: env.R2_BUCKET.trim(),
     r2PublicBaseUrl: env.R2_PUBLIC_BASE_URL.trim(),
     r2Prefix: String(env.R2_PREFIX || "final-renders").trim() || "final-renders",
@@ -368,7 +342,7 @@ async function writeReceipt(slugDir, receipt) {
 export async function runPublish({
   argv,
   env = process.env,
-  s3,
+  runCommand = execFileAsync,
   fetchImpl = fetch,
   now = new Date(),
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
@@ -394,13 +368,12 @@ export async function runPublish({
     return { skipped: true, receipt: existingReceipt };
   }
 
-  const r2Client = s3 || createR2Client(config);
   await uploadToR2({
-    s3: r2Client,
     bucket: config.r2Bucket,
     key: r2Key,
     file: args.file,
     force: args.force,
+    runCommand,
   });
   await verifyPublicUrl(videoUrl, fetchImpl);
   await validateAccounts({ config, targetAccounts, fetchImpl });
