@@ -209,3 +209,125 @@ export async function verifyPublicUrl(url, fetchImpl = fetch) {
   if (response.status === 200 || response.status === 206) return true;
   throw new Error(`R2 public URL is not reachable: ${response.status}`);
 }
+
+export function basicAuthHeader({ replizAccessKey, replizSecretKey }) {
+  return `Basic ${Buffer.from(`${replizAccessKey}:${replizSecretKey}`).toString("base64")}`;
+}
+
+function jsonHeaders(config) {
+  return {
+    Authorization: basicAuthHeader(config),
+    "Content-Type": "application/json",
+  };
+}
+
+function apiUrl(baseUrl, apiPath) {
+  return new URL(apiPath, `${baseUrl.replace(/\/+$/g, "")}/`).toString();
+}
+
+async function readJsonResponse(response) {
+  if (response.status === 204) return null;
+  return response.json();
+}
+
+async function replizJson({ config, apiPath, method = "GET", body, fetchImpl = fetch }) {
+  const response = await fetchImpl(apiUrl(config.replizApiBaseUrl, apiPath), {
+    method,
+    headers: jsonHeaders(config),
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await readJsonResponse(response);
+  if (!response.ok) {
+    throw new Error(data?.message || `Repliz API failed: ${response.status}`);
+  }
+  return data;
+}
+
+export async function validateAccounts({ config, targetAccounts, fetchImpl = fetch }) {
+  const accounts = [];
+  for (const target of targetAccounts) {
+    const account = await replizJson({
+      config,
+      apiPath: `/public/account/${encodeURIComponent(target.accountId)}`,
+      fetchImpl,
+    });
+    if (!account.isConnected) {
+      throw new Error(`Repliz account ${target.accountId} is not connected`);
+    }
+    if (account.type !== target.platform) {
+      throw new Error(`Repliz account ${target.accountId} expected ${target.platform}, got ${account.type}`);
+    }
+    accounts.push(account);
+  }
+  return accounts;
+}
+
+export async function createSchedules({ config, targetAccounts, post, videoUrl, now = new Date(), fetchImpl = fetch }) {
+  const schedules = [];
+  for (const target of targetAccounts) {
+    try {
+      const payload = buildSchedulePayload({
+        accountId: target.accountId,
+        post,
+        videoUrl,
+        now,
+      });
+      const response = await replizJson({
+        config,
+        apiPath: "/public/schedule",
+        method: "POST",
+        body: payload,
+        fetchImpl,
+      });
+      schedules.push({
+        accountId: target.accountId,
+        platform: target.platform,
+        scheduleId: response.scheduleId,
+        status: "pending",
+      });
+    } catch (error) {
+      schedules.push({
+        accountId: target.accountId,
+        platform: target.platform,
+        status: "error",
+        error: error.message,
+      });
+    }
+  }
+  return schedules;
+}
+
+export async function pollSchedules({
+  config,
+  schedules,
+  timeoutMs = 120_000,
+  intervalMs = 5_000,
+  fetchImpl = fetch,
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+}) {
+  const deadline = Date.now() + timeoutMs;
+  const current = schedules.map((schedule) => ({ ...schedule }));
+
+  while (Date.now() <= deadline) {
+    let pendingCount = 0;
+
+    for (const schedule of current) {
+      if (!schedule.scheduleId || schedule.status === "success" || schedule.status === "error") continue;
+      pendingCount += 1;
+      const detail = await replizJson({
+        config,
+        apiPath: `/public/schedule/${encodeURIComponent(schedule.scheduleId)}`,
+        fetchImpl,
+      });
+      schedule.status = detail.status || schedule.status;
+      if (detail.postId) schedule.postId = detail.postId;
+    }
+
+    if (pendingCount === 0 || current.every((schedule) => schedule.status === "success" || schedule.status === "error")) {
+      return current;
+    }
+    await sleep(intervalMs);
+  }
+
+  return current;
+}

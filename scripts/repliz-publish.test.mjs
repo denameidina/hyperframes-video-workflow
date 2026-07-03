@@ -9,12 +9,16 @@ import {
   buildR2Key,
   buildSchedulePayload,
   buildTargetAccounts,
+  basicAuthHeader,
+  createSchedules,
   createR2Client,
   makePublishKey,
   parseArgs,
+  pollSchedules,
   readPostMetadata,
   shouldSkipPublish,
   uploadToR2,
+  validateAccounts,
   verifyPublicUrl,
 } from "./repliz-publish.mjs";
 
@@ -189,4 +193,109 @@ test("verifyPublicUrl accepts 200 and 206 responses", async () => {
     () => verifyPublicUrl("https://media.example.com/video.mp4", async () => ({ status: 403 })),
     /R2 public URL is not reachable/,
   );
+});
+
+test("basicAuthHeader encodes Repliz access and secret key", () => {
+  assert.equal(basicAuthHeader({ replizAccessKey: "access", replizSecretKey: "secret" }), "Basic YWNjZXNzOnNlY3JldA==");
+});
+
+test("validateAccounts rejects disconnected or mismatched platform accounts", async () => {
+  const config = {
+    replizApiBaseUrl: "https://api.repliz.test",
+    replizAccessKey: "access",
+    replizSecretKey: "secret",
+  };
+
+  await assert.rejects(
+    () =>
+      validateAccounts({
+        config,
+        targetAccounts: [{ platform: "tiktok", accountId: "tk_1" }],
+        fetchImpl: async () => ({
+          ok: true,
+          status: 200,
+          json: async () => ({ id: "tk_1", type: "tiktok", isConnected: false }),
+        }),
+      }),
+    /not connected/,
+  );
+
+  await assert.rejects(
+    () =>
+      validateAccounts({
+        config,
+        targetAccounts: [{ platform: "instagram", accountId: "ig_1" }],
+        fetchImpl: async () => ({
+          ok: true,
+          status: 200,
+          json: async () => ({ id: "ig_1", type: "facebook", isConnected: true }),
+        }),
+      }),
+    /expected instagram/,
+  );
+});
+
+test("createSchedules posts one Repliz schedule per target account", async () => {
+  const calls = [];
+  const schedules = await createSchedules({
+    config: {
+      replizApiBaseUrl: "https://api.repliz.test",
+      replizAccessKey: "access",
+      replizSecretKey: "secret",
+    },
+    targetAccounts: [
+      { platform: "tiktok", accountId: "tk_1" },
+      { platform: "instagram", accountId: "ig_1" },
+    ],
+    post: {
+      title: "",
+      description: "Caption final",
+      topic: "",
+      type: "video",
+      tags: [],
+      mentions: [],
+      targetCountries: ["ID"],
+      scheduleAt: "2026-07-03T01:40:08.119Z",
+    },
+    videoUrl: "https://media.example.com/final-renders/0702-2/final.mp4",
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ scheduleId: `schedule_${calls.length}` }),
+      };
+    },
+  });
+
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0].url, "https://api.repliz.test/public/schedule");
+  assert.equal(calls[0].options.method, "POST");
+  assert.equal(calls[0].options.headers.Authorization, "Basic YWNjZXNzOnNlY3JldA==");
+  assert.deepEqual(schedules, [
+    { accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", status: "pending" },
+    { accountId: "ig_1", platform: "instagram", scheduleId: "schedule_2", status: "pending" },
+  ]);
+});
+
+test("pollSchedules updates terminal statuses", async () => {
+  const polled = await pollSchedules({
+    config: {
+      replizApiBaseUrl: "https://api.repliz.test",
+      replizAccessKey: "access",
+      replizSecretKey: "secret",
+    },
+    schedules: [{ accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", status: "pending" }],
+    timeoutMs: 1,
+    intervalMs: 0,
+    sleep: async () => {},
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ status: "success", postId: "post_1" }),
+    }),
+  });
+
+  assert.deepEqual(polled, [{ accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", status: "success", postId: "post_1" }]);
 });
