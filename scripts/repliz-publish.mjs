@@ -434,3 +434,57 @@ export async function runPublish({
   await writeReceipt(args.slug, receipt);
   return { skipped: false, receipt };
 }
+
+function printHelp() {
+  console.log(`Usage:
+  npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4
+
+Options:
+  --slug <dir>   Video working directory containing repliz-publish.json receipt/metadata
+  --file <mp4>   Rendered MP4 file to upload to Cloudflare R2
+  --force        Re-upload to R2 and create new Repliz schedules
+  --help         Show this help
+`);
+}
+
+async function loadDotEnv() {
+  if (!process.loadEnvFile) return;
+  try {
+    process.loadEnvFile(".env");
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+}
+
+async function main() {
+  await loadDotEnv();
+  const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    printHelp();
+    return;
+  }
+
+  const result = await runPublish({
+    argv: process.argv.slice(2),
+    env: process.env,
+  });
+
+  if (result.skipped) {
+    console.log(`Skipped duplicate publish. Receipt: ${path.join(args.slug, "repliz-publish.json")}`);
+    return;
+  }
+
+  console.log(`Uploaded: ${result.receipt.videoUrl}`);
+  for (const schedule of result.receipt.schedules) {
+    const id = schedule.scheduleId || "no-schedule-id";
+    console.log(`${schedule.platform}: ${schedule.status} ${id}`);
+  }
+}
+
+const isCli = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isCli) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}

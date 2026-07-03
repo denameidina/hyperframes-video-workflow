@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 
 import {
@@ -396,4 +397,15 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   assert.equal(receipt.r2Key, "final-renders/0702-2/final.mp4");
   assert.equal(receipt.post.description, "Caption final");
   assert.equal(receipt.schedules[0].status, "success");
+});
+
+test("CLI help prints usage", () => {
+  const result = spawnSync(process.execPath, ["scripts/repliz-publish.mjs", "--help"], {
+    cwd: path.resolve("."),
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Usage:/);
+  assert.match(result.stdout, /--slug <dir>/);
 });
