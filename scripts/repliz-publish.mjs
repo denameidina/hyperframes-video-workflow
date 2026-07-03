@@ -331,3 +331,106 @@ export async function pollSchedules({
 
   return current;
 }
+
+export function loadConfig(env) {
+  const required = [
+    "REPLIZ_API_BASE_URL",
+    "REPLIZ_ACCESS_KEY",
+    "REPLIZ_SECRET_KEY",
+    "CLOUDFLARE_ACCOUNT_ID",
+    "R2_ACCESS_KEY_ID",
+    "R2_SECRET_ACCESS_KEY",
+    "R2_BUCKET",
+    "R2_PUBLIC_BASE_URL",
+  ];
+  const missing = required.filter((name) => !String(env[name] || "").trim());
+  if (missing.length) throw new Error(`Missing env: ${missing.join(", ")}`);
+
+  return {
+    replizApiBaseUrl: env.REPLIZ_API_BASE_URL.trim(),
+    replizAccessKey: env.REPLIZ_ACCESS_KEY.trim(),
+    replizSecretKey: env.REPLIZ_SECRET_KEY.trim(),
+    cloudflareAccountId: env.CLOUDFLARE_ACCOUNT_ID.trim(),
+    r2AccessKeyId: env.R2_ACCESS_KEY_ID.trim(),
+    r2SecretAccessKey: env.R2_SECRET_ACCESS_KEY.trim(),
+    r2Bucket: env.R2_BUCKET.trim(),
+    r2PublicBaseUrl: env.R2_PUBLIC_BASE_URL.trim(),
+    r2Prefix: String(env.R2_PREFIX || "final-renders").trim() || "final-renders",
+  };
+}
+
+async function writeReceipt(slugDir, receipt) {
+  await mkdir(slugDir, { recursive: true });
+  const receiptPath = path.join(slugDir, "repliz-publish.json");
+  await writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);
+}
+
+export async function runPublish({
+  argv,
+  env = process.env,
+  s3,
+  fetchImpl = fetch,
+  now = new Date(),
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+}) {
+  const args = parseArgs(argv);
+  if (args.help) return { help: true };
+
+  const config = loadConfig(env);
+  const targetAccounts = buildTargetAccounts(env);
+  if (!targetAccounts.length) throw new Error("No target account IDs configured");
+
+  const post = await readPostMetadata(args.slug);
+  const existingReceipt = await readJsonIfExists(path.join(args.slug, "repliz-publish.json"));
+  const r2Key = buildR2Key({ prefix: config.r2Prefix, slug: args.slug, file: args.file });
+  const videoUrl = buildPublicUrl(config.r2PublicBaseUrl, r2Key);
+  const publishKey = makePublishKey({
+    r2Key,
+    targetAccounts,
+    description: post.description,
+  });
+
+  if (shouldSkipPublish(existingReceipt, publishKey, args.force)) {
+    return { skipped: true, receipt: existingReceipt };
+  }
+
+  const r2Client = s3 || createR2Client(config);
+  await uploadToR2({
+    s3: r2Client,
+    bucket: config.r2Bucket,
+    key: r2Key,
+    file: args.file,
+    force: args.force,
+  });
+  await verifyPublicUrl(videoUrl, fetchImpl);
+  await validateAccounts({ config, targetAccounts, fetchImpl });
+
+  const schedules = await createSchedules({
+    config,
+    targetAccounts,
+    post,
+    videoUrl,
+    now,
+    fetchImpl,
+  });
+  const polledSchedules = await pollSchedules({
+    config,
+    schedules,
+    fetchImpl,
+    sleep,
+  });
+
+  const receipt = {
+    post,
+    r2Bucket: config.r2Bucket,
+    r2Key,
+    videoUrl,
+    descriptionHash: sha256(post.description),
+    publishKey,
+    createdAt: now.toISOString(),
+    schedules: polledSchedules,
+  };
+
+  await writeReceipt(args.slug, receipt);
+  return { skipped: false, receipt };
+}

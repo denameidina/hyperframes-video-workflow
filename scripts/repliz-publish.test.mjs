@@ -12,10 +12,12 @@ import {
   basicAuthHeader,
   createSchedules,
   createR2Client,
+  loadConfig,
   makePublishKey,
   parseArgs,
   pollSchedules,
   readPostMetadata,
+  runPublish,
   shouldSkipPublish,
   uploadToR2,
   validateAccounts,
@@ -298,4 +300,100 @@ test("pollSchedules updates terminal statuses", async () => {
   });
 
   assert.deepEqual(polled, [{ accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", status: "success", postId: "post_1" }]);
+});
+
+function envFixture(overrides = {}) {
+  return {
+    REPLIZ_API_BASE_URL: "https://api.repliz.test",
+    REPLIZ_ACCESS_KEY: "access",
+    REPLIZ_SECRET_KEY: "secret",
+    CLOUDFLARE_ACCOUNT_ID: "cf_account",
+    R2_ACCESS_KEY_ID: "r2_access",
+    R2_SECRET_ACCESS_KEY: "r2_secret",
+    R2_BUCKET: "bucket",
+    R2_PUBLIC_BASE_URL: "https://media.example.com",
+    R2_PREFIX: "final-renders",
+    REPLIZ_TIKTOK_ACCOUNT_ID: "tk_1",
+    REPLIZ_INSTAGRAM_ACCOUNT_ID: "ig_1",
+    ...overrides,
+  };
+}
+
+test("loadConfig requires Repliz and R2 env but allows empty target platforms", () => {
+  assert.equal(loadConfig(envFixture()).r2Bucket, "bucket");
+  assert.throws(() => loadConfig(envFixture({ R2_BUCKET: "" })), /Missing env: R2_BUCKET/);
+});
+
+test("runPublish uploads to R2, creates schedules, writes receipt, and skips duplicate rerun", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  await writeFile(
+    path.join(slugDir, "repliz-publish.json"),
+    JSON.stringify({ post: { description: "Caption final", tags: ["editing"] } }),
+  );
+
+  const s3Calls = [];
+  const s3 = {
+    async send(command) {
+      s3Calls.push(command.constructor.name);
+      if (command.constructor.name === "HeadObjectCommand") {
+        const error = new Error("missing");
+        error.name = "NotFound";
+        throw error;
+      }
+      return { ETag: "\"uploaded\"" };
+    },
+  };
+
+  const fetchCalls = [];
+  const fetchImpl = async (url, options = {}) => {
+    fetchCalls.push({ url, options });
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/tk_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "tk_1", type: "tiktok", isConnected: true }) };
+    }
+    if (url.endsWith("/public/account/ig_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "ig_1", type: "instagram", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${fetchCalls.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success", postId: "post_1" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+
+  const first = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile],
+    env: envFixture(),
+    s3,
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(first.skipped, false);
+  assert.equal(first.receipt.schedules.length, 2);
+  assert.equal(first.receipt.videoUrl, "https://media.example.com/final-renders/0702-2/final.mp4");
+  assert.deepEqual(s3Calls, ["HeadObjectCommand", "PutObjectCommand"]);
+
+  const second = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile],
+    env: envFixture(),
+    s3,
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(second.skipped, true);
+  const receipt = JSON.parse(await readFile(path.join(slugDir, "repliz-publish.json"), "utf8"));
+  assert.equal(receipt.r2Key, "final-renders/0702-2/final.mp4");
+  assert.equal(receipt.post.description, "Caption final");
+  assert.equal(receipt.schedules[0].status, "success");
 });
