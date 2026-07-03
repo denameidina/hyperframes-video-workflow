@@ -1,5 +1,21 @@
 # HyperFrames Composition Project
 
+## Initial Setup After Clone
+
+For a fresh clone, read `docs/initial-setup.md` before running preview, render,
+or transcription commands. AI agents must also read
+`docs/ai-agent-initial-setup.md`.
+
+The project-local transcription tool is `vendor/whisper.cpp`. If it is missing,
+initialize the submodule and build/download the default model:
+
+```bash
+git submodule update --init --recursive vendor/whisper.cpp
+cmake -S vendor/whisper.cpp -B vendor/whisper.cpp/build
+cmake --build vendor/whisper.cpp/build -j --config Release
+sh vendor/whisper.cpp/models/download-ggml-model.sh large-v3-turbo
+```
+
 ## Dena Video Editing Context
 
 Before editing any Dena Meidina social video, read:
