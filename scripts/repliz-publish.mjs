@@ -162,3 +162,50 @@ export function buildSchedulePayload({ accountId, post, videoUrl, now = new Date
     scheduleAt: scheduleAtIso(post.scheduleAt, now),
   };
 }
+
+export function createR2Client({ cloudflareAccountId, r2AccessKeyId, r2SecretAccessKey }) {
+  return new S3Client({
+    region: "auto",
+    endpoint: `https://${cloudflareAccountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: r2AccessKeyId,
+      secretAccessKey: r2SecretAccessKey,
+    },
+  });
+}
+
+function isMissingObject(error) {
+  return error?.name === "NotFound" || error?.$metadata?.httpStatusCode === 404;
+}
+
+export async function uploadToR2({ s3, bucket, key, file, force }) {
+  if (!force) {
+    try {
+      await s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+      return { uploaded: false };
+    } catch (error) {
+      if (!isMissingObject(error)) throw error;
+    }
+  }
+
+  await access(file);
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: createReadStream(file),
+      ContentType: "video/mp4",
+    }),
+  );
+
+  return { uploaded: true };
+}
+
+export async function verifyPublicUrl(url, fetchImpl = fetch) {
+  const response = await fetchImpl(url, {
+    method: "GET",
+    headers: { Range: "bytes=0-0" },
+  });
+  if (response.status === 200 || response.status === 206) return true;
+  throw new Error(`R2 public URL is not reachable: ${response.status}`);
+}

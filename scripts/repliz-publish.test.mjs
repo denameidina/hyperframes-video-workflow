@@ -9,10 +9,13 @@ import {
   buildR2Key,
   buildSchedulePayload,
   buildTargetAccounts,
+  createR2Client,
   makePublishKey,
   parseArgs,
   readPostMetadata,
   shouldSkipPublish,
+  uploadToR2,
+  verifyPublicUrl,
 } from "./repliz-publish.mjs";
 
 test("parseArgs requires slug and file", () => {
@@ -114,4 +117,76 @@ test("duplicate guard compares publish key and respects force", () => {
   assert.equal(shouldSkipPublish(receipt, key, false), true);
   assert.equal(shouldSkipPublish(receipt, key, true), false);
   assert.equal(shouldSkipPublish(receipt, "different", false), false);
+});
+
+test("createR2Client uses Cloudflare R2 endpoint and auto region", async () => {
+  const client = createR2Client({
+    cloudflareAccountId: "cf_account",
+    r2AccessKeyId: "r2_access",
+    r2SecretAccessKey: "r2_secret",
+  });
+  assert.equal(await client.config.region(), "auto");
+  assert.equal((await client.config.endpoint()).hostname, "cf_account.r2.cloudflarestorage.com");
+});
+
+test("uploadToR2 skips existing object when force is false", async () => {
+  const calls = [];
+  const s3 = {
+    async send(command) {
+      calls.push(command.constructor.name);
+      return { ETag: "\"existing\"" };
+    },
+  };
+
+  const result = await uploadToR2({
+    s3,
+    bucket: "bucket",
+    key: "final-renders/0702-2/final.mp4",
+    file: "unused.mp4",
+    force: false,
+  });
+
+  assert.deepEqual(calls, ["HeadObjectCommand"]);
+  assert.deepEqual(result, { uploaded: false });
+});
+
+test("uploadToR2 uploads missing object with video/mp4 content type", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "r2-upload-"));
+  const file = path.join(dir, "final.mp4");
+  await writeFile(file, "fake mp4 bytes");
+
+  const commands = [];
+  const s3 = {
+    async send(command) {
+      commands.push(command);
+      if (command.constructor.name === "HeadObjectCommand") {
+        const error = new Error("missing");
+        error.name = "NotFound";
+        throw error;
+      }
+      return { ETag: "\"uploaded\"" };
+    },
+  };
+
+  const result = await uploadToR2({
+    s3,
+    bucket: "bucket",
+    key: "final-renders/0702-2/final.mp4",
+    file,
+    force: false,
+  });
+
+  assert.equal(result.uploaded, true);
+  assert.equal(commands[1].input.ContentType, "video/mp4");
+  assert.equal(commands[1].input.Bucket, "bucket");
+  assert.equal(commands[1].input.Key, "final-renders/0702-2/final.mp4");
+});
+
+test("verifyPublicUrl accepts 200 and 206 responses", async () => {
+  assert.equal(await verifyPublicUrl("https://media.example.com/video.mp4", async () => ({ status: 200 })), true);
+  assert.equal(await verifyPublicUrl("https://media.example.com/video.mp4", async () => ({ status: 206 })), true);
+  await assert.rejects(
+    () => verifyPublicUrl("https://media.example.com/video.mp4", async () => ({ status: 403 })),
+    /R2 public URL is not reachable/,
+  );
 });
