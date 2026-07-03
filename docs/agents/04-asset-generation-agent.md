@@ -34,6 +34,7 @@ Use this agent when:
 - A reference video uses visual techniques that need adaptation.
 - A raw talking-head video needs pattern interrupts every 4-8 seconds.
 - The video mentions tools, workflows, dashboards, CRM, ERP, code, AI agents, business systems, client delivery, or before/after proof.
+- The user provides a URL or the transcript mentions a live website, product, app, or tool that needs visual context.
 
 Do not use this agent when:
 
@@ -75,6 +76,7 @@ Good assets answer one of these questions:
 Bad assets are:
 
 - random AI robot images
+- AI slop: generic generated visuals that could fit any AI video
 - generic stock business photos
 - unrelated stickers
 - dense screenshots nobody can read
@@ -95,6 +97,7 @@ The agent may receive:
 - reference videos in `references/`
 - brand/product names
 - tool/app URLs or local app screenshots
+- user-provided links that need web research, screen capture, or screen recording
 - user constraints:
   - no generated people
   - no fake product UI
@@ -318,10 +321,10 @@ Prefer the simplest asset that works.
 
 Priority:
 
-1. Existing real source footage or screenshot.
-2. Simple diagram or text-support visual.
-3. Cropped/censored proof asset.
-4. Generated still.
+1. Existing real source footage, user-supplied media, or real web/app capture.
+2. Cropped/censored proof asset or focused screenshot/screen recording.
+3. Simple diagram or text-support visual.
+4. Generated still or designed bitmap support asset.
 5. Generated video.
 
 Generated video is the most expensive and least controllable. Use it only when it earns its place.
@@ -345,6 +348,7 @@ When preparing assets:
 
 - Use project-local output paths.
 - Move Codex-generated project assets into `videos/<slug>/assets/`; do not leave referenced files only in the Codex default output folder.
+- Actively consider Codex/image generation when a static card would feel stiff and a grounded bitmap still can explain the idea more clearly.
 - Keep originals if useful.
 - Export web/render-friendly formats.
 - Prefer PNG for overlays/stills.
@@ -360,6 +364,8 @@ Every asset must say where it came from:
 - `source-video-segment`
 - `user-supplied`
 - `screenshot`
+- `screen-recording`
+- `web-research`
 - `generated`
 - `designed`
 - `reference-analysis`
@@ -479,6 +485,19 @@ When using screenshots:
 
 Do not use screenshots as tiny wallpaper behind captions.
 
+## URL Research And Screen Capture Rules
+
+When the user provides a URL, or the transcript names a specific product/site/tool that materially affects the story:
+
+1. Research or inspect the current page before planning the asset.
+2. Capture local screenshots or short screen recordings when the real UI helps the viewer understand the point.
+3. Match every capture to a transcript time window and explain the reason in `asset-plan.md`.
+4. Store captures under `videos/<slug>/assets/`; no remote images, videos, or live fetches in the render path.
+5. Crop for phone readability and redact private/session data.
+6. If the page is inaccessible, private, or visually unhelpful, document that and use a generated still, simple diagram, or designed card instead.
+
+For a product/tool URL, prefer real captured UI for proof/context. Use generated assets for mood, abstraction, or process visualization, not as fake proof of what the live product does.
+
 ## Diagram Rules
 
 Diagrams should be phone-readable.
@@ -588,6 +607,8 @@ Reason:
 ## Screenshot/Capture Notes
 
 - Source:
+- URL researched:
+- Screen recording:
 - Crop:
 - Redactions:
 
@@ -682,6 +703,7 @@ If generated assets look generic:
 
 - Reject and revise prompt.
 - Use real screenshots, simple diagrams, or text cards instead.
+- If it still reads as AI slop after one revision, remove it.
 
 If generated media includes bad text:
 

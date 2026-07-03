@@ -291,6 +291,7 @@ Rules:
 
 - preserve caption text unless the Caption Agent marked a correction
 - keep each caption beat editable as text
+- preserve full spoken-word coverage from `caption-beats.json`; do not collapse running captions into sparse highlight-only text
 - use stable ids such as `cap-001`
 - use one highlighted phrase per beat by default
 - avoid placing captions over the mouth, key objects, or platform UI
@@ -361,6 +362,20 @@ Good motion mapping:
 
 Do not add new motion because it looks interesting. Only implement motion that supports the approved plan.
 
+### 6a. Implement SFX Cues
+
+If `motion-plan.md` or `overlay-timeline.json` includes SFX cues, wire them as local audio assets or a prepared SFX stem.
+
+Rules:
+
+- keep SFX files under `videos/<slug>/assets/` or another documented local project path
+- time cues to the same processed-video timeline as captions and overlays
+- keep SFX under speech; do not mask spoken words
+- document any skipped cue in `assembly-notes.md`
+- if no SFX asset exists for a required cue, route back to Motion/Overlay Agent instead of silently omitting it
+
+Do not rely on remote sound URLs in the render path.
+
 ### 7. Validate Layout
 
 Check:
@@ -374,6 +389,7 @@ Check:
 - no text clipped by its container
 - no asset path missing
 - no timing mismatch at the first or last frame
+- planned SFX cues are wired or explicitly documented as skipped
 
 If the composition uses `data-layout-allow-overflow`, document why in `assembly-notes.md`.
 
@@ -551,6 +567,7 @@ Create `videos/<slug>/assembly-notes.md`:
 - Caption placement:
 - Overlay placement:
 - Motion primitives:
+- SFX cues:
 - Safe area adjustments:
 
 ## Deviations From Plan
@@ -586,12 +603,14 @@ Create `videos/<slug>/assembly-checklist.md`:
 - [ ] Timeline is registered on `window.__timelines`
 - [ ] Timeline key matches composition id
 - [ ] Assets are local
+- [ ] SFX assets/stems are local when planned
 - [ ] No `Date.now()`
 - [ ] No `Math.random()`
 - [ ] No network fetches or remote render assets
 - [ ] Captions stay inside safe area
 - [ ] Overlays do not hide important face/object regions
 - [ ] Text fits inside containers
+- [ ] Planned SFX cues are implemented or documented
 - [ ] `npm run check` passes
 - [ ] Warnings are reviewed
 ```

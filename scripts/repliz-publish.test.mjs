@@ -25,10 +25,11 @@ import {
 } from "./repliz-publish.mjs";
 
 test("parseArgs requires slug and file", () => {
-  assert.deepEqual(parseArgs(["--slug", "videos/0702-2", "--file", "renders/final.mp4"]), {
+  assert.deepEqual(parseArgs(["--slug", "videos/0702-2", "--file", "renders/final.mp4", "--approved"]), {
     slug: "videos/0702-2",
     file: "renders/final.mp4",
     force: false,
+    approved: true,
     help: false,
   });
   assert.equal(parseArgs(["--help"]).help, true);
@@ -136,14 +137,15 @@ test("uploadToR2 uploads with Wrangler and video/mp4 content type", async () => 
     key: "final-renders/0702-2/final.mp4",
     file,
     force: false,
-    runCommand: async (command, args) => {
-      calls.push({ command, args });
+    accountId: "cf_account",
+    runCommand: async (command, args, options) => {
+      calls.push({ command, args, options });
       return { stdout: "ok", stderr: "" };
     },
   });
 
   assert.deepEqual(result, { uploaded: true });
-  assert.deepEqual(calls, [
+  assert.deepEqual(calls.map(({ command, args }) => ({ command, args })), [
     {
       command: "npx",
       args: [
@@ -152,6 +154,7 @@ test("uploadToR2 uploads with Wrangler and video/mp4 content type", async () => 
         "object",
         "put",
         "bucket/final-renders/0702-2/final.mp4",
+        "--remote",
         "--file",
         file,
         "--content-type",
@@ -159,6 +162,7 @@ test("uploadToR2 uploads with Wrangler and video/mp4 content type", async () => 
       ],
     },
   ]);
+  assert.equal(calls[0].options.env.CLOUDFLARE_ACCOUNT_ID, "cf_account");
 });
 
 test("uploadToR2 passes Wrangler force flag when requested", async () => {
@@ -172,13 +176,36 @@ test("uploadToR2 passes Wrangler force flag when requested", async () => {
     key: "final-renders/0702-2/final.mp4",
     file,
     force: true,
-    runCommand: async (command, args) => {
-      calls.push({ command, args });
+    accountId: "cf_account",
+    runCommand: async (command, args, options) => {
+      calls.push({ command, args, options });
       return { stdout: "ok", stderr: "" };
     },
   });
 
   assert.equal(calls[0].args.at(-1), "--force");
+});
+
+test("uploadToR2 passes Cloudflare account ID without Wrangler profile", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "r2-upload-account-"));
+  const file = path.join(dir, "final.mp4");
+  await writeFile(file, "fake mp4 bytes");
+
+  const calls = [];
+  await uploadToR2({
+    bucket: "bucket",
+    key: "final-renders/0702-2/final.mp4",
+    file,
+    force: false,
+    accountId: "nafanesia_account_id",
+    runCommand: async (command, args, options) => {
+      calls.push({ command, args, options });
+      return { stdout: "ok", stderr: "" };
+    },
+  });
+
+  assert.equal(calls[0].args.includes("--profile"), false);
+  assert.equal(calls[0].options.env.CLOUDFLARE_ACCOUNT_ID, "nafanesia_account_id");
 });
 
 test("verifyPublicUrl accepts 200 and 206 responses", async () => {
@@ -274,6 +301,47 @@ test("createSchedules posts one Repliz schedule per target account", async () =>
   ]);
 });
 
+test("createSchedules sanitizes YouTube description without changing other platforms", async () => {
+  const calls = [];
+  await createSchedules({
+    config: {
+      replizApiBaseUrl: "https://api.repliz.test",
+      replizAccessKey: "access",
+      replizSecretKey: "secret",
+    },
+    targetAccounts: [
+      { platform: "youtube", accountId: "yt_1" },
+      { platform: "tiktok", accountId: "tk_1" },
+    ],
+    post: {
+      title: "",
+      description: "raw video -> Codex -> HyperFrames -> R2 -> Repliz/API social automation\n\n#AIWorkflow #Repliz",
+      topic: "",
+      type: "video",
+      tags: [],
+      mentions: [],
+      targetCountries: ["ID"],
+      scheduleAt: "2026-07-03T01:40:08.119Z",
+    },
+    videoUrl: "https://media.example.com/final-renders/0702-2/final.mp4",
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ scheduleId: `schedule_${calls.length}` }),
+      };
+    },
+  });
+
+  const youtubePayload = JSON.parse(calls[0].options.body);
+  const tiktokPayload = JSON.parse(calls[1].options.body);
+  assert.equal(youtubePayload.description.includes("->"), false);
+  assert.equal(youtubePayload.description.includes("Repliz/API"), false);
+  assert.match(youtubePayload.description, /raw video ke Codex ke HyperFrames ke R2 ke Repliz dan API social automation/);
+  assert.equal(tiktokPayload.description, "raw video -> Codex -> HyperFrames -> R2 -> Repliz/API social automation\n\n#AIWorkflow #Repliz");
+});
+
 test("pollSchedules updates terminal statuses", async () => {
   const polled = await pollSchedules({
     config: {
@@ -300,6 +368,7 @@ function envFixture(overrides = {}) {
     REPLIZ_API_BASE_URL: "https://api.repliz.test",
     REPLIZ_ACCESS_KEY: "access",
     REPLIZ_SECRET_KEY: "secret",
+    CLOUDFLARE_ACCOUNT_ID: "cf_account",
     R2_BUCKET: "bucket",
     R2_PUBLIC_BASE_URL: "https://media.example.com",
     R2_PREFIX: "final-renders",
@@ -311,7 +380,25 @@ function envFixture(overrides = {}) {
 
 test("loadConfig requires Repliz and R2 env but allows empty target platforms", () => {
   assert.equal(loadConfig(envFixture()).r2Bucket, "bucket");
+  assert.equal(loadConfig(envFixture()).cloudflareAccountId, "cf_account");
   assert.throws(() => loadConfig(envFixture({ R2_BUCKET: "" })), /Missing env: R2_BUCKET/);
+});
+
+test("runPublish requires approval before uploading to R2 or scheduling", async () => {
+  const calls = [];
+
+  await assert.rejects(
+    () =>
+      runPublish({
+        argv: ["--slug", "videos/0702-2", "--file", "renders/final.mp4"],
+        env: {},
+        runCommand: async () => calls.push("wrangler"),
+        fetchImpl: async () => calls.push("fetch"),
+      }),
+    /requires user approval/,
+  );
+
+  assert.deepEqual(calls, []);
 });
 
 test("runPublish uploads to R2, creates schedules, writes receipt, and skips duplicate rerun", async () => {
@@ -348,10 +435,10 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   };
 
   const first = await runPublish({
-    argv: ["--slug", slugDir, "--file", renderFile],
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
     env: envFixture(),
-    runCommand: async (command, args) => {
-      wranglerCalls.push({ command, args });
+    runCommand: async (command, args, options) => {
+      wranglerCalls.push({ command, args, options });
       return { stdout: "ok", stderr: "" };
     },
     fetchImpl,
@@ -365,12 +452,13 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   assert.equal(wranglerCalls.length, 1);
   assert.equal(wranglerCalls[0].command, "npx");
   assert.equal(wranglerCalls[0].args[4], "bucket/final-renders/0702-2/final.mp4");
+  assert.equal(wranglerCalls[0].options.env.CLOUDFLARE_ACCOUNT_ID, "cf_account");
 
   const second = await runPublish({
-    argv: ["--slug", slugDir, "--file", renderFile],
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
     env: envFixture(),
-    runCommand: async (command, args) => {
-      wranglerCalls.push({ command, args });
+    runCommand: async (command, args, options) => {
+      wranglerCalls.push({ command, args, options });
       return { stdout: "ok", stderr: "" };
     },
     fetchImpl,

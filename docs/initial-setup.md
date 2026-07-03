@@ -14,6 +14,7 @@ HyperFrames dan siap membuat transcript dengan `vendor/whisper.cpp`.
 - FFmpeg/ffprobe.
 - `curl` atau `wget` untuk download model Whisper.
 - Koneksi internet untuk `npx hyperframes@0.7.24`, submodule, dan model.
+- Wrangler via `npx wrangler` jika akan upload final render ke Cloudflare R2/Repliz.
 
 macOS quick install:
 
@@ -136,3 +137,35 @@ Publish:
 ```bash
 npm run publish
 ```
+
+## Optional Repliz/R2 Auto Publish
+
+Auto publish memakai Wrangler untuk upload MP4 final ke Cloudflare R2, lalu
+Repliz memakai URL publik R2 itu untuk scheduling. Flow ini opsional dan hanya
+boleh dijalankan setelah user review dan approve hasil edit.
+
+Setup:
+
+```bash
+npx wrangler login
+cp .env.example .env
+```
+
+Isi `.env` dengan credential Repliz, target account social, dan Cloudflare:
+
+```bash
+R2_BUCKET=<r2-bucket>
+R2_PUBLIC_BASE_URL=https://<r2-public-domain>
+R2_PREFIX=<r2-prefix>
+CLOUDFLARE_ACCOUNT_ID=<cloudflare-account-id>
+```
+
+Tidak perlu `wrangler.jsonc`, S3 access key, atau R2 secret key untuk flow ini.
+
+Command publish setelah user approve:
+
+```bash
+npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approved
+```
+
+Tanpa `--approved`, script wajib berhenti sebelum upload R2 atau scheduling Repliz.

@@ -227,6 +227,7 @@ Do not copy:
 List assets required from downstream agents:
 
 - Screenshots
+- URL/site captures or screen recordings
 - Generated still images
 - Generated b-roll clips
 - Icons/stickers
@@ -243,6 +244,7 @@ Each asset request must include:
 - Style
 - Whether it is mandatory or optional
 - What it must not show
+- Source or URL to inspect, when relevant
 
 Example:
 
@@ -254,6 +256,29 @@ Style: cinematic but credible, no robot faces, no sci-fi hologram clutter
 Required: optional
 Do not show: fake ChatGPT UI, unreadable dashboards, random neon robots
 ```
+
+If the user provides a URL or the story depends on a live tool/product/site, request Agent 04 to research or inspect that link and create local screenshot/screen-record assets when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.
+
+When a real capture is not enough, explicitly allow Codex/image generation for grounded bitmap support assets. Generated assets should clarify mood, metaphor, or process, but must not be presented as real proof.
+
+### 8. Choose A Non-Promissory CTA
+
+CTA should invite a lightweight viewer action without promising a future deliverable.
+
+Good CTA shapes:
+
+- save/comment question
+- "komen `workflow` kalau ini relate"
+- "cerita di komentar kalau lo pernah ngalamin"
+- "follow kalau lo suka bahas AI dipakai di bisnis nyata"
+
+Avoid CTA that implies Dena will definitely send, publish, teach, or share something later unless the user explicitly requested that promise.
+
+Bad default CTA:
+
+- "Komen `mau`, nanti gue kirim source code."
+- "Gue bakal breakdown lengkap di video berikutnya."
+- "DM gue, nanti gue share template."
 
 ## Output Template
 
@@ -372,6 +397,7 @@ A Creative Director brief is good when:
 - The direction still sounds like Dena.
 - The asset requests are tied to meaning, not decoration.
 - The CTA follows naturally from the story.
+- The CTA is non-promissory unless the user explicitly asked for a promise.
 - The format is chosen because the source supports it.
 
 A brief is weak when:
@@ -431,7 +457,7 @@ Mission line:
 Gue mau buktiin AI bukan gimmick, tapi sistem kerja bisnis nyata.
 
 Humanizer CTA:
-Kalau lo mau gue breakdown workflow-nya, komen "mau".
+Kalau topik ini relate, komen "workflow".
 ```
 
 ## Handoff Contract
@@ -444,7 +470,7 @@ Bad handoff:
 
 Good handoff:
 
-> Use `cinematic-operator` grammar. Keep captions sparse during the manifesto line. Add dashboard proof overlay only when Dena mentions workflow automation. Do not add random AI robot imagery. CTA should ask whether viewers want a workflow breakdown.
+> Use `cinematic-operator` grammar. Keep captions sparse during the manifesto line. Add dashboard proof overlay only when Dena mentions workflow automation. Do not add random AI robot imagery. CTA should invite a comment without promising a future breakdown.
 
 ## Failure Modes
 

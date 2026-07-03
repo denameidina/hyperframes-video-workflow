@@ -24,6 +24,16 @@ Before editing any Dena Meidina social video, read:
 
 Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, caption style, edit pipeline, and HyperFrames layer contract. Do not ask the user to re-explain the style unless the uploaded video creates a real ambiguity.
 
+### Dena Social Video Non-Negotiables
+
+- Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
+- Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
+- When a user provides a URL or the transcript mentions a tool/product/site, Agent 04 must research or inspect it, capture local screenshots/screen recordings when useful, and time those assets to the transcript context.
+- Use Codex/image generation for grounded bitmap support assets when real captures are not enough. Do not default to stiff cards/SVGs if a generated still, texture, or short visual can explain the idea better.
+- Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
+- Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
+- CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
+
 ## Dena Agent Workflow Discipline
 
 For Dena Meidina social-video work, use the specialized agents in `docs/agents/` as the operating workflow. These files are not optional notes; they are the project contract for planning, editing, assembling, and reviewing videos.
@@ -86,6 +96,17 @@ For a complete social video, expect this chain:
 - `qa-punch-list.md`
 - `final-approval.md`, only after QA passes
 
+### Repliz/R2 Auto Publish Gate
+
+Auto publish is documented in `docs/repliz/integration-spec.md`.
+
+- After final render, stop and ask the user to review/approve the edited video.
+- Do not upload to Cloudflare R2 or schedule Repliz until the user explicitly approves/confirms.
+- Only after approval, run `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
+- R2 uses Wrangler remote upload, `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and public base `https://<r2-public-domain>`.
+- Do not add S3 access keys, R2 secret keys, or `wrangler.jsonc` for this flow unless the user explicitly asks.
+- Do not test or call Repliz unless the user explicitly asks; R2-only smoke tests are allowed when requested.
+
 ### Interaction With HyperFrames
 
 Agent 06 does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow Agent 06. After editing any `.html` composition, run `npm run check` before reporting completion.
@@ -123,6 +144,8 @@ npm run dev          # start the preview server (long-running — keep it alive 
 npm run check        # lint + validate + inspect
 npm run render       # render to MP4
 npm run publish      # publish and get a shareable link
+npm run test:repliz  # unit test R2/Repliz CLI without real network
+npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved
 npx hyperframes lint --verbose  # include info-level findings
 npx hyperframes lint --json     # machine-readable output for CI
 npx hyperframes docs <topic> # reference docs in terminal

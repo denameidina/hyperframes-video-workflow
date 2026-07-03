@@ -29,7 +29,7 @@ const DEFAULT_POST = {
 };
 
 export function parseArgs(argv) {
-  const args = { slug: "", file: "", force: false, help: false };
+  const args = { slug: "", file: "", force: false, approved: false, help: false };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -37,6 +37,8 @@ export function parseArgs(argv) {
       args.help = true;
     } else if (arg === "--force") {
       args.force = true;
+    } else if (arg === "--approved") {
+      args.approved = true;
     } else if (arg === "--slug") {
       args.slug = argv[++i] || "";
     } else if (arg === "--file") {
@@ -119,10 +121,31 @@ export function scheduleAtIso(scheduleAt, now = new Date()) {
   return new Date(scheduleAt).toISOString();
 }
 
-export function buildSchedulePayload({ accountId, post, videoUrl, now = new Date() }) {
+export function sanitizeDescriptionForPlatform(description, platform) {
+  const text = String(description || "");
+  if (platform !== "youtube") return text;
+
+  return text
+    .replace(/\s*(?:->|=>|→|➜|➔)\s*/g, " ke ")
+    .replace(
+      /\b([\p{L}\p{N}][\p{L}\p{N}-]*)\/([\p{L}\p{N}][\p{L}\p{N}-]*)\b/gu,
+      (match, left, right, offset, input) => {
+        if (input.slice(Math.max(0, offset - 16), offset).includes("://")) return match;
+        return `${left} dan ${right}`;
+      },
+    )
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+export function buildSchedulePayload({ accountId, platform, post, videoUrl, now = new Date() }) {
+  const description = sanitizeDescriptionForPlatform(post.description, platform);
+
   return {
     title: post.title,
-    description: post.description,
+    description,
     topic: post.topic,
     type: post.type,
     medias: [
@@ -161,7 +184,7 @@ export function buildSchedulePayload({ accountId, post, videoUrl, now = new Date
   };
 }
 
-export async function uploadToR2({ bucket, key, file, force, runCommand = execFileAsync }) {
+export async function uploadToR2({ bucket, key, file, force, accountId, runCommand = execFileAsync }) {
   await access(file);
   const args = [
     "wrangler",
@@ -169,6 +192,7 @@ export async function uploadToR2({ bucket, key, file, force, runCommand = execFi
     "object",
     "put",
     `${bucket}/${key}`,
+    "--remote",
     "--file",
     file,
     "--content-type",
@@ -176,7 +200,9 @@ export async function uploadToR2({ bucket, key, file, force, runCommand = execFi
   ];
   if (force) args.push("--force");
 
-  await runCommand("npx", args);
+  await runCommand("npx", args, {
+    env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: accountId },
+  });
 
   return { uploaded: true };
 }
@@ -248,6 +274,7 @@ export async function createSchedules({ config, targetAccounts, post, videoUrl, 
     try {
       const payload = buildSchedulePayload({
         accountId: target.accountId,
+        platform: target.platform,
         post,
         videoUrl,
         now,
@@ -317,6 +344,7 @@ export function loadConfig(env) {
     "REPLIZ_API_BASE_URL",
     "REPLIZ_ACCESS_KEY",
     "REPLIZ_SECRET_KEY",
+    "CLOUDFLARE_ACCOUNT_ID",
     "R2_BUCKET",
     "R2_PUBLIC_BASE_URL",
   ];
@@ -327,6 +355,7 @@ export function loadConfig(env) {
     replizApiBaseUrl: env.REPLIZ_API_BASE_URL.trim(),
     replizAccessKey: env.REPLIZ_ACCESS_KEY.trim(),
     replizSecretKey: env.REPLIZ_SECRET_KEY.trim(),
+    cloudflareAccountId: env.CLOUDFLARE_ACCOUNT_ID.trim(),
     r2Bucket: env.R2_BUCKET.trim(),
     r2PublicBaseUrl: env.R2_PUBLIC_BASE_URL.trim(),
     r2Prefix: String(env.R2_PREFIX || "final-renders").trim() || "final-renders",
@@ -349,6 +378,9 @@ export async function runPublish({
 }) {
   const args = parseArgs(argv);
   if (args.help) return { help: true };
+  if (!args.approved) {
+    throw new Error("Publishing requires user approval. Re-run with --approved after review.");
+  }
 
   const config = loadConfig(env);
   const targetAccounts = buildTargetAccounts(env);
@@ -373,6 +405,7 @@ export async function runPublish({
     key: r2Key,
     file: args.file,
     force: args.force,
+    accountId: config.cloudflareAccountId,
     runCommand,
   });
   await verifyPublicUrl(videoUrl, fetchImpl);
@@ -410,11 +443,12 @@ export async function runPublish({
 
 function printHelp() {
   console.log(`Usage:
-  npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4
+  npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
 
 Options:
   --slug <dir>   Video working directory containing repliz-publish.json receipt/metadata
   --file <mp4>   Rendered MP4 file to upload to Cloudflare R2
+  --approved     Required after user review; unlocks R2 upload and Repliz scheduling
   --force        Re-upload to R2 and create new Repliz schedules
   --help         Show this help
 `);

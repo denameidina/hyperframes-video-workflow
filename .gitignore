@@ -28,6 +28,7 @@ node_modules/
 # caches and temporary files
 .DS_Store
 .cache/
+.wrangler/
 tmp/
 temp/
 *.log

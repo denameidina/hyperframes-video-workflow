@@ -4,6 +4,19 @@ Repo ini adalah workspace HyperFrames untuk komposisi video sosial Dena Meidina.
 Dokumen ini ditulis supaya manusia dan AI agent bisa clone, paham kebutuhan
 minimum, lalu menjalankan project tanpa menebak-nebak.
 
+## Open Source Status
+
+Source code project ini dirilis dengan lisensi MIT. Raw video, render final,
+credential, dan media kerja pribadi tidak disimpan di git.
+
+Catatan penting:
+
+- `raw/`, `videos/`, `references/`, dan `renders/` adalah workspace lokal yang
+  ignored by git.
+- File `.env` tidak boleh di-commit. Pakai `.env.example` sebagai template.
+- Beberapa vendored skill/assets punya lisensi pihak ketiga. Lihat
+  `THIRD_PARTY_NOTICES.md`.
+
 ## Requirements
 
 - Node.js 22+.
@@ -12,6 +25,8 @@ minimum, lalu menjalankan project tanpa menebak-nebak.
 - Koneksi internet saat pertama kali menjalankan command, karena script memakai
   `npx --yes hyperframes@0.7.24`.
 - File media lokal untuk komposisi aktif, karena file besar tidak disimpan di git.
+- Wrangler via `npx wrangler` hanya diperlukan untuk upload final ke Cloudflare
+  R2/Repliz auto publish.
 
 Tidak ada dependency npm lokal yang wajib di-install sekarang. `package.json`
 langsung menjalankan HyperFrames lewat `npx`.
@@ -39,20 +54,8 @@ sh vendor/whisper.cpp/models/download-ggml-model.sh large-v3-turbo
 ```
 
 Kalau ingin preview/render komposisi aktif, pulihkan dulu file media lokal yang
-diabaikan git:
-
-```text
-videos/0702-2/processed-compact-plus.mp4
-videos/0702-2/audio-compact-sync.m4a
-videos/0702-2/assets/editing-bottleneck.svg
-videos/0702-2/assets/tool-stack.svg
-videos/0702-2/assets/workflow-pipeline.svg
-videos/0702-2/assets/monitor-proof-blurred.jpg
-videos/0702-2/assets/transcript-cut-flow.svg
-```
-
-Minta folder `videos/0702-2/` dari pemilik project, atau regenerate asset lewat
-workflow Dena di `docs/`.
+diabaikan git. Cek path yang dipakai di `index.html`, lalu restore atau
+regenerate folder kerja terkait di `videos/<slug>/`.
 
 ## How To Run
 
@@ -83,14 +86,36 @@ Publish dan ambil link:
 npm run publish
 ```
 
+Auto publish final render ke Repliz lewat Cloudflare R2:
+
+```bash
+npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
+```
+
+Jalankan command Repliz hanya setelah user review dan approve hasil edit. Tanpa
+`--approved`, script berhenti sebelum upload R2 atau scheduling Repliz. R2
+memakai Wrangler remote upload ke bucket dari `R2_BUCKET` dengan public base
+`https://<r2-public-domain>`; account dipilih lewat `CLOUDFLARE_ACCOUNT_ID` di
+`.env`, bukan S3 key atau `wrangler.jsonc`.
+
+Setup minimal:
+
+```bash
+npx wrangler login
+cp .env.example .env
+npm run test:repliz
+```
+
 ## Project Layout
 
 ```text
 index.html                              main HyperFrames composition
 package.json                            script dev/check/render/publish
+scripts/repliz-publish.mjs              R2 upload + Repliz scheduling CLI
 hyperframes.json                        konfigurasi path dan registry HyperFrames
 meta.json                               metadata project
 docs/dena-social-video-style-guide.md   style guide Dena
+docs/repliz/integration-spec.md         spec R2/Repliz auto publish
 docs/initial-setup.md                   setup awal untuk human/agent
 docs/ai-agent-initial-setup.md          checklist setup khusus AI agent
 docs/agents/                            workflow agent 01-07
@@ -157,3 +182,17 @@ renders/
 
 Kalau preview blank atau render gagal setelah clone, cek dulu apakah media lokal
 yang dibutuhkan `index.html` sudah ada.
+
+## Open Source Release Checklist
+
+Sebelum push public:
+
+```bash
+npm run test:repliz
+rg -n --hidden --glob '!.git/**' --glob '!node_modules/**' --glob '!vendor/**' \
+  'REPLIZ_(ACCESS|SECRET)_KEY|CLOUDFLARE_API_TOKEN|-----BEGIN .*PRIVATE KEY-----|sk-[A-Za-z0-9_-]{20,}'
+git status --short
+```
+
+Pastikan `git status --short --ignored` tidak menunjukkan raw/render/media
+pribadi sebagai tracked file.

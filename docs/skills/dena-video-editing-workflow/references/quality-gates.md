@@ -13,6 +13,15 @@ The edit must:
 - avoid random sticker/meme clutter
 - use reference videos as mechanics, not identity copying
 - end with one clear CTA
+- keep CTA non-promissory unless the user explicitly approved a promise
+
+## Pacing Gate
+
+The base edit must:
+
+- use `1.2x` speed for Dena storytelling/talking-head content by default
+- document any lower speed in `edit-decision-notes.md`
+- keep speech clear enough for viewers to follow without strain
 
 ## Caption Gate
 
@@ -22,6 +31,7 @@ Captions must:
 - stay out of platform bottom controls
 - avoid covering mouth, face, or key objects
 - use short phrase beats, ideally `1-4` words
+- account for every spoken word in the locked processed transcript for storytelling/talking-head edits
 - highlight only meaningful words or short phrases
 - use yellow sparingly
 - match speech timing closely
@@ -39,6 +49,22 @@ Every overlay or asset must do at least one job:
 - support CTA
 
 Reject assets that are generic, fake-looking, privacy-risky, unreadable, or unrelated.
+
+If the user provides a URL or the transcript mentions a tool/product/site, Agent 04 must either:
+
+- provide local screenshot/screen-record assets matched to transcript windows, or
+- document why capture was unnecessary or unsafe and provide a better generated/diagram alternative.
+
+Generated images/video are acceptable when grounded in the brief and clearly not presented as real proof.
+
+## Motion And SFX Gate
+
+Designed recuts must:
+
+- use pattern interrupts at a useful cadence for the content lane
+- include purposeful SFX cue notes when transitions, proof reveals, or title hits need impact
+- verify SFX is audible in the final render but does not cover speech
+- avoid motion/SFX that feels generic, chaotic, or detached from the transcript
 
 ## HyperFrames Gate
 
@@ -85,3 +111,19 @@ Before final render:
 5. Render only after blockers are gone.
 
 After render, review the MP4 separately from the source HTML for font fallback, blank frames, z-index issues, audio loss, timing drift, and export duration mismatch.
+
+## Publish Gate
+
+Final QA approval is not the same as user approval to publish.
+
+1. Render and review the MP4.
+2. Send the result to the user and wait for explicit approval/confirmation.
+3. Only after approval, run:
+
+```bash
+npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved
+```
+
+The script must refuse upload/scheduling without `--approved`. R2 uses Wrangler
+remote upload to bucket from `R2_BUCKET` and public base `https://<r2-public-domain>`.
+Do not call Repliz during QA unless the user explicitly requests it.

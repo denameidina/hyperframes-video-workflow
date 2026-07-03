@@ -37,6 +37,7 @@ Use exactly the agent that owns the current decision:
 | Overlay timing, pattern interrupts, zooms, effects, transitions | `docs/agents/05-motion-overlay-agent.md` |
 | `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly | `docs/agents/06-hyperframes-assembly-agent.md` |
 | Final review, punch list, render/platform readiness, approval | `docs/agents/07-qa-review-agent.md` |
+| R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
 
@@ -46,10 +47,13 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 
 - Do not rerun the full agent chain by default. Reuse existing artifacts, route only the broken part, and update downstream files that depend on it.
 - Treat "boring motion", "too much transcript was cut", "needs non-slop assets", and "no sound effects" as one targeted revision path: keep the compact cut as the baseline when it feels denser, Agent 02 restores only missing context, Agent 04 creates local/manual explanatory assets when useful, Agent 05 adds purposeful motion plus SFX timing, Agent 06 assembles, and Agent 07 re-verifies.
+- Treat "captions skipped words" as a Caption Agent bug by default. Regenerate or realign from the locked processed word-level transcript so every surviving spoken word is represented by active running captions.
 - Default recut intensity is `light-medium`: remove long silence, heavy filler, and clear repetition only. Do not force a viral hard-cut unless the user asks for aggressive pacing.
 - Lock the base cut before final captions. If `processed.mp4` changes, regenerate or realign `caption-beats.json` from the processed video instead of manually nudging old raw-timeline captions.
 - If captions, assets, motion, or SFX feel out of sync after a compact recut, transcribe the locked processed audio and retime `caption-beats.json`, `overlay-timeline.json`, HTML clips, and SFX cues from the same cue map.
 - If the user wants source code/editor footage visible as proof, keep overlays as compact callouts in unused top/side space. Do not use large privacy/context masks that hide the proof moment.
+- If the user provides a link or the transcript names a tool/product/site, route to Agent 04 for web research/inspection and local screenshot or screen-record capture before motion planning.
+- If real captures do not explain the point well enough, use Codex/image generation for grounded bitmap stills or short support visuals instead of stiff filler cards.
 - Preview with frame grabs/contact sheets first. Run full render only after cut, captions, and overlays look correct, then rerender only for blocker/major fixes.
 - For Dena raw talking-head clips, preserve natural context without killing density. A compact 55-70s cut can beat a fuller 80-100s cut when the lesson still lands.
 - If the user says SFX has no sound, verify both the solo SFX stem and the final render audio with a level scan. File existence is not enough; cues that peak too low are effectively missing.
@@ -63,11 +67,17 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Use Indonesian by default and preserve Dena's natural register.
 - Treat reference videos as ingredients, not costumes.
 - Keep Dena positioned as a credible AI systems builder, senior developer, founder/operator.
+- Default Dena storytelling/talking-head videos require running captions that cover every spoken word surviving the cut, not only highlight phrases.
+- Default processed speed is `1.2x`; any lower speed needs a documented clarity/emotion exception.
 - Keep captions readable on phone: short phrases, white/black base, selective yellow emphasis.
-- Keep overlays purposeful: clarify, prove, reset attention, or transition.
+- Keep overlays purposeful: clarify, prove, reset attention, or transition. URL/tool/product mentions need researched/captured or generated context assets when they help viewer understanding.
+- Motion plans for designed recuts must include purposeful, audible-but-under-speech SFX cues when transitions, proof reveals, or title hits need impact.
+- CTA must be non-promissory unless the user explicitly approves a promise.
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
 - After any `.html` edit, run `npm run check` and fix errors before handoff.
+- After final render, stop for user review. Do not upload to R2 or schedule Repliz until the user explicitly approves.
+- Repliz publish must use `--approved`; R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`.
 
 ## Handoff Contract
 

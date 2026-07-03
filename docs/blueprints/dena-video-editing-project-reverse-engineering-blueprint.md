@@ -46,6 +46,13 @@ The reconstructed workflow should produce handoff artifacts in order:
 - qa-punch-list.md
 - final-approval.md only after QA passes
 
+Optional auto-publish must be gated:
+- render the final MP4 first
+- stop for explicit user review/approval
+- only after approval may an agent upload to Cloudflare R2 and schedule Repliz
+- the publish command must require an explicit approval flag, for example `--approved`
+- documentation and examples must use placeholder env values only; never expose real `.env` values in repo files
+
 The reconstructed HyperFrames assembly rules:
 - use index.html as the main composition
 - every timed visible element must have class="clip"
@@ -87,6 +94,7 @@ Recreate these layers:
 5. HyperFrames project shell: `index.html`, `meta.json`, `package.json`, optional `compositions/`.
 6. Video work folders under `videos/<slug>/`.
 7. QA and render-readiness gates.
+8. Optional R2/Repliz auto-publish gate with user approval and placeholder-only env docs.
 
 The blueprint itself should remain standalone. Do not wire it into runtime instructions unless a user explicitly asks for a discoverable handoff document.
 
@@ -103,6 +111,7 @@ Recommended tools:
   - `package.json`
   - optional `compositions/`
 - local assets only for render paths
+- optional Wrangler CLI via `npx wrangler` for R2 upload
 
 Project commands:
 
@@ -111,6 +120,8 @@ npm run dev
 npm run check
 npm run render
 npm run publish
+npm run test:repliz
+npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved
 npx hyperframes lint --verbose
 npx hyperframes lint --json
 npx hyperframes docs <topic>
@@ -121,6 +132,8 @@ Important:
 - `npm run dev` is long-running. Run it in the background if using an agent environment that supports background processes.
 - Run `npm run check` after every `.html` composition edit.
 - Docs-only edits do not require `npm run check`.
+- `npm run repliz:publish` must refuse R2 upload and Repliz scheduling unless `--approved` is present after explicit user review.
+- Keep `.env`, account IDs, bucket names, public domains, API keys, and social account IDs out of docs. Use placeholders such as `<r2-bucket>`, `<r2-public-domain>`, `<cloudflare-account-id>`, and `<repliz-api-base-url>`.
 
 ## Folder Structure
 
@@ -133,12 +146,16 @@ Expected repo structure:
 ├── index.html
 ├── meta.json
 ├── package.json
+├── scripts/
+│   └── repliz-publish.mjs
 ├── raw/
 │   └── source videos
 ├── references/
 │   └── reference videos
 ├── docs/
 │   ├── dena-social-video-style-guide.md
+│   ├── repliz/
+│   │   └── integration-spec.md
 │   ├── agents/
 │   ├── skills/
 │   └── blueprints/
@@ -178,9 +195,12 @@ Use seven sequential agents. Each stage owns a distinct decision boundary.
 | 4 | Asset Generation Agent | screenshots, b-roll, diagrams, generated assets | `asset-plan.md`, `asset-manifest.json` |
 | 5 | Motion/Overlay Agent | timing, pattern interrupts, transitions, overlay behavior | `motion-plan.md`, `overlay-timeline.json` |
 | 6 | HyperFrames Assembly Agent | HTML/CSS/GSAP composition implementation | `index.html`, `assembly-notes.md`, `assembly-checklist.md` |
-| 7 | QA/Review Agent | verdict, punch list, render readiness, platform readiness | `qa-report.md`, `qa-punch-list.md`, `final-approval.md` |
+| 7 | QA/Review Agent | verdict, punch list, render readiness, user-review handoff | `qa-report.md`, `qa-punch-list.md`, `final-approval.md` |
+| Optional | R2/Repliz Publish Gate | upload approved render to R2 and schedule Repliz | `videos/<slug>/repliz-publish.json` |
 
 Do not let one stage silently take over another stage's responsibility. If QA finds a weak hook, send it back to the Creative Director. If captions are unreadable, send it back to Caption/Subtitle or HyperFrames Assembly depending on whether the issue is wording/timing or layout.
+
+Do not let QA approval silently become publish approval. After final render, stop and ask the user to review the edited video. R2 upload and Repliz scheduling happen only after explicit user approval and only through a command that includes `--approved`.
 
 ## Stage 0 - Intake
 
@@ -640,7 +660,7 @@ Outputs:
 
 Verdicts:
 
-- `pass`: ready for final render or publish
+- `pass`: ready for final render or user-review handoff
 - `pass-with-minor-notes`: usable with non-blocking polish notes
 - `revise`: not ready; major viewer/style issue remains
 - `blocked`: cannot review because inputs, preview, render, or verification evidence are missing
@@ -678,6 +698,49 @@ Do not approve if:
 - render is blank/frozen/out of sync
 - reference style overwhelms Dena's identity
 - `npm run check` fails after `.html` edits
+
+## Optional R2/Repliz Publish Gate
+
+This gate is optional and only runs after a rendered MP4 exists.
+
+Purpose:
+
+- upload the approved MP4 to Cloudflare R2 with Wrangler remote storage
+- build a public video URL from `R2_PUBLIC_BASE_URL` and the object key
+- schedule one Repliz post per configured social account
+- write a local non-secret receipt to `videos/<slug>/repliz-publish.json`
+
+Rules:
+
+- stop after final render and ask the user to review the edited video
+- do not upload to R2 or schedule Repliz until the user explicitly approves
+- require an approval flag such as `--approved` before any network publish work
+- use `CLOUDFLARE_ACCOUNT_ID` to select the Cloudflare account
+- use `npx wrangler r2 object put "${R2_BUCKET}/${objectKey}" --remote --file "${renderFile}" --content-type video/mp4`
+- do not require S3 access keys, R2 secret keys, or `wrangler.jsonc`
+- do not put real `.env` values in docs, tests, examples, or blueprints
+
+Expected placeholder config:
+
+```bash
+REPLIZ_API_BASE_URL=<repliz-api-base-url>
+REPLIZ_ACCESS_KEY=
+REPLIZ_SECRET_KEY=
+R2_BUCKET=<r2-bucket>
+R2_PUBLIC_BASE_URL=https://<r2-public-domain>
+R2_PREFIX=<r2-prefix>
+CLOUDFLARE_ACCOUNT_ID=<cloudflare-account-id>
+REPLIZ_FACEBOOK_ACCOUNT_ID=
+REPLIZ_YOUTUBE_ACCOUNT_ID=
+REPLIZ_TIKTOK_ACCOUNT_ID=
+REPLIZ_INSTAGRAM_ACCOUNT_ID=
+```
+
+Command after user approval:
+
+```bash
+npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved
+```
 
 ## Dena Style Standard
 
@@ -854,6 +917,8 @@ QA issues:
 - no `npm run check` after `.html` edit
 - final approval written despite major issues
 - rendered MP4 not reviewed separately
+- R2/Repliz publish run before explicit user approval
+- real `.env` value copied into docs or examples
 
 ## Completion Standard
 
@@ -870,5 +935,7 @@ A video is done only when:
 - no major issues remain
 - `qa-report.md` records the verdict
 - `final-approval.md` exists only for `pass`
+- any R2/Repliz publish waits for explicit user approval and uses `--approved`
+- public docs/examples contain placeholders, not real `.env` values
 
 If any item is missing, the AI agent must report the exact gap and route the work back to the owning stage.

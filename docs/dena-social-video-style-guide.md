@@ -92,8 +92,10 @@ Every edit should optimize for:
 - Remove dead air and repeated thinking.
 - Keep the authentic monologue.
 - Make captions easy to read without pausing.
+- For storytelling/talking-head content, make the whole surviving speech followable while muted: every spoken word must be represented by active running caption beats.
 - Add contextual overlays only when they clarify or re-engage.
 - End with a clear CTA that matches the topic.
+- Keep CTA non-promissory unless the user explicitly asks to promise a follow-up, download, source code, or future breakdown.
 
 Do not over-edit into generic CapCut chaos. Dena's style is credible developer/founder content, not meme spam.
 
@@ -126,20 +128,26 @@ When user provides a raw vlog/monologue video:
    - Avoid harsh over-compression.
    - Default speed: `1.2x`.
    - If the speech becomes too rushed, use `1.12x-1.18x`.
+   - Any exception to `1.2x` must be written in `edit-decision-notes.md` with the reason.
    - Keep cuts on sentence/phrase boundaries where possible.
 
 4. Caption plan
    - Use Agent 03.
    - Create readable caption beats, hook text, ASR corrections, and highlight logic.
+   - For storytelling/talking-head edits, cover every spoken word that survives the cut with running active captions; group words into readable 1-4 word beats instead of dropping words.
    - Write `caption-plan.md` and `caption-beats.json`.
 
 5. Asset plan
    - Use Agent 04 when screenshots, generated visuals, b-roll, diagrams, or proof assets are needed.
+   - If the user gives a URL or the story mentions a live tool/product/site, research/inspect it and create local screenshots, screen recordings, or captures matched to the transcript timeline.
+   - Use Codex/image generation for grounded bitmap stills or short support visuals when real captures and simple diagrams do not carry the idea.
+   - Do not generate AI slop: reject generic, fake-looking, or transcript-detached generated assets.
    - Skip only when assets are explicitly unnecessary.
    - Write `asset-plan.md` and `asset-manifest.json` when used.
 
 6. Motion and overlay plan
    - Use Agent 05 when overlays, cards, zooms, effects, or pattern interrupts are needed.
+   - Plan purposeful SFX cues for designed recuts, and keep them audible under speech instead of merely present as files.
    - Write `motion-plan.md` and `overlay-timeline.json`.
 
 7. Visual layers in HyperFrames
@@ -181,6 +189,13 @@ Rules:
 
 ## Caption Style Defaults
 
+Storytelling coverage:
+
+- Default Dena storytelling/talking-head edits use running captions, not sparse quote captions.
+- Every spoken word that survives the cut must appear in the caption system, either in a short phrase beat or a deliberate word-level beat.
+- It is acceptable to group small function words with nearby meaning words; it is not acceptable to omit meaningful speech just to make captions look cleaner.
+- Sparse editorial titles may replace full running captions only for an explicitly chosen cinematic/manifesto section, and that tradeoff must be documented in `caption-plan.md`.
+
 Base:
 
 - Font: heavy sans, close to TikTok/Reels bold caption style.
@@ -210,7 +225,7 @@ First 3 seconds decide the video.
 Default hook shape:
 
 - Top black rounded rectangle, white text.
-- Make a specific promise, conflict, or curiosity gap.
+- Make a specific payoff, conflict, or curiosity gap.
 - It should work even with audio muted.
 
 Hook formulas for Dena:
@@ -280,8 +295,10 @@ Revision learnings from raw talking-head workflow edits:
 
 - If feedback says the video feels boring, first add purposeful motion and pattern interrupts before changing the core story.
 - If feedback says too much transcript was cut, restore only the missing context. Keep the compact version if it feels denser and more rewatchable; do not lengthen just to prove the transcript was preserved.
-- If image assets are needed, prefer manual screenshots, UI crops, simple diagrams, or hand-authored SVG cards. Avoid generic AI b-roll that looks detached from the actual workflow.
-- Use subtle SFX for transitions, card hits, and emphasis only when it supports the speech. Do not cover the talking-head audio.
+- If caption feedback says words are missing, regenerate captions from the locked processed word-level transcript instead of making sparse highlight captions.
+- If image assets are needed, prefer real screenshots, screen recordings, UI crops, generated stills, simple diagrams, or designed cards based on the transcript context. Avoid generic AI b-roll that looks detached from the actual workflow.
+- If a user gives a link, inspect/research it and capture local visual proof where useful; do not rely only on generic cards to explain that link.
+- Use purposeful SFX for transitions, card hits, emphasis, and proof reveals when it supports the speech. Do not cover the talking-head audio.
 - If SFX feedback says there is no sound, measure the SFX stem and final render audio before approval. Too-quiet cues should be treated as missing, then boosted until they are audible but still under speech.
 - If caption, asset, and motion timing feels detached, regenerate timing from the locked processed audio transcript and use one shared cue map for captions, cards, feature chips, zooms, and SFX.
 - If raw footage intentionally shows source code/editor proof, do not cover it with a large context/privacy card. Put a compact callout in unused top/side space and blur private data upstream only when needed.
@@ -294,10 +311,16 @@ Choose by content:
 
 - AI/dev educational: "Save dulu kalau lo lagi bangun workflow AI."
 - Reflection/founder journey: "Pernah ngalamin hal yang sama? Cerita di komentar."
-- Tool recommendation: "Mau gue breakdown workflow-nya? Komen `mau`."
+- Tool recommendation: "Kalau topik ini relate, komen `workflow`."
 - Family/lifestyle vlog: "Menurut lo, simple moment kayak gini worth it nggak?"
 
 CTA should feel conversational and match Dena's voice.
+
+Avoid promissory CTA unless explicitly requested by the user:
+
+- "Nanti gue share source code-nya."
+- "Gue bakal upload tutorial lengkapnya."
+- "Komen `mau`, nanti gue kirim."
 
 ## Platform Publish Caption Defaults
 
@@ -378,11 +401,17 @@ Before final approval:
 - `npm run check` must pass after any `.html` composition edit.
 - First frame and first 3 seconds must work without audio.
 - Captions must be readable at phone size.
+- Storytelling captions must account for every spoken word in the locked processed transcript.
+- Speed must be `1.2x` unless a documented clarity/emotion exception exists.
 - Hook, middle proof/insight, and CTA must match the creative brief.
 - Overlays must clarify, prove, reset attention, or transition.
+- URL/tool/product mentions must have real captured or generated context assets when they materially help the viewer understand the story.
+- SFX cues must be audible in the final render when the motion plan calls for them.
+- CTA must be non-promissory unless the user explicitly approved a promise.
 - Audio must be clear, synced, and not harsh.
 - No private/client data may be visible.
 - Reference adaptation must still feel like Dena.
+- `final-approval.md` is QA approval only. Upload to R2 and Repliz scheduling still require explicit user approval and `--approved`.
 - QA must write a verdict in `qa-report.md`.
 
 Use Agent 07 verdicts:
@@ -399,9 +428,9 @@ Use:
 - Format: 9:16, 1080x1920.
 - Speed: 1.2x unless too rushed.
 - Hook: top black rounded card.
-- Captions: bold white with black stroke, yellow keyword.
-- Effects: light zoom/punch on key claims, not every word.
-- Overlays: only transcript-relevant.
-- CTA: one conversational question or save/comment prompt.
+- Captions: full running spoken-word coverage, bold white with black stroke, yellow keyword.
+- Effects: light zoom/punch on key claims, plus purposeful SFX cues where motion needs impact.
+- Overlays: only transcript-relevant, with URL/tool captures or generated assets when they clarify context.
+- CTA: one conversational, non-promissory question/save/comment prompt.
 
 Do this without asking again unless the input video has a real ambiguity that affects the output.

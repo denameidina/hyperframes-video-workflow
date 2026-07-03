@@ -14,6 +14,7 @@ Masuk scope:
 - Support multi-account dengan membuat satu schedule per `accountId`.
 - Simpan receipt lokal berisi `scheduleId`, status, dan payload non-secret.
 - Cegah accidental duplicate publish dari render yang sama.
+- Wajib ada approval user setelah review hasil edit sebelum upload R2 dan scheduling Repliz.
 
 Di luar scope MVP:
 
@@ -27,13 +28,14 @@ Di luar scope MVP:
 Credentials disimpan di environment, bukan di file repo:
 
 ```bash
-REPLIZ_API_BASE_URL=https://api.repliz.com
-REPLIZ_ACCESS_KEY=...
-REPLIZ_SECRET_KEY=...
+REPLIZ_API_BASE_URL=<repliz-api-base-url>
+REPLIZ_ACCESS_KEY=<repliz-access-key>
+REPLIZ_SECRET_KEY=<repliz-secret-key>
 
-R2_BUCKET=dena-video-renders
-R2_PUBLIC_BASE_URL=https://media.example.com
-R2_PREFIX=final-renders
+R2_BUCKET=<r2-bucket>
+R2_PUBLIC_BASE_URL=https://<r2-public-domain>
+R2_PREFIX=<r2-prefix>
+CLOUDFLARE_ACCOUNT_ID=<cloudflare-account-id>
 
 REPLIZ_FACEBOOK_ACCOUNT_ID=...
 REPLIZ_YOUTUBE_ACCOUNT_ID=...
@@ -45,9 +47,18 @@ REPLIZ_INSTAGRAM_ACCOUNT_ID=...
 
 Cloudflare R2 upload memakai Wrangler, bukan S3 access key/secret:
 
-- Local machine: login sekali dengan `npx wrangler login`.
-- CI/automation: set `CLOUDFLARE_API_TOKEN` di environment runner.
+- Local machine: login Wrangler biasa dengan `npx wrangler login`, lalu set `CLOUDFLARE_ACCOUNT_ID` ke target Cloudflare Account ID.
+- CI/automation: set `CLOUDFLARE_ACCOUNT_ID` dan `CLOUDFLARE_API_TOKEN` di environment runner.
 - Token harus punya akses R2 object read/write untuk bucket target.
+- Tidak perlu `wrangler.jsonc` untuk flow ini. Script memilih account lewat env `CLOUDFLARE_ACCOUNT_ID`.
+
+Target R2 aktif:
+
+```text
+bucket: <r2-bucket>
+public base URL: https://<r2-public-domain>
+object key: <r2-prefix>/<slug>/<renderBasename>
+```
 
 Target publish default dibaca dari `.env`:
 
@@ -90,7 +101,7 @@ Default `type` adalah `video`, karena Repliz mendukung video untuk Facebook, Ins
       "customThumbnail": false,
       "type": "video",
       "thumbnail": "",
-      "url": "https://media.example.com/final-renders/0702-2/final.mp4"
+      "url": "https://<r2-public-domain>/<r2-prefix>/0702-2/final.mp4"
     }
   ]
 }
@@ -106,7 +117,7 @@ Karena OpenAPI Repliz tidak punya upload endpoint, pipeline wajib upload MP4 fin
 Upload command:
 
 ```bash
-npx wrangler r2 object put "${R2_BUCKET}/${objectKey}" --file "${renderFile}" --content-type video/mp4
+CLOUDFLARE_ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID}" npx wrangler r2 object put "${R2_BUCKET}/${objectKey}" --remote --file "${renderFile}" --content-type video/mp4
 ```
 
 Object key default:
@@ -118,7 +129,7 @@ ${R2_PREFIX}/${slug}/${renderBasename}
 Contoh:
 
 ```text
-final-renders/0702-2/final.mp4
+<r2-prefix>/0702-2/final.mp4
 ```
 
 Upload wajib mengirim `Content-Type: video/mp4`. `R2_PUBLIC_BASE_URL` harus berupa custom/public domain yang bisa diakses Repliz tanpa Authorization header.
@@ -149,6 +160,13 @@ Endpoint:
 POST /public/schedule
 ```
 
+YouTube description sanitizer:
+
+- Before creating a YouTube schedule, sanitize `description` only for the YouTube payload.
+- Replace arrow pipeline notation such as `->`, `=>`, or `→` with natural text (`ke`).
+- Replace slash-heavy word pairs such as `Repliz/API` with `Repliz dan API`.
+- Keep the original caption for Facebook, TikTok, Instagram, and the local receipt.
+
 Payload per akun:
 
 ```json
@@ -163,7 +181,7 @@ Payload per akun:
       "customThumbnail": false,
       "type": "video",
       "thumbnail": "",
-      "url": "https://media.example.com/final-renders/0702-2/final.mp4"
+      "url": "https://<r2-public-domain>/<r2-prefix>/0702-2/final.mp4"
     }
   ],
   "meta": {
@@ -228,21 +246,24 @@ Command target:
 
 ```bash
 npm run render
-npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4
+# Stop di sini dulu. Kirim hasil render ke user untuk review.
+# Setelah user approve/confirm hasil edit:
+npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
 ```
 
 Minimal script behavior:
 
-1. Baca env Repliz dan R2 public config.
-2. Baca metadata publish dari `videos/<slug>/repliz-publish.json` jika ada.
-3. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, dan `REPLIZ_INSTAGRAM_ACCOUNT_ID`.
-4. Upload `--file` ke R2 dengan Wrangler jika object belum ada atau `--force` dipakai.
-5. Bentuk `videoUrl` dari public R2 URL.
-6. Tolak publish ulang jika receipt untuk kombinasi `r2Key + targetAccounts + description` sudah ada, kecuali diberi `--force`.
-7. Validasi semua accountId lewat Repliz.
-8. Buat schedule untuk tiap accountId.
-9. Simpan receipt lokal.
-10. Poll status sampai terminal `success/error` atau timeout.
+1. Tolak publish jika CLI tidak diberi `--approved`.
+2. Baca env Repliz dan R2 public config.
+3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` jika ada.
+4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, dan `REPLIZ_INSTAGRAM_ACCOUNT_ID`.
+5. Upload `--file` ke R2 dengan Wrangler jika object belum ada atau `--force` dipakai.
+6. Bentuk `videoUrl` dari public R2 URL.
+7. Tolak publish ulang jika receipt untuk kombinasi `r2Key + targetAccounts + description` sudah ada, kecuali diberi `--force`.
+8. Validasi semua accountId lewat Repliz.
+9. Buat schedule untuk tiap accountId.
+10. Simpan receipt lokal.
+11. Poll status sampai terminal `success/error` atau timeout.
 
 Default `scheduleAt`:
 
@@ -261,9 +282,9 @@ Format:
 
 ```json
 {
-  "r2Bucket": "dena-video-renders",
-  "r2Key": "final-renders/0702-2/final.mp4",
-  "videoUrl": "https://media.example.com/final-renders/0702-2/final.mp4",
+  "r2Bucket": "<r2-bucket>",
+  "r2Key": "<r2-prefix>/0702-2/final.mp4",
+  "videoUrl": "https://<r2-public-domain>/<r2-prefix>/0702-2/final.mp4",
   "descriptionHash": "sha256:...",
   "createdAt": "2026-07-03T01:40:08.119Z",
   "schedules": [
@@ -284,6 +305,7 @@ Do not store Repliz access keys, Repliz secret keys, Cloudflare API tokens, full
 
 - Missing env: fail before network call.
 - Missing `--file`: fail before network call.
+- Missing `--approved`: fail before R2 upload or Repliz scheduling.
 - No target account IDs configured: fail before network call.
 - Wrangler missing or not authenticated: fail before creating Repliz schedules.
 - R2 upload failure: fail before creating Repliz schedules.
@@ -295,6 +317,7 @@ Do not store Repliz access keys, Repliz secret keys, Cloudflare API tokens, full
 ## Acceptance Criteria
 
 - Given Wrangler is authenticated and a local MP4 exists, the script uploads the file to R2 and records `r2Key`.
+- Given `--approved` is missing, the script fails before R2 upload or Repliz scheduling.
 - Given a valid Repliz credential, connected accountId, caption, and R2 public MP4 URL, the script creates a schedule and records `scheduleId`.
 - Given Facebook, YouTube, TikTok, and Instagram account IDs in `.env`, the script creates one Repliz schedule per configured platform and records all schedule IDs.
 - Given the same video/caption/accounts twice, the second run exits without creating duplicate schedules unless `--force` is used.

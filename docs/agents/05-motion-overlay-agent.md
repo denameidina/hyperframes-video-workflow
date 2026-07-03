@@ -133,6 +133,7 @@ The Motion/Overlay Agent designs timing and behavior for:
 - lower-thirds
 - b-roll picture-in-picture
 - screenshot/card reveals
+- SFX cue timing tied to motion beats
 
 It does not decide final CSS implementation details beyond clear intent and constraints.
 
@@ -476,7 +477,7 @@ High density must still feel intentional.
 
 ## Sound/Motion Coordination
 
-This agent may note sound effect needs, but it does not design final audio mix.
+This agent owns SFX cue timing and intent. It does not do the final audio mix, but it must make the audio handoff specific enough that SFX can be implemented and verified.
 
 Useful notes:
 
@@ -486,7 +487,17 @@ Useful notes:
 - subtle riser before mission line
 - silence/drop before key line
 
-Do not require SFX for every motion.
+For designed Dena recuts, plan SFX on important transitions, proof reveals, title hits, and CTA shifts by default. Do not require SFX for every caption pop or small motion.
+
+Every SFX cue should include:
+
+- timecode
+- motion element id
+- sound type
+- intensity target
+- whether it must be audible in final render
+
+SFX should be audible enough to be felt on phone speakers, but must stay under speech and never mask words.
 
 ## Overlay Timeline Format
 
@@ -552,6 +563,17 @@ Each element needs:
 
 Use processed-video time.
 
+When an element needs sound, add an `sfx` object or a matching SFX entry in `motion-plan.md`:
+
+```json
+"sfx": {
+  "type": "soft-whoosh",
+  "intensity": "low",
+  "mustBeAudible": true,
+  "notes": "Under speech; supports proof card reveal"
+}
+```
+
 ## Motion Plan Template
 
 Create `motion-plan.md`.
@@ -602,6 +624,7 @@ Create `motion-plan.md`.
 - Dims:
 - Progress markers:
 - SFX suggestions:
+- SFX audibility target:
 
 ## Conflicts And Resolutions
 
@@ -710,6 +733,7 @@ A good Motion/Overlay pass:
 - Makes captions easier to read.
 - Supports proof and story.
 - Adds rhythm without clutter.
+- Defines SFX cues that make transitions and proof reveals feel intentional.
 - Uses assets only where they help.
 - Keeps every motion tied to a purpose.
 - Hands off clean timing to HyperFrames Assembly.
@@ -721,6 +745,7 @@ A weak pass:
 - Uses too many animations at once.
 - Makes screenshots unreadable.
 - Creates motion that does not match the story.
+- Leaves SFX vague, missing, or too quiet to matter.
 - Ignores platform safe areas.
 - Requires complex implementation without payoff.
 

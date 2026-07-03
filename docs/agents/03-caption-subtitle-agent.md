@@ -75,7 +75,7 @@ For Dena's videos, captions must do four jobs:
 - Create rhythm and pattern interrupts.
 - Preserve Dena's natural voice.
 
-Do not place every transcript word on screen if the chosen format calls for sparse editorial titles.
+For default Dena storytelling/talking-head edits, captions must cover every spoken word that survives the cut. Sparse editorial titles may replace running captions only for an explicitly chosen cinematic/manifesto section, and that tradeoff must be documented.
 
 ## Inputs
 
@@ -127,6 +127,7 @@ Default Dena style.
 
 - 1-6 words per beat.
 - Ideal 1-4 words.
+- Running coverage: every surviving spoken word appears in a caption beat.
 - Bold white text with black stroke/shadow.
 - One yellow keyword per beat when useful.
 - Lower-middle or lower safe area.
@@ -171,13 +172,39 @@ End text.
 
 Use the Creative Director format:
 
-- `clean-talking-head` -> mostly `subtitle-beat` + `hook-card` + `cta-caption`
-- `contextual-recut` -> `subtitle-beat` + `proof-label` + `hook-card`
+- `clean-talking-head` -> full running `subtitle-beat` + `hook-card` + `cta-caption`
+- `contextual-recut` -> full running `subtitle-beat` + `proof-label` + `hook-card`
 - `character-led-manifesto` -> `editorial-title` + selective `subtitle-beat` + `cta-caption`
 - `mini-case-study` -> `subtitle-beat` + `proof-label`
-- `vlog-story` -> softer `subtitle-beat` + minimal `hook-card`
+- `vlog-story` -> softer full running `subtitle-beat` + minimal `hook-card`
 
-For `kumar-inspired`, do not make full subtitles dominate the manifesto section. Use sparse title words for the most important identity/mission phrases.
+For `kumar-inspired`, do not make full subtitles dominate the manifesto section. Use sparse title words for the most important identity/mission phrases, then return to running subtitle coverage for normal speech.
+
+## Running Word Coverage Rules
+
+This is the default for Dena storytelling videos.
+
+- Start from the locked processed word-level transcript, not a summary.
+- Every spoken word that survives Agent 02 must map to one caption beat through `sourceWords`.
+- Group small words into readable phrase beats; do not drop them silently.
+- Keep active captions moving with the speech so a muted viewer can follow the complete story.
+- If exact timing is missing, mark the plan provisional and route back to Agent 02 for word-level timing.
+- If a word is intentionally omitted because it is cut audio, filler removed by Agent 02, or part of a sparse manifesto section, document it in `caption-plan.md`.
+
+Bad:
+
+```md
+Transcript says: "jadi ini tuh workflow yang gue pakai buat auto publish"
+Caption only shows: AUTO PUBLISH
+```
+
+Good:
+
+```md
+JADI INI TUH
+WORKFLOW YANG GUE PAKAI
+BUAT AUTO PUBLISH
+```
 
 ## Dena Default Caption Style
 
@@ -433,6 +460,7 @@ Each beat needs:
 - `highlight` or `null`
 - `type`
 - `position`
+- `sourceWords` covering the exact processed transcript word range
 - `notes`
 
 Use processed-video time, not raw-source time.
@@ -557,16 +585,17 @@ Choose the CTA from Creative Director unless the transcript gives a stronger nat
 
 Good Dena CTAs:
 
-- `Mau gue breakdown workflow-nya? Komen "mau".`
 - `Save dulu kalau lo lagi bangun sistem AI.`
 - `Pernah ngalamin ini juga? Cerita di komen.`
 - `Follow kalau lo mau lihat AI dipakai di bisnis nyata.`
+- `Kalau topik ini relate, komen "workflow".`
 
 Avoid:
 
 - `Like, comment, share, follow, save semuanya.`
 - corporate CTA
 - aggressive sales pitch
+- CTAs that promise Dena will send, publish, or explain something later unless the user explicitly approved that promise.
 
 ## Platform Publish Caption Rules
 
@@ -606,6 +635,7 @@ The Caption Agent provides timing and wording. HyperFrames Assembly Agent handle
 Before handing off:
 
 - Every beat is readable in under 1 second.
+- Every surviving spoken word is represented for storytelling/talking-head edits.
 - No beat has too many words.
 - Yellow highlights mean something.
 - Hook text works without audio.

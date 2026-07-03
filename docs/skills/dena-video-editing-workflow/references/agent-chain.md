@@ -10,22 +10,22 @@ Use this reference when deciding which Dena video agent to run and what artifact
    - Writes: `videos/<slug>/creative-brief.md`.
 
 2. `docs/agents/02-transcript-cut-agent.md`
-   - Owns: media audit, transcript, silence/filler/repetition cuts, base pacing.
+   - Owns: media audit, transcript, silence/filler/repetition cuts, base pacing, `1.2x` default speed or documented exception.
    - Reads: creative brief and source media.
    - Writes: `metadata.json`, `transcript.json`, `edit-decision-notes.md`, `cut-list.json`, optionally `processed.mp4`.
 
 3. `docs/agents/03-caption-subtitle-agent.md`
-   - Owns: caption text, phrase grouping, highlights, ASR correction, caption timing.
+   - Owns: caption text, full spoken-word running coverage for storytelling videos, phrase grouping, highlights, ASR correction, caption timing.
    - Reads: creative brief, cut notes, transcript.
    - Writes: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`.
 
 4. `docs/agents/04-asset-generation-agent.md`
-   - Owns: screenshots, generated stills/video, b-roll, diagrams, UI crops, proof visuals.
+   - Owns: screenshots, URL/web captures, screen recordings, generated stills/video, b-roll, diagrams, UI crops, proof visuals.
    - Reads: brief, cut notes, caption plan.
    - Writes: `asset-plan.md`, `asset-manifest.json`, asset files.
 
 5. `docs/agents/05-motion-overlay-agent.md`
-   - Owns: overlay timing, pattern interrupts, card motion, zooms, progress bars, transitions.
+   - Owns: overlay timing, pattern interrupts, card motion, zooms, progress bars, transitions, SFX cue timing.
    - Reads: captions and assets.
    - Writes: `motion-plan.md`, `overlay-timeline.json`.
 
@@ -38,13 +38,14 @@ Use this reference when deciding which Dena video agent to run and what artifact
    - Owns: final verdict, punch list, render/platform readiness, revision routing.
    - Reads: all upstream artifacts, composition files, preview/render evidence.
    - Writes: `qa-report.md`, `qa-punch-list.md`, optionally `render-review.md` and `final-approval.md`.
+   - Stops for explicit user approval before any R2/Repliz publish.
 
 ## Skip Rules
 
 Skipping is allowed only when the reason is explicit.
 
-- Skip Agent 04 when no assets are needed; write that decision in `caption-plan.md` or `motion-plan.md`.
-- Skip Agent 05 only for plain captions without designed overlays.
+- Skip Agent 04 only when no assets are needed and no URL/tool/product context needs visual support; write that decision in `caption-plan.md` or `motion-plan.md`.
+- Skip Agent 05 only for plain captions without designed overlays, pattern interrupts, progress, or SFX.
 - Skip Agent 06 only when no HyperFrames composition is being created or changed.
 - Skip Agent 07 only for exploratory notes that are not claiming final readiness.
 
@@ -56,9 +57,10 @@ Route revisions to the owner:
 
 - Weak hook, wrong format, wrong CTA: Agent 01.
 - Rambling cut, missing context, rough jump cut, bad base audio edit: Agent 02.
-- Caption wording, ASR, phrase grouping, highlight logic: Agent 03.
-- Unreadable screenshot, bad generated asset, privacy issue in asset: Agent 04.
-- Noisy motion, weak pattern interrupt, overlay timing conflict: Agent 05.
+- Wrong speed, missing `1.2x`, or undocumented slower speed: Agent 02.
+- Caption wording, missing spoken words, ASR, phrase grouping, highlight logic: Agent 03.
+- Unreadable screenshot, missing URL capture, bad generated asset, privacy issue in asset: Agent 04.
+- Noisy motion, weak pattern interrupt, missing/inaudible SFX cue, overlay timing conflict: Agent 05.
 - Broken HyperFrames contract, missing media, track overlap, z-index, render failure: Agent 06.
 - Approval decision, punch list, regression review: Agent 07.
 
@@ -70,3 +72,4 @@ If the user says:
 - `audit dulu`: inspect source/reference and produce evidence before changing files.
 - `buat workflow`: create or update docs first; do not jump into editing.
 - `render final`: verify QA gate first unless explicitly told to render a draft.
+- `publish final`: verify user approval, then use `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.

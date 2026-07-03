@@ -96,3 +96,12 @@ videos/<slug>/transcript.json
 - After editing any `.html` composition, run `npm run check`.
 - Docs-only edits do not require `npm run check`.
 - Do not commit or delete local media unless explicitly asked.
+- Never upload to R2 or schedule Repliz until the user explicitly approves the final edit.
+- Repliz publish requires `--approved`: `npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved`.
+- R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`; do not add S3 keys or `wrangler.jsonc`.
+
+For R2/Repliz work only, verify Wrangler:
+
+```bash
+npx wrangler --version
+```

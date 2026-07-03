@@ -1,6 +1,8 @@
 {
   "name": "videos",
+  "description": "HyperFrames video workflow workspace with R2/Repliz publishing helpers.",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "npx --yes hyperframes@0.7.24 preview",

@@ -192,6 +192,13 @@ If transcript is poor:
 - Add a `Transcript Quality` section in `edit-decision-notes.md`.
 - Flag parts that need human review.
 
+For storytelling/talking-head edits, downstream captions depend on complete word coverage. Preserve word-level timing for every spoken word that survives the cut. If `processed.mp4` is speed-adjusted, the handoff must include either:
+
+- a processed-timeline word-level transcript, or
+- a reliable raw-to-processed time mapping in `cut-list.json`.
+
+Do not hand off only sentence-level notes when Agent 03 needs running captions.
+
 ## Content Map
 
 Before cutting, map the content.
@@ -283,6 +290,8 @@ Default Dena speed:
 
 `1.2x`
 
+Apply `1.2x` by default for raw Dena talking-head/storytelling content. This is not optional polish; it is part of the base pacing standard.
+
 Use `1.2x` when:
 
 - Speech remains clear.
@@ -295,6 +304,8 @@ Use `1.12x-1.18x` when:
 - Emotional delivery matters.
 - The video is cinematic/manifesto style.
 - Indonesian words become hard to catch at `1.2x`.
+
+Any lower speed must be documented in `edit-decision-notes.md` under `Pacing Plan` with the exact reason.
 
 Avoid speed changes when:
 
@@ -507,6 +518,7 @@ Handoff must include:
 - final processed video path
 - exact output duration
 - transcript path
+- processed-timeline word-level transcript or raw-to-processed timing map
 - cut-list path
 - hook candidate timestamps
 - key quote timestamps
