@@ -140,7 +140,7 @@ When user provides a raw vlog/monologue video:
 5. Asset plan
    - Use Agent 04 when screenshots, generated visuals, b-roll, diagrams, or proof assets are needed.
    - If the user gives a URL or the story mentions a live tool/product/site, research/inspect it and create local screenshots, screen recordings, or captures matched to the transcript timeline.
-   - Use Codex/image generation for grounded bitmap stills or short support visuals when real captures and simple diagrams do not carry the idea.
+   - For every visual-support opportunity, Agent 04 must write an `Imagegen Decision Log`; try Codex/image generation for grounded bitmap stills when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
    - Do not generate AI slop: reject generic, fake-looking, or transcript-detached generated assets.
    - Skip only when assets are explicitly unnecessary.
    - Write `asset-plan.md` and `asset-manifest.json` when used.
@@ -297,6 +297,7 @@ Revision learnings from raw talking-head workflow edits:
 - If feedback says too much transcript was cut, restore only the missing context. Keep the compact version if it feels denser and more rewatchable; do not lengthen just to prove the transcript was preserved.
 - If caption feedback says words are missing, regenerate captions from the locked processed word-level transcript instead of making sparse highlight captions.
 - If image assets are needed, prefer real screenshots, screen recordings, UI crops, generated stills, simple diagrams, or designed cards based on the transcript context. Avoid generic AI b-roll that looks detached from the actual workflow.
+- Do not skip generated stills by default. If an asset pass uses only screenshots, SVGs, labels, or text cards, `asset-plan.md` must explain the imagegen decision per visual opportunity.
 - If a user gives a link, inspect/research it and capture local visual proof where useful; do not rely only on generic cards to explain that link.
 - Use purposeful SFX for transitions, card hits, emphasis, and proof reveals when it supports the speech. Do not cover the talking-head audio.
 - If SFX feedback says there is no sound, measure the SFX stem and final render audio before approval. Too-quiet cues should be treated as missing, then boosted until they are audible but still under speech.
