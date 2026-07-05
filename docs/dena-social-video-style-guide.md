@@ -20,7 +20,7 @@ Then route the work through the specialized agents in `docs/agents/`:
 4. `04-asset-generation-agent.md` - screenshots, generated visuals, b-roll, diagrams, proof assets.
 5. `05-motion-overlay-agent.md` - overlay timing, pattern interrupts, zooms, cards, transitions.
 6. `06-hyperframes-assembly-agent.md` - `index.html`, timed clips, tracks, GSAP, local asset wiring.
-7. `07-qa-review-agent.md` - punch list, render readiness, platform readiness, final approval.
+7. Optional at user review/publish gate: `07-qa-review-agent.md` - QA, punch list, render/platform readiness review.
 
 Do not jump to HyperFrames assembly before creative direction, cut logic, captions, assets, and motion are either completed or explicitly marked unnecessary.
 
@@ -159,12 +159,11 @@ When user provides a raw vlog/monologue video:
    - CTA/end layer.
    - Keep layers editable until final render.
 
-8. Verify and QA
-   - Use Agent 07.
-   - Run `npm run check`.
-   - Snapshot/preview key frames before final render.
-   - Check caption readability, overlap, safe area, and timing.
-   - Write `qa-report.md` and `qa-punch-list.md`.
+8. User review gate and optional QA
+   - Render and send the edit to the user first.
+   - Offer: publish as-is, QA first, or revisions.
+   - Use Agent 07 only when the user chooses QA first or asks for readiness/punch-list review.
+   - If QA runs, write `qa-report.md` and `qa-punch-list.md`.
    - Create `final-approval.md` only after QA passes.
 
 ## HyperFrames Layer Contract
@@ -377,9 +376,7 @@ Expected files:
 - `overlay-timeline.json`.
 - `assembly-notes.md`.
 - `assembly-checklist.md`.
-- `qa-report.md`.
-- `qa-punch-list.md`.
-- `final-approval.md`, only after QA passes.
+- Optional when the user chooses QA first: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes.
 
 Project-level composition files:
 
@@ -393,11 +390,11 @@ Rendered output:
 
 Keep intermediate files unless user asks to delete them.
 
-## QA And Approval Standard
+## Review Gate And Optional QA Standard
 
-An edit is not ready just because it renders.
+An edit is not publishable just because it renders. After render, the user reviews first and chooses publish as-is, QA first, or revisions.
 
-Before final approval:
+When the user chooses QA first:
 
 - `npm run check` must pass after any `.html` composition edit.
 - First frame and first 3 seconds must work without audio.
@@ -412,10 +409,10 @@ Before final approval:
 - Audio must be clear, synced, and not harsh.
 - No private/client data may be visible.
 - Reference adaptation must still feel like Dena.
-- `final-approval.md` is QA approval only. Upload to R2 and Repliz scheduling still require explicit user approval and `--approved`.
-- QA must write a verdict in `qa-report.md`.
+- `final-approval.md` is QA approval only and is not required for publish as-is. Upload to R2 and Repliz scheduling still require explicit user approval and `--approved`.
+- Agent 07 must write a verdict in `qa-report.md`.
 
-Use Agent 07 verdicts:
+Use Agent 07 verdicts only when QA runs:
 
 - `pass`: ready for final render or publish.
 - `pass-with-minor-notes`: usable, with non-blocking polish notes.

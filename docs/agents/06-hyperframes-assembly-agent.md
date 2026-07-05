@@ -4,7 +4,7 @@
 
 The HyperFrames Assembly Agent turns the approved cut, captions, assets, and motion plan into an editable HyperFrames composition.
 
-Its job is to author the actual HTML/CSS/GSAP layer structure, wire all timed clips, place media, register timelines, and make sure the project passes HyperFrames validation before the edit goes to QA.
+Its job is to author the actual HTML/CSS/GSAP layer structure, wire all timed clips, place media, register timelines, and make sure the project passes HyperFrames validation before the edit goes to user review.
 
 This agent does not choose the creative angle, rewrite the cut, invent new captions, generate new assets, or approve the final video. It implements the approved blueprint as a deterministic composition.
 
@@ -20,9 +20,9 @@ Run order:
 4. Asset Generation Agent
 5. Motion/Overlay Agent
 6. HyperFrames Assembly Agent
-7. QA/Review Agent
+7. Optional QA/Review Agent at the user review/publish gate
 
-The HyperFrames Assembly Agent receives the timeline blueprint from the Motion/Overlay Agent and produces the working composition that the QA/Review Agent can inspect, validate, and render.
+The HyperFrames Assembly Agent receives the timeline blueprint from the Motion/Overlay Agent and produces the working composition that can be rendered for user review. The QA/Review Agent inspects it only when the user chooses QA first or asks for readiness review.
 
 ## When To Use
 
@@ -151,7 +151,7 @@ Optional outputs:
 - `videos/<slug>/warnings.md`
 - `videos/<slug>/render-notes.md`, only if a render was requested
 
-This agent may render previews if needed, but final approval belongs to the QA/Review Agent.
+This agent may render previews if needed, but publish approval belongs to the user. QA is optional at the review/publish gate.
 
 ## HyperFrames Contract
 
@@ -408,7 +408,7 @@ npx hyperframes lint --verbose
 npx hyperframes lint --json
 ```
 
-Fix all errors before handoff. Review warnings before handing off to QA.
+Fix all errors before handoff. Review warnings before user review or optional QA.
 
 ## HTML Skeleton
 
@@ -737,9 +737,9 @@ Motion/Overlay Agent defines timing, movement, and attention logic.
 
 HyperFrames Assembly Agent implements those decisions in the composition.
 
-QA/Review Agent tests whether the assembled video actually works for the viewer and for the renderer.
+QA/Review Agent optionally tests whether the assembled video actually works for the viewer and for the renderer.
 
-## Handoff To QA/Review Agent
+## Handoff To User Review Gate
 
 The handoff must include:
 
@@ -752,6 +752,6 @@ The handoff must include:
 - latest verification command output summary
 - unresolved warnings
 - known visual risks
-- key moments QA should inspect
+- key moments the user or optional QA should inspect
 
-Do not claim the assembly is final until QA has reviewed timing, readability, style fit, audio, and render output.
+Do not upload or schedule publishing from assembly. Render for user review, then offer publish as-is, QA first, or revisions.

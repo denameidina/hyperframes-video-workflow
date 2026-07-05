@@ -2,15 +2,15 @@
 
 ## Purpose
 
-The QA/Review Agent is the final quality gate for Dena Meidina social video edits.
+The QA/Review Agent is an optional quality gate for Dena Meidina social video edits.
 
 Its job is to review the assembled HyperFrames composition and any rendered output against the creative brief, Dena style guide, caption plan, motion plan, technical HyperFrames contract, audio quality, platform constraints, and viewer experience.
 
-This agent does not invent a new creative direction, rewrite the whole edit, generate assets, author the primary composition, upload to R2, or schedule Repliz. It audits, classifies issues, gives precise revision instructions, and decides whether the edit is ready for render, user review, or another revision pass.
+This agent does not invent a new creative direction, rewrite the whole edit, generate assets, author the primary composition, upload to R2, or schedule Repliz. It audits, classifies issues, gives precise revision instructions, and decides whether the edit is ready for render, publish approval, or another revision pass.
 
 ## Position In Workflow
 
-This is the seventh agent.
+This is the optional seventh agent.
 
 Run order:
 
@@ -20,21 +20,21 @@ Run order:
 4. Asset Generation Agent
 5. Motion/Overlay Agent
 6. HyperFrames Assembly Agent
-7. QA/Review Agent
+7. Optional QA/Review Agent at the user review/publish gate
 
-The QA/Review Agent receives the assembled composition from the HyperFrames Assembly Agent and produces the final review report.
+After Agent 06, the default path is render -> user review gate. Run this agent only when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
 
 ## When To Use
 
-Use this agent when:
+Use this agent when the user chooses QA first or explicitly asks for review, and:
 
 - `index.html` or `compositions/*.html` has been assembled.
-- A preview, render, or near-final edit needs approval.
+- A preview, render, or near-final edit needs QA approval.
 - The team needs a punch list before final render.
 - The user asks whether an edit is ready to post.
 - A rendered MP4 needs review for timing, audio, captions, overlays, or style fit.
 - A previous revision needs regression review.
-- A final render needs a user-review handoff before R2/Repliz publishing.
+- A final render needs QA before R2/Repliz publishing.
 
 Do not use this agent when:
 
@@ -42,6 +42,7 @@ Do not use this agent when:
 - The cut is not locked.
 - Captions and overlays have not been assembled.
 - The user only wants ideation or reference analysis.
+- The user only wants to personally review the rendered edit before deciding.
 - The task is to implement a known fix. Send that to the relevant upstream agent.
 
 ## Required Reading
@@ -124,7 +125,7 @@ Preferred output folder:
 
 `videos/<slug>/`
 
-Required outputs:
+Required outputs when Agent 07 runs:
 
 - `qa-report.md`
 - `qa-punch-list.md`
@@ -137,7 +138,7 @@ Conditional outputs:
 
 The QA report is the decision record. It must be clear enough that another agent can execute the revisions without asking what went wrong.
 
-`final-approval.md` is an internal QA pass, not user permission to publish. After final render, stop and ask the user to review. R2 upload and Repliz scheduling require explicit user approval and the CLI flag `--approved`.
+`final-approval.md` is an internal QA pass, not user permission to publish. If the user chooses publish as-is, QA artifacts and `final-approval.md` are not required. R2 upload and Repliz scheduling require explicit user approval and the CLI flag `--approved`.
 
 ## Verdicts
 
@@ -726,11 +727,11 @@ Motion/Overlay Agent owns attention rhythm, overlay motion, pattern interrupts, 
 
 HyperFrames Assembly Agent owns the HTML/CSS/GSAP implementation and render contract.
 
-QA/Review Agent owns the final decision record and revision routing.
+QA/Review Agent owns the QA decision record and revision routing when QA is requested.
 
 ## Definition Of Done
 
-The edit is ready only when:
+A QA pass is complete only when:
 
 - `npm run check` passes
 - preview or render has been reviewed

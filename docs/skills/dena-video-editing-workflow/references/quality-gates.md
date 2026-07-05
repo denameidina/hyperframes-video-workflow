@@ -99,7 +99,9 @@ npm run check
 
 Fix errors before handoff. Review warnings before render.
 
-## QA Verdict Gate
+## Optional QA Verdict Gate
+
+Run this gate only when the user chooses QA first, asks whether the edit is ready, requests a punch list, or needs regression review.
 
 Use Agent 07 verdicts:
 
@@ -120,15 +122,17 @@ Before final render:
 4. Confirm audio sync and end cut.
 5. Render only after blockers are gone.
 
-After render, review the MP4 separately from the source HTML for font fallback, blank frames, z-index issues, audio loss, timing drift, and export duration mismatch.
+After render, do a basic export sanity check before user review: file exists, duration is plausible, audio is present when expected, and the first/last frames are not blank. Full Agent 07 QA waits until the user chooses QA first.
 
 ## Publish Gate
 
-Final QA approval is not the same as user approval to publish.
+User review is mandatory. QA is optional and lives inside this review/publish gate.
 
-1. Render and review the MP4.
-2. Send the result to the user and wait for explicit approval/confirmation.
-3. Only after approval, run:
+1. Render the MP4 and send the result to the user.
+2. Offer three paths: publish as-is, run QA first, or request revisions.
+3. If the user chooses publish as-is, QA artifacts are not required.
+4. If the user chooses QA first, run Agent 07, then return here for explicit publish approval.
+5. Only after explicit approval/confirmation, run:
 
 ```bash
 npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved

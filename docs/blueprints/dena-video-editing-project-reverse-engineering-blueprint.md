@@ -42,13 +42,11 @@ The reconstructed workflow should produce handoff artifacts in order:
 - overlay-timeline.json
 - assembly-notes.md
 - assembly-checklist.md
-- qa-report.md
-- qa-punch-list.md
-- final-approval.md only after QA passes
+- optional after user chooses QA first: qa-report.md, qa-punch-list.md, final-approval.md only after QA passes
 
 Optional auto-publish must be gated:
 - render the final MP4 first
-- stop for explicit user review/approval
+- stop for explicit user review with choices: publish as-is, QA first, or revisions
 - only after approval may an agent upload to Cloudflare R2 and schedule Repliz
 - the publish command must require an explicit approval flag, for example `--approved`
 - documentation and examples must use placeholder env values only; never expose real `.env` values in repo files
@@ -176,12 +174,10 @@ Expected repo structure:
         ├── overlay-timeline.json
         ├── assembly-notes.md
         ├── assembly-checklist.md
-        ├── qa-report.md
-        ├── qa-punch-list.md
-        └── final-approval.md
+        └── optional QA: qa-report.md, qa-punch-list.md, final-approval.md
 ```
 
-Create only the artifacts that apply. For example, skip `asset-plan.md` only when the decision that no assets are needed is documented.
+Create only the artifacts that apply. For example, skip `asset-plan.md` only when the decision that no assets are needed is documented. Skip QA artifacts unless the user chooses QA first or explicitly asks for QA.
 
 ## Workflow Overview
 
@@ -195,12 +191,12 @@ Use seven sequential agents. Each stage owns a distinct decision boundary.
 | 4 | Asset Generation Agent | screenshots, b-roll, diagrams, generated assets | `asset-plan.md`, `asset-manifest.json` |
 | 5 | Motion/Overlay Agent | timing, pattern interrupts, transitions, overlay behavior | `motion-plan.md`, `overlay-timeline.json` |
 | 6 | HyperFrames Assembly Agent | HTML/CSS/GSAP composition implementation | `index.html`, `assembly-notes.md`, `assembly-checklist.md` |
-| 7 | QA/Review Agent | verdict, punch list, render readiness, user-review handoff | `qa-report.md`, `qa-punch-list.md`, `final-approval.md` |
+| 7 optional | QA/Review Agent | verdict, punch list, render readiness review | `qa-report.md`, `qa-punch-list.md`, `final-approval.md` |
 | Optional | R2/Repliz Publish Gate | upload approved render to R2 and schedule Repliz | `videos/<slug>/repliz-publish.json` |
 
 Do not let one stage silently take over another stage's responsibility. If QA finds a weak hook, send it back to the Creative Director. If captions are unreadable, send it back to Caption/Subtitle or HyperFrames Assembly depending on whether the issue is wording/timing or layout.
 
-Do not let QA approval silently become publish approval. After final render, stop and ask the user to review the edited video. R2 upload and Repliz scheduling happen only after explicit user approval and only through a command that includes `--approved`.
+Do not let QA approval silently become publish approval. After final render, stop and ask the user to review the edited video with three choices: publish as-is, QA first, or revisions. R2 upload and Repliz scheduling happen only after explicit user approval and only through a command that includes `--approved`.
 
 ## Stage 0 - Intake
 
@@ -647,6 +643,8 @@ Fix errors before handoff.
 
 ## Stage 7 - QA/Review Agent
 
+Run only when the user chooses QA first, asks for readiness/punch-list review, or needs regression review.
+
 Purpose:
 
 Decide whether the edit is ready, needs revisions, or is blocked.
@@ -660,7 +658,7 @@ Outputs:
 
 Verdicts:
 
-- `pass`: ready for final render or user-review handoff
+- `pass`: ready for final render or publish approval
 - `pass-with-minor-notes`: usable with non-blocking polish notes
 - `revise`: not ready; major viewer/style issue remains
 - `blocked`: cannot review because inputs, preview, render, or verification evidence are missing
@@ -915,7 +913,7 @@ QA issues:
 
 - no preview evidence
 - no `npm run check` after `.html` edit
-- final approval written despite major issues
+- final approval written despite major issues when QA was requested
 - rendered MP4 not reviewed separately
 - R2/Repliz publish run before explicit user approval
 - real `.env` value copied into docs or examples
@@ -933,8 +931,8 @@ A video is done only when:
 - preview or render has been reviewed
 - no blockers remain
 - no major issues remain
-- `qa-report.md` records the verdict
-- `final-approval.md` exists only for `pass`
+- if QA was requested, `qa-report.md` records the verdict
+- if QA was requested, `final-approval.md` exists only for `pass`
 - any R2/Repliz publish waits for explicit user approval and uses `--approved`
 - public docs/examples contain placeholders, not real `.env` values
 

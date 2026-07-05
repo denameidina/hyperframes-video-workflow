@@ -7,7 +7,7 @@ description: Use when planning, editing, assembling, reviewing, or rendering Den
 
 ## Overview
 
-Use this skill as the router for Dena Meidina social-video work in this project. It enforces the `docs/agents/` sequence, Dena style guide, HyperFrames composition rules, handoff artifacts, and QA gates.
+Use this skill as the router for Dena Meidina social-video work in this project. It enforces the `docs/agents/` sequence, Dena style guide, HyperFrames composition rules, handoff artifacts, and optional QA review gate.
 
 ## Start Here
 
@@ -36,7 +36,7 @@ Use exactly the agent that owns the current decision:
 | Screenshots, b-roll, generated images/video, diagrams, stickers | `docs/agents/04-asset-generation-agent.md` |
 | Overlay timing, pattern interrupts, zooms, effects, transitions | `docs/agents/05-motion-overlay-agent.md` |
 | `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly | `docs/agents/06-hyperframes-assembly-agent.md` |
-| Final review, punch list, render/platform readiness, approval | `docs/agents/07-qa-review-agent.md` |
+| Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/07-qa-review-agent.md` |
 | R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
@@ -76,7 +76,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
 - After any `.html` edit, run `npm run check` and fix errors before handoff.
-- After final render, stop for user review. Do not upload to R2 or schedule Repliz until the user explicitly approves.
+- After final render, stop for user review. Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
 - Repliz publish must use `--approved`; R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`.
 
 ## Handoff Contract
@@ -95,12 +95,9 @@ videos/<slug>/motion-plan.md
 videos/<slug>/overlay-timeline.json
 videos/<slug>/assembly-notes.md
 videos/<slug>/assembly-checklist.md
-videos/<slug>/qa-report.md
-videos/<slug>/qa-punch-list.md
-videos/<slug>/final-approval.md
 ```
 
-Only create asset artifacts when assets are needed. Only create `final-approval.md` after QA passes.
+Only create asset artifacts when assets are needed. Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
 
 ## If Inputs Are Missing
 
@@ -112,6 +109,6 @@ Do not invent missing upstream decisions.
 - Missing assets: run Agent 04 or mark assets unnecessary.
 - Missing motion plan: run Agent 05.
 - Missing assembly notes/checklist: run Agent 06.
-- Missing QA evidence: run Agent 07.
+- User chose QA first and QA evidence is missing: run Agent 07.
 
 If the user asks for a narrow fix, document which upstream assumptions are being reused.

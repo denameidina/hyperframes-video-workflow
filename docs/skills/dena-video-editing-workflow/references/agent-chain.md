@@ -2,7 +2,7 @@
 
 Use this reference when deciding which Dena video agent to run and what artifact must be produced next.
 
-## Full Sequential Workflow
+## Default Edit Workflow
 
 1. `docs/agents/01-creative-director.md`
    - Owns: angle, audience, hook, content lane, visual grammar, CTA.
@@ -34,11 +34,13 @@ Use this reference when deciding which Dena video agent to run and what artifact
    - Reads: all upstream plans and `/hyperframes` routed docs.
    - Writes: composition files, `assembly-notes.md`, `assembly-checklist.md`.
 
-7. `docs/agents/07-qa-review-agent.md`
+7. Optional review gate: `docs/agents/07-qa-review-agent.md`
    - Owns: final verdict, punch list, render/platform readiness, revision routing.
    - Reads: all upstream artifacts, composition files, preview/render evidence.
    - Writes: `qa-report.md`, `qa-punch-list.md`, optionally `render-review.md` and `final-approval.md`.
-   - Stops for explicit user approval before any R2/Repliz publish.
+   - Runs only when the user chooses QA first, asks for readiness/punch-list review, or needs regression review.
+
+After Agent 06, render the edit and stop for user review. At that gate, offer publish as-is, QA first, or revisions. R2/Repliz publish still requires explicit user approval.
 
 ## Skip Rules
 
@@ -47,7 +49,7 @@ Skipping is allowed only when the reason is explicit.
 - Skip Agent 04 only when no assets are needed and no URL/tool/product context needs visual support; write that decision in `caption-plan.md` or `motion-plan.md`.
 - Skip Agent 05 only for plain captions without designed overlays, pattern interrupts, progress, or SFX.
 - Skip Agent 06 only when no HyperFrames composition is being created or changed.
-- Skip Agent 07 only for exploratory notes that are not claiming final readiness.
+- Skip Agent 07 by default until the user review/publish gate. Run it only when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
 
 Never skip Agent 01 for a new creative edit unless the user asks for a narrow technical operation.
 
@@ -62,7 +64,7 @@ Route revisions to the owner:
 - Unreadable screenshot, missing URL capture, bad generated asset, privacy issue in asset: Agent 04.
 - Noisy motion, weak pattern interrupt, missing/inaudible SFX cue, overlay timing conflict: Agent 05.
 - Broken HyperFrames contract, missing media, track overlap, z-index, render failure: Agent 06.
-- Approval decision, punch list, regression review: Agent 07.
+- Optional QA decision, punch list, regression review: Agent 07.
 
 ## User Shortcuts
 
@@ -71,5 +73,6 @@ If the user says:
 - `lanjut agent berikutnya`: continue to the next numbered agent.
 - `audit dulu`: inspect source/reference and produce evidence before changing files.
 - `buat workflow`: create or update docs first; do not jump into editing.
-- `render final`: verify QA gate first unless explicitly told to render a draft.
-- `publish final`: verify user approval, then use `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
+- `render final`: run required technical checks, render, then send to the user review gate.
+- `publish final` or `publish as-is`: verify explicit user approval, then use `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
+- `QA first`: run Agent 07, then return to the user review/publish gate.

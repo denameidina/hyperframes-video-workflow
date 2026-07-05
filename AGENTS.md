@@ -44,9 +44,9 @@ Start by reading the local workflow skill:
 
 Use that skill as the router, then read the specific agent file for the current stage.
 
-### Mandatory Agent Order
+### Default Agent Order
 
-Default full workflow:
+Default edit workflow before user review:
 
 1. `docs/agents/01-creative-director.md`
 2. `docs/agents/02-transcript-cut-agent.md`
@@ -54,7 +54,8 @@ Default full workflow:
 4. `docs/agents/04-asset-generation-agent.md`
 5. `docs/agents/05-motion-overlay-agent.md`
 6. `docs/agents/06-hyperframes-assembly-agent.md`
-7. `docs/agents/07-qa-review-agent.md`
+
+`docs/agents/07-qa-review-agent.md` is optional and runs from the user review/publish gate when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
 
 Run the agents sequentially unless the user explicitly requests a narrow technical fix. Do not jump to assembly before creative direction, cut logic, captions, assets, and motion have either been completed or explicitly marked unnecessary.
 
@@ -66,7 +67,7 @@ Run the agents sequentially unless the user explicitly requests a narrow technic
 - Screenshots, generated stills/video, b-roll, diagrams, UI mockups, stickers, textures, or proof visuals: use Agent 04.
 - Overlay timing, pattern interrupts, zooms, effects, cards, progress bars, or transition behavior: use Agent 05.
 - Editing `index.html`, `compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, or local asset wiring: use Agent 06 and the relevant HyperFrames skill.
-- Final approval, punch list, render readiness, platform readiness, or regression review: use Agent 07.
+- Optional QA, punch list, render/platform readiness review, or regression review: use Agent 07.
 
 ### Discipline Rules
 
@@ -92,16 +93,17 @@ For a complete social video, expect this chain:
 - `overlay-timeline.json`
 - `assembly-notes.md`
 - `assembly-checklist.md`
-- `qa-report.md`
-- `qa-punch-list.md`
-- `final-approval.md`, only after QA passes
+- Optional after user chooses QA first at review/publish gate: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
 
 ### Repliz/R2 Auto Publish Gate
 
 Auto publish is documented in `docs/repliz/integration-spec.md`.
 
-- After final render, stop and ask the user to review/approve the edited video.
+- After final render, stop and ask the user to review the edited video.
+- At the review gate, offer: publish as-is, run QA first, or request revisions.
 - Do not upload to Cloudflare R2 or schedule Repliz until the user explicitly approves/confirms.
+- If the user chooses publish as-is, QA artifacts are not required.
+- If the user chooses QA first, run Agent 07 before asking for final publish approval.
 - Only after approval, run `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
 - R2 uses Wrangler remote upload, `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and public base `https://<r2-public-domain>`.
 - Do not add S3 access keys, R2 secret keys, or `wrangler.jsonc` for this flow unless the user explicitly asks.
