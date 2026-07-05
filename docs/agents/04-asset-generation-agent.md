@@ -329,6 +329,24 @@ Priority:
 
 Generated video is the most expensive and least controllable. Use it only when it earns its place.
 
+### 3A. Imagegen Decision Log
+
+For every visual-support opportunity, write an `Imagegen Decision Log` entry in `asset-plan.md` before deciding that generated media is unnecessary.
+
+Required fields:
+
+| Field | Meaning |
+| --- | --- |
+| `time` | Transcript window |
+| `purpose` | clarify, prove, contrast, reset-attention, background, etc. |
+| `best_real_asset` | source footage, screenshot, screen recording, user media, or `none` |
+| `simple_asset_option` | diagram, text-support visual, sticker, or `none` |
+| `imagegen_candidate` | `yes` or `no` |
+| `decision` | `generate`, `use-real`, `use-diagram`, `skip` |
+| `reason` | One concrete sentence tied to the transcript |
+
+Do not write "no generated image needed" unless this log explains why for each visual opportunity.
+
 ### 4. Define Visual Constraints
 
 Each asset needs:
@@ -355,6 +373,23 @@ When preparing assets:
 - Prefer MP4/WebM for short clips.
 - Prefer SVG only for simple diagrams/icons that should scale cleanly.
 - Keep file sizes reasonable.
+
+Image generation must be tried at least once when all are true:
+
+- The asset purpose is `background`, `metaphor`, `abstract AI/workflow idea`, `transition`, `reset-attention`, `texture`, or `impossible b-roll`.
+- The asset is not being used as factual proof.
+- The current alternative would be a stiff text card, generic SVG, or empty decorative background.
+- The prompt can be grounded in the transcript without fake UI, fake client data, generated people, or robot/neon AI cliches.
+
+If the generated result looks generic or fake after one revision, remove it and document the rejection in `asset-plan.md`.
+
+Do not generate when:
+
+- The asset's primary purpose is `prove` and a real capture/source frame exists.
+- The viewer needs to inspect a real product, repo, website, app, dashboard, or code state.
+- The only possible prompt would create fake evidence.
+- The video is family/vlog or emotionally human, and source footage already carries the moment.
+- The user explicitly asks for no generated assets.
 
 ### 6. Document Provenance
 
@@ -551,6 +586,15 @@ Create `asset-manifest.json`.
 }
 ```
 
+For generated assets, also include:
+
+```json
+{
+  "promptSummary": "Vertical founder desk workflow still, no readable text, no people, no fake UI.",
+  "rejectedAlternatives": ["static text card felt stiff"]
+}
+```
+
 Each asset entry needs:
 
 - stable `id`
@@ -593,6 +637,12 @@ Create `asset-plan.md`.
 
 | ID | Time | Type | Purpose | File | Required | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+
+## Imagegen Decision Log
+
+| Time | Purpose | Best real asset | Simple asset option | Imagegen candidate | Decision | Reason |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0.0-3.0 | reset-attention | none | hook text card | yes | generate | The hook needs a grounded visual plate, and a static text card would feel stiff. |
 
 ## Prompts
 
