@@ -55,6 +55,16 @@ If the user provides a URL or the transcript mentions a tool/product/site, Agent
 - provide local screenshot/screen-record assets matched to transcript windows, or
 - document why capture was unnecessary or unsafe and provide a better generated/diagram alternative.
 
+When `asset-plan.md` exists, QA must check for an `Imagegen Decision Log`.
+
+Fail Agent 04 output when:
+
+- visual assets exist but `asset-plan.md` has no `Imagegen Decision Log`
+- an asset opportunity says no generated media was needed without an `imagegen_candidate` decision
+- a mood, background, reset-attention, texture, transition, or abstract workflow moment uses only a stiff card/SVG and does not explain why image generation was skipped
+- a generated asset has no provenance or prompt summary in `asset-manifest.json`
+- a generated asset looks generic, fake, or detached from transcript context
+
 Generated images/video are acceptable when grounded in the brief and clearly not presented as real proof.
 
 ## Motion And SFX Gate
