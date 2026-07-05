@@ -71,7 +71,15 @@ Target publish default dibaca dari `.env`:
 }
 ```
 
-Per video/project, integrasi hanya butuh metadata post:
+Per video/project, integrasi membutuhkan metadata post dengan `description`
+non-empty. Source priority:
+
+1. `videos/<slug>/repliz-publish.json` `post.description`
+2. `videos/<slug>/repliz-publish.json` root `description`
+3. `videos/<slug>/publish-captions.md` `## Instagram` fenced `text` block
+4. `videos/<slug>/publish-captions.md` `## TikTok` fenced `text` block
+
+Jika semua source kosong, script berhenti sebelum upload R2 atau scheduling Repliz.
 
 ```json
 {
@@ -255,7 +263,7 @@ Minimal script behavior:
 
 1. Tolak publish jika CLI tidak diberi `--approved`.
 2. Baca env Repliz dan R2 public config.
-3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` jika ada.
+3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong.
 4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, dan `REPLIZ_INSTAGRAM_ACCOUNT_ID`.
 5. Upload `--file` ke R2 dengan Wrangler jika object belum ada atau `--force` dipakai.
 6. Bentuk `videoUrl` dari public R2 URL.

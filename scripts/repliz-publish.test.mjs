@@ -83,12 +83,35 @@ test("buildSchedulePayload matches Repliz video schedule contract", () => {
   });
 
   assert.equal(payload.accountId, "tk_1");
+  assert.equal(payload.description, "Caption final");
   assert.equal(payload.type, "video");
   assert.equal(payload.medias[0].type, "video");
   assert.equal(payload.medias[0].url, "https://media.example.com/final-renders/0702-2/final.mp4");
   assert.deepEqual(payload.additionalInfo.tags, ["editing"]);
   assert.deepEqual(payload.additionalInfo.mentions, ["dena"]);
   assert.deepEqual(payload.additionalInfo.targetCountries, ["ID"]);
+});
+
+test("buildSchedulePayload rejects empty description", () => {
+  assert.throws(
+    () =>
+      buildSchedulePayload({
+        accountId: "tk_1",
+        platform: "tiktok",
+        post: {
+          title: "",
+          description: " ",
+          topic: "",
+          type: "video",
+          tags: [],
+          mentions: [],
+          targetCountries: ["ID"],
+          scheduleAt: "2026-07-03T01:40:08.119Z",
+        },
+        videoUrl: "https://media.example.com/final-renders/0702-2/final.mp4",
+      }),
+    /Missing tiktok post description/,
+  );
 });
 
 test("readPostMetadata supports a root metadata object and a receipt post object", async () => {
@@ -111,6 +134,84 @@ test("readPostMetadata supports a root metadata object and a receipt post object
   assert.deepEqual((await readPostMetadata(rootSlug)).tags, ["root"]);
   assert.equal((await readPostMetadata(receiptSlug)).description, "Receipt caption");
   assert.deepEqual((await readPostMetadata(receiptSlug)).targetCountries, ["US"]);
+});
+
+test("readPostMetadata falls back to Instagram publish caption", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-publish-caption-"));
+  await writeFile(
+    path.join(dir, "publish-captions.md"),
+    `# Publish Captions
+
+## Instagram
+
+Character count: 42
+
+\`\`\`text
+Instagram caption final.
+
+#AIWorkflow
+\`\`\`
+
+## TikTok
+
+\`\`\`text
+TikTok caption final.
+\`\`\`
+`,
+  );
+
+  const post = await readPostMetadata(dir);
+
+  assert.equal(post.description, "Instagram caption final.\n\n#AIWorkflow");
+});
+
+test("readPostMetadata prefers repliz-publish description over publish-captions fallback", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-explicit-caption-"));
+  await writeFile(path.join(dir, "repliz-publish.json"), JSON.stringify({ post: { description: "Explicit caption" } }));
+  await writeFile(
+    path.join(dir, "publish-captions.md"),
+    `## Instagram
+
+\`\`\`text
+Fallback caption
+\`\`\`
+`,
+  );
+
+  const post = await readPostMetadata(dir);
+
+  assert.equal(post.description, "Explicit caption");
+});
+
+test("readPostMetadata uses root description when receipt post description is blank", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-root-description-"));
+  await writeFile(
+    path.join(dir, "repliz-publish.json"),
+    JSON.stringify({ description: "Root caption", post: { description: " " } }),
+  );
+
+  const post = await readPostMetadata(dir);
+
+  assert.equal(post.description, "Root caption");
+});
+
+test("readPostMetadata falls back to TikTok when Instagram caption is absent", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-tiktok-caption-"));
+  await writeFile(
+    path.join(dir, "publish-captions.md"),
+    `# Publish Captions
+
+## TikTok
+
+\`\`\`text
+TikTok only caption.
+\`\`\`
+`,
+  );
+
+  const post = await readPostMetadata(dir);
+
+  assert.equal(post.description, "TikTok only caption.");
 });
 
 test("duplicate guard compares publish key and respects force", () => {
@@ -399,6 +500,82 @@ test("runPublish requires approval before uploading to R2 or scheduling", async 
   );
 
   assert.deepEqual(calls, []);
+});
+
+test("runPublish rejects empty post description before uploading or scheduling", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-empty-description-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  await mkdir(slugDir, { recursive: true });
+  const calls = [];
+
+  await assert.rejects(
+    () =>
+      runPublish({
+        argv: ["--slug", slugDir, "--file", path.join(dir, "renders", "final.mp4"), "--approved"],
+        env: envFixture(),
+        runCommand: async () => calls.push("wrangler"),
+        fetchImpl: async () => calls.push("fetch"),
+      }),
+    /Missing post description/,
+  );
+
+  assert.deepEqual(calls, []);
+});
+
+test("runPublish sends publish-captions description to every schedule payload", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-caption-fallback-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  await writeFile(
+    path.join(slugDir, "publish-captions.md"),
+    `# Publish Captions
+
+## Instagram
+
+\`\`\`text
+Caption from publish captions.
+
+#AIWorkflow
+\`\`\`
+`,
+  );
+
+  const scheduleBodies = [];
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/tk_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "tk_1", type: "tiktok", isConnected: true }) };
+    }
+    if (url.endsWith("/public/account/ig_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "ig_1", type: "instagram", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      scheduleBodies.push(JSON.parse(options.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${scheduleBodies.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+
+  await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture(),
+    runCommand: async () => ({ stdout: "ok", stderr: "" }),
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(scheduleBodies.length, 2);
+  assert.deepEqual(
+    scheduleBodies.map((body) => body.description),
+    ["Caption from publish captions.\n\n#AIWorkflow", "Caption from publish captions.\n\n#AIWorkflow"],
+  );
 });
 
 test("runPublish uploads to R2, creates schedules, writes receipt, and skips duplicate rerun", async () => {

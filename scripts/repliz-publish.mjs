@@ -100,18 +100,58 @@ export async function readJsonIfExists(filePath) {
   }
 }
 
+async function readTextIfExists(filePath) {
+  try {
+    return await readFile(filePath, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return "";
+    throw error;
+  }
+}
+
+function extractPublishCaption(markdown, heading) {
+  const headingMatch = markdown.match(new RegExp(`^##\\s+${heading}\\s*$`, "im"));
+  if (!headingMatch) return "";
+
+  const afterHeading = markdown.slice(headingMatch.index + headingMatch[0].length);
+  const nextHeadingIndex = afterHeading.search(/^##\s+/m);
+  const section = nextHeadingIndex === -1 ? afterHeading : afterHeading.slice(0, nextHeadingIndex);
+  const fencedText = section.match(/```(?:text)?\s*\n([\s\S]*?)\n```/i)?.[1] || "";
+
+  return fencedText.trim();
+}
+
+async function readPublishDescription(slugDir) {
+  const markdown = await readTextIfExists(path.join(slugDir, "publish-captions.md"));
+  if (!markdown.trim()) return "";
+  return extractPublishCaption(markdown, "Instagram") || extractPublishCaption(markdown, "TikTok");
+}
+
 export async function readPostMetadata(slugDir) {
   const data = await readJsonIfExists(path.join(slugDir, "repliz-publish.json"));
   const source = data?.post || data || {};
+  const fallbackDescription = await readPublishDescription(slugDir);
+  const description =
+    String(source.description || "").trim() ||
+    String(data?.description || "").trim() ||
+    fallbackDescription;
+
   return {
     ...DEFAULT_POST,
     ...source,
+    description,
     tags: Array.isArray(source.tags) ? source.tags : DEFAULT_POST.tags,
     mentions: Array.isArray(source.mentions) ? source.mentions : DEFAULT_POST.mentions,
     targetCountries: Array.isArray(source.targetCountries)
       ? source.targetCountries
       : DEFAULT_POST.targetCountries,
   };
+}
+
+function requireDescription(description, label = "post") {
+  const text = String(description || "").trim();
+  if (!text) throw new Error(`Missing ${label} description`);
+  return text;
 }
 
 export function scheduleAtIso(scheduleAt, now = new Date()) {
@@ -141,7 +181,7 @@ export function sanitizeDescriptionForPlatform(description, platform) {
 }
 
 export function buildSchedulePayload({ accountId, platform, post, videoUrl, now = new Date() }) {
-  const description = sanitizeDescriptionForPlatform(post.description, platform);
+  const description = requireDescription(sanitizeDescriptionForPlatform(post.description, platform), `${platform} post`);
 
   return {
     title: post.title,
@@ -387,6 +427,11 @@ export async function runPublish({
   if (!targetAccounts.length) throw new Error("No target account IDs configured");
 
   const post = await readPostMetadata(args.slug);
+  try {
+    requireDescription(post.description);
+  } catch {
+    throw new Error(`Missing post description. Add ${path.join(args.slug, "repliz-publish.json")} with post.description or ${path.join(args.slug, "publish-captions.md")} before publishing.`);
+  }
   const existingReceipt = await readJsonIfExists(path.join(args.slug, "repliz-publish.json"));
   const r2Key = buildR2Key({ prefix: config.r2Prefix, slug: args.slug, file: args.file });
   const videoUrl = buildPublicUrl(config.r2PublicBaseUrl, r2Key);

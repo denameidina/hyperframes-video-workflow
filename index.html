@@ -3,138 +3,347 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Dena - Codex HyperFrames Repliz Roadmap</title>
+    <title>Dena - Repliz Affiliate Joke Workflow</title>
     <script src="vendor/gsap.min.js"></script>
     <style>
       * { box-sizing: border-box; }
-      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: Arial, Helvetica, sans-serif; }
-      [data-composition-id] { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #050505; --white: #fff; --black: #050505; --yellow: #facc15; --green: #22c55e; --safe-bottom: 260px; }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      [data-composition-id] {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #050505;
+        --white: #fff;
+        --black: #050505;
+        --panel: rgba(5, 5, 5, 0.9);
+        --yellow: #facc15;
+        --green: #22c55e;
+        --muted: #d4d4d8;
+        --safe-bottom: 270px;
+      }
       .clip { position: absolute; }
-      .base-video { inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
+      .base-video {
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform-origin: center center;
+      }
       audio.clip { width: 0; height: 0; opacity: 0; }
-      .dim { inset: 0; z-index: 8; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.48) 0%, rgba(0,0,0,.12) 38%, rgba(0,0,0,.28) 100%); }
-      .progress-bar { top: 0; left: 0; z-index: 35; width: 100%; height: 12px; background: rgba(255,255,255,.14); }
-      .progress-fill { display: block; width: 100%; height: 100%; background: var(--yellow); transform: scaleX(0); transform-origin: left center; }
-      .hook-card, .cta-card, .stack-card, .platform-card, .roadmap-card, .screenshot-card, .route-card { color: var(--white); background: rgba(0,0,0,.88); border: 3px solid rgba(255,255,255,.16); border-radius: 8px; box-shadow: 0 22px 48px rgba(0,0,0,.45); }
-      .hook-card { top: 104px; left: 64px; right: 64px; z-index: 55; padding: 26px 34px; text-align: center; text-transform: uppercase; }
-      .hook-card .line { display: block; font-size: 50px; font-weight: 950; line-height: 1.04; }
-      .hook-card .small { margin-top: 12px; color: var(--yellow); font-size: 29px; font-weight: 900; line-height: 1.08; }
-      .roadmap-card { top: 340px; left: 102px; z-index: 25; width: 876px; height: 410px; overflow: hidden; }
-      .roadmap-card img { display: block; width: 100%; height: 100%; object-fit: contain; }
-      .stack-card { top: 156px; left: 54px; right: 54px; z-index: 26; display: flex; gap: 14px; align-items: center; justify-content: center; padding: 20px; }
-      .chip { min-width: 172px; padding: 17px 16px; color: var(--white); background: #18181b; border: 2px solid rgba(255,255,255,.14); border-radius: 8px; font-size: 27px; font-weight: 950; line-height: 1; text-align: center; text-transform: uppercase; }
-      .chip.hot { color: var(--black); background: var(--yellow); border-color: var(--yellow); }
-      .platform-card { top: 150px; left: 78px; right: 78px; z-index: 26; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 22px; }
-      .platform-card .chip { min-width: 0; font-size: 28px; }
-      .screenshot-card { top: 122px; left: 58px; z-index: 28; width: 560px; height: 620px; overflow: hidden; padding: 16px; }
-      .screenshot-card img { width: 100%; height: 510px; object-fit: cover; object-position: top center; border-radius: 6px; display: block; }
-      .screenshot-card figcaption { margin-top: 14px; color: var(--yellow); font-size: 26px; font-weight: 950; text-transform: uppercase; }
-      .route-card { top: 146px; left: 76px; right: 76px; z-index: 27; padding: 24px 28px; }
-      .route-card .route-title { color: var(--yellow); font-size: 32px; font-weight: 950; text-transform: uppercase; }
-      .route-card .route-line { display: flex; gap: 12px; align-items: center; margin-top: 18px; }
-      .route-card .route-step { flex: 1; padding: 18px 10px; color: #fff; background: #18181b; border: 2px solid rgba(255,255,255,.14); border-radius: 8px; font-size: 24px; font-weight: 950; text-align: center; text-transform: uppercase; }
-      .route-card .route-step.hot { color: #050505; background: var(--yellow); border-color: var(--yellow); }
-      .caption { left: 70px; right: 70px; bottom: var(--safe-bottom); z-index: 45; min-height: 124px; color: var(--white); font-size: 62px; font-weight: 950; line-height: 1; letter-spacing: 0; text-align: center; text-transform: uppercase; overflow-wrap: anywhere; text-shadow: 0 5px 0 #000, 0 12px 26px rgba(0,0,0,.72); -webkit-text-stroke: 2px #000; }
+      .progress-bar {
+        top: 0;
+        left: 0;
+        z-index: 34;
+        width: 100%;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .progress-fill {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--yellow);
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+      .hook-card,
+      .cta-card,
+      .proof-card,
+      .label-card,
+      .sticker {
+        color: var(--white);
+        background: var(--panel);
+        border: 3px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        box-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
+      }
+      .hook-card {
+        top: 92px;
+        left: 64px;
+        right: 64px;
+        z-index: 56;
+        padding: 24px 30px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .hook-card .line {
+        display: block;
+        font-size: 48px;
+        font-weight: 950;
+        line-height: 1.04;
+      }
+      .hook-card .small {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 10px 16px;
+        color: var(--yellow);
+        background: rgba(0, 0, 0, 0.42);
+        border: 2px solid rgba(250, 204, 21, 0.5);
+        border-radius: 8px;
+        font-size: 30px;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .proof-card {
+        top: 132px;
+        z-index: 24;
+        width: 470px;
+        overflow: hidden;
+        padding: 14px;
+      }
+      .proof-card.left { left: 42px; }
+      .proof-card.right { right: 42px; }
+      .proof-card.wide {
+        left: 54px;
+        right: 54px;
+        width: auto;
+        height: 380px;
+      }
+      .proof-card img {
+        display: block;
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        object-position: top center;
+        border-radius: 6px;
+      }
+      .proof-card.wide img {
+        height: 100%;
+        object-fit: contain;
+      }
+      .proof-card figcaption {
+        margin-top: 12px;
+        color: var(--yellow);
+        font-size: 22px;
+        font-weight: 950;
+        line-height: 1.08;
+        text-transform: uppercase;
+      }
+      .label-card {
+        z-index: 37;
+        padding: 14px 18px;
+        font-size: 25px;
+        font-weight: 950;
+        line-height: 1.05;
+        text-transform: uppercase;
+      }
+      .label-card.left { top: 128px; left: 52px; }
+      .label-card.right { top: 128px; right: 52px; }
+      .label-card.green {
+        color: #dcfce7;
+        border-color: rgba(34, 197, 94, 0.65);
+      }
+      .sticker {
+        top: 122px;
+        right: 62px;
+        z-index: 38;
+        padding: 14px 18px;
+        color: var(--black);
+        background: var(--yellow);
+        border-color: var(--yellow);
+        transform: rotate(3deg);
+        font-size: 27px;
+        font-weight: 950;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+      .caption {
+        left: 58px;
+        right: 58px;
+        bottom: var(--safe-bottom);
+        z-index: 45;
+        min-height: 116px;
+        color: var(--white);
+        font-size: 54px;
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: 0;
+        text-align: center;
+        text-transform: uppercase;
+        overflow-wrap: anywhere;
+        text-shadow: 0 5px 0 #000, 0 12px 26px rgba(0, 0, 0, 0.72);
+        -webkit-text-stroke: 2px #000;
+      }
       .highlight { color: var(--yellow); }
-      .approval-pill { right: 78px; bottom: 128px; z-index: 37; padding: 15px 20px; border-radius: 8px; color: var(--white); background: rgba(0,0,0,.76); border: 2px solid rgba(255,255,255,.16); font-size: 24px; font-weight: 900; text-transform: uppercase; }
-      .cta-card { top: 112px; left: 72px; right: 72px; z-index: 56; padding: 32px 38px; text-align: center; text-transform: uppercase; }
-      .cta-card .main { display: block; color: var(--white); font-size: 45px; font-weight: 950; line-height: 1.08; }
-      .cta-card .reply { display: inline-block; margin-top: 18px; padding: 15px 22px; border-radius: 8px; color: var(--black); background: var(--yellow); font-size: 38px; font-weight: 950; line-height: 1; }
-      .flash { inset: 0; z-index: 36; background: rgba(250,204,21,.26); opacity: 0; pointer-events: none; }
+      .cta-card {
+        top: 98px;
+        left: 72px;
+        right: 72px;
+        z-index: 57;
+        padding: 28px 34px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .cta-card .main {
+        display: block;
+        color: var(--white);
+        font-size: 42px;
+        font-weight: 950;
+        line-height: 1.08;
+      }
+      .cta-card .reply {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 14px 20px;
+        border-radius: 8px;
+        color: var(--black);
+        background: var(--yellow);
+        font-size: 31px;
+        font-weight: 950;
+        line-height: 1;
+      }
     </style>
   </head>
   <body>
-    <main id="root" data-composition-id="dena-codex-hyperframes-repliz-roadmap" data-start="0" data-width="1080" data-height="1920" data-duration="42.433">
-      <video id="base-video" class="clip base-video" data-start="0" data-duration="42.433" data-track-index="1" src="videos/codex-hyperframes-repliz-roadmap/processed.mp4" muted playsinline></video>
-      <audio id="base-audio" class="clip" data-start="0" data-duration="42.433" data-track-index="10" src="videos/codex-hyperframes-repliz-roadmap/processed.mp4"></audio>
-      <audio id="sfx-001" class="clip" data-start="0.18" data-duration="0.22" data-track-index="11" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-whoosh.wav"></audio>
-      <audio id="sfx-002" class="clip" data-start="9.70" data-duration="0.22" data-track-index="12" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-whoosh.wav"></audio>
-      <audio id="sfx-003" class="clip" data-start="17.45" data-duration="0.12" data-track-index="13" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-click.wav"></audio>
-      <audio id="sfx-004" class="clip" data-start="24.90" data-duration="0.22" data-track-index="14" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-whoosh.wav"></audio>
-      <audio id="sfx-005" class="clip" data-start="34.35" data-duration="0.12" data-track-index="15" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-click.wav"></audio>
-      <audio id="sfx-006" class="clip" data-start="38.65" data-duration="0.22" data-track-index="16" src="videos/codex-hyperframes-repliz-roadmap/assets/sfx-soft-whoosh.wav"></audio>
-      <div id="global-dim" class="clip dim" data-start="0" data-duration="42.433" data-track-index="0"></div>
-      <div id="progress" class="clip progress-bar" data-start="0" data-duration="42.433" data-track-index="3"><span id="progress-fill" class="progress-fill"></span></div>
-      <div id="flash-repliz" class="clip flash" data-start="17.45" data-duration="0.16" data-track-index="6"></div>
-      <div id="flash-platform" class="clip flash" data-start="34.35" data-duration="0.16" data-track-index="7"></div>
-      <div id="approval-pill" class="clip approval-pill" data-start="17.4" data-duration="25.0" data-track-index="8">approval dulu -> baru publish</div>
-      <section id="hook-card" class="clip hook-card" data-start="0" data-duration="3.4" data-track-index="5"><span class="line">Raw video -> Codex</span><span class="line">auto publish roadmap</span><span class="line small">HyperFrames + R2 + Repliz</span></section>
-      <figure id="roadmap-hero" class="clip roadmap-card" data-start="0.2" data-duration="5.6" data-track-index="4"><img src="videos/codex-hyperframes-repliz-roadmap/assets/roadmap-flow.svg" alt="" /></figure>
-      <section id="stack-card" class="clip stack-card" data-start="9.7" data-duration="6.4" data-track-index="4"><span class="chip">Raw</span><span class="chip hot">Codex</span><span class="chip hot">HyperFrames</span><span class="chip">Render</span></section>
-      <figure id="repliz-shot" class="clip screenshot-card" data-start="17.4" data-duration="7.4" data-track-index="4"><img src="videos/codex-hyperframes-repliz-roadmap/assets/repliz-api-crop.png" alt="" /><figcaption>Repliz: API + social automation context</figcaption></figure>
-      <section id="route-card" class="clip route-card" data-start="24.9" data-duration="9.2" data-track-index="4"><div class="route-title">tag raw video -> codex automation</div><div class="route-line"><span class="route-step">Tag</span><span class="route-step hot">Codex</span><span class="route-step hot">Render</span><span class="route-step">Approval</span></div></section>
-      <section id="platform-card" class="clip platform-card" data-start="34.35" data-duration="5.5" data-track-index="4"><span class="chip hot">Instagram</span><span class="chip hot">TikTok</span><span class="chip hot">YouTube</span></section>
-      <div id="cap-001" class="clip caption" data-start="0" data-duration="0.933" data-track-index="2">UPDATE LAGI</div>
-      <div id="cap-002" class="clip caption" data-start="0.968" data-duration="0.933" data-track-index="2">UNTUK KONTEN</div>
-      <div id="cap-003" class="clip caption" data-start="1.936" data-duration="0.933" data-track-index="2">EDITING, NAH</div>
-      <div id="cap-004" class="clip caption" data-start="2.904" data-duration="1.417" data-track-index="2">SAYA DI SINI</div>
-      <div id="cap-005" class="clip caption" data-start="4.356" data-duration="1.417" data-track-index="2">LAGI MAU <span class="highlight">PROGRESS</span></div>
-      <div id="cap-006" class="clip caption" data-start="5.808" data-duration="1.417" data-track-index="2">UNTUK <span class="highlight">AUTO DEPLOY-NYA</span></div>
-      <div id="cap-007" class="clip caption" data-start="7.26" data-duration="0.933" data-track-index="2">JUGA ATAU</div>
-      <div id="cap-008" class="clip caption" data-start="8.228" data-duration="1.417" data-track-index="2"><span class="highlight">AUTO PUBLISH-NYA</span> JUGA</div>
-      <div id="cap-009" class="clip caption" data-start="9.68" data-duration="0.942" data-track-index="2">JADI SAYA</div>
-      <div id="cap-010" class="clip caption" data-start="10.657" data-duration="0.943" data-track-index="2">BAKAL BERENCANA</div>
-      <div id="cap-011" class="clip caption" data-start="11.635" data-duration="0.943" data-track-index="2">UNTUK KETIKA</div>
-      <div id="cap-012" class="clip caption" data-start="12.613" data-duration="0.942" data-track-index="2">SUDAH DI-EDIT</div>
-      <div id="cap-013" class="clip caption" data-start="13.59" data-duration="0.942" data-track-index="2">SAMA <span class="highlight">AI</span></div>
-      <div id="cap-014" class="clip caption" data-start="14.567" data-duration="0.943" data-track-index="2">PAK<span class="highlight">AI</span> YANG</div>
-      <div id="cap-015" class="clip caption" data-start="15.545" data-duration="1.431" data-track-index="2"><span class="highlight">HYPERFRAMES</span> DAN CODEX</div>
-      <div id="cap-016" class="clip caption" data-start="17.011" data-duration="0.454" data-track-index="2">SEBELUMNYA</div>
-      <div id="cap-017" class="clip caption" data-start="17.5" data-duration="1.296" data-track-index="2">LANJUT MAU</div>
-      <div id="cap-018" class="clip caption" data-start="18.831" data-duration="1.296" data-track-index="2"><span class="highlight">DI-UPLOAD</span> KE</div>
-      <div id="cap-019" class="clip caption" data-start="20.162" data-duration="1.296" data-track-index="2"><span class="highlight">R2</span> CLOUDFLARE</div>
-      <div id="cap-020" class="clip caption" data-start="21.493" data-duration="1.296" data-track-index="2">SAMA NANTI</div>
-      <div id="cap-021" class="clip caption" data-start="22.824" data-duration="1.296" data-track-index="2">PAKAI <span class="highlight">API</span></div>
-      <div id="cap-022" class="clip caption" data-start="24.155" data-duration="0.63" data-track-index="2"><span class="highlight">REPLIZ</span></div>
-      <div id="cap-023" class="clip caption" data-start="24.82" data-duration="0.929" data-track-index="2">NAH INI</div>
-      <div id="cap-024" class="clip caption" data-start="25.784" data-duration="0.929" data-track-index="2">BIAR SAYA</div>
-      <div id="cap-025" class="clip caption" data-start="26.748" data-duration="1.411" data-track-index="2">KETIKA <span class="highlight">TAG VIDEO</span></div>
-      <div id="cap-026" class="clip caption" data-start="28.194" data-duration="0.929" data-track-index="2">SEPERTI INI</div>
-      <div id="cap-027" class="clip caption" data-start="29.158" data-duration="1.411" data-track-index="2">ITU BAKAL LANGSUNG</div>
-      <div id="cap-028" class="clip caption" data-start="30.604" data-duration="0.929" data-track-index="2">SAYA KIRIM</div>
-      <div id="cap-029" class="clip caption" data-start="31.568" data-duration="0.929" data-track-index="2">KE <span class="highlight">CODEX</span></div>
-      <div id="cap-030" class="clip caption" data-start="32.532" data-duration="1.411" data-track-index="2">DAN BAKAL LANGSUNG</div>
-      <div id="cap-031" class="clip caption" data-start="33.978" data-duration="0.45" data-track-index="2"><span class="highlight">DI-AUTOMATE</span></div>
-      <div id="cap-032" class="clip caption" data-start="34.46" data-duration="0.811" data-track-index="2">LANGSUNG <span class="highlight">DI-PUBLISH</span></div>
-      <div id="cap-033" class="clip caption" data-start="35.306" data-duration="1.234" data-track-index="2">JUGA KE <span class="highlight">INSTAGRAM</span></div>
-      <div id="cap-034" class="clip caption" data-start="36.574" data-duration="0.811" data-track-index="2">KE <span class="highlight">TIKTOK</span></div>
-      <div id="cap-035" class="clip caption" data-start="37.42" data-duration="0.811" data-track-index="2">KE <span class="highlight">YOUTUBE</span></div>
-      <div id="cap-036" class="clip caption" data-start="38.266" data-duration="1.234" data-track-index="2">DAN ITU SEMUANYA</div>
-      <div id="cap-037" class="clip caption" data-start="39.534" data-duration="0.811" data-track-index="2">UDAH <span class="highlight">OTOMATIS</span></div>
-      <div id="cap-038" class="clip caption" data-start="40.38" data-duration="1.42" data-track-index="2">NAH SEPERTI ITU</div>
-      <div id="cap-039" class="clip caption" data-start="41.835" data-duration="0.45" data-track-index="2"><span class="highlight">RENCANANYA</span></div>
-      <section id="cta-card" class="clip cta-card" data-start="38.65" data-duration="3.78" data-track-index="5"><span class="main">Save dulu kalau lo lagi bangun content workflow AI</span><span class="reply">komen "workflow"</span></section>
+    <main
+      id="root"
+      data-composition-id="dena-repliz-affiliate-joke"
+      data-start="0"
+      data-width="1080"
+      data-height="1920"
+      data-duration="77.508"
+    >
+      <video id="base-video" class="clip base-video" data-start="0" data-duration="77.508" data-track-index="1" src="videos/repliz-affiliate-joke/processed.mp4" muted playsinline></video>
+      <audio id="base-audio" class="clip" data-start="0" data-duration="77.508" data-track-index="10" src="videos/repliz-affiliate-joke/processed.mp4"></audio>
+      <audio id="sfx-hook" class="clip" data-start="0" data-duration="2.12" data-track-index="11" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/impact-bass-1.mp3"></audio>
+      <audio id="sfx-github" class="clip" data-start="0.4" data-duration="0.57" data-track-index="12" data-volume="0.12" src="videos/repliz-affiliate-joke/assets/sfx/whoosh-short.mp3"></audio>
+      <audio id="sfx-diagram" class="clip" data-start="23.2" data-duration="0.57" data-track-index="13" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/whoosh-short.mp3"></audio>
+      <audio id="sfx-approve" class="clip" data-start="31.26" data-duration="0.37" data-track-index="14" data-volume="0.12" src="videos/repliz-affiliate-joke/assets/sfx/click-soft.mp3"></audio>
+      <audio id="sfx-affiliate" class="clip" data-start="54.22" data-duration="0.72" data-track-index="15" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/pop.mp3"></audio>
+      <audio id="sfx-cta" class="clip" data-start="73.9" data-duration="2.5" data-track-index="16" data-volume="0.09" src="videos/repliz-affiliate-joke/assets/sfx/chime.mp3"></audio>
+
+      <div id="progress" class="clip progress-bar" data-start="0" data-duration="77.508" data-track-index="3"><span id="progress-fill" class="progress-fill"></span></div>
+
+      <section id="hook-card" class="clip hook-card" data-start="0" data-duration="3" data-track-index="5">
+        <span class="line">Workflow edit video AI</span>
+        <span class="line">gue push ke GitHub</span>
+        <span class="small">Codex + R2 + Repliz</span>
+      </section>
+
+      <figure id="github-card-a" class="clip proof-card left" data-start="0.4" data-duration="7.4" data-track-index="4">
+        <img src="videos/repliz-affiliate-joke/assets/github-repo-crop.png" alt="" />
+        <figcaption>public repo: hyperframes-video-workflow</figcaption>
+      </figure>
+      <div id="proof-label" class="clip label-card left" data-start="18.35" data-duration="4.85" data-track-index="6">video sebelumnya sudah pakai automation</div>
+      <figure id="workflow-card" class="clip proof-card wide" data-start="23.2" data-duration="19.8" data-track-index="4">
+        <img src="videos/repliz-affiliate-joke/assets/workflow-route.svg" alt="" />
+      </figure>
+      <div id="approval-badge" class="clip label-card right green" data-start="30" data-duration="9.6" data-track-index="6">review -> approve -> publish</div>
+      <div id="tool-chips" class="clip label-card left" data-start="40.43" data-duration="5.51" data-track-index="6">Cloudflare R2 + Repliz</div>
+      <figure id="repliz-card" class="clip proof-card right" data-start="43.2" data-duration="13.3" data-track-index="4">
+        <img src="videos/repliz-affiliate-joke/assets/repliz-referral-crop.png" alt="" />
+        <figcaption>Repliz public page context</figcaption>
+      </figure>
+      <div id="affiliate-sticker" class="clip sticker" data-start="54.22" data-duration="4.28" data-track-index="6">affiliate joke</div>
+      <figure id="github-card-b" class="clip proof-card left" data-start="59.35" data-duration="8.65" data-track-index="4">
+        <img src="videos/repliz-affiliate-joke/assets/github-repo-crop-reprise.png" alt="" />
+        <figcaption>detailnya baca di repository</figcaption>
+      </figure>
+
+      <div id="cap-001" class="clip caption" data-start="0.01" data-duration="1.67" data-track-index="2">SEKARANG <span class="highlight">WORKFLOW</span> UNTUK</div>
+      <div id="cap-002" class="clip caption" data-start="1.68" data-duration="1.82" data-track-index="2">EDITING VIDEO SAMA <span class="highlight">PUBLISH</span></div>
+      <div id="cap-003" class="clip caption" data-start="3.51" data-duration="1.01" data-track-index="2">KE <span class="highlight">SOCIAL</span> MEDIA</div>
+      <div id="cap-004" class="clip caption" data-start="4.6" data-duration="1.04" data-track-index="2">SAYA SUDAH <span class="highlight">JADI</span> SEMUA</div>
+      <div id="cap-005" class="clip caption" data-start="5.64" data-duration="1.21" data-track-index="2">DAN SUDAH SAYA</div>
+      <div id="cap-006" class="clip caption" data-start="6.85" data-duration="1.13" data-track-index="2">PUSH KE <span class="highlight">GITHUB</span></div>
+      <div id="cap-007" class="clip caption" data-start="8.08" data-duration="1.71" data-track-index="2">SAYA JADI BUAT TEMAN-TEMAN</div>
+      <div id="cap-008" class="clip caption" data-start="9.79" data-duration="1.72" data-track-index="2">YANG MAU <span class="highlight">COBA</span> JUGA GITU YA</div>
+      <div id="cap-009" class="clip caption" data-start="11.51" data-duration="1.33" data-track-index="2">MAU NGEDIT-NGEDIT <span class="highlight">WORKFLOWNYA</span></div>
+      <div id="cap-010" class="clip caption" data-start="13.21" data-duration="1.17" data-track-index="2">SILAHKAN BANGET GITU YA</div>
+      <div id="cap-011" class="clip caption" data-start="14.64" data-duration="0.98" data-track-index="2"><span class="highlight">SESUAIKAN</span> SAMA</div>
+      <div id="cap-012" class="clip caption" data-start="16.1" data-duration="2.26" data-track-index="2"><span class="highlight">EDITING</span> VIDEONYA TEMAN-TEMAN AJA</div>
+      <div id="cap-013" class="clip caption" data-start="18.36" data-duration="2.13" data-track-index="2">VIDEO-VIDEO SAYA <span class="highlight">SEBELUMNYA</span></div>
+      <div id="cap-014" class="clip caption" data-start="20.49" data-duration="2.47" data-track-index="2">ITU TUH SUDAH PAKAI <span class="highlight">AUTOMATIONNYA</span></div>
+      <div id="cap-015" class="clip caption" data-start="22.98" data-duration="1.91" data-track-index="2">ITU JADI SECARA <span class="highlight">SINGKATNYA</span></div>
+      <div id="cap-016" class="clip caption" data-start="24.89" data-duration="1.31" data-track-index="2">SAYA KIRIM KE <span class="highlight">CODEX</span></div>
+      <div id="cap-017" class="clip caption" data-start="26.29" data-duration="2.12" data-track-index="2">TERUS SURUH <span class="highlight">NGEDIT</span> GITU YA</div>
+      <div id="cap-018" class="clip caption" data-start="28.62" data-duration="2" data-track-index="2">NANTI ADA <span class="highlight">REVIEW</span> DULU</div>
+      <div id="cap-019" class="clip caption" data-start="30.63" data-duration="0.63" data-track-index="2">GITU YA BIAR</div>
+      <div id="cap-020" class="clip caption" data-start="31.26" data-duration="0.95" data-track-index="2">SAYA <span class="highlight">APPROVE</span> DULU</div>
+      <div id="cap-021" class="clip caption" data-start="32.21" data-duration="1" data-track-index="2">NIH <span class="highlight">HASIL</span> VIDEONYA</div>
+      <div id="cap-022" class="clip caption" data-start="33.21" data-duration="1.12" data-track-index="2">UDAH <span class="highlight">SESUAI</span> SAMA YANG</div>
+      <div id="cap-023" class="clip caption" data-start="34.33" data-duration="1.25" data-track-index="2">AKU <span class="highlight">INGIN</span> ATAU BELUM</div>
+      <div id="cap-024" class="clip caption" data-start="35.58" data-duration="2.01" data-track-index="2">NAH KALAU UDAH <span class="highlight">APPROVE</span></div>
+      <div id="cap-025" class="clip caption" data-start="37.59" data-duration="1.69" data-track-index="2">BARU DI <span class="highlight">AUTO DEPLOY</span></div>
+      <div id="cap-026" class="clip caption" data-start="39.28" data-duration="1.15" data-track-index="2">SAMA SI <span class="highlight">CODEX</span></div>
+      <div id="cap-027" class="clip caption" data-start="40.43" data-duration="2.4" data-track-index="2">KE CLOUDFLARE DULU <span class="highlight">R2</span></div>
+      <div id="cap-028" class="clip caption" data-start="43.24" data-duration="2.7" data-track-index="2">SAMA KE APA NAMANYA <span class="highlight">REPLIZ</span></div>
+      <div id="cap-029" class="clip caption" data-start="46.1" data-duration="0.87" data-track-index="2">NAH BUAT TEMAN-TEMAN</div>
+      <div id="cap-030" class="clip caption" data-start="46.97" data-duration="1.35" data-track-index="2">YANG MAU APA ITU <span class="highlight">REPLIZ</span></div>
+      <div id="cap-031" class="clip caption" data-start="48.32" data-duration="1.16" data-track-index="2">GITU YA NAH TEMAN-TEMAN</div>
+      <div id="cap-032" class="clip caption" data-start="49.48" data-duration="1.13" data-track-index="2">BISA <span class="highlight">CARI TAHU</span> SENDIRI</div>
+      <div id="cap-033" class="clip caption" data-start="50.61" data-duration="1.57" data-track-index="2">DAN MUNGKIN TEMAN-TEMAN NANTI</div>
+      <div id="cap-034" class="clip caption" data-start="52.18" data-duration="1.26" data-track-index="2">BAKAL SAYA KASIH <span class="highlight">LINKNYA</span></div>
+      <div id="cap-035" class="clip caption" data-start="53.44" data-duration="0.77" data-track-index="2">JUGA BIAR NANTI</div>
+      <div id="cap-036" class="clip caption" data-start="54.22" data-duration="1.24" data-track-index="2"><span class="highlight">AFFILIATE</span>-NYA BISA MASUK</div>
+      <div id="cap-037" class="clip caption" data-start="55.6" data-duration="0.78" data-track-index="2">JUGA KE <span class="highlight">SAYA</span></div>
+      <div id="cap-038" class="clip caption" data-start="56.38" data-duration="0.72" data-track-index="2">GITU YA JADI DISINI</div>
+      <div id="cap-039" class="clip caption" data-start="57.1" data-duration="1.1" data-track-index="2">YA TEMAN-TEMAN YA UDAH</div>
+      <div id="cap-040" class="clip caption" data-start="58.27" data-duration="0.87" data-track-index="2">SAYA <span class="highlight">PUSH</span> GITU YA</div>
+      <div id="cap-041" class="clip caption" data-start="59.35" data-duration="1.05" data-track-index="2">NAH NANTI SAYA AKAN</div>
+      <div id="cap-042" class="clip caption" data-start="60.41" data-duration="1.11" data-track-index="2">KASIH JUGA <span class="highlight">LINKNYA</span></div>
+      <div id="cap-043" class="clip caption" data-start="61.52" data-duration="1.35" data-track-index="2">TERUS UNTUK <span class="highlight">CONTOH</span> VIDEONYA</div>
+      <div id="cap-044" class="clip caption" data-start="63.25" data-duration="1.45" data-track-index="2">MUNGKIN BISA LIHAT <span class="highlight">VIDEO INI</span></div>
+      <div id="cap-045" class="clip caption" data-start="64.7" data-duration="0.6" data-track-index="2">SAJA ATAU</div>
+      <div id="cap-046" class="clip caption" data-start="65.61" data-duration="1.71" data-track-index="2">VIDEO SAYA YANG <span class="highlight">SEBELUMNYA</span></div>
+      <div id="cap-047" class="clip caption" data-start="67.38" data-duration="1.56" data-track-index="2">UNTUK <span class="highlight">DETAILNYA</span> MUNGKIN</div>
+      <div id="cap-048" class="clip caption" data-start="68.94" data-duration="1.73" data-track-index="2"><span class="highlight">BELUM</span> SAYA KASIH TAHU</div>
+      <div id="cap-049" class="clip caption" data-start="70.67" data-duration="1.53" data-track-index="2">GITU YA DALAM BENTUK <span class="highlight">VIDEO</span></div>
+      <div id="cap-050" class="clip caption" data-start="72.2" data-duration="1.86" data-track-index="2">TAPI TEMAN-TEMAN BISA</div>
+      <div id="cap-051" class="clip caption" data-start="74.06" data-duration="2.5" data-track-index="2">BACA DI <span class="highlight">REPOSITORY</span>-NYA GITU</div>
+
+      <section id="cta-card" class="clip cta-card" data-start="73.9" data-duration="3.6" data-track-index="5">
+        <span class="main">Link repo + Repliz ada di caption</span>
+        <span class="reply">cek kalau lo mau coba workflow-nya</span>
+      </section>
     </main>
     <script>
       window.__timelines = window.__timelines || {};
       const timeline = gsap.timeline({ paused: true });
-      timeline.to('#progress-fill', { scaleX: 1, duration: 42.433, ease: 'none' }, 0);
-      timeline.to('#hook-card', { autoAlpha: 0, y: -18, duration: 0.22, ease: 'power1.in' }, 3.15);
-      timeline.fromTo('#roadmap-hero', { autoAlpha: 0, y: 24, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out' }, 0.2);
-      timeline.to('#roadmap-hero', { autoAlpha: 0, y: -18, duration: 0.2, ease: 'power1.in' }, 5.55);
-      timeline.fromTo('#stack-card', { autoAlpha: 0, y: -22 }, { autoAlpha: 1, y: 0, duration: 0.22, ease: 'power2.out' }, 9.7);
-      timeline.to('#stack-card', { autoAlpha: 0, y: -14, duration: 0.2, ease: 'power1.in' }, 15.85);
-      timeline.fromTo('#repliz-shot', { autoAlpha: 0, x: -26, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.25, ease: 'power2.out' }, 17.4);
-      timeline.to('#flash-repliz', { opacity: 1, duration: 0.04, ease: 'none' }, 17.45);
-      timeline.to('#flash-repliz', { opacity: 0, duration: 0.1, ease: 'none' }, 17.51);
-      timeline.to('#repliz-shot', { autoAlpha: 0, x: -18, duration: 0.2, ease: 'power1.in' }, 24.55);
-      timeline.fromTo('#route-card', { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.24, ease: 'power2.out' }, 24.9);
-      timeline.to('#route-card', { autoAlpha: 0, y: -14, duration: 0.2, ease: 'power1.in' }, 33.85);
-      timeline.fromTo('#platform-card', { autoAlpha: 0, y: -22 }, { autoAlpha: 1, y: 0, duration: 0.22, ease: 'power2.out' }, 34.35);
-      timeline.to('#flash-platform', { opacity: 1, duration: 0.04, ease: 'none' }, 34.35);
-      timeline.to('#flash-platform', { opacity: 0, duration: 0.1, ease: 'none' }, 34.41);
-      timeline.set('#flash-platform', { opacity: 0 }, 34.46);
-      timeline.to('#platform-card', { autoAlpha: 0, y: -12, duration: 0.2, ease: 'power1.in' }, 39.65);
-      timeline.fromTo('#approval-pill', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 17.4);
-      timeline.fromTo('#cta-card', { autoAlpha: 0, y: 24, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.24, ease: 'power2.out' }, 38.65);
-      timeline.to('#base-video', { scale: 1.035, duration: 14, ease: 'none' }, 0);
-      timeline.to('#base-video', { scale: 1.055, duration: 14, ease: 'none' }, 17.4);
-      timeline.to('#base-video', { scale: 1.04, duration: 10, ease: 'none' }, 32.3);
+      timeline.to('#progress-fill', { scaleX: 1, duration: 77.508, ease: 'none' }, 0);
+      timeline.to('#hook-card', { autoAlpha: 0, y: -16, duration: 0.2, ease: 'power1.in' }, 2.82);
+      timeline.set('#hook-card', { autoAlpha: 0 }, 3);
+      timeline.fromTo('#github-card-a', { autoAlpha: 0, x: -28, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 0.4);
+      timeline.to('#github-card-a', { autoAlpha: 0, x: -18, duration: 0.2, ease: 'power1.in' }, 7.6);
+      timeline.fromTo('#proof-label', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 18.35);
+      timeline.to('#proof-label', { autoAlpha: 0, y: -12, duration: 0.18, ease: 'power1.in' }, 23.0);
+      timeline.set('#proof-label', { autoAlpha: 0 }, 23.2);
+      timeline.fromTo('#workflow-card', { autoAlpha: 0, y: -22, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 23.2);
+      timeline.to('#workflow-card', { autoAlpha: 0, y: -16, duration: 0.2, ease: 'power1.in' }, 42.8);
+      timeline.fromTo('#approval-badge', { autoAlpha: 0, x: 18 }, { autoAlpha: 1, x: 0, duration: 0.18, ease: 'power2.out' }, 30);
+      timeline.to('#approval-badge', { autoAlpha: 0, x: 12, duration: 0.18, ease: 'power1.in' }, 39.4);
+      timeline.fromTo('#tool-chips', { autoAlpha: 0, x: -18 }, { autoAlpha: 1, x: 0, duration: 0.18, ease: 'power2.out' }, 40.43);
+      timeline.to('#tool-chips', { autoAlpha: 0, x: -12, duration: 0.18, ease: 'power1.in' }, 45.76);
+      timeline.fromTo('#repliz-card', { autoAlpha: 0, x: 26, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 43.2);
+      timeline.to('#repliz-card', { autoAlpha: 0, x: 16, duration: 0.2, ease: 'power1.in' }, 56.3);
+      timeline.fromTo('#affiliate-sticker', { autoAlpha: 0, y: -14, scale: 0.8, rotation: 3 }, { autoAlpha: 1, y: 0, scale: 1, rotation: 3, duration: 0.2, ease: 'back.out(1.5)' }, 54.22);
+      timeline.to('#affiliate-sticker', { autoAlpha: 0, y: -10, duration: 0.18, ease: 'power1.in' }, 58.3);
+      timeline.fromTo('#github-card-b', { autoAlpha: 0, x: -28, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 59.35);
+      timeline.to('#github-card-b', { autoAlpha: 0, x: -18, duration: 0.2, ease: 'power1.in' }, 67.8);
+      timeline.fromTo('#cta-card', { autoAlpha: 0, y: -18, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.24, ease: 'power2.out' }, 73.9);
+      timeline.to('#base-video', { scale: 1.04, duration: 1.2, ease: 'power2.out' }, 0);
+      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 1.2);
+      timeline.to('#base-video', { scale: 1.05, duration: 1.3, ease: 'power2.out' }, 24.89);
+      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 26.19);
+      timeline.to('#base-video', { scale: 1.05, duration: 2, ease: 'power2.out' }, 35.58);
+      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 37.58);
+      timeline.to('#base-video', { scale: 1.04, duration: 1.2, ease: 'power2.out' }, 54.22);
+      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 55.42);
       document.querySelectorAll('.caption').forEach((caption) => {
         const start = Number(caption.dataset.start || 0);
-        timeline.fromTo(caption, { autoAlpha: 0, y: 18, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.12, ease: 'power2.out' }, start);
+        timeline.fromTo(caption, { autoAlpha: 0, y: 16, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' }, start);
       });
-      window.__timelines['dena-codex-hyperframes-repliz-roadmap'] = timeline;
+      window.__timelines['dena-repliz-affiliate-joke'] = timeline;
     </script>
   </body>
 </html>

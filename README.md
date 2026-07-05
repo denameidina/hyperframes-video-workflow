@@ -92,6 +92,11 @@ Auto publish final render ke Repliz lewat Cloudflare R2:
 npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
 ```
 
+Sebelum command ini, pastikan description tersedia di
+`videos/<slug>/repliz-publish.json` (`post.description` atau root
+`description`) atau di `videos/<slug>/publish-captions.md` (`## Instagram`
+atau `## TikTok`). Script berhenti sebelum upload jika description tetap kosong.
+
 Jalankan command Repliz hanya setelah user review dan approve hasil edit. Tanpa
 `--approved`, script berhenti sebelum upload R2 atau scheduling Repliz. R2
 memakai Wrangler remote upload ke bucket dari `R2_BUCKET` dengan public base
