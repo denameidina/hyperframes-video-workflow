@@ -29,7 +29,7 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 - Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
 - Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
 - When a user provides a URL or the transcript mentions a tool/product/site, Agent 04 must research or inspect it, capture local screenshots/screen recordings when useful, and time those assets to the transcript context.
-- Use Codex/image generation for grounded bitmap support assets when real captures are not enough. Do not default to stiff cards/SVGs if a generated still, texture, or short visual can explain the idea better.
+- Agent 04 must write an `Imagegen Decision Log` for every visual-support opportunity; use Codex/image generation for grounded bitmap support assets when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
