@@ -302,6 +302,10 @@ Revision learnings from raw talking-head workflow edits:
 - If SFX feedback says there is no sound, measure the SFX stem and final render audio before approval. Too-quiet cues should be treated as missing, then boosted until they are audible but still under speech.
 - If caption, asset, and motion timing feels detached, regenerate timing from the locked processed audio transcript and use one shared cue map for captions, cards, feature chips, zooms, and SFX.
 - If raw footage intentionally shows source code/editor proof, do not cover it with a large context/privacy card. Put a compact callout in unused top/side space and blur private data upstream only when needed.
+- Whisper word-level timings are token interpolations and drift up to ~1.4s across pauses. Do not cut on them. Cut on amplitude: `silencedetect` for candidate boundaries, then per-window `volumedetect` to confirm each cut sits >=18 dB under the speech peak. Segment-level timings are reliable; word-level are not.
+- Whisper normalizes colloquial register on 1.2x audio (udah->sudah, nggak->tidak, masukin->masukkan, nambahin->menambahin). Captions must restore Dena's spoken forms; transcribe the raw-speed audio too when in doubt, and cross-check tool/UI terms against on-screen frames (e.g. "briefing atau QA" was misheard as "gripping atau KE", corrected from the app's `Dari brief`/`Dari QA` tabs).
+- A base master limited to -1.0 dBFS true-peak leaves no headroom for SFX on loud lines: a bass hit under the loudest word will clip. Either master `processed.mp4` with ~2 dBFS headroom before layering SFX, or skip the SFX accent on the hottest moments and let the visual punch carry it. Always measure the final render for clipped samples (`astats` peak count), not just file presence.
+- When the transcript shows a live local tool/app (e.g. a client-routed SPA at 127.0.0.1), capture clean UI proof by driving Chrome over the DevTools Protocol (Node's global `WebSocket`, no deps) to click into the right view, since a plain headless screenshot only gets the default route. Real captured UI beats any generated/redrawn dashboard for proof moments.
 
 ## CTA Defaults
 
