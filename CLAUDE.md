@@ -1,5 +1,40 @@
 # HyperFrames Composition Project
 
+## Source of Truth — internal/docs/
+
+The canonical documentation for this repo lives in `internal/docs/`. All docs are
+registered in `internal/docs/README.md` (numbered index + registry). The rest of
+this file and `AGENTS.md` are entry doors; when they disagree with a detail doc,
+the detail doc wins — fix it there first, then sync the entry door.
+
+**Start here:** read `AGENTS.md` → `internal/docs/README.md` → only the doc
+relevant to your task. Do not implement from memory when a doc exists.
+
+- Video production task → route via `docs/skills/dena-video-editing-workflow/SKILL.md`;
+  canon index is [operations/video-editing-workflow](internal/docs/operations/video-editing-workflow.md)
+  and [rd-03](internal/docs/requirements/rd-03-video-editing-workflow.md).
+- Code / publish / composition change → follow
+  [operations/implementation-standard](internal/docs/operations/implementation-standard.md).
+
+**Documentation-First Rule:**
+
+- Before a task, identify the owning doc for the area (README → Canonical Files).
+- Behavior change → write/update EARS acceptance criteria first
+  ([ears-standard](internal/docs/requirements/ears-standard.md)).
+- Architectural decision → new ADR (`internal/docs/adr/NNNN-*.md`, Status accepted).
+- New doc → must be linked from the README index.
+- Update touched docs **in the same commit** as the code; if a change is purely
+  mechanical, state "no docs update needed" explicitly.
+
+**Definition of Done:** implementation matches docs; touched docs updated in the
+same commit; tests run (or blocked with an explicit reason); no stale
+paths/terms; final report names the docs that changed.
+
+**Enforcement:** the Stop hook `.claude/hooks/ensure-docs-updated.py` blocks
+completion when implementation files (`scripts/`, `index.html`, `compositions/`,
+`docs/agents/`) are staged without any docs (`internal/docs/`, `AGENTS.md`,
+`CLAUDE.md`).
+
 ## Initial Setup After Clone
 
 For a fresh clone, read `docs/initial-setup.md` before running preview, render,

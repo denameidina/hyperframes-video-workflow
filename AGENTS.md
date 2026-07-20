@@ -1,5 +1,35 @@
 # HyperFrames Composition Project
 
+## Source of Truth — internal/docs/
+
+The canonical documentation for this repo lives in `internal/docs/`, indexed by
+`internal/docs/README.md` (numbered reading order + registry). This file and
+`CLAUDE.md` are entry doors; detail docs are canonical. If they conflict, fix the
+detail doc first, then sync the entry door.
+
+**Start here:** read this file → `internal/docs/README.md` → only the doc
+relevant to your task. Do not implement from memory when a doc exists.
+
+- Video production → `docs/skills/dena-video-editing-workflow/SKILL.md` (router),
+  with canon index [operations/video-editing-workflow](internal/docs/operations/video-editing-workflow.md).
+- Code / publish / composition → [operations/implementation-standard](internal/docs/operations/implementation-standard.md).
+
+**Documentation-First Rule:** before a task identify the owning doc (README →
+Canonical Files); behavior change → write/update EARS first
+([ears-standard](internal/docs/requirements/ears-standard.md)); architectural
+decision → new ADR (`internal/docs/adr/NNNN-*.md`); a new doc must be linked from
+the README index; update touched docs in the same commit as the code, or state
+"no docs update needed" for purely mechanical changes.
+
+**Definition of Done:** implementation matches docs; touched docs updated in the
+same commit; tests run (or blocked with explicit reason); no stale paths/terms;
+final report names the docs that changed.
+
+**Enforcement:** Stop hook `.claude/hooks/ensure-docs-updated.py` blocks
+completion when implementation files (`scripts/`, `index.html`, `compositions/`,
+`docs/agents/`) are staged with no docs (`internal/docs/`, `AGENTS.md`,
+`CLAUDE.md`) staged.
+
 ## Initial Setup After Clone
 
 For a fresh clone, read `docs/initial-setup.md` before running preview, render,

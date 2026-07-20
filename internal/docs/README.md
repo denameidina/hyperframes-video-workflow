@@ -1,0 +1,132 @@
+# Internal Docs — Source of Truth Index
+Status: operating standard
+Date: 2026-07-20
+
+Ini index + registry Source of Truth repo **hyperframes-video-workflow**
+(workspace produksi video sosial Dena Meidina + CLI auto-publish R2/Repliz).
+Setiap doc terdaftar di sini dengan deskripsi satu baris, dalam urutan baca
+bernomor. Doc detail adalah **kanonik**; `entrypoints/` hanya pintu masuk ringkas.
+
+Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task.
+
+## Reading Order
+
+### Entrypoints (pintu masuk ringkas)
+1. [entrypoints/blueprint.md](entrypoints/blueprint.md) - Pintu masuk: apa repo ini + peta ke doc detail.
+2. [entrypoints/prd.md](entrypoints/prd.md) - Ringkas kebutuhan produk → requirements/prd.
+3. [entrypoints/frd.md](entrypoints/frd.md) - Ringkas kebutuhan fungsional → requirements/frd.
+4. [entrypoints/rd.md](entrypoints/rd.md) - Ringkas requirement per domain (EARS) → rd-NN.
+5. [entrypoints/brd.md](entrypoints/brd.md) - Ringkas kebutuhan bisnis → business/brd (draft).
+
+### Product
+6. [product/blueprint.md](product/blueprint.md) - Apa produk & untuk siapa: personal tool + template open-source.
+7. [product/scope-principles.md](product/scope-principles.md) - Batas in/out scope + prinsip personal-first & deterministik.
+8. [product/onboarding.md](product/onboarding.md) - Cara mulai untuk pemilik, adopter template, dan agent AI.
+
+### Business / Brand / Research (sebagian draft)
+9. [business/brd.md](business/brd.md) - Model bisnis: personal/non-komersial; monetisasi draft.
+10. [brand/strategy.md](brand/strategy.md) - Tidak ada strategi brand formal; rujuk style guide produksi; draft.
+11. [research/market.md](research/market.md) - Belum ada riset pasar/kompetitor formal; draft.
+
+### Requirements (EARS)
+12. [requirements/ears-standard.md](requirements/ears-standard.md) - 5 pola EARS + aturan penulisan terukur.
+13. [requirements/prd.md](requirements/prd.md) - Kebutuhan produk tingkat "apa & kenapa".
+14. [requirements/frd.md](requirements/frd.md) - Ikhtisar fungsional + peta domain requirement.
+15. [requirements/rd-01-publish-pipeline.md](requirements/rd-01-publish-pipeline.md) - EARS auto-publish R2/Repliz (approval, idempotensi, schedule).
+16. [requirements/rd-02-composition-render.md](requirements/rd-02-composition-render.md) - EARS kontrak komposisi HyperFrames + render deterministik.
+17. [requirements/rd-03-video-editing-workflow.md](requirements/rd-03-video-editing-workflow.md) - EARS disiplin workflow 7-agent + non-negotiable konten.
+18. [requirements/rd-04-transcription-setup.md](requirements/rd-04-transcription-setup.md) - EARS setup lingkungan + transkripsi whisper lokal.
+
+### Architecture
+19. [architecture/stack.md](architecture/stack.md) - Stack: Node 22+, HyperFrames npx, GSAP, whisper.cpp, R2/Wrangler, Repliz.
+20. [architecture/data-model.md](architecture/data-model.md) - Semua entitas data & bentuk JSON (receipt, caption-beats, dst.).
+21. [architecture/api-contract.md](architecture/api-contract.md) - Kontrak R2 (Wrangler) + Repliz (3 endpoint) + surface fungsi CLI.
+22. [architecture/nfr.md](architecture/nfr.md) - NFR terukur: determinisme, keamanan, audio/caption, timeout, idempotensi.
+
+### ADR (accepted, reverse-engineered)
+23. [adr/0001-hyperframes-html-to-video.md](adr/0001-hyperframes-html-to-video.md) - Pilih HyperFrames HTML→video sebagai engine komposisi.
+24. [adr/0002-repliz-r2-publish-via-wrangler.md](adr/0002-repliz-r2-publish-via-wrangler.md) - Publish via R2 (Wrangler) + Repliz, tanpa S3 key.
+25. [adr/0003-approval-gated-publish.md](adr/0003-approval-gated-publish.md) - Publish di-gate flag `--approved`.
+26. [adr/0004-local-whisper-transcription.md](adr/0004-local-whisper-transcription.md) - Transkripsi lokal via whisper.cpp submodule.
+27. [adr/0005-seven-agent-workflow-discipline.md](adr/0005-seven-agent-workflow-discipline.md) - Produksi dibagi 7 peran agent berbasis dokumen.
+28. [adr/0006-idempotent-publish-receipts.md](adr/0006-idempotent-publish-receipts.md) - Idempotensi publish via receipt + publishKey.
+29. [adr/0007-no-local-npm-deps-pinned-npx.md](adr/0007-no-local-npm-deps-pinned-npx.md) - Tanpa deps npm lokal; HyperFrames via npx ter-pin.
+
+### Design System & Frontend
+30. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+31. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Cara `index.html` mengimplementasikan komposisi aktif.
+
+### Operations
+32. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+33. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+34. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 7-agent + ikhtisar per agent.
+35. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+36. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+37. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+
+### Security
+38. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+39. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+
+## Canonical Files
+
+Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
+
+| Area | Doc kanonik |
+| --- | --- |
+| Stack / teknologi | [architecture/stack](architecture/stack.md) |
+| Entitas data & JSON | [architecture/data-model](architecture/data-model.md) |
+| Kontrak Repliz / R2 / CLI | [architecture/api-contract](architecture/api-contract.md) |
+| Kualitas non-fungsional | [architecture/nfr](architecture/nfr.md) |
+| Perilaku publish (EARS) | [requirements/rd-01-publish-pipeline](requirements/rd-01-publish-pipeline.md) |
+| Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
+| Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
+| Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0007) |
+| Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
+| Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
+| Operasi harian | [operations/runbook](operations/runbook.md) |
+| Operasi publish | [operations/publish-runbook](operations/publish-runbook.md) |
+| Workflow 7-agent (operasional) | [operations/video-editing-workflow](operations/video-editing-workflow.md) |
+| Standar implementasi & DoD | [operations/implementation-standard](operations/implementation-standard.md) |
+| Keamanan | [security/security-standard](security/security-standard.md) |
+| Produk & scope | [product/blueprint](product/blueprint.md) |
+| Bisnis (draft) | [business/brd](business/brd.md) |
+| Brand (draft) | [brand/strategy](brand/strategy.md) |
+| Riset (draft) | [research/market](research/market.md) |
+
+> Detail workflow video per-tahap tetap hidup di `docs/agents/01..07-*.md` dan
+> `docs/dena-social-video-style-guide.md` (di luar `internal/docs/`); doc
+> operasional di sini merangkum & merujuknya, dan menjadi index kanoniknya.
+
+## Naming Standard (glosarium domain)
+
+Pakai istilah ini secara konsisten di semua doc & kode:
+
+- **slug** — nama direktori kerja satu video: `videos/<slug>/`.
+- **processed.mp4** — base video hasil cut (9:16, tanpa caption/overlay burned-in).
+- **beat / caption beat** — satu unit caption pendek (1–4 kata ideal).
+- **hook card** — kartu atas hitam pembuka (3 detik pertama, kerja tanpa audio).
+- **track (data-track-index)** — layer tumpang-tindih **temporal**, bukan paint order.
+- **z-index** — urutan **paint** (siapa di atas siapa).
+- **clip** — kelas wajib (`class="clip"`) tiap elemen ber-waktu.
+- **composition-id** — `data-composition-id` root, kunci `window.__timelines`.
+- **agent 01..07** — peran workflow (creative → cut → caption → aset → motion → assembly → QA).
+- **handoff artifact** — file output milik satu agent di `videos/<slug>/`.
+- **Imagegen Decision Log** — log wajib Agent 04 untuk tiap peluang visual-support.
+- **receipt** — `videos/<slug>/repliz-publish.json` (metadata + hasil publish).
+- **publishKey** — sha256 idempotensi `{r2Key, targetAccounts, description}`.
+- **r2Key** — object key R2 `<prefix>/<slug>/<file>`.
+- **approval / `--approved`** — gate manusia wajib sebelum upload/scheduling.
+- **target account** — akun sosial tujuan dari `REPLIZ_<PLATFORM>_ACCOUNT_ID`.
+- **EARS** — format acceptance criteria (5 pola), lihat [ears-standard](requirements/ears-standard.md).
+
+## Source Discipline
+
+- Doc detail = kanonik. `entrypoints/` hanya ringkas. **Bila konflik, perbaiki
+  doc detail dulu, lalu sinkronkan entrypoint-nya.**
+- Perubahan perilaku ditulis sebagai EARS **sebelum** kode.
+- Update doc yang tersentuh **dalam commit yang sama** dengan kodenya.
+- Doc baru **wajib** ter-link dari Reading Order di file ini.
+- Keputusan arsitektural baru → ADR baru (`adr/NNNN-*.md`, Status accepted).
+- Bila perubahan murni mekanis, nyatakan eksplisit "no docs update needed".
