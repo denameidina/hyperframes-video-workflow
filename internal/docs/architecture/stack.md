@@ -1,0 +1,94 @@
+# Stack
+Status: accepted (reverse-engineered)
+Date: 2026-07-20
+
+Kanonik untuk: teknologi, runtime, dependency, dan tooling repo ini. Diturunkan
+dari `package.json`, `.github/workflows/ci.yml`, `.gitmodules`, `index.html`,
+`scripts/repliz-publish.mjs`, dan `hyperframes.json`.
+
+## Ringkasan
+
+Repo ini adalah **workspace HyperFrames** untuk memproduksi video sosial vertikal
+(9:16, 1080x1920) milik Dena Meidina, plus satu CLI Node untuk auto-publish
+render final ke social media lewat Cloudflare R2 + Repliz. Tidak ada server
+aplikasi, tidak ada database, tidak ada frontend web ter-deploy. "Aplikasi" =
+komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
+
+## Runtime & bahasa
+
+- **Node.js 22+** (`README.md`, `docs/initial-setup.md`). CI memakai Node 24
+  (`.github/workflows/ci.yml`). Tidak ada engine pin di `package.json`.
+- **ES Modules** — `package.json` menyetel `"type": "module"`; semua script
+  Node pakai `import` (`scripts/repliz-publish.mjs`).
+- **Bahasa implementasi:** JavaScript (`.mjs`) untuk CLI; HTML + CSS + JavaScript
+  inline (GSAP) untuk komposisi (`index.html`).
+
+## Dependency strategy: zero local npm deps
+
+- `package.json` **tidak punya `dependencies` maupun `devDependencies`**. Tidak
+  ada `node_modules` yang wajib di-install. Lihat
+  [ADR-0007](../adr/0007-no-local-npm-deps-pinned-npx.md).
+- HyperFrames dipanggil per invocation lewat **`npx --yes hyperframes@0.7.24`**
+  (versi di-pin di setiap script `dev`/`check`/`render`/`publish`).
+- CLI publish (`scripts/repliz-publish.mjs`) hanya memakai **modul bawaan Node**:
+  `node:crypto`, `node:child_process`, `node:fs/promises`, `node:path`,
+  `node:process`, `node:url`, `node:util`. Tidak ada SDK AWS/Cloudflare/Repliz.
+
+## Komponen tooling
+
+| Komponen | Peran | Cara dipanggil | Sumber |
+| --- | --- | --- | --- |
+| HyperFrames 0.7.24 | Render HTML → MP4, preview, lint, validate, inspect, publish | `npx --yes hyperframes@0.7.24 <cmd>` | `package.json` |
+| GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di `index.html` | `index.html:7` |
+| whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
+| ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual oleh Agent 02 | `docs/agents/02-transcript-cut-agent.md` |
+| Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:227` |
+| Wrangler | Auth + upload R2 (bukan S3 key) | `npx wrangler login`, `npx wrangler r2 ...` | `docs/repliz/integration-spec.md` |
+| Repliz API | Schedule post multi-platform | `fetch` ke `REPLIZ_API_BASE_URL`, HTTP Basic Auth | `scripts/repliz-publish.mjs` |
+| node:test | Unit test CLI publish | `node --test scripts/repliz-publish.test.mjs` | `package.json` |
+| GitHub Actions | CI test on PR + push ke `main` | `.github/workflows/ci.yml` | CI |
+
+## npm scripts (kontrak command)
+
+Dari `package.json`:
+
+- `npm run dev` → `npx --yes hyperframes@0.7.24 preview` — server preview
+  long-running (jalankan sebagai background process).
+- `npm run check` → `hyperframes lint && hyperframes validate && hyperframes inspect`.
+- `npm run render` → `hyperframes render` (MP4).
+- `npm run publish` → `hyperframes publish` (link shareable HyperFrames).
+- `npm run repliz:publish` → `node scripts/repliz-publish.mjs` (auto-publish R2/Repliz).
+- `npm run test:repliz` → `node --test scripts/repliz-publish.test.mjs`.
+
+## Konfigurasi HyperFrames
+
+`hyperframes.json` menyetel registry + path:
+
+- `registry`: `https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry`
+- `paths.blocks`: `compositions`
+- `paths.components`: `compositions/components`
+- `paths.assets`: `assets`
+
+`meta.json` = metadata project (`id: videos`, `name: videos`,
+`createdAt: 2026-07-02T01:57:43.070Z`).
+
+## Skills terpasang
+
+`.claude/skills/` berisi paket skill HyperFrames vendored (`hyperframes`,
+`hyperframes-core`, `hyperframes-animation`, `hyperframes-creative`,
+`hyperframes-cli`, `hyperframes-media`, `hyperframes-registry`, plus workflow
+skill seperti `embedded-captions`, `faceless-explainer`, dsb). Sebagian aset
+skill punya lisensi pihak ketiga; lihat `THIRD_PARTY_NOTICES.md`.
+
+## Yang TIDAK ada di stack
+
+- Tidak ada database, ORM, atau backend HTTP server.
+- Tidak ada framework frontend (React/Vue/dll). Komposisi = HTML + GSAP polos.
+- Tidak ada bundler/transpiler (TypeScript, webpack, vite).
+- Tidak ada SDK cloud; R2 murni lewat Wrangler CLI, Repliz murni lewat `fetch`.
+
+## Referensi
+
+- [Data Model](data-model.md)
+- [API Contract](api-contract.md)
+- [NFR](nfr.md)
