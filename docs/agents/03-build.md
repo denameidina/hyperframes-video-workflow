@@ -74,7 +74,8 @@ motion, match Dena default style, reuse existing project structure).
    readiness report naming the missing artifact and its owning phase; do not
    guess.
 2. **Produce assets.** Read `docs/agents/references/asset-production.md`. For
-   each Asset Brief in `visual-plan.md`, capture or generate the file into
+   each Asset Brief in `visual-plan.md` (Motion B-roll Briefs are not assets; step
+   4a handles them), capture or generate the file into
    `videos/<slug>/assets/` under its Planned file name, record it in
    `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
@@ -119,7 +120,8 @@ motion, match Dena default style, reuse existing project structure).
 ## Outputs
 
 - `index.html`
-- `compositions/*.html`, only when sub-compositions are justified
+- `compositions/broll/*.html` for motion b-roll clips; other `compositions/*.html`
+  only when sub-compositions are justified
 - `videos/<slug>/assets/*` and `videos/<slug>/assets/asset-manifest.json`, when
   assets exist
 - `videos/<slug>/processed-audio.wav`

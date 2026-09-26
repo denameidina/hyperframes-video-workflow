@@ -2,7 +2,8 @@
 
 How to turn a Motion B-roll Brief into a HyperFrames clip. Loaded by
 `docs/agents/03-build.md` in the author step. Engine: `vendor/motion-kit/`
-(adapted from Barty-Bart/motion-graphics, MIT). Worked examples:
+(adapted from Barty-Bart/motion-graphics, MIT). Worked examples (example text is invented to show the mechanism; real clips
+take every label and quote from the transcript):
 `docs/agents/references/motion-broll-examples/` (`npm run check:broll-examples`).
 
 ## Host Setup
@@ -31,13 +32,24 @@ The host `data-composition-id` must equal the id inside the clip file and the
      data-width="1080" data-height="1920"></div>
 ```
 
-`data-start` is the brief's in-time; `data-duration` is the clip's `T` (or longer:
-the clip then holds its last state).
+`data-start` is the brief's in-time; `data-duration` equals the clip's `T`. To hold
+the last state longer, raise `T` rather than the mount's `data-duration`: frames
+past `T` only repeat the frame at `T`. Mounts take no `class="clip"`; HyperFrames
+times sub-composition mounts from `data-start` and `data-duration`.
+
+Captions (z 45) and the hook card (z 56) stay above `.broll` (z 22). In a split,
+captions keep their normal safe-area position over the bottom half with the face.
+SFX for a clip are ordinary host `<audio>` cues (see Implement SFX Cues in
+`hyperframes-assembly.md`), with files prepared in the asset production step.
+The base video is `#base-video` and the root timeline is the one the host
+registers in `window.__timelines` (HTML Skeleton in `hyperframes-assembly.md`).
 
 ## Clip Skeleton
 
 Everything lives inside `<template>`; the root is styled by `#root`, never by a
-class. Ids inside a clip only need to be unique within that clip.
+class. Ids inside a clip only need to be unique within that clip, and must be
+valid CSS identifiers (start with a letter; letters, digits, `-`, `_`), because
+`M.finder` looks them up with `#id`.
 
 ```html
 <!doctype html>
@@ -105,6 +117,14 @@ is 300 px left of centre and 40 px below the shape's top edge.
 | `W`, `H` | `1080`, `1920` |
 | `T` | Clip length in seconds (> 0) |
 | `bg` | `'#050505'` for cutaway; `null` (transparent) for split and panel |
+
+Colours in `SH` states and `M.ctrack` must be 6-digit `#rrggbb`; `#fff` or
+`rgba()` silently produces invalid colours. Use `rgba()` only in plain CSS.
+
+Engine CSS classes: `mk-stage`, `mk-world`, `mk-shape`, `mk-layer` (structure);
+`mk-a` (absolute box), `mk-row` (absolute flex row, no wrap), `mk-mono` (Geist
+Mono), `mk-blend` (`mix-blend-mode: difference`), `mk-cursor` (added by the
+engine when `cfg.cursor` is set).
 | `center` | Screen point the camera centres on; default `[540, 960]` |
 | `intro` | Time the shape pops in; `null` = already on screen |
 | `SH` | States: `{ name: { w, h, r, bg, cam } }` |
@@ -172,6 +192,7 @@ cursor outside the frame, then check once more.
   empty for a moment.
 - Keep the cursor inside the frame at every camera zoom, including during
   morphs.
-- A clip ends by holding its last state; a longer host `data-duration` holds it.
+- Set `T` so the last state has settled (about 0.8 s after the last change);
+  frames past `T` repeat the frame at `T`.
 - Do not use `document.getElementById`, `requestAnimationFrame`, timers,
   `Date.now()`, `performance.now()`, or `Math.random()` in a clip.

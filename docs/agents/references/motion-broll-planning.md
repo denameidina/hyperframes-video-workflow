@@ -53,8 +53,10 @@ Rules:
 ## Content Rules
 
 - One idea per clip. A long panel may hold several states of that idea.
-- Put each state change on its word, 0.4–1.2 s apart. Prefer the first or last
-  word of a caption beat; word times come from `processed-transcript.json`.
+- Put each state change on its word, 0.4–1.2 s apart while the line is being
+  spoken; a state may hold longer through a pause or while a progress runs.
+  Prefer the first or last word of a caption beat; word times come from
+  `processed-transcript.json`.
 - Labels come from the transcript, in the language Dena spoke.
 - Never invent numbers, prices, results, names, or quotes (Gate 2 R1). Use
   relative bars, skeleton lines, or transcript labels, and mark what is
@@ -83,7 +85,7 @@ Rules:
 | Terminal typing | A command or prompt | Mono text is typed character by character with a caret |
 | Side-by-side | Two options compared | Two columns; a highlight moves to the winner |
 | Chapter card | A new section of the story | A short title card between sections |
-| Chat thread | A conversation or client messages | Generic bubbles (no brand), lines from the transcript, one per word beat |
+| Chat thread | A conversation or client messages | Generic bubbles (no brand) with lines from the transcript, one per word beat; use empty skeleton bubbles when no line can be quoted |
 | Timeline langkah | A journey or a sequence of steps | Step nodes; a liquid indicator moves to each step on its word |
 | Before → after | A change from one state to another | One shape morphs from "sebelum" to "sesudah" with transcript labels |
 | Notif / kalender / jam | Time pressure, interruptions, schedules | Stacked notifications, a calendar, or a clock; times only from the transcript |
@@ -98,8 +100,11 @@ Use this instead of the generic Asset Brief for a `motion-broll` row in
 
 - Type: motion-broll
 - Purpose:
+- Required: <yes | no>
 - Privacy notes:
+- Do not cover: <e.g. Dena's face in 0–3 s, the caption area>
 - Planned file: `compositions/broll/NN-name.html`
+- Placement / Track: <treatment> / track 4
 - Treatment: <cutaway | split | panel> — <reason>
 - Pattern: <vocabulary pattern(s)>
 - In–out (host time): <start>–<end> s
@@ -111,3 +116,12 @@ Use this instead of the generic Asset Brief for a `motion-broll` row in
 - SFX: <cue @ host time>
 - Key-word times for the still check: <host times>
 ```
+
+Naming and timeline entry:
+
+- `NN` is the Timeline ID number padded to two digits (`ov-004` → `04`); the clip
+  id is `broll-NN-name` and the mount id `broll-NN-name-mount`.
+- In `overlay-timeline.json`, the row is an element with `id` = the Timeline ID,
+  `type: "motion-broll"`, `track: 4`, `assetRef: "compositions/broll/NN-name.html"`,
+  and the treatment in `placement`.
+- A motion b-roll clip is not an asset: it gets no `asset-manifest.json` entry.
