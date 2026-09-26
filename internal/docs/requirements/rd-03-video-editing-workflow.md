@@ -120,6 +120,21 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   detik tanpa mengubah makna, then fase Story shall menandai blocker dan meminta
   keputusan user, bukan mengarang atau memanipulasi ucapan.
 
+## Motion b-roll
+
+- **RD-03-31** (Ubiquitous) — Fase Screen Plan shall memilih motion b-roll lebih
+  dulu untuk kalimat yang menjelaskan, menunjukkan, membandingkan, atau
+  berurutan, dan mencatat alasannya di Visual Decision Log.
+- **RD-03-32** (Ubiquitous) — Setiap baris `motion-broll` di `visual-plan.md`
+  shall punya Motion B-roll Brief dengan treatment (cutaway/split/panel) beserta
+  alasan dan state per kata.
+- **RD-03-33** (Unwanted) — If sebuah visual menutup wajah Dena penuh lebih dari
+  10 detik atau menutup kalimat personal/emosional/opini, then Gate 2 shall
+  menandainya sebagai R3.
+- **RD-03-34** (Event-driven) — When fase Build selesai menulis clip motion
+  b-roll, fase Build shall mengambil snapshot clip pada waktu kata kunci brief
+  tanpa `GEMINI_API_KEY` dan memperbaiki temuan sebelum render.
+
 ## Referensi
 
 - Operasional detail: [operations/video-editing-workflow](../operations/video-editing-workflow.md)

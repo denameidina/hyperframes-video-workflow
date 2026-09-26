@@ -52,22 +52,23 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 28. [adr/0006-idempotent-publish-receipts.md](adr/0006-idempotent-publish-receipts.md) - Idempotensi publish via receipt + publishKey.
 29. [adr/0007-no-local-npm-deps-pinned-npx.md](adr/0007-no-local-npm-deps-pinned-npx.md) - Tanpa deps npm lokal; HyperFrames via npx ter-pin.
 30. [adr/0008-four-phase-workflow.md](adr/0008-four-phase-workflow.md) - Produksi 4 fase (Story, Screen Plan, Build, QA opsional) dengan gate.
+31. [adr/0009-motion-broll-motion-kit.md](adr/0009-motion-broll-motion-kit.md) - Motion b-roll lewat engine motion-kit + sub-composition HyperFrames.
 
 ### Design System & Frontend
-31. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-32. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Cara `index.html` mengimplementasikan komposisi aktif.
+32. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+33. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Cara `index.html` mengimplementasikan komposisi aktif.
 
 ### Operations
-33. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-34. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-35. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-36. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-37. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-38. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+34. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+35. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+36. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+37. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+38. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+39. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-39. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-40. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+40. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+41. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
@@ -83,7 +84,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0008) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0009) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |

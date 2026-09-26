@@ -44,6 +44,25 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-12** (Ubiquitous) — The system shall mereferensikan hanya aset lokal
   (mis. `videos/<slug>/assets/...`) di komposisi.
 
+## Motion b-roll
+
+- **RD-02-15** (Optional) — Where komposisi memakai motion b-roll, host
+  `index.html` shall memuat `vendor/motion-kit/motion-kit.js` dan
+  `vendor/motion-kit/motion-kit.css` tepat sekali, setelah `vendor/gsap.min.js`.
+- **RD-02-16** (Ubiquitous) — Setiap clip motion b-roll shall berupa
+  sub-composition di `compositions/broll/` yang memanggil `M.clip(id, cfg)` secara
+  sinkron, sehingga timeline paused terdaftar di `window.__timelines[id]` dengan
+  durasi `cfg.T`.
+- **RD-02-17** (Ubiquitous) — Setiap frame clip motion b-roll shall hanya
+  bergantung pada waktu lokal clip, tanpa timer, `requestAnimationFrame`, atau
+  jam render.
+- **RD-02-18** (Event-driven) — When `npm run render:blur -- --slug <slug>`
+  dijalankan, the system shall merender pada 4× fps (120 untuk 30 fps), memadukan
+  4 frame per frame output dengan ffmpeg `tmix`, menyalin stream audio tanpa encode
+  ulang, menulis `renders/<slug>-blur.mp4`, dan menghapus file antara 120 fps.
+- **RD-02-19** (Unwanted) — If `--slug` berisi karakter selain huruf kecil, angka,
+  dan tanda hubung, then `render:blur` shall menolak tanpa merender.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system
