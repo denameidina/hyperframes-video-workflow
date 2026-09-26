@@ -45,30 +45,33 @@ yang sama dengan hook Story.
 **Langkah visual:** satu `visual-plan.md` (menggantikan rencana aset dan
 rencana motion lama): Visual Decision Log wajib untuk tiap peluang visual-support
 (time, line, purpose, best_real_asset, simple_asset_option,
-imagegen_candidate, decision, reason); prioritas aset real capture > screenshot
-bukti > diagram > generated still > generated video; riset URL/tool dan rencana
+imagegen_candidate, decision, reason); prioritas motion b-roll > capture bukti
+> generated still > generated video (lihat `motion-broll-planning.md`); riset URL/tool dan rencana
 capture; motion primitives (caption-pop 0.12–0.2s, hook-card-snap 0.2–0.35s,
 proof-card-slide 0.25–0.45s, punch-zoom 0.2–0.4s, flash-cut <0.12s, cta-morph
 2–4s); density dari `visual_density`; cue SFX audible di HP namun di bawah speech.
 **Output:** `caption-plan.md`, `caption-beats.json`, `publish-captions.md`,
 `visual-plan.md`, `overlay-timeline.json`.
 **Gate 2** (kondisional): berhenti hanya bila baris Timeline kena R1–R6 (angka/
-klaim tak verbatim, data asli/privat, wajah tertutup >6s atau saat kalimat
+klaim tak verbatim, data asli/privat, wajah tertutup >10s atau saat kalimat
 personal, wajah tertutup di 0–3s tanpa pilihan brief, CTA berjanji, generated
 yang menggambarkan orang/brand nyata). Referensi: `captions.md`,
-`caption-artifacts.md`, `visual-planning.md`, `motion-grammar.md`.
+`caption-artifacts.md`, `visual-planning.md`, `motion-grammar.md`,
+`motion-broll-planning.md`.
 
 ### 3. Build (`docs/agents/03-build.md`)
 Cek kesiapan (termasuk `Gate 2 Result`) → capture/generate aset sesuai Asset
 Briefs ke `videos/<slug>/assets/` + `assets/asset-manifest.json` (file yang
-benar-benar dibuat) → baca skill `/hyperframes` + `/hyperframes-core` → rakit
+benar-benar dibuat) → baca skill `/hyperframes` + `/hyperframes-core` → tulis clip motion b-roll
+(`compositions/broll/*.html`) dan cek snapshot-nya di kata kunci → rakit
 `index.html` (+ `compositions/*.html` bila perlu). Kontrak: root
 `data-composition-id` + `data-width/height/duration`; tiap elemen ber-waktu
 `class="clip"` + timing; tanpa overlap track sama; timeline paused terdaftar;
 deterministik; video muted + audio terpisah; aset lokal. `npm run check`, fix
 semua error, preview keyframe, tulis `assembly-notes.md` +
-`assembly-checklist.md`, render. **Gate 3** (wajib): berhenti untuk review user.
-Referensi: `asset-production.md`, `hyperframes-assembly.md`.
+`assembly-checklist.md`, render (opsional `npm run render:blur`). **Gate 3** (wajib): berhenti untuk review user.
+Referensi: `asset-production.md`, `hyperframes-assembly.md`,
+`motion-broll-authoring.md`.
 
 ### 4. QA (`docs/agents/04-qa.md`, opsional)
 Hanya bila user memilih QA dulu / minta readiness, punch-list, atau regression.

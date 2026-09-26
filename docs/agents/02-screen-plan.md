@@ -110,7 +110,7 @@ unobstructed, use only project-local assets).
 
 ### Visual step
 
-4. **Map and decide.** Read `docs/agents/references/visual-planning.md` (Asset
+4. **Map and decide.** Read `docs/agents/references/motion-broll-planning.md` first (motion b-roll is the default visual), then `docs/agents/references/visual-planning.md` (Asset
    Categories, Asset Decision Workflow steps 1–4, Dena-Specific Asset Rules,
    Dena-Specific Examples, Default Asset Density) and the image-generation
    decision rules at the top of Generated Image Prompt Rules in
@@ -161,7 +161,7 @@ the matching trigger IDs in the row's `Gate 2 trigger` column (`-` when none):
 | --- | --- |
 | R1 | A number, price, percentage, result, client name, or quote on screen (a Timeline row's On-screen text or a caption beat) that is not verbatim from the transcript and was not given by the user. Digits and words for the same number match (`3 kali` = `tiga kali`); a changed form or unit (`3X`, `300%`) does not |
 | R2 | A screenshot or recording that shows real client or product data, or private information |
-| R3 | A visual that covers Dena's face completely for more than 6 seconds, or covers a personal, emotional, or opinion line |
+| R3 | A visual that covers Dena's face completely for more than 10 seconds, or covers a personal, emotional, or opinion line |
 | R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `## User Approvals` in `creative-brief.md` allows that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
 | R5 | A CTA that implies a promise ("nanti gue share/kirim/bahas…") without the user's explicit approval |
 | R6 | Generated image or video that depicts a real person or a real brand |

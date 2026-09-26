@@ -101,12 +101,17 @@ motion, match Dena default style, reuse existing project structure).
    element, extract the audio of `processed.mp4` (or use `audio-clean.wav` when
    Story made one) to `videos/<slug>/processed-audio.wav`; never use Story's
    raw-time ASR extract.
+4a. **Author motion b-roll.** For each `motion-broll` row, follow
+   `docs/agents/references/motion-broll-authoring.md`: write the clip at its
+   Planned file, mount it in `index.html` on track 4, add the split transform
+   when the treatment is split, then run the Still Check at the brief's key-word
+   times and fix what it shows before step 5.
 5. **Verify.** Run `npm run check` and fix every error; review warnings. Preview
    keyframes as listed in the Render Gate of
    `docs/skills/dena-video-editing-workflow/references/quality-gates.md`.
 6. **Write handoff notes.** `assembly-notes.md` and `assembly-checklist.md`
    (formats in `docs/agents/references/hyperframes-assembly.md`).
-7. **Render.** `npm run render -- --output renders/<slug>.mp4`, then the export sanity check from the Render
+7. **Render.** `npm run render -- --output renders/<slug>.mp4` (or, for a final render with motion blur, `npm run render:blur -- --slug <slug>`, which writes `renders/<slug>-blur.mp4`), then the export sanity check from the Render
    Gate (file exists, duration plausible, audio present, first/last frames not
    blank).
 8. **Gate 3.** Apply Gate 3 below.

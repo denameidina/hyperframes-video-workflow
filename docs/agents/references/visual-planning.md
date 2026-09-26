@@ -180,11 +180,13 @@ Prefer the simplest asset that works.
 
 Priority:
 
-1. Existing real source footage, user-supplied media, or real web/app capture.
-2. Cropped/censored proof asset or focused screenshot/screen recording.
-3. Simple diagram or text-support visual.
-4. Generated still or designed bitmap support asset.
+1. Motion b-roll (`motion-broll-planning.md`) for a line that explains, shows, compares, or sequences something.
+2. Existing real source footage, user-supplied media, or real web/app capture when the moment needs proof (it may sit inside a motion b-roll state).
+3. Cropped/censored proof asset or focused screenshot/screen recording.
+4. Generated still or designed bitmap support asset for mood, texture, or background.
 5. Generated video.
+
+A personal, emotional, or opinion line gets no visual.
 
 Generated video is the most expensive and least controllable. Use it only when it earns its place.
 
@@ -201,7 +203,7 @@ Required fields:
 | `best_real_asset` | source footage, screenshot, screen recording, user media, or `none` |
 | `simple_asset_option` | diagram, text-support visual, sticker, or `none` |
 | `imagegen_candidate` | `yes` or `no` |
-| `decision` | `generate`, `use-real`, `use-diagram`, `skip` |
+| `decision` | `motion-broll`, `generate`, `use-real`, `use-diagram`, `skip` |
 | `reason` | One concrete sentence tied to the transcript |
 
 Do not write "no generated image needed" unless this log explains why for each visual opportunity.
@@ -350,7 +352,8 @@ In the Timeline, `ID` is the join key: reuse it as the element `id` in
 field of its `assets/asset-manifest.json` entry. Use the `ov-NNN` form from the
 Overlay Timeline Format in `motion-grammar.md`. `On-screen text` lists every word
 the visual shows. `Illustrative` is `yes` when the visual is generated, mocked, or
-otherwise not real proof.
+otherwise not real proof. For a `motion-broll` row, use the Motion B-roll Brief
+from `motion-broll-planning.md` instead of the generic brief below.
 
 ```md
 # Visual Plan - <video slug>

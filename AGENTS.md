@@ -63,7 +63,7 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 - Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
 - Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
 - When a user provides a URL or the transcript mentions a tool/product/site, the Screen Plan phase must research or inspect it and plan captures timed to the transcript context; the Build phase captures local screenshots/screen recordings when useful.
-- The Screen Plan phase must write a `Visual Decision Log` in `visual-plan.md` for every visual-support opportunity; use Codex/image generation for grounded bitmap support assets when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
+- The Screen Plan phase must write a `Visual Decision Log` in `visual-plan.md` for every visual-support opportunity. Motion b-roll (`docs/agents/references/motion-broll-planning.md`) is the default for a line that explains, shows, compares, or sequences; use a real capture when the moment needs proof, and Codex/image generation for grounded bitmap assets only for mood, texture, or background moments that motion b-roll cannot carry.
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
@@ -164,6 +164,10 @@ npm run check        # lint + validate + inspect
 npm run render       # render to MP4
 npm run publish      # publish and get a shareable link
 npm run test:repliz  # unit test R2/Repliz CLI without real network
+npm run test:motion-kit        # unit test motion b-roll engine
+npm run test:render-blur       # unit test motion-blur pass
+npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
+npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved
 npx hyperframes lint --verbose  # include info-level findings
 npx hyperframes lint --json     # machine-readable output for CI

@@ -282,6 +282,7 @@ Use overlays to clarify context or reset attention every 4-8 seconds.
 
 Good overlays:
 
+- Motion b-roll: one morphing shape + cursor that shows the process, tool, comparison, or step Dena is talking about (`docs/agents/references/motion-broll-planning.md`).
 - Screenshot of tool/app when mentioning a tool.
 - Small UI mock/screenshot when talking about frontend.
 - Simple checklist card for frameworks, scope, requirements.
@@ -299,6 +300,7 @@ Bad overlays:
 Default visual language for tech/founder monologues:
 
 - Clean black/white/yellow caption system.
+- Motion b-roll in the same palette: `#050505`, white, one yellow accent.
 - Occasional glass/black cards.
 - Minimal accent lines.
 - Screenshots and UI cards when context demands.

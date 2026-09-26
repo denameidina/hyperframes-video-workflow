@@ -570,6 +570,14 @@ Assign to:
 - Screen Plan phase (visual step) for visual grammar
 - Build phase for implementation changes
 
+## Motion B-roll Review
+
+- For every clip in `compositions/broll/`, each state change lands on its word (±0.2 s against `processed-transcript.json`).
+- The cursor stays inside the frame at every zoom, including mid-morph.
+- Text is readable at phone size in every settled state.
+- Treatment rules hold: no face cover in 0–3 s without approval, 2 s of face between cutaways, cutaways ≤ 10 s.
+- One accent colour; no invented numbers; illustrative parts match the brief.
+
 ## Definition Of Done
 
 A QA pass is complete only when:

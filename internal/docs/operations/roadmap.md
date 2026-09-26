@@ -19,6 +19,13 @@ Video asli pertama setelah [ADR-0008](../adr/0008-four-phase-workflow.md) menjad
 uji nyata struktur 4 fase. Catat temuan (gate, artifact, referensi yang dibaca)
 dan revisi lewat ADR baru bila perlu.
 
+### Validasi motion b-roll
+Video asli pertama yang memakai motion b-roll
+([ADR-0009](../adr/0009-motion-broll-motion-kit.md)) menguji engine, treatment
+split pada footage nyata, dan pass `render:blur` termasuk audio passthrough
+(belum teruji karena proyek contoh tanpa audio). Catat temuannya; revisi lewat
+ADR baru bila perlu.
+
 ### Rilis open source
 `docs/open-source-release-checklist.md` merencanakan langkah rilis publik:
 konfirmasi nama repo publik + MIT; pastikan footage/render/transcript/receipt/
