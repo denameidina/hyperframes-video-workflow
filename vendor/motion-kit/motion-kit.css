@@ -1,0 +1,14 @@
+/* motion-kit styles. Adapted from Barty-Bart/motion-graphics skills/motion-broll/engine/base.css
+   (MIT, commit e8d610a). Classes are prefixed mk- because this sheet is global in the host. */
+@font-face { font-family: 'Geist'; src: url(fonts/Geist-Variable.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Geist Mono'; src: url(fonts/GeistMono-Medium.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+.mk-stage { position: absolute; left: 0; top: 0; overflow: hidden; font-family: 'Geist', system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #050505; font-feature-settings: "tnum" 1; }
+.mk-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.mk-shape { position: absolute; overflow: hidden; isolation: isolate; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 18px 48px -12px rgba(0,0,0,.6); }
+.mk-layer { position: absolute; width: 0; height: 0; transform-origin: 0 0; }
+.mk-a { position: absolute; }
+.mk-row { position: absolute; display: flex; align-items: center; white-space: nowrap; }
+.mk-blend { mix-blend-mode: difference; }
+.mk-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+.mk-stage svg { display: block; overflow: visible; }
+.mk-cursor { position: absolute; left: 0; top: 0; height: auto; transform-origin: 3px 3px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); z-index: 10; }

@@ -85,6 +85,21 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 - `punch-zoom` base video (scale 1.0→1.04–1.08, 0.2–0.4s).
 - `progress-bar` deterministik. `flash-cut` < 0.12s. `cta-morph` hold 2–4s.
 
+## Motion b-roll (motion-kit)
+
+- Engine `vendor/motion-kit/` dimuat sekali di `index.html`; setiap clip adalah
+  sub-composition `compositions/broll/*.html` di **track 4**. Mount host ber-class
+  `broll` (`position:absolute; inset:0; z-index:22`), di bawah caption (45) dan
+  hook/CTA (56–57).
+- Token: kanvas `#050505`; shape putih `#FFFFFF` (tinta `#050505`) atau panel
+  `#111111` + border `rgba(255,255,255,.12)`; satu aksen `#facc15`; sukses
+  `#22c55e`; muted `#d4d4d8`.
+- Font di dalam shape: Geist (UI), Geist Mono (terminal/nama file). Caption tetap
+  Arial 950.
+- Treatment: cutaway (latar `#050505` penuh), split (clip mengisi separuh atas;
+  host menggeser `#base-video` ke bawah lewat `y`), panel (clip transparan di zona
+  kosong). Detail: `docs/agents/references/motion-broll-authoring.md`.
+
 ## SFX
 
 - Cue SFX (`#sfx-*`) dengan `data-volume` rendah (`0.09–0.12`), audible di HP
