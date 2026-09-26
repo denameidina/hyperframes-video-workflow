@@ -1,59 +1,8 @@
-# Agent 03 - Caption/Subtitle Agent
+# Captions (Reference)
 
-## Purpose
-
-The Caption/Subtitle Agent designs how spoken words and editorial text appear on screen.
-
-Its job is to turn the processed transcript into readable, rhythmic, on-brand caption beats: subtitles, hook text, keyword highlights, editorial title words, CTA text, and caption timing notes for HyperFrames assembly.
-
-This agent does not cut video, generate media assets, design contextual overlays, author the final HyperFrames composition, or render the final video.
-
-## Position In Workflow
-
-This is the third agent.
-
-Run order:
-
-1. Creative Director
-2. Transcript/Cut Agent
-3. Caption/Subtitle Agent
-4. Asset Generation Agent
-5. Motion/Overlay Agent
-6. HyperFrames Assembly Agent
-7. QA/Review Agent
-
-The Caption/Subtitle Agent depends on the processed base video and final transcript timing from Agent 02.
-
-## When To Use
-
-Use this agent when:
-
-- `processed.mp4` exists or the cut timing is locked.
-- `transcript.json` exists.
-- The video needs social captions, kinetic captions, title captions, hook text, or CTA text.
-- A reference style needs caption grammar adaptation.
-- Captions need to be readable, timed, and editable as separate HyperFrames layers.
-
-Do not use this agent when:
-
-- The transcript/cut is still changing significantly.
-- The task is only to generate images/video assets.
-- The task is only to assemble existing caption data into HTML.
-- The video has no speech and only needs motion graphics.
-
-## Required Reading
-
-Before working, read:
-
-- `docs/dena-social-video-style-guide.md`
-- `docs/agents/01-creative-director.md`
-- `docs/agents/02-transcript-cut-agent.md`
-- `videos/<slug>/creative-brief.md`
-- `videos/<slug>/edit-decision-notes.md`
-- `videos/<slug>/transcript.json`
-- `videos/<slug>/cut-list.json`, if available
-
-If `processed.mp4` does not exist, the agent may still produce a provisional caption plan, but it must clearly mark the plan as provisional.
+Rules for on-screen captions, hook text, and CTA text. Loaded by
+`docs/agents/02-screen-plan.md` in the captions step. Workflow order lives in the
+phase documents, not here.
 
 ## Caption Timing Lock
 
@@ -62,60 +11,7 @@ Final caption timing must follow the locked processed video, not the raw timelin
 - Create provisional captions only before cut lock.
 - After `processed.mp4` changes, regenerate or realign `caption-beats.json` against that processed video.
 - Do not reuse old caption times from a previous cut unless the processed media is unchanged.
-- If many captions feel off-timeline, route back to Transcript/Cut Agent first; do not hand-nudge every beat around an unstable cut.
-
-## Core Principle
-
-Captions are not just transcription.
-
-For Dena's videos, captions must do four jobs:
-
-- Make the video understandable with sound off.
-- Emphasize the exact words that sell the idea.
-- Create rhythm and pattern interrupts.
-- Preserve Dena's natural voice.
-
-For default Dena storytelling/talking-head edits, captions must cover every spoken word that survives the cut. Sparse editorial titles may replace running captions only for an explicitly chosen cinematic/manifesto section, and that tradeoff must be documented.
-
-## Inputs
-
-The agent may receive:
-
-- `processed.mp4`
-- `transcript.json`
-- `creative-brief.md`
-- `edit-decision-notes.md`
-- User notes about caption style
-- Reference video notes
-- Platform target:
-  - Instagram Reels
-  - TikTok
-  - YouTube Shorts
-- Visual grammar from Creative Director:
-  - `dena-default`
-  - `cinematic-operator`
-  - `tech-dashboard`
-  - `founder-vlog`
-  - `kumar-inspired`
-
-## Outputs
-
-Preferred output folder:
-
-`videos/<slug>/`
-
-Required outputs:
-
-- `caption-plan.md`
-- `caption-beats.json`
-- `publish-captions.md`
-
-Optional outputs:
-
-- `caption-review-notes.md`
-- `caption-style-preview.html` for quick local visual testing
-
-This agent must make captions editable by later HyperFrames assembly. Do not burn captions into video.
+- If many captions feel off-timeline, route back to Story phase first; do not hand-nudge every beat around an unstable cut.
 
 ## Caption Types
 
@@ -140,7 +36,7 @@ Top safe-area hook text.
 - Black rounded rectangle.
 - White text.
 - 2-4 lines max.
-- Uses the same verbatim words as Agent 02's locked transcript hook; line
+- Uses the same verbatim words as Story phase's locked transcript hook; line
   breaks, case, and one highlight may change, but the wording may not.
 - Covers every spoken word in the locked hook and works with sound off.
 - Starts at `00:00.00` and ends no later than `00:03.00`.
@@ -159,20 +55,20 @@ Sparse large title words.
 Small label or annotation tied to a visual proof point.
 
 - Example: `3 JAM MANUAL -> OTOMATIS`
-- Usually handed off to Motion/Overlay Agent.
-- Caption Agent defines wording and timing, not final visual treatment.
+- Usually handed off to Screen Plan phase (visual step).
+- Screen Plan phase (captions step) defines wording and timing, not final visual treatment.
 
 ### `cta-caption`
 
 End text.
 
 - Conversational, one CTA only.
-- Should match the Creative Director CTA.
+- Should match the Story phase CTA.
 - Usually appears in final 3-7 seconds.
 
 ## Caption Mode Selection
 
-Use the Creative Director format:
+Use the Story phase format:
 
 - `clean-talking-head` -> full running `subtitle-beat` + `hook-card` + `cta-caption`
 - `contextual-recut` -> full running `subtitle-beat` + `proof-label` + `hook-card`
@@ -187,11 +83,11 @@ For `kumar-inspired`, do not make full subtitles dominate the manifesto section.
 This is the default for Dena storytelling videos.
 
 - Start from the locked processed word-level transcript, not a summary.
-- Every spoken word that survives Agent 02 must map to one caption beat through `sourceWords`.
+- Every spoken word that survives Story phase must map to one caption beat through `sourceWords`.
 - Group small words into readable phrase beats; do not drop them silently.
 - Keep active captions moving with the speech so a muted viewer can follow the complete story.
-- If exact timing is missing, mark the plan provisional and route back to Agent 02 for word-level timing.
-- If a word is intentionally omitted because it is cut audio, filler removed by Agent 02, or part of a sparse manifesto section, document it in `caption-plan.md`.
+- If exact timing is missing, mark the plan provisional and route back to Story phase for word-level timing.
+- If a word is intentionally omitted because it is cut audio, filler removed by Story phase, or part of a sparse manifesto section, document it in `caption-plan.md`.
 
 Bad:
 
@@ -254,7 +150,7 @@ Example for Dena:
 00:07.40-00:09.00: SISTEM KERJA
 ```
 
-Do not copy Kumar's red serif typography unless the Creative Director explicitly chooses a darker cinematic grammar. Even then, adapt the palette to Dena's identity.
+Do not copy Kumar's red serif typography unless the Story phase explicitly chooses a darker cinematic grammar. Even then, adapt the palette to Dena's identity.
 
 ## Keyword Highlight Rules
 
@@ -363,7 +259,7 @@ Caption placement options:
 - `center-title`: editorial title only.
 - `side-label`: proof labels, usually handoff to overlay agent.
 
-The Caption Agent should specify placement, but HyperFrames Assembly Agent decides final CSS implementation.
+The Screen Plan phase (captions step) should specify placement, but Build phase decides final CSS implementation.
 
 ## Language Rules
 
@@ -413,152 +309,9 @@ Common corrections:
 
 If uncertain, mark it in `caption-plan.md` instead of guessing.
 
-## Caption Data Format
-
-Create `caption-beats.json` with this shape:
-
-```json
-{
-  "source": "videos/example/processed.mp4",
-  "mode": "subtitle-beat",
-  "duration": 54.2,
-  "style": {
-    "base": "dena-default",
-    "position": "lower-center",
-    "font": "heavy-sans",
-    "fill": "white",
-    "stroke": "black",
-    "highlight": "yellow"
-  },
-  "beats": [
-    {
-      "id": "cap-001",
-      "start": 0.0,
-      "duration": 1.2,
-      "text": "AI-NYA BUKAN MASALAH",
-      "highlight": "BUKAN",
-      "type": "subtitle-beat",
-      "position": "lower-center",
-      "sourceWords": ["0.00-1.18"],
-      "notes": "Contrast phrase; keep punchy"
-    }
-  ],
-  "uncertain": [
-    {
-      "time": 18.2,
-      "text": "Claude",
-      "reason": "ASR may say cloud"
-    }
-  ]
-}
-```
-
-Each beat needs:
-
-- stable `id`
-- `start`
-- `duration`
-- `text`
-- `highlight` or `null`
-- `type`
-- `position`
-- `sourceWords` covering the exact processed transcript word range
-- `notes`
-
-Use processed-video time, not raw-source time.
-
-## Caption Plan Template
-
-Create `caption-plan.md`.
-
-```md
-# Caption Plan - <video slug>
-
-## Inputs
-
-- Processed video:
-- Transcript:
-- Creative brief:
-- Edit notes:
-
-## Caption Strategy
-
-- Primary mode:
-- Support modes:
-- Visual grammar:
-- Readability target:
-
-## Hook Text
-
-Primary:
-
-Locked transcript quote:
-
-Agent 02 source timestamp:
-
-Processed timing: <00:00.00-00:03.00 maximum>
-
-Verbatim match: <pass|blocked>
-
-Backup:
-
-Muted-viewer version:
-
-## Style
-
-- Font:
-- Fill:
-- Stroke/shadow:
-- Highlight:
-- Position:
-- Motion suggestion:
-
-## Beat Rules For This Video
-
-- Max words per beat:
-- Highlight logic:
-- Case:
-- Safe area notes:
-
-## Caption Beats Summary
-
-| Time | Type | Text | Highlight | Position | Notes |
-| --- | --- | --- | --- | --- | --- |
-
-## Editorial Title Beats
-
-Use only if applicable.
-
-| Time | Text | Reason |
-| --- | --- | --- |
-
-## CTA Text
-
-Primary:
-
-Backup:
-
-## Uncertain Words
-
-- Time:
-  Word:
-  Concern:
-  Suggested fix:
-
-## Handoff
-
-For Asset Generation Agent:
-
-For Motion/Overlay Agent:
-
-For HyperFrames Assembly Agent:
-
-For QA Agent:
-```
-
 ## Hook Caption Rules
 
-The first three seconds need explicit screen text derived from Agent 02's
+The first three seconds need explicit screen text derived from Story phase's
 locked spoken hook. Use the exact surviving words so the audio hook and muted
 hook make the same claim. You may change capitalization, line breaks, and
 highlighting for readability; do not paraphrase, add stakes, or reveal an
@@ -569,7 +322,7 @@ The hook card must:
 - Start at `00:00.00` and end no later than `00:03.00`.
 - Cover every spoken word in the hook through `sourceWords`.
 - Remain readable in 2-4 lines without audio.
-- Hand off a `blocked` status to Agent 02 if the locked timing or wording is
+- Hand off a `blocked` status to Story phase if the locked timing or wording is
   missing; do not invent replacement copy.
 
 Good hook text:
@@ -603,7 +356,7 @@ Avoid:
 
 One CTA only.
 
-Choose the CTA from Creative Director unless the transcript gives a stronger natural line.
+Choose the CTA from Story phase unless the transcript gives a stronger natural line.
 
 Good Dena CTAs:
 
@@ -618,82 +371,6 @@ Avoid:
 - corporate CTA
 - aggressive sales pitch
 - CTAs that promise Dena will send, publish, or explain something later unless the user explicitly approved that promise.
-
-## Platform Publish Caption Rules
-
-Create `publish-captions.md` for the upload copy.
-
-Rules:
-
-- `publish-captions.md` must contain a `## YouTube Title` section with the title
-  inside a fenced ```` ```text ```` block. The auto-publish CLI reads that exact
-  heading; without it the title is derived from the first line of the caption.
-- YouTube title must be max `100` characters, must not contain `<` or `>`, and
-  must read as a standalone headline (not a truncated caption).
-- Instagram caption must be max `1200` characters.
-- TikTok caption must be max `4000` characters.
-- Include the video's core learning, not just a teaser.
-- Keep Dena's Indonesian voice: direct, practical, founder/developer, not corporate.
-- Use one clear CTA.
-- Use only relevant hashtags; avoid hashtag stuffing.
-- Include character counts for the YouTube title and both captions before handoff.
-
-Expected shape (fenced `text` block under each heading):
-
-    ## YouTube Title
-
-    ```text
-    Cara Gue Rombak Workflow Editing Pakai AI
-    ```
-
-    ## Instagram
-
-    ```text
-    <caption>
-    ```
-
-    ## TikTok
-
-    ```text
-    <caption>
-    ```
-
-## Relationship To HyperFrames
-
-Captions must stay editable as their own layer.
-
-Suggested tracks:
-
-- Track `2`: main subtitles.
-- Track `5`: hook card, editorial title, CTA.
-
-Every later HyperFrames caption element must have:
-
-- `class="clip"`
-- `data-start`
-- `data-duration`
-- `data-track-index`
-- stable `id`
-
-The Caption Agent provides timing and wording. HyperFrames Assembly Agent handles HTML/CSS/GSAP implementation.
-
-## QA Checklist
-
-Before handing off:
-
-- Every beat is readable in under 1 second.
-- Every surviving spoken word is represented for storytelling/talking-head edits.
-- No beat has too many words.
-- Yellow highlights mean something.
-- Hook text works without audio.
-- Hook-card wording matches Agent 02's locked transcript quote verbatim and
-  covers every hook word from `00:00.00` through no later than `00:03.00`.
-- CTA is one clear action.
-- Captions do not contradict the transcript.
-- Uncertain ASR words are marked.
-- Placement avoids obvious face/mouth/UI conflicts.
-- Caption plan matches Creative Director visual grammar.
-- Captions still sound like Dena.
 
 ## Quality Bar
 
@@ -721,7 +398,7 @@ A weak pass:
 If transcript timing is inaccurate:
 
 - Mark the plan provisional.
-- Ask Transcript/Cut Agent for corrected word timings.
+- Ask Story phase for corrected word timings.
 - Do not invent exact timings.
 
 If processed video changes:
@@ -740,7 +417,7 @@ If the visual frame is busy:
 - Choose stronger stroke/shadow.
 - Move captions to `mid-lower`.
 - Reduce word count per beat.
-- Ask Motion/Overlay Agent to avoid competing overlays.
+- Ask Screen Plan phase (visual step) to avoid competing overlays.
 
 If the creative direction is cinematic/manifesto:
 
@@ -765,3 +442,4 @@ Do not turn Dena captions into:
 - random karaoke captions
 - full-screen paragraph slides
 - generic AI influencer copy
+
