@@ -1,5 +1,5 @@
 # ADR-0005 Disiplin Workflow 7-Agent Berbasis Dokumen
-Status: accepted (reverse-engineered)
+Status: superseded by [ADR-0008](0008-four-phase-workflow.md)
 Date: 2026-07-20
 
 ## Context

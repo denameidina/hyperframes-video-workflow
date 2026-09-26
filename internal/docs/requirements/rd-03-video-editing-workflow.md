@@ -1,93 +1,126 @@
 # RD-03 Video Editing Workflow
-Status: accepted (reverse-engineered)
-Date: 2026-08-25
+Status: accepted
+Date: 2026-09-26
 
-Domain: disiplin workflow 7 agent untuk video sosial Dena. Owner: `docs/agents/*`,
-`docs/skills/dena-video-editing-workflow/SKILL.md`. Diturunkan dari AGENTS.md,
-CLAUDE.md, dan tiap agent doc. Detail operasional:
+Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`,
+`docs/skills/dena-video-editing-workflow/SKILL.md`. Keputusan:
+[ADR-0008](../adr/0008-four-phase-workflow.md). Detail operasional:
 [operations/video-editing-workflow](../operations/video-editing-workflow.md).
 
 ## Urutan & routing
 
-- **RD-03-01** (Event-driven) — When sebuah task Dena dimulai, the system shall
-  membaca `docs/skills/dena-video-editing-workflow/SKILL.md` sebagai router lalu
-  agent yang relevan.
-- **RD-03-02** (Ubiquitous) — The system shall menjalankan agent secara berurutan
-  01 → 02 → 03 → 04 → 05 → 06 sebelum user review, kecuali user meminta perbaikan
-  teknis sempit.
-- **RD-03-03** (Unwanted) — If assembly (Agent 06) hendak dimulai sebelum arah
-  kreatif, cut, caption, aset, dan motion selesai atau ditandai tidak perlu, then
-  the system shall menolak dan kembali ke agent hulu yang kurang.
-- **RD-03-04** (Optional) — Where user memilih QA lebih dulu di gate review, the
-  system shall menjalankan Agent 07 sebelum meminta approval publish final.
+- **RD-03-01** (Event-driven) — When sebuah task video Dena dimulai, the system
+  shall membaca `docs/skills/dena-video-editing-workflow/SKILL.md` sebagai router
+  lalu dokumen fase yang relevan di `docs/agents/`.
+- **RD-03-02** (Ubiquitous) — The system shall menjalankan fase berurutan
+  Story → Screen Plan → Build sebelum review user, kecuali user meminta
+  perbaikan teknis sempit.
+- **RD-03-03** (Unwanted) — If fase Build hendak dimulai sebelum
+  `creative-brief.md`, `edit-decision-notes.md`, `caption-beats.json`, dan
+  `visual-plan.md` dengan bagian `Gate 2 Result` ada, then the system shall
+  menolak dan kembali ke fase hulu yang kurang.
+- **RD-03-04** (Ubiquitous) — Setiap fase hilir shall membaca artifact fase hulu
+  di `videos/<slug>/`, bukan dokumen fase hulu.
+
+## Gate
+
+- **RD-03-05** (Event-driven) — When video raw baru diberikan, fase Story shall
+  mentranskripsi sumber sebelum memilih hook.
+- **RD-03-06** (State-driven) — While `gate_cut` bernilai `off` dan user tidak
+  meminta review cut, fase Story shall menulis blok `## Cut Summary` di
+  `edit-decision-notes.md` (kutipan hook `00:00.00-00:03.00`, durasi awal →
+  akhir, bagian yang dibuang + alasan) lalu lanjut ke Screen Plan.
+- **RD-03-07** (Optional) — Where `gate_cut` bernilai `on` atau user meminta
+  review cut, fase Story shall berhenti dan menunjukkan `processed.mp4` beserta
+  Cut Summary sebelum Screen Plan dimulai.
+- **RD-03-08** (Unwanted) — If baris Timeline `visual-plan.md` cocok dengan
+  pemicu R1–R6 (`docs/agents/02-screen-plan.md`), then fase Screen Plan shall
+  berhenti dan menampilkan hanya baris yang ditandai, beserta pemicu dan satu
+  alternatif aman per baris, sebelum Build.
+- **RD-03-09** (Event-driven) — When tidak ada baris Timeline yang cocok dengan
+  R1–R6, fase Screen Plan shall menulis `Gate 2: no triggers` di bagian
+  `Gate 2 Result` lalu lanjut ke Build.
+- **RD-03-10** (Event-driven) — When render final siap, fase Build shall berhenti
+  untuk review user dan menawarkan approve, QA dulu, atau revisi.
+- **RD-03-11** (Event-driven) — When user meng-approve render final tanpa memilih
+  QA, the system shall lanjut ke gate publish tanpa mensyaratkan `qa-report.md`
+  atau `final-approval.md`.
+- **RD-03-12** (Optional) — Where user memilih QA, fase QA shall berjalan di
+  subagent yang hanya menerima path slug, path render,
+  `docs/agents/04-qa.md`, dan `docs/agents/references/qa-checklist.md`.
 
 ## Handoff artifacts
 
-- **RD-03-05** (Ubiquitous) — The system shall menghasilkan artifact handoff milik
-  tiap agent di `videos/<slug>/` bila slug ada (mis. `creative-brief.md`,
-  `edit-decision-notes.md`, `caption-plan.md`, `caption-beats.json`,
-  `publish-captions.md`, `asset-plan.md`, `asset-manifest.json`, `motion-plan.md`,
-  `overlay-timeline.json`, `assembly-notes.md`, `assembly-checklist.md`).
-- **RD-03-06** (Unwanted) — If artifact hulu hilang, then the system shall
-  membuatnya lewat agent hulu yang benar atau menulis catatan blocker; tidak
-  boleh mengarang keputusan yang hilang.
+- **RD-03-13** (Ubiquitous) — The system shall menghasilkan artifact milik tiap
+  fase di `videos/<slug>/` bila slug ada: Story (`creative-brief.md`,
+  `metadata.json`, `transcript.json`, `edit-decision-notes.md`, `cut-list.json`,
+  `processed.mp4`), Screen Plan (`caption-plan.md`, `caption-beats.json`,
+  `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`), Build
+  (`assets/asset-manifest.json` bila ada aset, `assembly-notes.md`,
+  `assembly-checklist.md`).
+- **RD-03-14** (Unwanted) — If artifact hulu hilang, then the system shall
+  membuatnya lewat fase hulu yang benar atau menulis catatan blocker; tidak boleh
+  mengarang keputusan yang hilang.
 
 ## Aturan konten (non-negotiable)
 
-- **RD-03-07** (Ubiquitous) — The system shall memberi cakupan caption penuh:
+- **RD-03-15** (Ubiquitous) — The system shall memberi cakupan caption penuh:
   setiap kata terucap yang lolos cut punya beat caption (talking-head/storytelling).
-- **RD-03-08** (State-driven) — While memproses video Dena default, the system
+- **RD-03-16** (State-driven) — While memproses video Dena default, the system
   shall memakai kecepatan `1.2x`; If kecepatan diturunkan, then the system shall
   mendokumentasikan alasan eksak di `edit-decision-notes.md`.
-- **RD-03-09** (Ubiquitous) — The system shall membuat CTA non-promissory secara
+- **RD-03-17** (Ubiquitous) — The system shall membuat CTA non-promissory secara
   default; the system shall tidak menyiratkan janji "kirim/bahas/share source
   nanti" kecuali user memintanya eksplisit.
-- **RD-03-10** (Event-driven) — When user memberi URL atau transkrip menyebut
-  tool/produk/situs, Agent 04 shall meneliti/inspeksi, menangkap screenshot/
-  rekaman lokal bila berguna, dan menautkannya ke jendela transkrip.
-- **RD-03-11** (Ubiquitous) — Agent 04 shall menulis `Imagegen Decision Log` untuk
-  setiap peluang visual-support sebelum menyimpulkan generated media tidak perlu.
-- **RD-03-12** (Unwanted) — If aset generated tampak generik/palsu/lepas dari
+- **RD-03-18** (Event-driven) — When user memberi URL atau transkrip menyebut
+  tool/produk/situs, fase Screen Plan shall meneliti/inspeksi dan merencanakan
+  capture yang ditautkan ke jendela transkrip, dan fase Build shall menangkap
+  screenshot/rekaman lokal yang direncanakan.
+- **RD-03-19** (Ubiquitous) — Fase Screen Plan shall menulis `Visual Decision Log`
+  di `visual-plan.md` untuk setiap peluang visual-support sebelum menyimpulkan
+  generated media tidak perlu.
+- **RD-03-20** (Unwanted) — If aset generated tampak generik/palsu/lepas dari
   workflow (AI slop), then the system shall menolaknya setelah maksimal satu
   revisi dan mendokumentasikan penolakan.
-- **RD-03-13** (Ubiquitous) — The system shall menyertakan cue SFX yang audible
-  namun tidak menutup speech; SFX hilang atau terlalu pelan adalah temuan QA.
+- **RD-03-21** (Ubiquitous) — The system shall menyertakan cue SFX yang audible
+  namun tidak menutup speech; SFX hilang atau terlalu pelan adalah temuan review.
 
 ## Batas tanggung jawab
 
-- **RD-03-14** (Ubiquitous) — The system shall menjaga tiap agent dalam batas
-  perannya (mis. Agent 05 merancang timing motion; Agent 06 mengimplementasikan
-  di HyperFrames).
-- **RD-03-15** (Ubiquitous) — Temuan QA (Agent 07) shall dirutekan sebagai
-  perbaikan ke agent pemilik, bukan "polish" kabur.
+- **RD-03-22** (Ubiquitous) — The system shall menjaga tiap fase dalam batasnya:
+  Screen Plan memutuskan visual dan timing; Build mengimplementasikannya di
+  HyperFrames.
+- **RD-03-23** (Ubiquitous) — Temuan review user atau QA shall dirutekan ke fase
+  pemilik (Story, Screen Plan, atau Build), bukan menjadi "polish" kabur.
 
 ## Hook transkrip tiga detik
 
-- **RD-03-16** (Event-driven) — When transkrip lengkap tersedia, Agent 02 shall
+- **RD-03-24** (Event-driven) — When transkrip lengkap tersedia, fase Story shall
   memilih tepat satu potongan ucapan verbatim yang memuat intisari, puncak
   masalah, kontradiksi, atau curiosity gap sebagai hook utama.
-- **RD-03-17** (Event-driven) — When hook utama dipindahkan ke awal, Agent 02
+- **RD-03-25** (Event-driven) — When hook utama dipindahkan ke awal, fase Story
   shall menempatkan awal potongan pada output `00:00.00`, mengakhirinya paling
   lambat `00:03.00` pada processed timeline, lalu melanjutkan ke penjelasan.
-- **RD-03-18** (Unwanted) — If pemendekan hook diperlukan, then Agent 02 shall
-  hanya membuang jeda atau filler tanpa mengubah makna; Agent 02 shall tidak
+- **RD-03-26** (Unwanted) — If pemendekan hook diperlukan, then fase Story shall
+  hanya membuang jeda atau filler tanpa mengubah makna; fase Story shall tidak
   menyambung kata terpisah untuk membuat klaim yang tidak pernah diucapkan.
-- **RD-03-19** (Ubiquitous) — Agent 02 shall mencatat timestamp sumber, kutipan
+- **RD-03-27** (Ubiquitous) — Fase Story shall mencatat timestamp sumber, kutipan
   verbatim, timing output, alasan pemilihan, transisi ke penjelasan, dan
   penanganan duplikasi hook di `edit-decision-notes.md` serta `cut-list.json`.
-- **RD-03-20** (Event-driven) — When potongan sumber dipindahkan menjadi hook,
-  Agent 02 shall menghapus kemunculan aslinya dari alur berikutnya kecuali
+- **RD-03-28** (Event-driven) — When potongan sumber dipindahkan menjadi hook,
+  fase Story shall menghapus kemunculan aslinya dari alur berikutnya kecuali
   pengulangan adalah callback yang diminta brief dan didokumentasikan.
-- **RD-03-21** (Event-driven) — When Agent 03 membuat caption hook, Agent 03
-  shall memakai kata ucapan yang sama, mencakup setiap kata pada hook, dan
-  menayangkannya dalam hook card yang dapat dipahami tanpa audio selama jendela
-  `00:00.00`–`00:03.00`.
-- **RD-03-22** (Unwanted) — If tidak ada potongan ucapan yang muat dalam tiga
-  detik tanpa mengubah makna, then Agent 02 shall menandai blocker dan merutekan
-  keputusan ke Agent 01 atau user, bukan mengarang atau memanipulasi ucapan.
+- **RD-03-29** (Event-driven) — When fase Screen Plan membuat caption hook, fase
+  Screen Plan shall memakai kata ucapan yang sama, mencakup setiap kata pada
+  hook, dan menayangkannya dalam hook card yang dapat dipahami tanpa audio
+  selama jendela `00:00.00`–`00:03.00`.
+- **RD-03-30** (Unwanted) — If tidak ada potongan ucapan yang muat dalam tiga
+  detik tanpa mengubah makna, then fase Story shall menandai blocker dan meminta
+  keputusan user, bukan mengarang atau memanipulasi ucapan.
 
 ## Referensi
 
 - Operasional detail: [operations/video-editing-workflow](../operations/video-editing-workflow.md)
-- Keputusan: [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md)
+- Keputusan: [ADR-0008](../adr/0008-four-phase-workflow.md) (menggantikan
+  [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md))
 - Sistem visual: [design-system/visual-system](../design-system/visual-system.md)
