@@ -97,6 +97,12 @@ Sebelum command ini, pastikan description tersedia di
 `description`) atau di `videos/<slug>/publish-captions.md` (`## Instagram`
 atau `## TikTok`). Script berhenti sebelum upload jika description tetap kosong.
 
+Title diambil dari `post.title` / root `title` di `repliz-publish.json`, lalu
+blok `## YouTube Title` di `publish-captions.md`, lalu diturunkan otomatis dari
+baris pertama description (max 100 karakter). Title yang sama dikirim ke semua
+platform, tapi hanya YouTube yang wajib non-empty: jika target YouTube aktif dan
+title tetap kosong, script berhenti sebelum upload.
+
 Jalankan command Repliz hanya setelah user review dan approve hasil edit. Tanpa
 `--approved`, script berhenti sebelum upload R2 atau scheduling Repliz. R2
 memakai Wrangler remote upload ke bucket dari `R2_BUCKET` dengan public base

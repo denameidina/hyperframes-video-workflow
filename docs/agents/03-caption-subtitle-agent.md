@@ -140,8 +140,10 @@ Top safe-area hook text.
 - Black rounded rectangle.
 - White text.
 - 2-4 lines max.
-- Must work with sound off.
-- Usually appears in first 3 seconds.
+- Uses the same verbatim words as Agent 02's locked transcript hook; line
+  breaks, case, and one highlight may change, but the wording may not.
+- Covers every spoken word in the locked hook and works with sound off.
+- Starts at `00:00.00` and ends no later than `00:03.00`.
 
 ### `editorial-title`
 
@@ -490,6 +492,14 @@ Create `caption-plan.md`.
 
 Primary:
 
+Locked transcript quote:
+
+Agent 02 source timestamp:
+
+Processed timing: <00:00.00-00:03.00 maximum>
+
+Verbatim match: <pass|blocked>
+
 Backup:
 
 Muted-viewer version:
@@ -548,7 +558,19 @@ For QA Agent:
 
 ## Hook Caption Rules
 
-The first 3 seconds need explicit screen text unless the Creative Director chose a purely visual hook.
+The first three seconds need explicit screen text derived from Agent 02's
+locked spoken hook. Use the exact surviving words so the audio hook and muted
+hook make the same claim. You may change capitalization, line breaks, and
+highlighting for readability; do not paraphrase, add stakes, or reveal an
+answer that is absent from the spoken excerpt.
+
+The hook card must:
+
+- Start at `00:00.00` and end no later than `00:03.00`.
+- Cover every spoken word in the hook through `sourceWords`.
+- Remain readable in 2-4 lines without audio.
+- Hand off a `blocked` status to Agent 02 if the locked timing or wording is
+  missing; do not invent replacement copy.
 
 Good hook text:
 
@@ -603,13 +625,38 @@ Create `publish-captions.md` for the upload copy.
 
 Rules:
 
+- `publish-captions.md` must contain a `## YouTube Title` section with the title
+  inside a fenced ```` ```text ```` block. The auto-publish CLI reads that exact
+  heading; without it the title is derived from the first line of the caption.
+- YouTube title must be max `100` characters, must not contain `<` or `>`, and
+  must read as a standalone headline (not a truncated caption).
 - Instagram caption must be max `1200` characters.
 - TikTok caption must be max `4000` characters.
 - Include the video's core learning, not just a teaser.
 - Keep Dena's Indonesian voice: direct, practical, founder/developer, not corporate.
 - Use one clear CTA.
 - Use only relevant hashtags; avoid hashtag stuffing.
-- Include character counts for both captions before handoff.
+- Include character counts for the YouTube title and both captions before handoff.
+
+Expected shape (fenced `text` block under each heading):
+
+    ## YouTube Title
+
+    ```text
+    Cara Gue Rombak Workflow Editing Pakai AI
+    ```
+
+    ## Instagram
+
+    ```text
+    <caption>
+    ```
+
+    ## TikTok
+
+    ```text
+    <caption>
+    ```
 
 ## Relationship To HyperFrames
 
@@ -639,6 +686,8 @@ Before handing off:
 - No beat has too many words.
 - Yellow highlights mean something.
 - Hook text works without audio.
+- Hook-card wording matches Agent 02's locked transcript quote verbatim and
+  covers every hook word from `00:00.00` through no later than `00:03.00`.
 - CTA is one clear action.
 - Captions do not contradict the transcript.
 - Uncertain ASR words are marked.

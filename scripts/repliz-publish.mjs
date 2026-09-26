@@ -17,6 +17,8 @@ const TARGET_ENV = [
   ["instagram", "REPLIZ_INSTAGRAM_ACCOUNT_ID"],
 ];
 
+const YOUTUBE_TITLE_MAX_LENGTH = 100;
+
 const DEFAULT_POST = {
   title: "",
   description: "",
@@ -80,11 +82,11 @@ export function sha256(value) {
   return `sha256:${createHash("sha256").update(value).digest("hex")}`;
 }
 
-export function makePublishKey({ r2Key, targetAccounts, description }) {
+export function makePublishKey({ r2Key, targetAccounts, description, title }) {
   const sortedTargets = [...targetAccounts]
     .map(({ platform, accountId }) => ({ platform, accountId }))
     .sort((a, b) => `${a.platform}:${a.accountId}`.localeCompare(`${b.platform}:${b.accountId}`));
-  return sha256(JSON.stringify({ r2Key, targetAccounts: sortedTargets, description }));
+  return sha256(JSON.stringify({ r2Key, targetAccounts: sortedTargets, description, title: String(title || "") }));
 }
 
 export function shouldSkipPublish(receipt, publishKey, force) {
@@ -127,6 +129,37 @@ async function readPublishDescription(slugDir) {
   return extractPublishCaption(markdown, "Instagram") || extractPublishCaption(markdown, "TikTok");
 }
 
+async function readPublishTitle(slugDir) {
+  const markdown = await readTextIfExists(path.join(slugDir, "publish-captions.md"));
+  if (!markdown.trim()) return "";
+  return extractPublishCaption(markdown, "YouTube Title");
+}
+
+export function deriveTitleFromDescription(description, maxLength = YOUTUBE_TITLE_MAX_LENGTH) {
+  const firstMeaningfulLine = String(description || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .find((line) => line && !/^#\S/.test(line));
+
+  return truncateTitle(firstMeaningfulLine, maxLength);
+}
+
+export function truncateTitle(text, maxLength = YOUTUBE_TITLE_MAX_LENGTH) {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  if (clean.length <= maxLength) return clean;
+
+  const slice = clean.slice(0, maxLength);
+  const lastSpace = slice.lastIndexOf(" ");
+  const cut = lastSpace > maxLength / 2 ? slice.slice(0, lastSpace) : slice;
+  return cut.replace(/[\s.,;:!?-]+$/, "");
+}
+
+export function sanitizeTitleForPlatform(title, platform) {
+  const text = String(title || "").replace(/\s+/g, " ").trim();
+  if (platform !== "youtube") return text;
+  return truncateTitle(text.replace(/[<>]/g, " "), YOUTUBE_TITLE_MAX_LENGTH);
+}
+
 export async function readPostMetadata(slugDir) {
   const data = await readJsonIfExists(path.join(slugDir, "repliz-publish.json"));
   const source = data?.post || data || {};
@@ -135,10 +168,16 @@ export async function readPostMetadata(slugDir) {
     String(source.description || "").trim() ||
     String(data?.description || "").trim() ||
     fallbackDescription;
+  const title =
+    String(source.title || "").trim() ||
+    String(data?.title || "").trim() ||
+    (await readPublishTitle(slugDir)) ||
+    deriveTitleFromDescription(description);
 
   return {
     ...DEFAULT_POST,
     ...source,
+    title,
     description,
     tags: Array.isArray(source.tags) ? source.tags : DEFAULT_POST.tags,
     mentions: Array.isArray(source.mentions) ? source.mentions : DEFAULT_POST.mentions,
@@ -151,6 +190,12 @@ export async function readPostMetadata(slugDir) {
 function requireDescription(description, label = "post") {
   const text = String(description || "").trim();
   if (!text) throw new Error(`Missing ${label} description`);
+  return text;
+}
+
+function requireTitle(title, label = "post") {
+  const text = String(title || "").trim();
+  if (!text) throw new Error(`Missing ${label} title`);
   return text;
 }
 
@@ -182,9 +227,11 @@ export function sanitizeDescriptionForPlatform(description, platform) {
 
 export function buildSchedulePayload({ accountId, platform, post, videoUrl, now = new Date() }) {
   const description = requireDescription(sanitizeDescriptionForPlatform(post.description, platform), `${platform} post`);
+  const title = sanitizeTitleForPlatform(post.title, platform);
+  if (platform === "youtube") requireTitle(title, `${platform} post`);
 
   return {
-    title: post.title,
+    title,
     description,
     topic: post.topic,
     type: post.type,
@@ -432,6 +479,9 @@ export async function runPublish({
   } catch {
     throw new Error(`Missing post description. Add ${path.join(args.slug, "repliz-publish.json")} with post.description or ${path.join(args.slug, "publish-captions.md")} before publishing.`);
   }
+  if (targetAccounts.some((target) => target.platform === "youtube") && !sanitizeTitleForPlatform(post.title, "youtube")) {
+    throw new Error(`Missing YouTube post title. Add ${path.join(args.slug, "repliz-publish.json")} with post.title or a "## YouTube Title" block in ${path.join(args.slug, "publish-captions.md")} before publishing.`);
+  }
   const existingReceipt = await readJsonIfExists(path.join(args.slug, "repliz-publish.json"));
   const r2Key = buildR2Key({ prefix: config.r2Prefix, slug: args.slug, file: args.file });
   const videoUrl = buildPublicUrl(config.r2PublicBaseUrl, r2Key);
@@ -439,6 +489,7 @@ export async function runPublish({
     r2Key,
     targetAccounts,
     description: post.description,
+    title: post.title,
   });
 
   if (shouldSkipPublish(existingReceipt, publishKey, args.force)) {
@@ -477,6 +528,7 @@ export async function runPublish({
     r2Key,
     videoUrl,
     descriptionHash: sha256(post.description),
+    titleHash: sha256(post.title),
     publishKey,
     createdAt: now.toISOString(),
     schedules: polledSchedules,

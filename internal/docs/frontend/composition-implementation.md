@@ -52,6 +52,22 @@ ada di [rd-02](../requirements/rd-02-composition-render.md) dan
 Media lokal (`processed.mp4`, aset, SFX) di-ignore git; setelah clone, preview
 akan blank sampai file `videos/<slug>/...` yang dirujuk `index.html` dipulihkan.
 
+## Komposisi Standalone Per Slug
+
+Jika repo-root `index.html` sedang berisi edit lain yang belum boleh ditimpa,
+sebuah video boleh memakai proyek HyperFrames mandiri di
+`videos/<slug>/hyperframes/index.html`. Media harus tetap menjadi direct child
+root komposisi standalone, semua path harus lokal terhadap proyek tersebut,
+dan verifikasi dijalankan dari folder standalone dengan `npm run check`.
+
+Contoh yang sudah dirender:
+
+- `videos/20260805-pak-radin-ai/hyperframes/index.html`
+- composition id `dena-pak-radin-ai`, 1080x1920, 48.566 detik
+- base media memakai proxy GOP-30 lokal untuk seek deterministik tanpa mengubah
+  `processed.mp4` atau timing transcript
+- hasil review: `videos/20260805-pak-radin-ai/render.mp4`
+
 ## Referensi
 
 - [design-system/visual-system](../design-system/visual-system.md)

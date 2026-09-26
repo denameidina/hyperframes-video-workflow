@@ -43,6 +43,20 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
   bawah heading eksak `## Instagram`/`## TikTok` (case-insensitive) dan
   mengabaikan teks non-fenced di section itu.
 
+## Metadata & title
+
+- **RD-01-31** (Ubiquitous) — The system shall menentukan `title` dengan
+  prioritas: `repliz-publish.json` `post.title` → root `title` →
+  `publish-captions.md` blok `## YouTube Title` → derivasi dari `description`.
+- **RD-01-32** (Ubiquitous) — The system shall menurunkan title dari
+  `description` dengan mengambil baris non-kosong pertama yang tidak diawali
+  hashtag (`#\S`), menormalkan whitespace, dan memotongnya di batas kata
+  maksimal `100` karakter.
+- **RD-01-33** (Unwanted) — If ada target account `youtube` dan `title` tetap
+  kosong setelah semua fallback, then the system shall throw
+  `Missing YouTube post title` yang menyebut `repliz-publish.json` dan blok
+  `## YouTube Title` di `publish-captions.md`, sebelum upload atau scheduling.
+
 ## Object key & URL
 
 - **RD-01-11** (Ubiquitous) — The system shall menyusun object key R2 sebagai
@@ -56,7 +70,7 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
   `schedules.length > 0` dan flag `--force` tidak ada, the system shall skip
   publish dan mengembalikan receipt lama tanpa upload/scheduling.
 - **RD-01-14** (Ubiquitous) — The system shall menghitung `publishKey` =
-  `sha256(JSON({ r2Key, targetAccounts terurut per "platform:accountId", description }))`.
+  `sha256(JSON({ r2Key, targetAccounts terurut per "platform:accountId", description, title }))`.
 - **RD-01-15** (Optional) — Where `--force` diberikan, the system shall selalu
   re-upload R2 dan membuat schedule baru meski receipt cocok.
 
@@ -92,6 +106,11 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
   mengganti notasi panah (`-> => → ➜ ➔`) jadi ` ke ` dan pasangan `kata/kata`
   jadi `kata dan kata` (kecuali didahului `://`), tanpa mengubah caption platform
   lain.
+- **RD-01-34** (Ubiquitous) — The system shall mengirim `title` hasil resolusi ke
+  payload semua platform, dengan whitespace dinormalkan dan di-trim.
+- **RD-01-35** (State-driven) — While platform target `youtube`, the system shall
+  membuang karakter `<` dan `>` dari `title`, memotongnya di batas kata maksimal
+  `100` karakter, dan throw `Missing youtube post title` bila hasilnya kosong.
 - **RD-01-25** (Event-driven) — When `scheduleAt` bernilai `"now"` atau kosong,
   the system shall menjadwalkan pada `now + 60_000 ms` dalam ISO; nilai lain
   dikirim sebagai `new Date(value).toISOString()`.
@@ -111,8 +130,8 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 
 - **RD-01-29** (Event-driven) — When publish berhasil, the system shall menulis
   `videos/<slug>/repliz-publish.json` berisi `post`, `r2Bucket`, `r2Key`,
-  `videoUrl`, `descriptionHash` (`sha256:...`), `publishKey`, `createdAt`,
-  `schedules[]`.
+  `videoUrl`, `descriptionHash` (`sha256:...`), `titleHash` (`sha256:...`),
+  `publishKey`, `createdAt`, `schedules[]`.
 - **RD-01-30** (Ubiquitous) — The system shall tidak menyimpan access/secret key,
   Cloudflare API token, header Basic Auth penuh, atau signed URL di receipt.
 

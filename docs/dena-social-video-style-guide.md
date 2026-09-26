@@ -88,7 +88,9 @@ Observed strong hook style:
 
 Every edit should optimize for:
 
-- Stop scroll in first 3 seconds.
+- Stop scroll with a transcript-derived spoken hook in the first 3 seconds:
+  move the verbatim core tension or peak problem to `00:00.00`, end it by
+  `00:03.00`, then continue into the explanation.
 - Remove dead air and repeated thinking.
 - Keep the authentic monologue.
 - Make captions easy to read without pausing.
@@ -105,7 +107,9 @@ When user provides a raw vlog/monologue video:
 
 1. Creative direction
    - Use Agent 01.
-   - Choose content lane, hook, format, retention spine, visual grammar, and CTA.
+   - Choose content lane, hook tension, format, retention spine, visual grammar,
+     and CTA. Lock the exact quote only when a transcript exists; otherwise mark
+     the hook provisional for Agent 02.
    - Write `videos/<slug>/creative-brief.md`.
 
 2. Inspect source and build the base cut
@@ -114,6 +118,11 @@ When user provides a raw vlog/monologue video:
    - Identify whether it is talking-head, handheld vlog, or mixed.
    - Check if existing burned-in captions/text exist.
    - Transcribe word-level.
+   - From the complete transcript, rank at least three hook candidates and lock
+     one verbatim excerpt containing the core tension or peak problem.
+   - Move the locked excerpt to processed output `00:00.00-00:03.00`, remove its
+     later duplicate unless it is an intentional callback, then continue with
+     the explanation.
    - Cut silence/dead air.
    - Cut filler and repeated starts when meaning stays intact.
    - Keep human texture; do not remove every pause if it makes speech unnatural.
@@ -221,6 +230,23 @@ Examples:
 
 First 3 seconds decide the video.
 
+Default editorial flow:
+
+1. Read the complete transcript before locking the opening audio.
+2. Select a contiguous, verbatim phrase that carries the core tension, peak
+   problem, contradiction, proof, or curiosity gap without giving away the
+   answer.
+3. Place it at output `00:00.00` and end it no later than `00:03.00` after the
+   speed adjustment.
+4. Continue immediately with the original explanation/setup and remove the
+   hook's later duplicate unless the brief calls for a documented callback.
+5. Use the same spoken words in the hook card so muted viewers receive the same
+   claim.
+
+Shorten the source only by removing silence or filler while preserving meaning.
+If no intact phrase fits the window, route the hook back to Agent 01 or the user
+instead of fabricating dialogue or splicing separate words into a new claim.
+
 Default hook shape:
 
 - Top black rounded rectangle, white text.
@@ -305,6 +331,34 @@ Revision learnings from raw talking-head workflow edits:
 - Whisper word-level timings are token interpolations and drift up to ~1.4s across pauses. Do not cut on them. Cut on amplitude: `silencedetect` for candidate boundaries, then per-window `volumedetect` to confirm each cut sits >=18 dB under the speech peak. Segment-level timings are reliable; word-level are not.
 - Whisper normalizes colloquial register on 1.2x audio (udah->sudah, nggak->tidak, masukin->masukkan, nambahin->menambahin). Captions must restore Dena's spoken forms; transcribe the raw-speed audio too when in doubt, and cross-check tool/UI terms against on-screen frames (e.g. "briefing atau QA" was misheard as "gripping atau KE", corrected from the app's `Dari brief`/`Dari QA` tabs).
 - A base master limited to -1.0 dBFS true-peak leaves no headroom for SFX on loud lines: a bass hit under the loudest word will clip. Either master `processed.mp4` with ~2 dBFS headroom before layering SFX, or skip the SFX accent on the hottest moments and let the visual punch carry it. Always measure the final render for clipped samples (`astats` peak count), not just file presence.
+- If the final HyperFrames render clips (astats `Max level` > 1.0), fix it without re-rendering: run the render audio through `alimiter=limit=0.8,loudnorm=I=-14:TP=-1.5:LRA=11` with `-c:v copy`. Re-verify `astats` after (AAC re-encode adds overshoot, so limit below the ceiling).
+- DJI/phone raw is often stored 1920x1080 with `rotation=-90` (displays 1080x1920). In an ffmpeg `filter_complex`, `[0:v]` is already auto-rotated to upright — adding `transpose` rotates it AGAIN to sideways. In filter_complex do not add transpose (autorotate handles it); or use `-noautorotate` + `transpose`. Verify orientation with a frame grab before the long encode.
+- HyperFrames memuxing banyak elemen `<audio>` dengan benar, dan `data-volume` bekerja
+  persis seperti perhitungan (peak file + 20*log10(volume)). Tetapi **`data-media-start`
+  pada elemen `<audio>` membuat klip itu senyap total di render** — bukan bergeser, tapi
+  hilang. Kalau butuh potongan tertentu dari sebuah file SFX, potong file-nya lebih dulu
+  dengan ffmpeg dan rujuk file hasil potongan itu. Diuji terpisah dengan komposisi 3 detik.
+- Jangan percaya durasi file SFX dari manifest sebagai durasi bunyinya. `riser.mp3`
+  berdurasi 10.03s tapi isinya hanya 0-5s; sisanya senyap. Petakan envelope-nya dulu
+  (`volumedetect` per 0.5s) sebelum menentukan titik potong dan waktu cue.
+- SFX yang duduk di bawah suara **tidak akan terlihat** pada perbandingan `volumedetect`
+  antara render dan `processed.mp4`: puncak speech mendominasi window-nya, dan kedua file
+  tidak sample-aligned sehingga selisih 0.2-0.8 dB tidak berarti apa-apa. Untuk memastikan
+  sebuah cue benar-benar masuk, render komposisi uji pendek yang hanya berisi cue tersebut,
+  lalu ukur. Cue yang berada di window senyap (mis. riser) adalah satu-satunya yang bisa
+  diverifikasi langsung dari render penuh.
+- Untuk menutup wajah anak pada footage bergerak, jangan mengandalkan satu overlay yang
+  di-keyframe saja. Deteksi wajah per-frame (macOS Vision lewat Swift) memberi posisi yang
+  akurat selama kamera stabil, tapi gagal total saat whip pan karena motion blur — dan
+  justru di situlah risikonya. Dua hal wajib: (1) anchor manual dari pembacaan frame untuk
+  bagian whip, (2) cover kedua yang lebih besar dan diam menutup posisi tujuan lompatan
+  kamera, karena frame persis terjadinya lompatan bisa meleset 1-2 frame antara waktu
+  ekstraksi ffmpeg dan waktu seek komposisi. Verifikasi akhir harus frame-demi-frame pada
+  MP4 hasil render, bukan pada beberapa frame sampel, dan harus dilihat mata juga karena
+  detektor wajah gagal pada frame blur.
+- Cover privasi harus opaque. Jangan pakai `backdrop-filter`: fitur itu bisa gagal senyap
+  di renderer headless, dan gate privasi tidak boleh bergantung pada sesuatu yang gagalnya
+  tidak terlihat.
 - When the transcript shows a live local tool/app (e.g. a client-routed SPA at 127.0.0.1), capture clean UI proof by driving Chrome over the DevTools Protocol (Node's global `WebSocket`, no deps) to click into the right view, since a plain headless screenshot only gets the default route. Real captured UI beats any generated/redrawn dashboard for proof moments.
 
 ## CTA Defaults
@@ -330,10 +384,18 @@ Avoid promissory CTA unless explicitly requested by the user:
 
 For every finished social video, include `publish-captions.md`:
 
+- YouTube title: max `100` characters, no `<` or `>`, reads as a standalone headline.
 - Instagram caption: max `1200` characters.
 - TikTok caption: max `4000` characters.
 - Both captions must include the video's core learning, one clear CTA, and character counts.
 - Keep the copy in Dena's natural Indonesian voice; avoid corporate promo language and hashtag stuffing.
+- Publish-parser contract: for `npm run repliz:publish` to read the caption,
+  `publish-captions.md` must use headings that are exactly `## YouTube Title`,
+  `## Instagram`, and `## TikTok` (not `## Instagram (Reels) caption`), each
+  followed by a fenced ` ```text ` block. The Instagram block is used as the
+  description for all platforms; the `## YouTube Title` block is used as the
+  title for all platforms and is required for YouTube. See
+  `docs/repliz/integration-spec.md`.
 
 ## Social Findings From Public Samples
 

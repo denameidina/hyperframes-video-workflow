@@ -1,6 +1,6 @@
 # RD-03 Video Editing Workflow
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-08-25
 
 Domain: disiplin workflow 7 agent untuk video sosial Dena. Owner: `docs/agents/*`,
 `docs/skills/dena-video-editing-workflow/SKILL.md`. Diturunkan dari AGENTS.md,
@@ -60,6 +60,31 @@ CLAUDE.md, dan tiap agent doc. Detail operasional:
   di HyperFrames).
 - **RD-03-15** (Ubiquitous) — Temuan QA (Agent 07) shall dirutekan sebagai
   perbaikan ke agent pemilik, bukan "polish" kabur.
+
+## Hook transkrip tiga detik
+
+- **RD-03-16** (Event-driven) — When transkrip lengkap tersedia, Agent 02 shall
+  memilih tepat satu potongan ucapan verbatim yang memuat intisari, puncak
+  masalah, kontradiksi, atau curiosity gap sebagai hook utama.
+- **RD-03-17** (Event-driven) — When hook utama dipindahkan ke awal, Agent 02
+  shall menempatkan awal potongan pada output `00:00.00`, mengakhirinya paling
+  lambat `00:03.00` pada processed timeline, lalu melanjutkan ke penjelasan.
+- **RD-03-18** (Unwanted) — If pemendekan hook diperlukan, then Agent 02 shall
+  hanya membuang jeda atau filler tanpa mengubah makna; Agent 02 shall tidak
+  menyambung kata terpisah untuk membuat klaim yang tidak pernah diucapkan.
+- **RD-03-19** (Ubiquitous) — Agent 02 shall mencatat timestamp sumber, kutipan
+  verbatim, timing output, alasan pemilihan, transisi ke penjelasan, dan
+  penanganan duplikasi hook di `edit-decision-notes.md` serta `cut-list.json`.
+- **RD-03-20** (Event-driven) — When potongan sumber dipindahkan menjadi hook,
+  Agent 02 shall menghapus kemunculan aslinya dari alur berikutnya kecuali
+  pengulangan adalah callback yang diminta brief dan didokumentasikan.
+- **RD-03-21** (Event-driven) — When Agent 03 membuat caption hook, Agent 03
+  shall memakai kata ucapan yang sama, mencakup setiap kata pada hook, dan
+  menayangkannya dalam hook card yang dapat dipahami tanpa audio selama jendela
+  `00:00.00`–`00:03.00`.
+- **RD-03-22** (Unwanted) — If tidak ada potongan ucapan yang muat dalam tiga
+  detik tanpa mengubah makna, then Agent 02 shall menandai blocker dan merutekan
+  keputusan ke Agent 01 atau user, bukan mengarang atau memanipulasi ucapan.
 
 ## Referensi
 

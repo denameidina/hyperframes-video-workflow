@@ -218,6 +218,38 @@ Create a sequence like:
 
 The content map helps avoid cutting only by waveform.
 
+## Three-Second Transcript Hook
+
+After the full transcript and content map are available, lock exactly one
+spoken source excerpt as the opening hook. Agent 01 owns the hook strategy;
+this agent owns selecting the real source moment that fulfills it.
+
+The selected excerpt must:
+
+- Contain the core tension, peak problem, contradiction, proof, or curiosity
+  gap that makes the viewer want the explanation.
+- Use a contiguous, verbatim spoken phrase from the source.
+- Start at output `00:00.00` and end no later than output `00:03.00` after the
+  selected speed adjustment.
+- Preserve the original meaning. Shorten only by removing silence or filler;
+  do not splice separate words into a claim Dena never made.
+- Lead directly into the explanation or setup after the hook.
+- Be removed from its original later position unless the Creative Brief asks
+  for an intentional callback; document any retained repetition.
+
+If no source excerpt fits within three seconds without changing meaning, mark
+the hook as `blocked` and route the decision to Agent 01 or the user. Do not
+substitute fabricated dialogue.
+
+Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
+
+- exact spoken quote
+- source start and end
+- processed output start and end
+- selection reason
+- transition into the explanation
+- original-occurrence handling: `removed` or `intentional-callback`
+
 ## Cut Categories
 
 Label every cut decision with one category.
@@ -226,7 +258,8 @@ Use these categories:
 
 - `keep`: essential for story, proof, or emotion.
 - `tighten`: keep meaning but remove pauses/filler.
-- `move-to-hook`: phrase is strong enough to become opening hook.
+- `move-to-hook`: the locked verbatim phrase moves to output `00:00.00` and
+  ends no later than `00:03.00`.
 - `cut-silence`: dead air, long pause, empty thinking.
 - `cut-filler`: "eee", "um", "jadi", "kayak", "sebenernya" when not meaningful.
 - `cut-repeat`: repeated phrase or restarted sentence.
@@ -315,7 +348,9 @@ Avoid speed changes when:
 
 ## Hook Extraction
 
-This agent does not choose the final hook strategy, but it must identify candidate hook material from the transcript.
+This agent does not invent the hook strategy. It must identify at least three
+source-grounded candidates, then lock exactly one candidate using the
+Three-Second Transcript Hook contract above.
 
 Find:
 
@@ -326,7 +361,9 @@ Find:
 - Most emotional line
 - Best CTA line
 
-Return at least 3 hook candidate clips with timestamps.
+Return at least 3 hook candidate clips with timestamps. Every candidate should
+be evaluated against its processed duration; a candidate longer than three
+seconds may inform the choice but cannot become the locked opening unchanged.
 
 Example:
 
@@ -342,6 +379,20 @@ Example:
    Why: proof hook, concrete business value.
 ```
 
+After the candidates, add the locked decision:
+
+```md
+## Three-Second Transcript Hook
+
+- Status: locked
+- Exact spoken quote: "Workflow bisnisnya yang belum jelas."
+- Source: 00:43.20-00:45.70
+- Output: 00:00.00-00:02.50
+- Why: states the peak problem without revealing the explanation
+- Transition: resume with the original setup at output 00:02.50
+- Original occurrence: removed
+```
+
 ## Edit Decision List
 
 Produce an edit decision list before generating `processed.mp4`.
@@ -354,9 +405,10 @@ Use this format in `edit-decision-notes.md`:
 | Source Start | Source End | Action | Reason | Output Position |
 | --- | --- | --- | --- | --- |
 | 00:00.00 | 00:06.20 | cut-silence | slow setup before hook | - |
-| 00:06.20 | 00:18.90 | keep | core problem statement | 00:00.00 |
+| 00:42.10 | 00:44.70 | move-to-hook | locked peak problem | 00:00.00 |
+| 00:06.20 | 00:18.90 | keep | explanation after hook | 00:02.60 |
 | 00:18.90 | 00:24.50 | cut-repeat | repeated setup | - |
-| 00:24.50 | 00:41.00 | tighten | useful context, remove pauses | 00:12.70 |
+| 00:24.50 | 00:41.00 | tighten | useful context, remove pauses | 00:15.30 |
 ```
 
 Also create machine-readable `cut-list.json`.
@@ -368,12 +420,23 @@ Recommended JSON shape:
   "source": "raw/example.mp4",
   "targetDuration": 60,
   "speed": 1.2,
+  "primaryHook": {
+    "text": "Workflow bisnisnya yang belum jelas.",
+    "sourceStart": 42.1,
+    "sourceEnd": 44.7,
+    "outputStart": 0.0,
+    "outputEnd": 2.6,
+    "reason": "peak problem; creates curiosity before the explanation",
+    "transition": "resume the original setup immediately after the hook",
+    "originalOccurrence": "removed"
+  },
   "segments": [
     {
-      "sourceStart": 6.2,
-      "sourceEnd": 18.9,
-      "action": "keep",
-      "reason": "core problem statement"
+      "sourceStart": 42.1,
+      "sourceEnd": 44.7,
+      "action": "move-to-hook",
+      "outputStart": 0.0,
+      "reason": "locked peak problem"
     }
   ],
   "notes": [
@@ -471,6 +534,16 @@ Use this template for `edit-decision-notes.md`.
    Text:
    Why:
 
+## Three-Second Transcript Hook
+
+- Status: <locked|blocked>
+- Exact spoken quote:
+- Source start/end:
+- Output start/end: <must begin 00:00.00 and end no later than 00:03.00>
+- Why this creates curiosity:
+- Transition into explanation:
+- Original occurrence: <removed|intentional-callback>
+
 ## Edit Decision List
 
 | Source Start | Source End | Action | Reason | Output Position |
@@ -520,7 +593,9 @@ Handoff must include:
 - transcript path
 - processed-timeline word-level transcript or raw-to-processed timing map
 - cut-list path
-- hook candidate timestamps
+- three hook candidate timestamps
+- locked three-second hook quote, source timing, output timing, transition, and
+  original-occurrence handling
 - key quote timestamps
 - sections where captions need extra care
 - sections where overlays should support meaning
@@ -532,14 +607,18 @@ Bad handoff:
 
 Good handoff:
 
-> `processed.mp4` is 54.2s at 1.18x. The primary hook candidate is source `00:42.1-00:47.3`, now output `00:00.0-00:04.4`. ASR may confuse `Claude` with `cloud` at output `00:18.2`. Preserve the pause before `workflow bisnisnya rusak` because it supports the contrast hook.
+> `processed.mp4` is 54.2s at 1.18x. The locked verbatim hook is source
+> `00:42.1-00:44.7`, now output `00:00.0-00:02.6`; its original occurrence is
+> removed and the explanation resumes at output `00:02.6`. ASR may confuse
+> `Claude` with `cloud` at output `00:18.2`.
 
 ## Quality Bar
 
 A good Transcript/Cut pass:
 
 - Makes the video shorter without losing context.
-- Keeps the strongest hook candidate near the front.
+- Opens at `00:00.00` with the locked verbatim hook, ends it by `00:03.00`,
+  then continues into the explanation.
 - Preserves Dena's natural voice.
 - Removes obvious dead air and repeated starts.
 - Leaves clean timing for captions.

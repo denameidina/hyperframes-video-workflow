@@ -1,6 +1,6 @@
 # Video Editing Workflow (7 Agent)
 Status: operating standard
-Date: 2026-07-20
+Date: 2026-08-25
 
 Kanonik untuk: cara operasional menjalankan produksi video Dena via 7 agent.
 Aturan/kriteria: [rd-03](../requirements/rd-03-video-editing-workflow.md);
@@ -24,7 +24,8 @@ premis, audience, hook utama + cadangan, struktur retensi, arah visual/caption,
 kebutuhan aset, CTA, risiko). Content lane (pilih 1 primer): `ai-systems`,
 `developer-craft`, `founder-operator`, `journey-reflection`, `family-vlog`,
 `viral-character`. Hook: `callout|contrast|mistake|proof|mission|plot-twist` —
-3 detik pertama harus jalan tanpa audio. CTA non-promissory.
+tetapkan tension yang harus dicari; kunci kutipan verbatim hanya bila transkrip
+sudah ada, selain itu tandai provisional untuk Agent 02. CTA non-promissory.
 
 ### 02 Transcript/Cut
 Raw → base editorial bersih. Baca brief dulu. **Output wajib:** `metadata.json`,
@@ -35,7 +36,11 @@ pakai whisper lokal. Cut berbasis amplitudo, bukan word-level. **Kecepatan
 default 1.2x** (1.12–1.18x bila sumber cepat; lebih rendah wajib
 didokumentasikan). Base video 9:16 1080x1920 30fps, tanpa caption/overlay
 burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true peak −1.5..−1.0 dBFS.
-Serahkan timing word-level tiap kata yang lolos + ≥3 kandidat hook.
+Serahkan timing word-level tiap kata yang lolos + ≥3 kandidat hook. Kunci tepat
+satu kutipan verbatim berisi intisari/puncak masalah, pindahkan ke output
+`00:00.00-00:03.00`, lanjutkan ke penjelasan, dan hapus kemunculan aslinya
+kecuali callback didokumentasikan. Catat source/output timing, alasan, transisi,
+dan penanganan duplikasi di `edit-decision-notes.md` + `cut-list.json`.
 
 ### 03 Caption/Subtitle
 **Output wajib:** `caption-plan.md`, `caption-beats.json`, `publish-captions.md`.
@@ -45,7 +50,8 @@ Tipe caption: `subtitle-beat` (default 1–4 kata, max 6), `hook-card`,
 min 0.45s, nyaman 0.8–1.4s, hold panjang 1.8–2.5s. Safe: top 120px, bottom 220px.
 Koreksi ASR (cloud→Claude, chat gbt→ChatGPT, dst.). `publish-captions.md`: IG max
 1200 char, TikTok max 4000 char, sertakan character count. Track 2 = subtitle,
-track 5 = hook/title/CTA.
+track 5 = hook/title/CTA. Hook card `00:00.00-00:03.00` memakai kata yang sama
+dengan hook transkrip Agent 02 dan mencakup seluruh ucapan untuk muted viewing.
 
 ### 04 Asset Generation
 **Output wajib:** `assets/asset-plan.md`, `asset-manifest.json` (aset di

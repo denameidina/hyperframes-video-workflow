@@ -34,7 +34,7 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
 `scripts/repliz-publish.mjs`.
 
 **Wajib** (publish gagal jika salah satu kosong — `loadConfig`,
-`repliz-publish.mjs:382`):
+`repliz-publish.mjs:429`):
 
 - `REPLIZ_API_BASE_URL` — base URL Repliz (OpenAPI tidak punya `servers`, jadi
   base URL harus dikonfigurasi).
@@ -47,7 +47,7 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
 
 - `R2_PREFIX` — default `final-renders` bila kosong.
 - Target akun (platform tanpa ID akan dilewati) — `buildTargetAccounts`,
-  `repliz-publish.mjs:56`:
+  `repliz-publish.mjs:58`:
   - `REPLIZ_FACEBOOK_ACCOUNT_ID` → platform `facebook`
   - `REPLIZ_YOUTUBE_ACCOUNT_ID` → platform `youtube`
   - `REPLIZ_TIKTOK_ACCOUNT_ID` → platform `tiktok`
@@ -59,20 +59,20 @@ Secret tidak boleh masuk git (`.gitignore` mengabaikan `.env` + `.env.*` kecuali
 ## `repliz-publish.json` — receipt + metadata (entitas sentral)
 
 File dwifungsi: **input metadata** (dibaca `readPostMetadata`) dan **output
-receipt** (ditulis `writeReceipt`, `repliz-publish.mjs:405`).
+receipt** (ditulis `writeReceipt`, `repliz-publish.mjs:452`).
 
 ### Sebagai input (metadata post)
 
-`readPostMetadata` (`repliz-publish.mjs:130`) menerima dua bentuk:
+`readPostMetadata` (`repliz-publish.mjs:163`) menerima dua bentuk:
 
 - Root object: `{ "description": "...", "tags": [...], ... }`
 - Post object: `{ "post": { "description": "...", ... } }`
 
-Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs:20`):
+Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs:22`):
 
 | Field | Tipe | Default | Catatan |
 | --- | --- | --- | --- |
-| `title` | string | `""` | |
+| `title` | string | `""` | Wajib non-empty untuk YouTube; auto-derive dari `description` bila kosong |
 | `description` | string | `""` | Wajib non-empty saat publish (lihat prioritas di bawah) |
 | `topic` | string | `""` | |
 | `type` | string | `"video"` | Repliz media type; default `video`, bukan `reel` |
@@ -90,9 +90,22 @@ Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs:20`):
 
 Jika keempatnya kosong, publish berhenti sebelum upload/scheduling.
 
+**Prioritas sumber `title`** (`readPostMetadata` + `readPublishTitle` +
+`deriveTitleFromDescription`):
+
+1. `repliz-publish.json` → `post.title`
+2. `repliz-publish.json` → root `title`
+3. `publish-captions.md` → blok `## YouTube Title`
+4. Derivasi dari `description`: baris non-kosong pertama yang bukan baris
+   hashtag, whitespace dinormalkan, dipotong di batas kata maksimal 100 karakter
+
+Title dikirim ke payload semua platform. Untuk YouTube, `<`/`>` dibuang dan
+title dipotong ke maksimal 100 karakter; jika hasilnya kosong sementara target
+YouTube aktif, publish berhenti sebelum upload/scheduling.
+
 ### Sebagai output (receipt)
 
-Ditulis setelah publish sukses (`repliz-publish.mjs:474`):
+Ditulis setelah publish sukses (`repliz-publish.mjs:452`):
 
 ```json
 {
@@ -101,6 +114,7 @@ Ditulis setelah publish sukses (`repliz-publish.mjs:474`):
   "r2Key": "<prefix>/<slug-basename>/<file-basename>",
   "videoUrl": "<R2_PUBLIC_BASE_URL>/<r2Key url-encoded>",
   "descriptionHash": "sha256:<hex>",
+  "titleHash": "sha256:<hex>",
   "publishKey": "sha256:<hex>",
   "createdAt": "<ISO now>",
   "schedules": [
@@ -121,14 +135,15 @@ header Basic Auth penuh, atau signed URL (lihat integration spec).
 
 ## `publish-captions.md` — kontrak heading eksak
 
-Dibaca `extractPublishCaption` (`repliz-publish.mjs:112`). Regex mencari heading
+Dibaca `extractPublishCaption` (`repliz-publish.mjs:114`). Regex mencari heading
 `^## <Heading>$` (case-insensitive, multiline), lalu mengambil isi blok berpagar
 ` ```text ... ``` ` (atau ` ``` ... ``` `) pertama di section itu, di-`trim`.
 
-Heading yang dibaca, berurutan: **`## Instagram`** lalu **`## TikTok`**. Teks di
-luar fenced block (mis. baris "Character count: N") diabaikan. Batas panjang
+Heading yang dibaca untuk `description`, berurutan: **`## Instagram`** lalu
+**`## TikTok`**. Heading yang dibaca untuk `title`: **`## YouTube Title`**. Teks
+di luar fenced block (mis. baris "Character count: N") diabaikan. Batas panjang
 (dari style guide / integration spec): IG max **1200** karakter, TikTok max
-**4000** karakter.
+**4000** karakter, judul YouTube max **100** karakter.
 
 Contoh minimal valid:
 

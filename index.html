@@ -3,347 +3,354 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Dena - Repliz Affiliate Joke Workflow</title>
+    <title>Dena - Kerja Dari Rumah Sambil Jaga Anak</title>
     <script src="vendor/gsap.min.js"></script>
     <style>
       * { box-sizing: border-box; }
-      html,
-      body {
-        margin: 0;
-        width: 1080px;
-        height: 1920px;
-        overflow: hidden;
-        background: #000;
+      html, body {
+        margin: 0; width: 1080px; height: 1920px;
+        overflow: hidden; background: #000;
         font-family: Arial, Helvetica, sans-serif;
       }
       [data-composition-id] {
-        position: relative;
-        width: 1080px;
-        height: 1920px;
-        overflow: hidden;
-        background: #050505;
-        --white: #fff;
-        --black: #050505;
-        --panel: rgba(5, 5, 5, 0.9);
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        --white: #fff; --panel: rgba(8, 8, 8, 0.9);
         --yellow: #facc15;
-        --green: #22c55e;
-        --muted: #d4d4d8;
-        --safe-bottom: 270px;
+        --cover: #cfc6ba;
+        --safe-bottom: 292px;
       }
       .clip { position: absolute; }
+      /* latar full-bleed sebagai child (background root bisa hilang di producer) */
+      .bg-fill { position: absolute; inset: 0; z-index: 0; background: #050505; }
       .base-video {
-        inset: 0;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transform-origin: center center;
+        inset: 0; z-index: 1; width: 100%; height: 100%;
+        object-fit: cover; transform-origin: center 40%;
       }
       audio.clip { width: 0; height: 0; opacity: 0; }
-      .progress-bar {
-        top: 0;
-        left: 0;
-        z-index: 34;
-        width: 100%;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.16);
-      }
-      .progress-fill {
-        display: block;
-        width: 100%;
-        height: 100%;
-        background: var(--yellow);
-        transform: scaleX(0);
-        transform-origin: left center;
-      }
-      .hook-card,
-      .cta-card,
-      .proof-card,
-      .label-card,
-      .sticker {
-        color: var(--white);
-        background: var(--panel);
-        border: 3px solid rgba(255, 255, 255, 0.16);
-        border-radius: 8px;
-        box-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
-      }
+      /* inline-block: transform tidak berlaku pada span inline */
+      .hl { color: var(--yellow); display: inline-block; }
+
+      /* progress bar tipis di tepi atas */
+      .progress-track { top: 0; left: 0; right: 0; height: 4px; z-index: 30; background: rgba(255,255,255,0.12); }
+      .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 100%;
+        background: var(--yellow); opacity: 0.55; transform-origin: left center; transform: scaleX(0); }
+
+      /* vignette bagian pelajaran */
+      .vignette { inset: 0; z-index: 12; opacity: 0;
+        background: radial-gradient(ellipse at center 42%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.55) 100%); }
+
+      /* kartu hook (atas) */
       .hook-card {
-        top: 92px;
-        left: 64px;
-        right: 64px;
-        z-index: 56;
-        padding: 24px 30px;
-        text-align: center;
-        text-transform: uppercase;
+        top: 96px; left: 60px; right: 60px; z-index: 56;
+        padding: 26px 30px; text-align: center; text-transform: uppercase; color: var(--white);
+        background: var(--panel); border: 3px solid rgba(255,255,255,0.16);
+        border-radius: 16px; box-shadow: 0 22px 48px rgba(0,0,0,0.5);
       }
-      .hook-card .line {
-        display: block;
-        font-size: 48px;
-        font-weight: 950;
-        line-height: 1.04;
+      .hook-card .line { display: block; font-size: 52px; font-weight: 950; line-height: 1.14; }
+      .hook-card .line.small { font-size: 42px; }
+
+      /* kartu CTA (atas, supaya tidak bentrok subtitle) */
+      .cta-card {
+        top: 96px; left: 60px; right: 60px; z-index: 56;
+        padding: 28px 30px; text-align: center; text-transform: uppercase; color: var(--white);
+        background: var(--panel); border: 3px solid rgba(250,204,21,0.5);
+        border-radius: 16px; box-shadow: 0 22px 48px rgba(0,0,0,0.55);
       }
-      .hook-card .small {
-        display: inline-block;
-        margin-top: 14px;
-        padding: 10px 16px;
-        color: var(--yellow);
-        background: rgba(0, 0, 0, 0.42);
-        border: 2px solid rgba(250, 204, 21, 0.5);
-        border-radius: 8px;
-        font-size: 30px;
-        font-weight: 950;
-        line-height: 1;
+      .cta-card .line { display: block; font-size: 54px; font-weight: 950; line-height: 1.14; }
+
+      /* chip proof saat pan ke monitor */
+      .proof-chip {
+        top: 190px; right: 56px; z-index: 34;
+        padding: 12px 24px; border-radius: 999px;
+        background: rgba(8,8,8,0.8); border: 2px solid rgba(255,255,255,0.18);
+        color: var(--white); font-size: 30px; font-weight: 900; letter-spacing: 0.06em;
+        text-transform: uppercase; box-shadow: 0 12px 30px rgba(0,0,0,0.45);
       }
-      .proof-card {
-        top: 132px;
-        z-index: 24;
-        width: 470px;
-        overflow: hidden;
-        padding: 14px;
+
+      /* cover privasi wajah bayi - OPAQUE, bukan backdrop-filter */
+      .privacy-cover {
+        left: 0; top: 0; width: 200px; height: 200px;
+        margin-left: -100px; margin-top: -100px;
+        z-index: 40; border-radius: 50%; will-change: transform;
+        background: radial-gradient(circle,
+          var(--cover) 0%, var(--cover) 78%,
+          rgba(207,198,186,0.86) 90%, rgba(207,198,186,0) 100%);
       }
-      .proof-card.left { left: 42px; }
-      .proof-card.right { right: 42px; }
-      .proof-card.wide {
-        left: 54px;
-        right: 54px;
-        width: auto;
-        height: 380px;
+      /* label stiker yang menyambungkan candaan di audio ke visual */
+      .cover-label {
+        top: 806px; left: 0; right: 0; z-index: 42; text-align: center;
       }
-      .proof-card img {
-        display: block;
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-        object-position: top center;
-        border-radius: 6px;
+      .cover-label span {
+        display: inline-block; padding: 10px 22px; border-radius: 999px;
+        background: var(--yellow); color: #121212;
+        font-size: 30px; font-weight: 950; letter-spacing: 0.08em; text-transform: uppercase;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.4);
       }
-      .proof-card.wide img {
-        height: 100%;
-        object-fit: contain;
-      }
-      .proof-card figcaption {
-        margin-top: 12px;
-        color: var(--yellow);
-        font-size: 22px;
-        font-weight: 950;
-        line-height: 1.08;
-        text-transform: uppercase;
-      }
-      .label-card {
-        z-index: 37;
-        padding: 14px 18px;
-        font-size: 25px;
-        font-weight: 950;
-        line-height: 1.05;
-        text-transform: uppercase;
-      }
-      .label-card.left { top: 128px; left: 52px; }
-      .label-card.right { top: 128px; right: 52px; }
-      .label-card.green {
-        color: #dcfce7;
-        border-color: rgba(34, 197, 94, 0.65);
-      }
-      .sticker {
-        top: 122px;
-        right: 62px;
-        z-index: 38;
-        padding: 14px 18px;
-        color: var(--black);
-        background: var(--yellow);
-        border-color: var(--yellow);
-        transform: rotate(3deg);
-        font-size: 27px;
-        font-weight: 950;
-        line-height: 1;
-        text-transform: uppercase;
-      }
+
+      /* subtitle */
       .caption {
-        left: 58px;
-        right: 58px;
-        bottom: var(--safe-bottom);
-        z-index: 45;
-        min-height: 116px;
-        color: var(--white);
-        font-size: 54px;
-        font-weight: 950;
-        line-height: 0.98;
-        letter-spacing: 0;
-        text-align: center;
-        text-transform: uppercase;
-        overflow-wrap: anywhere;
-        text-shadow: 0 5px 0 #000, 0 12px 26px rgba(0, 0, 0, 0.72);
+        left: 56px; right: 56px; bottom: var(--safe-bottom); z-index: 45;
+        min-height: 116px; color: var(--white); font-size: 58px; font-weight: 950;
+        line-height: 1.0; text-align: center; text-transform: uppercase;
+        overflow-wrap: anywhere; text-shadow: 0 5px 0 #000, 0 12px 26px rgba(0,0,0,0.72);
         -webkit-text-stroke: 2px #000;
       }
-      .highlight { color: var(--yellow); }
-      .cta-card {
-        top: 98px;
-        left: 72px;
-        right: 72px;
-        z-index: 57;
-        padding: 28px 34px;
-        text-align: center;
-        text-transform: uppercase;
-      }
-      .cta-card .main {
-        display: block;
-        color: var(--white);
-        font-size: 42px;
-        font-weight: 950;
-        line-height: 1.08;
-      }
-      .cta-card .reply {
-        display: inline-block;
-        margin-top: 16px;
-        padding: 14px 20px;
-        border-radius: 8px;
-        color: var(--black);
-        background: var(--yellow);
-        font-size: 31px;
-        font-weight: 950;
-        line-height: 1;
-      }
+      /* dinaikkan saat kamera pan ke bayi, supaya tidak bertabrakan dengan cover */
+      .caption-up { bottom: auto; top: 372px; }
     </style>
   </head>
   <body>
-    <main
-      id="root"
-      data-composition-id="dena-repliz-affiliate-joke"
-      data-start="0"
-      data-width="1080"
-      data-height="1920"
-      data-duration="77.508"
-    >
-      <video id="base-video" class="clip base-video" data-start="0" data-duration="77.508" data-track-index="1" src="videos/repliz-affiliate-joke/processed.mp4" muted playsinline></video>
-      <audio id="base-audio" class="clip" data-start="0" data-duration="77.508" data-track-index="10" src="videos/repliz-affiliate-joke/processed.mp4"></audio>
-      <audio id="sfx-hook" class="clip" data-start="0" data-duration="2.12" data-track-index="11" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/impact-bass-1.mp3"></audio>
-      <audio id="sfx-github" class="clip" data-start="0.4" data-duration="0.57" data-track-index="12" data-volume="0.12" src="videos/repliz-affiliate-joke/assets/sfx/whoosh-short.mp3"></audio>
-      <audio id="sfx-diagram" class="clip" data-start="23.2" data-duration="0.57" data-track-index="13" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/whoosh-short.mp3"></audio>
-      <audio id="sfx-approve" class="clip" data-start="31.26" data-duration="0.37" data-track-index="14" data-volume="0.12" src="videos/repliz-affiliate-joke/assets/sfx/click-soft.mp3"></audio>
-      <audio id="sfx-affiliate" class="clip" data-start="54.22" data-duration="0.72" data-track-index="15" data-volume="0.1" src="videos/repliz-affiliate-joke/assets/sfx/pop.mp3"></audio>
-      <audio id="sfx-cta" class="clip" data-start="73.9" data-duration="2.5" data-track-index="16" data-volume="0.09" src="videos/repliz-affiliate-joke/assets/sfx/chime.mp3"></audio>
+    <main id="root" data-composition-id="dena-wfh-jaga-anak"
+      data-start="0" data-width="1080" data-height="1920" data-duration="54.81">
 
-      <div id="progress" class="clip progress-bar" data-start="0" data-duration="77.508" data-track-index="3"><span id="progress-fill" class="progress-fill"></span></div>
+      <div class="bg-fill"></div>
 
-      <section id="hook-card" class="clip hook-card" data-start="0" data-duration="3" data-track-index="5">
-        <span class="line">Workflow edit video AI</span>
-        <span class="line">gue push ke GitHub</span>
-        <span class="small">Codex + R2 + Repliz</span>
+      <!-- media dasar: video muted + audio terpisah -->
+      <video id="base-video" class="clip base-video" data-start="0" data-duration="54.81" data-track-index="1" src="videos/wfh-jaga-anak/processed.mp4" muted playsinline></video>
+      <audio id="base-audio" class="clip" data-start="0" data-duration="54.81" data-track-index="10" src="videos/wfh-jaga-anak/processed.mp4"></audio>
+
+      <!-- SFX: masing-masing di track sendiri supaya tidak overlap satu track.
+           Jangan pakai data-media-start pada audio: atribut itu membuat klip jadi
+           senyap total di render (sudah diuji terpisah). Kalau butuh potongan
+           tertentu dari sebuah file SFX, potong file-nya lebih dulu. -->
+      <audio id="sfx-chip"  class="clip" data-start="6.90"  data-duration="0.57" data-track-index="11" data-volume="0.22" src="videos/wfh-jaga-anak/assets/sfx/whoosh-short.mp3"></audio>
+      <audio id="sfx-pop"   class="clip" data-start="18.45" data-duration="0.72" data-track-index="12" data-volume="0.24" src="videos/wfh-jaga-anak/assets/sfx/pop.mp3"></audio>
+      <audio id="sfx-riser" class="clip" data-start="29.96" data-duration="1.00" data-track-index="13" data-volume="0.13" src="videos/wfh-jaga-anak/assets/sfx/riser-lead.mp3"></audio>
+      <audio id="sfx-cta"   class="clip" data-start="50.20" data-duration="0.57" data-track-index="14" data-volume="0.22" src="videos/wfh-jaga-anak/assets/sfx/whoosh-short.mp3"></audio>
+
+      <!-- progress bar -->
+      <div id="progress" class="clip progress-track" data-start="0" data-duration="54.81" data-track-index="3">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+
+      <!-- vignette bagian pelajaran -->
+      <div id="vignette" class="clip vignette" data-start="30.96" data-duration="19.24" data-track-index="6"></div>
+
+      <!-- chip proof saat pan ke monitor -->
+      <div id="proof-chip" class="clip proof-chip" data-start="6.9" data-duration="2.3" data-track-index="4">LAGI NGERJAIN</div>
+
+      <!-- COVER PRIVASI WAJAH BAYI - wajib, jangan diubah timing/posisinya -->
+      <div id="baby-cover" class="clip privacy-cover" data-start="17.50" data-duration="3.25" data-track-index="4"></div>
+      <!-- Cover kedua: lompatan kamera di ~20.43-20.47 tidak bisa dipastikan
+           jatuh di frame mana, jadi posisi tujuan lompatan ditutup lebih awal
+           dan tetap ditutup sampai bayi keluar frame. Sengaja besar (900px):
+           frame persis saat lompatan tidak bisa dipastikan, jadi seluruh kuadran
+           kiri-bawah ditutup selama window itu. -->
+      <div id="baby-cover-2" class="clip privacy-cover" data-start="20.30" data-duration="0.45" data-track-index="9"></div>
+      <div id="cover-label" class="clip cover-label" data-start="18.45" data-duration="1.90" data-track-index="7"><span>Ditutup AI</span></div>
+
+      <!-- kartu hook -->
+      <section id="hook-card" class="clip hook-card" data-start="0" data-duration="4.3" data-track-index="5">
+        <span class="line">KERJA REMOTE</span>
+        <span class="line">KATANYA ENAK.</span>
+        <span class="line small">SAMPE YANG PEGANG BAYI PERGI.</span>
       </section>
 
-      <figure id="github-card-a" class="clip proof-card left" data-start="0.4" data-duration="7.4" data-track-index="4">
-        <img src="videos/repliz-affiliate-joke/assets/github-repo-crop.png" alt="" />
-        <figcaption>public repo: hyperframes-video-workflow</figcaption>
-      </figure>
-      <div id="proof-label" class="clip label-card left" data-start="18.35" data-duration="4.85" data-track-index="6">video sebelumnya sudah pakai automation</div>
-      <figure id="workflow-card" class="clip proof-card wide" data-start="23.2" data-duration="19.8" data-track-index="4">
-        <img src="videos/repliz-affiliate-joke/assets/workflow-route.svg" alt="" />
-      </figure>
-      <div id="approval-badge" class="clip label-card right green" data-start="30" data-duration="9.6" data-track-index="6">review -> approve -> publish</div>
-      <div id="tool-chips" class="clip label-card left" data-start="40.43" data-duration="5.51" data-track-index="6">Cloudflare R2 + Repliz</div>
-      <figure id="repliz-card" class="clip proof-card right" data-start="43.2" data-duration="13.3" data-track-index="4">
-        <img src="videos/repliz-affiliate-joke/assets/repliz-referral-crop.png" alt="" />
-        <figcaption>Repliz public page context</figcaption>
-      </figure>
-      <div id="affiliate-sticker" class="clip sticker" data-start="54.22" data-duration="4.28" data-track-index="6">affiliate joke</div>
-      <figure id="github-card-b" class="clip proof-card left" data-start="59.35" data-duration="8.65" data-track-index="4">
-        <img src="videos/repliz-affiliate-joke/assets/github-repo-crop-reprise.png" alt="" />
-        <figcaption>detailnya baca di repository</figcaption>
-      </figure>
-
-      <div id="cap-001" class="clip caption" data-start="0.01" data-duration="1.67" data-track-index="2">SEKARANG <span class="highlight">WORKFLOW</span> UNTUK</div>
-      <div id="cap-002" class="clip caption" data-start="1.68" data-duration="1.82" data-track-index="2">EDITING VIDEO SAMA <span class="highlight">PUBLISH</span></div>
-      <div id="cap-003" class="clip caption" data-start="3.51" data-duration="1.01" data-track-index="2">KE <span class="highlight">SOCIAL</span> MEDIA</div>
-      <div id="cap-004" class="clip caption" data-start="4.6" data-duration="1.04" data-track-index="2">SAYA SUDAH <span class="highlight">JADI</span> SEMUA</div>
-      <div id="cap-005" class="clip caption" data-start="5.64" data-duration="1.21" data-track-index="2">DAN SUDAH SAYA</div>
-      <div id="cap-006" class="clip caption" data-start="6.85" data-duration="1.13" data-track-index="2">PUSH KE <span class="highlight">GITHUB</span></div>
-      <div id="cap-007" class="clip caption" data-start="8.08" data-duration="1.71" data-track-index="2">SAYA JADI BUAT TEMAN-TEMAN</div>
-      <div id="cap-008" class="clip caption" data-start="9.79" data-duration="1.72" data-track-index="2">YANG MAU <span class="highlight">COBA</span> JUGA GITU YA</div>
-      <div id="cap-009" class="clip caption" data-start="11.51" data-duration="1.33" data-track-index="2">MAU NGEDIT-NGEDIT <span class="highlight">WORKFLOWNYA</span></div>
-      <div id="cap-010" class="clip caption" data-start="13.21" data-duration="1.17" data-track-index="2">SILAHKAN BANGET GITU YA</div>
-      <div id="cap-011" class="clip caption" data-start="14.64" data-duration="0.98" data-track-index="2"><span class="highlight">SESUAIKAN</span> SAMA</div>
-      <div id="cap-012" class="clip caption" data-start="16.1" data-duration="2.26" data-track-index="2"><span class="highlight">EDITING</span> VIDEONYA TEMAN-TEMAN AJA</div>
-      <div id="cap-013" class="clip caption" data-start="18.36" data-duration="2.13" data-track-index="2">VIDEO-VIDEO SAYA <span class="highlight">SEBELUMNYA</span></div>
-      <div id="cap-014" class="clip caption" data-start="20.49" data-duration="2.47" data-track-index="2">ITU TUH SUDAH PAKAI <span class="highlight">AUTOMATIONNYA</span></div>
-      <div id="cap-015" class="clip caption" data-start="22.98" data-duration="1.91" data-track-index="2">ITU JADI SECARA <span class="highlight">SINGKATNYA</span></div>
-      <div id="cap-016" class="clip caption" data-start="24.89" data-duration="1.31" data-track-index="2">SAYA KIRIM KE <span class="highlight">CODEX</span></div>
-      <div id="cap-017" class="clip caption" data-start="26.29" data-duration="2.12" data-track-index="2">TERUS SURUH <span class="highlight">NGEDIT</span> GITU YA</div>
-      <div id="cap-018" class="clip caption" data-start="28.62" data-duration="2" data-track-index="2">NANTI ADA <span class="highlight">REVIEW</span> DULU</div>
-      <div id="cap-019" class="clip caption" data-start="30.63" data-duration="0.63" data-track-index="2">GITU YA BIAR</div>
-      <div id="cap-020" class="clip caption" data-start="31.26" data-duration="0.95" data-track-index="2">SAYA <span class="highlight">APPROVE</span> DULU</div>
-      <div id="cap-021" class="clip caption" data-start="32.21" data-duration="1" data-track-index="2">NIH <span class="highlight">HASIL</span> VIDEONYA</div>
-      <div id="cap-022" class="clip caption" data-start="33.21" data-duration="1.12" data-track-index="2">UDAH <span class="highlight">SESUAI</span> SAMA YANG</div>
-      <div id="cap-023" class="clip caption" data-start="34.33" data-duration="1.25" data-track-index="2">AKU <span class="highlight">INGIN</span> ATAU BELUM</div>
-      <div id="cap-024" class="clip caption" data-start="35.58" data-duration="2.01" data-track-index="2">NAH KALAU UDAH <span class="highlight">APPROVE</span></div>
-      <div id="cap-025" class="clip caption" data-start="37.59" data-duration="1.69" data-track-index="2">BARU DI <span class="highlight">AUTO DEPLOY</span></div>
-      <div id="cap-026" class="clip caption" data-start="39.28" data-duration="1.15" data-track-index="2">SAMA SI <span class="highlight">CODEX</span></div>
-      <div id="cap-027" class="clip caption" data-start="40.43" data-duration="2.4" data-track-index="2">KE CLOUDFLARE DULU <span class="highlight">R2</span></div>
-      <div id="cap-028" class="clip caption" data-start="43.24" data-duration="2.7" data-track-index="2">SAMA KE APA NAMANYA <span class="highlight">REPLIZ</span></div>
-      <div id="cap-029" class="clip caption" data-start="46.1" data-duration="0.87" data-track-index="2">NAH BUAT TEMAN-TEMAN</div>
-      <div id="cap-030" class="clip caption" data-start="46.97" data-duration="1.35" data-track-index="2">YANG MAU APA ITU <span class="highlight">REPLIZ</span></div>
-      <div id="cap-031" class="clip caption" data-start="48.32" data-duration="1.16" data-track-index="2">GITU YA NAH TEMAN-TEMAN</div>
-      <div id="cap-032" class="clip caption" data-start="49.48" data-duration="1.13" data-track-index="2">BISA <span class="highlight">CARI TAHU</span> SENDIRI</div>
-      <div id="cap-033" class="clip caption" data-start="50.61" data-duration="1.57" data-track-index="2">DAN MUNGKIN TEMAN-TEMAN NANTI</div>
-      <div id="cap-034" class="clip caption" data-start="52.18" data-duration="1.26" data-track-index="2">BAKAL SAYA KASIH <span class="highlight">LINKNYA</span></div>
-      <div id="cap-035" class="clip caption" data-start="53.44" data-duration="0.77" data-track-index="2">JUGA BIAR NANTI</div>
-      <div id="cap-036" class="clip caption" data-start="54.22" data-duration="1.24" data-track-index="2"><span class="highlight">AFFILIATE</span>-NYA BISA MASUK</div>
-      <div id="cap-037" class="clip caption" data-start="55.6" data-duration="0.78" data-track-index="2">JUGA KE <span class="highlight">SAYA</span></div>
-      <div id="cap-038" class="clip caption" data-start="56.38" data-duration="0.72" data-track-index="2">GITU YA JADI DISINI</div>
-      <div id="cap-039" class="clip caption" data-start="57.1" data-duration="1.1" data-track-index="2">YA TEMAN-TEMAN YA UDAH</div>
-      <div id="cap-040" class="clip caption" data-start="58.27" data-duration="0.87" data-track-index="2">SAYA <span class="highlight">PUSH</span> GITU YA</div>
-      <div id="cap-041" class="clip caption" data-start="59.35" data-duration="1.05" data-track-index="2">NAH NANTI SAYA AKAN</div>
-      <div id="cap-042" class="clip caption" data-start="60.41" data-duration="1.11" data-track-index="2">KASIH JUGA <span class="highlight">LINKNYA</span></div>
-      <div id="cap-043" class="clip caption" data-start="61.52" data-duration="1.35" data-track-index="2">TERUS UNTUK <span class="highlight">CONTOH</span> VIDEONYA</div>
-      <div id="cap-044" class="clip caption" data-start="63.25" data-duration="1.45" data-track-index="2">MUNGKIN BISA LIHAT <span class="highlight">VIDEO INI</span></div>
-      <div id="cap-045" class="clip caption" data-start="64.7" data-duration="0.6" data-track-index="2">SAJA ATAU</div>
-      <div id="cap-046" class="clip caption" data-start="65.61" data-duration="1.71" data-track-index="2">VIDEO SAYA YANG <span class="highlight">SEBELUMNYA</span></div>
-      <div id="cap-047" class="clip caption" data-start="67.38" data-duration="1.56" data-track-index="2">UNTUK <span class="highlight">DETAILNYA</span> MUNGKIN</div>
-      <div id="cap-048" class="clip caption" data-start="68.94" data-duration="1.73" data-track-index="2"><span class="highlight">BELUM</span> SAYA KASIH TAHU</div>
-      <div id="cap-049" class="clip caption" data-start="70.67" data-duration="1.53" data-track-index="2">GITU YA DALAM BENTUK <span class="highlight">VIDEO</span></div>
-      <div id="cap-050" class="clip caption" data-start="72.2" data-duration="1.86" data-track-index="2">TAPI TEMAN-TEMAN BISA</div>
-      <div id="cap-051" class="clip caption" data-start="74.06" data-duration="2.5" data-track-index="2">BACA DI <span class="highlight">REPOSITORY</span>-NYA GITU</div>
-
-      <section id="cta-card" class="clip cta-card" data-start="73.9" data-duration="3.6" data-track-index="5">
-        <span class="main">Link repo + Repliz ada di caption</span>
-        <span class="reply">cek kalau lo mau coba workflow-nya</span>
+      <!-- kartu CTA -->
+      <section id="cta-card" class="clip cta-card" data-start="50.2" data-duration="4.6" data-track-index="5">
+        <span class="line">KERJA DARI RUMAH?</span>
+        <span class="line"><span class="hl">KERESAHAN LO APA?</span></span>
       </section>
+
+      <!-- subtitle berjalan (cakupan penuh 140 kata) -->
+      <div id="cap-001" class="clip caption" data-start="0.02" data-duration="1.33" data-track-index="2">KALAU <span class="hl">PROGRAMMER</span> DI RUMAH</div>
+      <div id="cap-002" class="clip caption" data-start="1.35" data-duration="1.39" data-track-index="8">GITU YA, SAMBIL <span class="hl">JAGA ANAK</span></div>
+      <div id="cap-003" class="clip caption" data-start="2.74" data-duration="1.59" data-track-index="2">JADI SAYA SAMBIL KERJA</div>
+      <div id="cap-004" class="clip caption" data-start="4.33" data-duration="2.15" data-track-index="8">GITU YA, SAMBIL JAGA ANAK JUGA</div>
+      <div id="cap-005" class="clip caption" data-start="6.48" data-duration="0.65" data-track-index="2">JADI DI SINI</div>
+      <div id="cap-006" class="clip caption" data-start="7.13" data-duration="1.77" data-track-index="8">YA SAYA KERJA <span class="hl">SEPERTI BIASANYA</span></div>
+      <div id="cap-007" class="clip caption" data-start="8.90" data-duration="0.95" data-track-index="2">CUMAN <span class="hl">MASALAHNYA</span></div>
+      <div id="cap-008" class="clip caption" data-start="9.85" data-duration="0.95" data-track-index="8">YANG NGURUS BAYI ITU</div>
+      <div id="cap-009" class="clip caption" data-start="10.80" data-duration="1.40" data-track-index="2">LAGI NGANTER INI</div>
+      <div id="cap-010" class="clip caption" data-start="12.20" data-duration="1.80" data-track-index="8">NGANTER AMI, <span class="hl">KAKAKNYA</span></div>
+      <div id="cap-011" class="clip caption" data-start="14.00" data-duration="1.08" data-track-index="2">GITU YA</div>
+      <div id="cap-012" class="clip caption" data-start="15.08" data-duration="1.50" data-track-index="8">NAH DI SINI SAYA <span class="hl">SENDIRIAN</span></div>
+      <div id="cap-013" class="clip caption caption-up" data-start="16.58" data-duration="1.80" data-track-index="2">GITU YA, SAMA ANAK-ANAK</div>
+      <div id="cap-014" class="clip caption caption-up" data-start="18.38" data-duration="1.06" data-track-index="8"><span class="hl">BOCIL</span> INI</div>
+      <div id="cap-015" class="clip caption caption-up" data-start="19.44" data-duration="1.15" data-track-index="2">HELLO</div>
+      <div id="cap-016" class="clip caption caption-up" data-start="20.59" data-duration="0.98" data-track-index="8">NANTI SAMA <span class="hl">AI</span></div>
+      <div id="cap-017" class="clip caption" data-start="21.57" data-duration="1.26" data-track-index="2"><span class="hl">TUTUP</span> YA MUKANYA</div>
+      <div id="cap-018" class="clip caption" data-start="22.83" data-duration="0.93" data-track-index="8">YA GITU</div>
+      <div id="cap-019" class="clip caption" data-start="23.76" data-duration="1.08" data-track-index="2">TOLONG <span class="hl">EDITIN</span></div>
+      <div id="cap-020" class="clip caption" data-start="24.84" data-duration="0.72" data-track-index="8">OKE, NAH</div>
+      <div id="cap-021" class="clip caption" data-start="25.56" data-duration="1.11" data-track-index="2">AKU UDAH NYURUH</div>
+      <div id="cap-022" class="clip caption" data-start="26.67" data-duration="1.06" data-track-index="8">KE <span class="hl">AI</span> AKU BUAT</div>
+      <div id="cap-023" class="clip caption" data-start="27.73" data-duration="2.29" data-track-index="2"><span class="hl">NUTUPIN</span> WAJAH DEDE BAYINYA</div>
+      <div id="cap-024" class="clip caption" data-start="30.02" data-duration="0.94" data-track-index="8">JADI YA DI SINI</div>
+      <div id="cap-025" class="clip caption" data-start="30.96" data-duration="2.01" data-track-index="2"><span class="hl">DILEMANYA</span> KALAU KERJA DI RUMAH</div>
+      <div id="cap-026" class="clip caption" data-start="32.97" data-duration="2.30" data-track-index="8">TUH KAYAK GINI TEMEN-TEMEN</div>
+      <div id="cap-027" class="clip caption" data-start="35.27" data-duration="1.36" data-track-index="2">JADI KERJA YA DIKIT-DIKIT</div>
+      <div id="cap-028" class="clip caption" data-start="36.63" data-duration="1.32" data-track-index="8">MUNGKIN ADA <span class="hl">GANGGUAN</span></div>
+      <div id="cap-029" class="clip caption" data-start="37.95" data-duration="1.49" data-track-index="2">TAPI GANGGUANNYA <span class="hl">POSITIF</span></div>
+      <div id="cap-030" class="clip caption" data-start="39.44" data-duration="1.36" data-track-index="8">YA SAMA <span class="hl">KELUARGA</span> GITU YA</div>
+      <div id="cap-031" class="clip caption" data-start="40.80" data-duration="1.41" data-track-index="2">JADI YA <span class="hl">NIKMATIN</span> AJA</div>
+      <div id="cap-032" class="clip caption" data-start="42.21" data-duration="1.39" data-track-index="8">SIH SEBENERNYA</div>
+      <div id="cap-033" class="clip caption" data-start="43.60" data-duration="1.48" data-track-index="2">EMANG KERJA DI RUMAH JUGA</div>
+      <div id="cap-034" class="clip caption" data-start="45.08" data-duration="1.23" data-track-index="8">TUJUANNYA EMANG PENGEN</div>
+      <div id="cap-035" class="clip caption" data-start="46.31" data-duration="1.69" data-track-index="2"><span class="hl">DEKET SAMA KELUARGA</span> JUGA</div>
+      <div id="cap-036" class="clip caption" data-start="48.00" data-duration="1.20" data-track-index="8">JADI TEMEN-TEMEN</div>
+      <div id="cap-037" class="clip caption" data-start="49.20" data-duration="1.76" data-track-index="2">YANG KERJA DI RUMAH GITU YA</div>
+      <div id="cap-038" class="clip caption" data-start="50.96" data-duration="0.88" data-track-index="8">COBA <span class="hl">KOMEN</span></div>
+      <div id="cap-039" class="clip caption" data-start="51.84" data-duration="1.60" data-track-index="2">SAMA GIMANA <span class="hl">KERESAHANNYA</span></div>
+      <div id="cap-040" class="clip caption" data-start="53.44" data-duration="0.76" data-track-index="8">GITU YA</div>
+      <div id="cap-041" class="clip caption" data-start="54.20" data-duration="0.61" data-track-index="2">SEE YOU</div>
     </main>
+
     <script>
       window.__timelines = window.__timelines || {};
       const timeline = gsap.timeline({ paused: true });
-      timeline.to('#progress-fill', { scaleX: 1, duration: 77.508, ease: 'none' }, 0);
-      timeline.to('#hook-card', { autoAlpha: 0, y: -16, duration: 0.2, ease: 'power1.in' }, 2.82);
-      timeline.set('#hook-card', { autoAlpha: 0 }, 3);
-      timeline.fromTo('#github-card-a', { autoAlpha: 0, x: -28, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 0.4);
-      timeline.to('#github-card-a', { autoAlpha: 0, x: -18, duration: 0.2, ease: 'power1.in' }, 7.6);
-      timeline.fromTo('#proof-label', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 18.35);
-      timeline.to('#proof-label', { autoAlpha: 0, y: -12, duration: 0.18, ease: 'power1.in' }, 23.0);
-      timeline.set('#proof-label', { autoAlpha: 0 }, 23.2);
-      timeline.fromTo('#workflow-card', { autoAlpha: 0, y: -22, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 23.2);
-      timeline.to('#workflow-card', { autoAlpha: 0, y: -16, duration: 0.2, ease: 'power1.in' }, 42.8);
-      timeline.fromTo('#approval-badge', { autoAlpha: 0, x: 18 }, { autoAlpha: 1, x: 0, duration: 0.18, ease: 'power2.out' }, 30);
-      timeline.to('#approval-badge', { autoAlpha: 0, x: 12, duration: 0.18, ease: 'power1.in' }, 39.4);
-      timeline.fromTo('#tool-chips', { autoAlpha: 0, x: -18 }, { autoAlpha: 1, x: 0, duration: 0.18, ease: 'power2.out' }, 40.43);
-      timeline.to('#tool-chips', { autoAlpha: 0, x: -12, duration: 0.18, ease: 'power1.in' }, 45.76);
-      timeline.fromTo('#repliz-card', { autoAlpha: 0, x: 26, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 43.2);
-      timeline.to('#repliz-card', { autoAlpha: 0, x: 16, duration: 0.2, ease: 'power1.in' }, 56.3);
-      timeline.fromTo('#affiliate-sticker', { autoAlpha: 0, y: -14, scale: 0.8, rotation: 3 }, { autoAlpha: 1, y: 0, scale: 1, rotation: 3, duration: 0.2, ease: 'back.out(1.5)' }, 54.22);
-      timeline.to('#affiliate-sticker', { autoAlpha: 0, y: -10, duration: 0.18, ease: 'power1.in' }, 58.3);
-      timeline.fromTo('#github-card-b', { autoAlpha: 0, x: -28, scale: 0.98 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.28, ease: 'power2.out' }, 59.35);
-      timeline.to('#github-card-b', { autoAlpha: 0, x: -18, duration: 0.2, ease: 'power1.in' }, 67.8);
-      timeline.fromTo('#cta-card', { autoAlpha: 0, y: -18, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.24, ease: 'power2.out' }, 73.9);
-      timeline.to('#base-video', { scale: 1.04, duration: 1.2, ease: 'power2.out' }, 0);
-      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 1.2);
-      timeline.to('#base-video', { scale: 1.05, duration: 1.3, ease: 'power2.out' }, 24.89);
-      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 26.19);
-      timeline.to('#base-video', { scale: 1.05, duration: 2, ease: 'power2.out' }, 35.58);
-      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 37.58);
-      timeline.to('#base-video', { scale: 1.04, duration: 1.2, ease: 'power2.out' }, 54.22);
-      timeline.to('#base-video', { scale: 1.0, duration: 0.6, ease: 'power1.out' }, 55.42);
-      document.querySelectorAll('.caption').forEach((caption) => {
-        const start = Number(caption.dataset.start || 0);
-        timeline.fromTo(caption, { autoAlpha: 0, y: 16, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' }, start);
+
+      // progress bar - lebar deterministik dari waktu timeline
+      timeline.fromTo('#progress-fill', { scaleX: 0 }, { scaleX: 1, duration: 54.81, ease: 'none' }, 0);
+
+      // kartu hook masuk/keluar
+      // Kartu hook sudah OPAQUE di frame pertama - frame pertama adalah thumbnail
+      // feed dan harus terbaca tanpa suara. Yang dianimasikan hanya posisinya.
+      timeline.set('#hook-card', { autoAlpha: 1, y: -14 }, 0);
+      timeline.to('#hook-card', { y: 0, duration: 0.24, ease: 'power2.out' }, 0);
+      timeline.to('#hook-card', { autoAlpha: 0, y: -16, duration: 0.25, ease: 'power1.in' }, 4.05);
+      timeline.set('#hook-card', { autoAlpha: 0 }, 4.33);
+
+      // chip proof (pan ke monitor)
+      timeline.fromTo('#proof-chip', { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: 0.3, ease: 'power2.out' }, 6.9);
+      timeline.to('#proof-chip', { autoAlpha: 0, duration: 0.2, ease: 'power1.in' }, 9.00);
+
+      // punch-zoom pada klaim kunci (tidak pernah tumpang tindih dengan cover privasi)
+      timeline.to('#base-video', { scale: 1.05, duration: 0.30, ease: 'power2.out' }, 8.90);
+      timeline.to('#base-video', { scale: 1.00, duration: 0.60, ease: 'power1.inOut' }, 9.90);
+
+      timeline.to('#base-video', { scale: 1.06, duration: 0.35, ease: 'power2.out' }, 15.08);
+      timeline.to('#base-video', { scale: 1.00, duration: 0.60, ease: 'power1.inOut' }, 16.30);
+
+      timeline.to('#base-video', { scale: 1.05, duration: 0.28, ease: 'power2.out' }, 23.76);
+      timeline.to('#base-video', { scale: 1.00, duration: 0.55, ease: 'power1.inOut' }, 24.60);
+
+      timeline.to('#base-video', { scale: 1.06, duration: 0.32, ease: 'power2.out' }, 37.95);
+      timeline.to('#base-video', { scale: 1.00, duration: 0.70, ease: 'power1.inOut' }, 38.90);
+
+      // beat emosi: push-in pelan, bukan hentakan
+      timeline.to('#base-video', { scale: 1.05, duration: 1.20, ease: 'sine.inOut' }, 46.31);
+      timeline.to('#base-video', { scale: 1.00, duration: 0.90, ease: 'sine.inOut' }, 47.80);
+
+      // vignette menandai masuknya bagian pelajaran
+      timeline.fromTo('#vignette', { autoAlpha: 0 }, { autoAlpha: 0.18, duration: 0.55, ease: 'power2.out' }, 30.96);
+      timeline.to('#vignette', { autoAlpha: 0.08, duration: 1.20, ease: 'power1.inOut' }, 31.80);
+      timeline.to('#vignette', { autoAlpha: 0, duration: 0.40, ease: 'power1.in' }, 49.80);
+      timeline.set('#vignette', { autoAlpha: 0 }, 50.20);
+
+      // === COVER PRIVASI WAJAH BAYI =========================================
+      // Posisi dari deteksi wajah per-frame (macOS Vision) pada processed.mp4,
+      // plus anchor manual untuk bagian whip pan yang terlalu blur untuk terdeteksi.
+      // Keyframe 20.467s memakai set(), bukan to(): kamera melompat ~620px dalam
+      // satu frame, dan menginterpolasi lompatan itu akan membuka wajah bayi.
+      timeline.set('#baby-cover', { autoAlpha: 0, x: 55, y: 1385, scale: 2.1000 }, 17.5);
+      timeline.to('#baby-cover', { autoAlpha: 1, duration: 0.08, ease: 'none' }, 17.5);
+      timeline.to('#baby-cover', { x: 72, y: 1370, scale: 2.1000, duration: 0.15, ease: 'none' }, 17.5);
+      timeline.to('#baby-cover', { x: 92, y: 1360, scale: 2.1000, duration: 0.11, ease: 'none' }, 17.65);
+      timeline.to('#baby-cover', { x: 141, y: 1303, scale: 2.0000, duration: 0.13, ease: 'none' }, 17.76);
+      timeline.to('#baby-cover', { x: 216, y: 1285, scale: 1.9000, duration: 0.13, ease: 'none' }, 17.89);
+      timeline.to('#baby-cover', { x: 283, y: 1280, scale: 1.5000, duration: 0.047, ease: 'none' }, 18.02);
+      timeline.to('#baby-cover', { x: 352, y: 1255, scale: 1.5000, duration: 0.133, ease: 'none' }, 18.067);
+      timeline.to('#baby-cover', { x: 375, y: 1234, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.2);
+      timeline.to('#baby-cover', { x: 415, y: 1231, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.233);
+      timeline.to('#baby-cover', { x: 424, y: 1217, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.267);
+      timeline.to('#baby-cover', { x: 446, y: 1209, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.3);
+      timeline.to('#baby-cover', { x: 481, y: 1213, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.333);
+      timeline.to('#baby-cover', { x: 506, y: 1195, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.367);
+      timeline.to('#baby-cover', { x: 522, y: 1176, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.4);
+      timeline.to('#baby-cover', { x: 561, y: 1173, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.433);
+      timeline.to('#baby-cover', { x: 581, y: 1173, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.467);
+      timeline.to('#baby-cover', { x: 596, y: 1162, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.5);
+      timeline.to('#baby-cover', { x: 622, y: 1152, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.533);
+      timeline.to('#baby-cover', { x: 638, y: 1141, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.567);
+      timeline.to('#baby-cover', { x: 663, y: 1133, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.6);
+      timeline.to('#baby-cover', { x: 663, y: 1121, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.633);
+      timeline.to('#baby-cover', { x: 681, y: 1111, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.667);
+      timeline.to('#baby-cover', { x: 716, y: 1111, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.7);
+      timeline.to('#baby-cover', { x: 716, y: 1097, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.733);
+      timeline.to('#baby-cover', { x: 731, y: 1091, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.767);
+      timeline.to('#baby-cover', { x: 749, y: 1088, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.8);
+      timeline.to('#baby-cover', { x: 761, y: 1085, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.833);
+      timeline.to('#baby-cover', { x: 788, y: 1090, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.867);
+      timeline.to('#baby-cover', { x: 788, y: 1090, scale: 1.5000, duration: 0.033, ease: 'none' }, 18.9);
+      timeline.to('#baby-cover', { x: 782, y: 1078, scale: 1.5000, duration: 0.034, ease: 'none' }, 18.933);
+      timeline.to('#baby-cover', { x: 809, y: 1085, scale: 1.5600, duration: 0.033, ease: 'none' }, 18.967);
+      timeline.to('#baby-cover', { x: 818, y: 1080, scale: 1.5600, duration: 0.033, ease: 'none' }, 19);
+      timeline.to('#baby-cover', { x: 808, y: 1073, scale: 1.5750, duration: 0.034, ease: 'none' }, 19.033);
+      timeline.to('#baby-cover', { x: 837, y: 1073, scale: 1.5850, duration: 0.033, ease: 'none' }, 19.067);
+      timeline.to('#baby-cover', { x: 825, y: 1063, scale: 1.5000, duration: 0.033, ease: 'none' }, 19.1);
+      timeline.to('#baby-cover', { x: 833, y: 1062, scale: 1.5350, duration: 0.034, ease: 'none' }, 19.133);
+      timeline.to('#baby-cover', { x: 840, y: 1060, scale: 1.5750, duration: 0.033, ease: 'none' }, 19.167);
+      timeline.to('#baby-cover', { x: 847, y: 1056, scale: 1.5450, duration: 0.033, ease: 'none' }, 19.2);
+      timeline.to('#baby-cover', { x: 852, y: 1054, scale: 1.5750, duration: 0.034, ease: 'none' }, 19.233);
+      timeline.to('#baby-cover', { x: 854, y: 1052, scale: 1.6000, duration: 0.033, ease: 'none' }, 19.267);
+      timeline.to('#baby-cover', { x: 875, y: 1046, scale: 1.5850, duration: 0.033, ease: 'none' }, 19.3);
+      timeline.to('#baby-cover', { x: 878, y: 1046, scale: 1.6100, duration: 0.034, ease: 'none' }, 19.333);
+      timeline.to('#baby-cover', { x: 883, y: 1044, scale: 1.6250, duration: 0.033, ease: 'none' }, 19.367);
+      timeline.to('#baby-cover', { x: 885, y: 1043, scale: 1.6500, duration: 0.033, ease: 'none' }, 19.4);
+      timeline.to('#baby-cover', { x: 886, y: 1042, scale: 1.6500, duration: 0.034, ease: 'none' }, 19.433);
+      timeline.to('#baby-cover', { x: 887, y: 1040, scale: 1.6250, duration: 0.033, ease: 'none' }, 19.467);
+      timeline.to('#baby-cover', { x: 889, y: 1038, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.5);
+      timeline.to('#baby-cover', { x: 892, y: 1037, scale: 1.6400, duration: 0.034, ease: 'none' }, 19.533);
+      timeline.to('#baby-cover', { x: 891, y: 1036, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.567);
+      timeline.to('#baby-cover', { x: 891, y: 1035, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.6);
+      timeline.to('#baby-cover', { x: 890, y: 1035, scale: 1.6250, duration: 0.034, ease: 'none' }, 19.633);
+      timeline.to('#baby-cover', { x: 888, y: 1036, scale: 1.6750, duration: 0.033, ease: 'none' }, 19.667);
+      timeline.to('#baby-cover', { x: 888, y: 1034, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.7);
+      timeline.to('#baby-cover', { x: 888, y: 1034, scale: 1.6400, duration: 0.034, ease: 'none' }, 19.733);
+      timeline.to('#baby-cover', { x: 886, y: 1035, scale: 1.6100, duration: 0.033, ease: 'none' }, 19.767);
+      timeline.to('#baby-cover', { x: 878, y: 1037, scale: 1.6000, duration: 0.033, ease: 'none' }, 19.8);
+      timeline.to('#baby-cover', { x: 875, y: 1039, scale: 1.6500, duration: 0.034, ease: 'none' }, 19.833);
+      timeline.to('#baby-cover', { x: 870, y: 1040, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.867);
+      timeline.to('#baby-cover', { x: 864, y: 1043, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.9);
+      timeline.to('#baby-cover', { x: 858, y: 1045, scale: 1.7050, duration: 0.034, ease: 'none' }, 19.933);
+      timeline.to('#baby-cover', { x: 850, y: 1045, scale: 1.6400, duration: 0.033, ease: 'none' }, 19.967);
+      timeline.to('#baby-cover', { x: 842, y: 1045, scale: 1.6000, duration: 0.033, ease: 'none' }, 20);
+      timeline.to('#baby-cover', { x: 832, y: 1051, scale: 1.6900, duration: 0.034, ease: 'none' }, 20.033);
+      timeline.to('#baby-cover', { x: 824, y: 1050, scale: 1.5750, duration: 0.033, ease: 'none' }, 20.067);
+      timeline.to('#baby-cover', { x: 812, y: 1055, scale: 1.6000, duration: 0.033, ease: 'none' }, 20.1);
+      timeline.to('#baby-cover', { x: 797, y: 1061, scale: 1.6400, duration: 0.034, ease: 'none' }, 20.133);
+      timeline.to('#baby-cover', { x: 785, y: 1066, scale: 1.6500, duration: 0.033, ease: 'none' }, 20.167);
+      timeline.to('#baby-cover', { x: 772, y: 1068, scale: 1.5850, duration: 0.033, ease: 'none' }, 20.2);
+      timeline.to('#baby-cover', { x: 755, y: 1076, scale: 1.6000, duration: 0.034, ease: 'none' }, 20.233);
+      timeline.to('#baby-cover', { x: 740, y: 1081, scale: 1.5450, duration: 0.033, ease: 'none' }, 20.267);
+      timeline.to('#baby-cover', { x: 723, y: 1088, scale: 1.5750, duration: 0.033, ease: 'none' }, 20.3);
+      timeline.to('#baby-cover', { x: 716, y: 1092, scale: 1.5600, duration: 0.034, ease: 'none' }, 20.333);
+      timeline.to('#baby-cover', { x: 695, y: 1103, scale: 1.6000, duration: 0.033, ease: 'none' }, 20.367);
+      timeline.to('#baby-cover', { x: 684, y: 1108, scale: 1.5600, duration: 0.033, ease: 'none' }, 20.4);
+      timeline.to('#baby-cover', { x: 684, y: 1108, scale: 1.7000, duration: 0.017, ease: 'none' }, 20.433);
+      timeline.set('#baby-cover', { x: 81, y: 1359, scale: 2.4000 }, 20.467);
+      timeline.to('#baby-cover', { x: 68, y: 1370, scale: 2.4000, duration: 0.066, ease: 'none' }, 20.467);
+      timeline.to('#baby-cover', { x: 64, y: 1355, scale: 2.4000, duration: 0.034, ease: 'none' }, 20.533);
+      timeline.to('#baby-cover', { x: 60, y: 1350, scale: 2.4000, duration: 0.073, ease: 'none' }, 20.567);
+      timeline.to('#baby-cover', { autoAlpha: 0, duration: 0.08, ease: 'none' }, 20.64);
+
+      // cover kedua - menutup posisi tujuan whip pan selama window ambigu
+      timeline.set('#baby-cover-2', { autoAlpha: 0, x: 160, y: 1440, scale: 4.5 }, 20.30);
+      timeline.to('#baby-cover-2', { autoAlpha: 1, duration: 0.06, ease: 'none' }, 20.30);
+      timeline.to('#baby-cover-2', { autoAlpha: 0, duration: 0.08, ease: 'none' }, 20.64);
+
+      // label stiker "Ditutup AI" - muncul sekali, keluar sebelum cover melompat
+      timeline.fromTo('#cover-label span', { autoAlpha: 0, y: 14, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.22, ease: 'back.out(1.6)' }, 18.45);
+      timeline.to('#cover-label span', { autoAlpha: 0, duration: 0.2, ease: 'power1.in' }, 20.15);
+      timeline.set('#cover-label span', { autoAlpha: 0 }, 20.30);
+
+      // kartu CTA
+      timeline.fromTo('#cta-card', { autoAlpha: 0, y: -22 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 50.2);
+
+      // subtitle berjalan
+      document.querySelectorAll('.caption').forEach((c) => {
+        const start = Number(c.dataset.start || 0);
+        timeline.fromTo(c, { autoAlpha: 0, y: 16, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' }, start);
       });
-      window.__timelines['dena-repliz-affiliate-joke'] = timeline;
+
+      // penekanan micro-scale hanya di dua beat emosi
+      timeline.to('#cap-029 .hl', { scale: 1.04, duration: 0.09, ease: 'power2.out' }, 38.10);
+      timeline.to('#cap-029 .hl', { scale: 1.00, duration: 0.09, ease: 'power2.in' }, 38.19);
+      timeline.to('#cap-035 .hl', { scale: 1.04, duration: 0.09, ease: 'power2.out' }, 46.46);
+      timeline.to('#cap-035 .hl', { scale: 1.00, duration: 0.09, ease: 'power2.in' }, 46.55);
+
+      window.__timelines['dena-wfh-jaga-anak'] = timeline;
     </script>
   </body>
 </html>

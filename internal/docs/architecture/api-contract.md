@@ -12,7 +12,7 @@ Repo ini **tidak mengekspos API sendiri**. Kontrak di sini adalah API yang
 
 ## 1. Cloudflare R2 (via Wrangler CLI)
 
-Upload via `uploadToR2` (`repliz-publish.mjs:227`). Bukan S3 API, bukan signed
+Upload via `uploadToR2` (`repliz-publish.mjs:274`). Bukan S3 API, bukan signed
 URL — memakai Wrangler remote put.
 
 Command yang dijalankan:
@@ -22,18 +22,18 @@ npx wrangler r2 object put "<R2_BUCKET>/<r2Key>" --remote --file "<file>" --cont
 ```
 
 - Dijalankan dengan env `CLOUDFLARE_ACCOUNT_ID=<config.cloudflareAccountId>`
-  (di-inject ke child process, `repliz-publish.mjs:243`).
+  (di-inject ke child process, `repliz-publish.mjs:291`).
 - `--force` ditambahkan hanya bila flag `--force` dipakai.
 - `access(file)` dipanggil dulu; file tidak ada → throw sebelum upload.
-- **Object key** (`buildR2Key`, `repliz-publish.mjs:66`):
+- **Object key** (`buildR2Key`, `repliz-publish.mjs:68`):
   `<R2_PREFIX>/<basename(slug)>/<basename(file)>`, prefix default `final-renders`,
   slash pinggir dipangkas.
-- **Public URL** (`buildPublicUrl`, `repliz-publish.mjs:73`):
+- **Public URL** (`buildPublicUrl`, `repliz-publish.mjs:75`):
   `<R2_PUBLIC_BASE_URL tanpa trailing slash>/<key, tiap segmen encodeURIComponent>`.
 
 ### Verifikasi reachability
 
-`verifyPublicUrl` (`repliz-publish.mjs:250`): `GET <videoUrl>` dengan header
+`verifyPublicUrl` (`repliz-publish.mjs:297`): `GET <videoUrl>` dengan header
 `Range: bytes=0-0`. Diterima jika status **200 atau 206**; selain itu throw
 `R2 public URL is not reachable: <status>`.
 
@@ -44,13 +44,13 @@ Base URL = `REPLIZ_API_BASE_URL` (OpenAPI `docs/repliz/openapi.json`,
 dari env). 53 path total; CLI ini memakai **3**.
 
 **Auth:** HTTP Basic — `Authorization: Basic base64(REPLIZ_ACCESS_KEY:REPLIZ_SECRET_KEY)`
-(`basicAuthHeader`, `repliz-publish.mjs:259`). Semua request JSON pakai
+(`basicAuthHeader`, `repliz-publish.mjs:306`). Semua request JSON pakai
 `Content-Type: application/json`. Non-2xx → throw `data.message` atau
 `Repliz API failed: <status>`.
 
 ### 2.1 GET `/public/account/{accountId}` — validasi akun
 
-`validateAccounts` (`repliz-publish.mjs:292`). Untuk tiap target account:
+`validateAccounts` (`repliz-publish.mjs:339`). Untuk tiap target account:
 
 - Panggil `GET /public/account/<encoded accountId>`.
 - Tolak (throw) jika `account.isConnected !== true` →
@@ -62,12 +62,12 @@ Alternatif listing (integration spec): `GET /public/account?page=1&limit=20&type
 
 ### 2.2 POST `/public/schedule` — buat schedule
 
-`createSchedules` (`repliz-publish.mjs:311`) memanggil satu POST per target
-account. Payload dibangun `buildSchedulePayload` (`repliz-publish.mjs:183`):
+`createSchedules` (`repliz-publish.mjs:358`) memanggil satu POST per target
+account. Payload dibangun `buildSchedulePayload` (`repliz-publish.mjs:228`):
 
 ```json
 {
-  "title": "<post.title>",
+  "title": "<sanitized title>",
   "description": "<sanitized description>",
   "topic": "<post.topic>",
   "type": "<post.type, default 'video'>",
@@ -90,12 +90,12 @@ account. Payload dibangun `buildSchedulePayload` (`repliz-publish.mjs:183`):
 
 - **`description` wajib non-empty** — `requireDescription` throw
   `Missing <platform> post description` jika kosong/whitespace.
-- **`scheduleAt`** (`scheduleAtIso`, `repliz-publish.mjs:157`): `"now"` (atau
+- **`scheduleAt`** (`scheduleAtIso`, `repliz-publish.mjs:202`): `"now"` (atau
   falsy) → `now + 60_000 ms` dalam ISO; nilai lain → `new Date(value).toISOString()`.
 - **Sukses** → response `{ scheduleId }`, disimpan dengan `status: "pending"`.
   Error per-akun ditangkap → entry `{ status: "error", error }` (tidak
   menggagalkan akun lain).
-- **Sanitizer YouTube** (`sanitizeDescriptionForPlatform`, `repliz-publish.mjs:164`)
+- **Sanitizer YouTube** (`sanitizeDescriptionForPlatform`, `repliz-publish.mjs:209`)
   — hanya platform `youtube`:
   - Panah `-> => → ➜ ➔` diganti ` ke `.
   - Pasangan `kata/kata` (huruf/angka) → `kata dan kata`, kecuali didahului
@@ -106,7 +106,7 @@ account. Payload dibangun `buildSchedulePayload` (`repliz-publish.mjs:183`):
 
 ### 2.3 GET `/public/schedule/{scheduleId}` — poll status
 
-`pollSchedules` (`repliz-publish.mjs:347`). Loop hingga semua terminal atau
+`pollSchedules` (`repliz-publish.mjs:394`). Loop hingga semua terminal atau
 timeout:
 
 - **Timeout** default `120_000 ms`, **interval** default `5_000 ms`.
@@ -147,7 +147,7 @@ testable.
 | `loadConfig(env)` | Validasi + baca 6 env wajib |
 | `runPublish({...})` | Orkestrasi end-to-end (entry testable) |
 
-Alur `runPublish` (`repliz-publish.mjs:411`): parseArgs → cek `--approved` →
+Alur `runPublish` (`repliz-publish.mjs:458`): parseArgs → cek `--approved` →
 loadConfig → buildTargetAccounts → readPostMetadata (+ cek description) →
 buildR2Key/videoUrl/publishKey → shouldSkipPublish → uploadToR2 →
 verifyPublicUrl → validateAccounts → createSchedules → pollSchedules →

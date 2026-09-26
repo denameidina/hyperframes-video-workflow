@@ -1,6 +1,6 @@
 # Internal Docs — Source of Truth Index
 Status: operating standard
-Date: 2026-07-20
+Date: 2026-08-25
 
 Ini index + registry Source of Truth repo **hyperframes-video-workflow**
 (workspace produksi video sosial Dena Meidina + CLI auto-publish R2/Repliz).
@@ -107,6 +107,9 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - **processed.mp4** — base video hasil cut (9:16, tanpa caption/overlay burned-in).
 - **beat / caption beat** — satu unit caption pendek (1–4 kata ideal).
 - **hook card** — kartu atas hitam pembuka (3 detik pertama, kerja tanpa audio).
+- **three-second transcript hook** — satu kutipan ucapan verbatim yang memuat
+  tension/puncak masalah, dipindahkan ke processed output `00:00.00-00:03.00`
+  sebelum alur penjelasan.
 - **track (data-track-index)** — layer tumpang-tindih **temporal**, bukan paint order.
 - **z-index** — urutan **paint** (siapa di atas siapa).
 - **clip** — kelas wajib (`class="clip"`) tiap elemen ber-waktu.

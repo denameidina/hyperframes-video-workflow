@@ -12,12 +12,14 @@ import {
   buildTargetAccounts,
   basicAuthHeader,
   createSchedules,
+  deriveTitleFromDescription,
   loadConfig,
   makePublishKey,
   parseArgs,
   pollSchedules,
   readPostMetadata,
   runPublish,
+  sanitizeTitleForPlatform,
   shouldSkipPublish,
   uploadToR2,
   validateAccounts,
@@ -212,6 +214,114 @@ TikTok only caption.
   const post = await readPostMetadata(dir);
 
   assert.equal(post.description, "TikTok only caption.");
+});
+
+test("deriveTitleFromDescription uses the first meaningful line and trims to 100 characters", () => {
+  assert.equal(
+    deriveTitleFromDescription("Gue rombak workflow editing pakai AI.\n\nDetail lengkapnya di caption.\n\n#AIWorkflow"),
+    "Gue rombak workflow editing pakai AI.",
+  );
+  assert.equal(deriveTitleFromDescription("#AIWorkflow #Repliz\n\nBaris kedua yang beneran."), "Baris kedua yang beneran.");
+  assert.equal(deriveTitleFromDescription(""), "");
+
+  const long = `${"kata ".repeat(40)}`;
+  const derived = deriveTitleFromDescription(long);
+  assert.ok(derived.length <= 100, `expected <=100 chars, got ${derived.length}`);
+  assert.equal(derived.endsWith("kata"), true);
+});
+
+test("sanitizeTitleForPlatform strips angle brackets and caps YouTube titles at 100 characters", () => {
+  assert.equal(sanitizeTitleForPlatform("  Judul   <keren>  ", "youtube"), "Judul keren");
+  assert.equal(sanitizeTitleForPlatform("Judul <keren>", "tiktok"), "Judul <keren>");
+  assert.ok(sanitizeTitleForPlatform("kata ".repeat(40), "youtube").length <= 100);
+});
+
+test("buildSchedulePayload sends the resolved title on every platform payload", () => {
+  const post = {
+    title: "Judul YouTube final",
+    description: "Caption final",
+    topic: "",
+    type: "video",
+    tags: [],
+    mentions: [],
+    targetCountries: ["ID"],
+    scheduleAt: "2026-07-03T01:40:08.119Z",
+  };
+  const videoUrl = "https://media.example.com/final-renders/0702-2/final.mp4";
+
+  assert.equal(buildSchedulePayload({ accountId: "yt_1", platform: "youtube", post, videoUrl }).title, "Judul YouTube final");
+  assert.equal(buildSchedulePayload({ accountId: "tk_1", platform: "tiktok", post, videoUrl }).title, "Judul YouTube final");
+});
+
+test("buildSchedulePayload rejects an empty title for YouTube only", () => {
+  const post = {
+    title: "  ",
+    description: "Caption final",
+    topic: "",
+    type: "video",
+    tags: [],
+    mentions: [],
+    targetCountries: ["ID"],
+    scheduleAt: "2026-07-03T01:40:08.119Z",
+  };
+  const videoUrl = "https://media.example.com/final-renders/0702-2/final.mp4";
+
+  assert.throws(
+    () => buildSchedulePayload({ accountId: "yt_1", platform: "youtube", post, videoUrl }),
+    /Missing youtube post title/,
+  );
+  assert.equal(buildSchedulePayload({ accountId: "tk_1", platform: "tiktok", post, videoUrl }).title, "");
+});
+
+test("readPostMetadata resolves title from metadata, publish captions, then description", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-title-"));
+  const explicitSlug = path.join(dir, "explicit");
+  const captionSlug = path.join(dir, "caption");
+  const derivedSlug = path.join(dir, "derived");
+  await mkdir(explicitSlug);
+  await mkdir(captionSlug);
+  await mkdir(derivedSlug);
+
+  const captionsMarkdown = `# Publish Captions
+
+## YouTube Title
+
+\`\`\`text
+Judul dari publish captions
+\`\`\`
+
+## Instagram
+
+\`\`\`text
+Caption Instagram final.
+
+#AIWorkflow
+\`\`\`
+`;
+
+  await writeFile(path.join(explicitSlug, "repliz-publish.json"), JSON.stringify({ post: { title: "Judul eksplisit" } }));
+  await writeFile(path.join(explicitSlug, "publish-captions.md"), captionsMarkdown);
+  await writeFile(path.join(captionSlug, "publish-captions.md"), captionsMarkdown);
+  await writeFile(
+    path.join(derivedSlug, "publish-captions.md"),
+    `## Instagram
+
+\`\`\`text
+Caption Instagram final.
+
+#AIWorkflow
+\`\`\`
+`,
+  );
+
+  assert.equal((await readPostMetadata(explicitSlug)).title, "Judul eksplisit");
+  assert.equal((await readPostMetadata(captionSlug)).title, "Judul dari publish captions");
+  assert.equal((await readPostMetadata(derivedSlug)).title, "Caption Instagram final.");
+});
+
+test("makePublishKey changes when the title changes", () => {
+  const base = { r2Key: "final-renders/0702-2/final.mp4", targetAccounts: [{ platform: "youtube", accountId: "yt_1" }], description: "Caption final" };
+  assert.notEqual(makePublishKey({ ...base, title: "Judul A" }), makePublishKey({ ...base, title: "Judul B" }));
 });
 
 test("duplicate guard compares publish key and respects force", () => {
@@ -415,7 +525,7 @@ test("createSchedules sanitizes YouTube description without changing other platf
       { platform: "tiktok", accountId: "tk_1" },
     ],
     post: {
-      title: "",
+      title: "Workflow editing AI end to end",
       description: "raw video -> Codex -> HyperFrames -> R2 -> Repliz/API social automation\n\n#AIWorkflow #Repliz",
       topic: "",
       type: "video",
@@ -437,6 +547,7 @@ test("createSchedules sanitizes YouTube description without changing other platf
 
   const youtubePayload = JSON.parse(calls[0].options.body);
   const tiktokPayload = JSON.parse(calls[1].options.body);
+  assert.equal(youtubePayload.title, "Workflow editing AI end to end");
   assert.equal(youtubePayload.description.includes("->"), false);
   assert.equal(youtubePayload.description.includes("Repliz/API"), false);
   assert.match(youtubePayload.description, /raw video ke Codex ke HyperFrames ke R2 ke Repliz dan API social automation/);
@@ -575,6 +686,96 @@ Caption from publish captions.
   assert.deepEqual(
     scheduleBodies.map((body) => body.description),
     ["Caption from publish captions.\n\n#AIWorkflow", "Caption from publish captions.\n\n#AIWorkflow"],
+  );
+});
+
+test("runPublish sends the YouTube title to every schedule payload and receipt", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-title-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  await writeFile(
+    path.join(slugDir, "publish-captions.md"),
+    `# Publish Captions
+
+## YouTube Title
+
+\`\`\`text
+Cara Gue Rombak Workflow Editing Pakai AI
+\`\`\`
+
+## Instagram
+
+\`\`\`text
+Caption from publish captions.
+
+#AIWorkflow
+\`\`\`
+`,
+  );
+
+  const scheduleBodies = [];
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/yt_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "yt_1", type: "youtube", isConnected: true }) };
+    }
+    if (url.endsWith("/public/account/tk_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "tk_1", type: "tiktok", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      scheduleBodies.push(JSON.parse(options.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${scheduleBodies.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+
+  const result = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture({ REPLIZ_YOUTUBE_ACCOUNT_ID: "yt_1", REPLIZ_INSTAGRAM_ACCOUNT_ID: "" }),
+    runCommand: async () => ({ stdout: "ok", stderr: "" }),
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(scheduleBodies.length, 2);
+  assert.deepEqual(
+    scheduleBodies.map((body) => body.title),
+    ["Cara Gue Rombak Workflow Editing Pakai AI", "Cara Gue Rombak Workflow Editing Pakai AI"],
+  );
+  assert.equal(result.receipt.post.title, "Cara Gue Rombak Workflow Editing Pakai AI");
+});
+
+test("runPublish rejects a YouTube target with an unresolvable title before uploading", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-title-missing-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  await writeFile(
+    path.join(slugDir, "repliz-publish.json"),
+    JSON.stringify({ post: { description: "#AIWorkflow #Repliz" } }),
+  );
+
+  await assert.rejects(
+    runPublish({
+      argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+      env: envFixture({ REPLIZ_YOUTUBE_ACCOUNT_ID: "yt_1" }),
+      runCommand: async () => {
+        throw new Error("should not upload");
+      },
+      fetchImpl: async () => {
+        throw new Error("should not call network");
+      },
+    }),
+    /Missing YouTube post title/,
   );
 });
 

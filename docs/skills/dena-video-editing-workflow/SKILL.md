@@ -31,8 +31,8 @@ Use exactly the agent that owns the current decision:
 | User need | Agent |
 | --- | --- |
 | New raw/reference video, angle, hook, format, style adaptation | `docs/agents/01-creative-director.md` |
-| Transcript, silence/filler cuts, pacing, processed base video | `docs/agents/02-transcript-cut-agent.md` |
-| Captions, subtitles, hook text, phrase grouping, ASR correction | `docs/agents/03-caption-subtitle-agent.md` |
+| Transcript, three-second spoken hook selection/reorder, silence/filler cuts, pacing, processed base video | `docs/agents/02-transcript-cut-agent.md` |
+| Captions, subtitles, verbatim hook card, phrase grouping, ASR correction | `docs/agents/03-caption-subtitle-agent.md` |
 | Screenshots, b-roll, generated images/video, diagrams, stickers | `docs/agents/04-asset-generation-agent.md` |
 | Overlay timing, pattern interrupts, zooms, effects, transitions | `docs/agents/05-motion-overlay-agent.md` |
 | `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly | `docs/agents/06-hyperframes-assembly-agent.md` |
@@ -60,6 +60,13 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - For transcript quality, use the project-local Whisper install in `vendor/whisper.cpp` with `ggml-large-v3-turbo.bin`; convert source audio to WAV first and pass an Indonesian/domain-term prompt.
 - If a longer HyperFrames render stalls in default low-memory mode after passing check/snapshot review, retry the final render with `PRODUCER_LOW_MEMORY_MODE=false` and document the workaround in `render-review.md`.
 - When a session produces a workflow learning, update the relevant docs in the same turn; the project-local `.codex` Stop hook enforces this for learning prompts and workflow/config changes.
+- Jangan pakai `data-media-start` pada elemen `<audio>` HyperFrames; klipnya jadi senyap
+  di render. Potong file SFX-nya lebih dulu, lalu rujuk hasil potongannya.
+- SFX di bawah suara tidak bisa diverifikasi dengan membandingkan level render vs
+  `processed.mp4`. Render komposisi uji pendek berisi cue itu saja, lalu ukur.
+- Untuk cover wajah anak: deteksi per-frame + anchor manual untuk bagian whip pan + satu
+  cover kedua yang diam menutup posisi tujuan lompatan kamera. Verifikasi frame-demi-frame
+  pada MP4 final, dengan detektor **dan** mata.
 - If the user asks whether session learnings are already documented, treat that as a docs reconciliation task: verify the covered learnings and add or refine a concise docs note in the same turn before answering.
 
 ## Non-Negotiables
@@ -67,6 +74,10 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Use Indonesian by default and preserve Dena's natural register.
 - Treat reference videos as ingredients, not costumes.
 - Keep Dena positioned as a credible AI systems builder, senior developer, founder/operator.
+- Every edited video opens with a contiguous, verbatim transcript excerpt that
+  carries the core tension or peak problem at `00:00.00-00:03.00`, followed by
+  the explanation; Agent 02 documents the source move and Agent 03 captions the
+  same words for muted viewing.
 - Default Dena storytelling/talking-head videos require running captions that cover every spoken word surviving the cut, not only highlight phrases.
 - Default processed speed is `1.2x`; any lower speed needs a documented clarity/emotion exception.
 - Keep captions readable on phone: short phrases, white/black base, selective yellow emphasis.

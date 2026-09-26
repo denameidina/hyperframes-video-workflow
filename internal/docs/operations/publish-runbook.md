@@ -15,6 +15,10 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 - Description tersedia (salah satu): `videos/<slug>/repliz-publish.json`
   (`post.description` atau root `description`) **atau** `publish-captions.md`
   (`## Instagram` / `## TikTok`, fenced ` ```text ` block).
+- Title tersedia bila target YouTube aktif: `repliz-publish.json` (`post.title`
+  atau root `title`) **atau** `publish-captions.md` (`## YouTube Title`, fenced
+  ` ```text ` block). Tanpa keduanya, title diturunkan dari baris pertama
+  description (max 100 karakter).
 - **Approval user** atas render final.
 
 ## Langkah
@@ -51,6 +55,7 @@ Repliz → buat schedule per akun → poll status → tulis receipt.
 | `Missing env: ...` | Env wajib kosong | Lengkapi `.env` |
 | `No target account IDs configured` | Semua `REPLIZ_*_ACCOUNT_ID` kosong | Isi minimal satu |
 | `Missing post description...` | Description kosong di semua sumber | Isi `repliz-publish.json`/`publish-captions.md` |
+| `Missing YouTube post title...` | Target YouTube aktif tapi title kosong & tidak bisa diturunkan dari description | Isi `post.title` atau blok `## YouTube Title` |
 | `R2 public URL is not reachable: <status>` | Domain publik salah / objek belum ada | Cek `R2_PUBLIC_BASE_URL`, ulangi |
 | `Repliz account <id> is not connected` | Akun belum connect | Hubungkan akun di Repliz |
 | `... expected <platform>, got <type>` | ID akun salah platform | Perbaiki env ID |

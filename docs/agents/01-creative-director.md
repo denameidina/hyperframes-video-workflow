@@ -161,6 +161,14 @@ Pick one hook type:
 
 The first 3 seconds must work with audio muted.
 
+The hook strategy starts here, but the final opening audio must be grounded in
+the transcript. If a transcript already exists, base the primary and backup
+hooks on exact spoken lines and include their source timestamps. If the
+transcript does not exist yet, mark the hook as `provisional`, define the
+tension Agent 02 should search for, and let Agent 02 lock the verbatim source
+excerpt after transcription. Do not invent a spoken claim and hand it off as
+though it exists in the footage.
+
 ### 4. Decide The Format
 
 Choose one format:
@@ -188,8 +196,8 @@ Default structure for a 30-75 second Dena video:
 
 Default structure for a 20-30 second character-led video:
 
-- `0-2s`: visual shock + target callout
-- `2-6s`: identity twist
+- `0-3s`: verbatim transcript hook + visual shock
+- `3-6s`: identity twist
 - `6-12s`: mission or bold claim
 - `12-20s`: aura/proof montage
 - `20-25s`: humanizer CTA
@@ -314,7 +322,13 @@ Use this template for every brief.
 
 ## Hook
 
+Status: <provisional|locked-from-transcript>
+
 Primary hook:
+
+Exact spoken quote, if transcript exists:
+
+Source timestamp, if transcript exists:
 
 Backup hooks:
 
@@ -378,6 +392,11 @@ Backup CTA:
 
 For Transcript/Cut Agent:
 
+- Transcript tension to find:
+- Hook status to validate:
+- Required opening: verbatim source excerpt at 00:00.00-00:03.00, followed by
+  the explanation flow.
+
 For Caption Agent:
 
 For Asset Generation Agent:
@@ -392,6 +411,8 @@ For QA Agent:
 A Creative Director brief is good when:
 
 - The hook is specific enough to write on screen immediately.
+- The hook is either locked to an exact transcript quote or clearly marked
+  provisional for Agent 02 to validate after transcription.
 - The video can be explained in one sentence.
 - The downstream agents know exactly what to do next.
 - The direction still sounds like Dena.

@@ -56,6 +56,10 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 
 ### Dena Social Video Non-Negotiables
 
+- Every edited video must open with a contiguous, verbatim transcript excerpt
+  that captures the core tension or peak problem at processed output
+  `00:00.00-00:03.00`, then continue into the explanation. Agent 02 owns the
+  source move; Agent 03 captions the same words for muted viewing.
 - Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
 - Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
 - When a user provides a URL or the transcript mentions a tool/product/site, Agent 04 must research or inspect it, capture local screenshots/screen recordings when useful, and time those assets to the transcript context.
@@ -92,7 +96,7 @@ Run the agents sequentially unless the user explicitly requests a narrow technic
 ### Routing Rules
 
 - New raw video, reference video, "make this viral", "edit like this", hook/style direction, or format choice: start with Agent 01.
-- Silence cuts, transcript, filler removal, pacing, content structure, or processed media: use Agent 02.
+- Silence cuts, transcript-derived three-second hook selection/reorder, filler removal, pacing, content structure, or processed media: use Agent 02.
 - Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, or CTA text: use Agent 03.
 - Screenshots, generated stills/video, b-roll, diagrams, UI mockups, stickers, textures, or proof visuals: use Agent 04.
 - Overlay timing, pattern interrupts, zooms, effects, cards, progress bars, or transition behavior: use Agent 05.

@@ -81,10 +81,23 @@ non-empty. Source priority:
 
 Jika semua source kosong, script berhenti sebelum upload R2 atau scheduling Repliz.
 
+`title` wajib non-empty untuk YouTube. Source priority:
+
+1. `videos/<slug>/repliz-publish.json` `post.title`
+2. `videos/<slug>/repliz-publish.json` root `title`
+3. `videos/<slug>/publish-captions.md` `## YouTube Title` fenced `text` block
+4. Derivasi otomatis dari `description`: baris non-kosong pertama yang bukan
+   baris hashtag, dinormalisasi spasinya dan dipotong di batas kata maksimal
+   `100` karakter.
+
+Jika `REPLIZ_YOUTUBE_ACCOUNT_ID` terisi dan title tetap kosong setelah semua
+source di atas, script berhenti sebelum upload R2 atau scheduling Repliz. Title
+yang sama dikirim ke semua platform; hanya YouTube yang divalidasi non-empty.
+
 ```json
 {
   "type": "video",
-  "title": "",
+  "title": "Judul YouTube final",
   "description": "Caption final untuk post",
   "topic": "",
   "tags": [],
@@ -175,11 +188,18 @@ YouTube description sanitizer:
 - Replace slash-heavy word pairs such as `Repliz/API` with `Repliz dan API`.
 - Keep the original caption for Facebook, TikTok, Instagram, and the local receipt.
 
+YouTube title sanitizer:
+
+- Collapse whitespace and trim on every platform.
+- For YouTube only, drop `<` dan `>` (ditolak YouTube) lalu potong di batas kata
+  maksimal `100` karakter.
+- Reject the YouTube schedule when the sanitized title is empty.
+
 Payload per akun:
 
 ```json
 {
-  "title": "",
+  "title": "Judul YouTube final",
   "description": "Caption final untuk post",
   "topic": "",
   "type": "video",
@@ -265,11 +285,11 @@ Minimal script behavior:
 
 1. Tolak publish jika CLI tidak diberi `--approved`.
 2. Baca env Repliz dan R2 public config.
-3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong.
+3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong, atau jika target YouTube aktif dan `title` tidak bisa di-resolve.
 4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, dan `REPLIZ_INSTAGRAM_ACCOUNT_ID`.
 5. Upload `--file` ke R2 dengan Wrangler jika object belum ada atau `--force` dipakai.
 6. Bentuk `videoUrl` dari public R2 URL.
-7. Tolak publish ulang jika receipt untuk kombinasi `r2Key + targetAccounts + description` sudah ada, kecuali diberi `--force`.
+7. Tolak publish ulang jika receipt untuk kombinasi `r2Key + targetAccounts + description + title` sudah ada, kecuali diberi `--force`.
 8. Validasi semua accountId lewat Repliz.
 9. Buat schedule untuk tiap accountId.
 10. Simpan receipt lokal.
@@ -296,6 +316,7 @@ Format:
   "r2Key": "<r2-prefix>/0702-2/final.mp4",
   "videoUrl": "https://<r2-public-domain>/<r2-prefix>/0702-2/final.mp4",
   "descriptionHash": "sha256:...",
+  "titleHash": "sha256:...",
   "createdAt": "2026-07-03T01:40:08.119Z",
   "schedules": [
     {

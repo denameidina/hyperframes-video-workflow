@@ -32,6 +32,6 @@ setelah user menyetujui. `final-approval.md` dari QA adalah lulus QA internal,
 
 ## Sources
 
-- `scripts/repliz-publish.mjs:421`, `scripts/repliz-publish.test.mjs`
+- `scripts/repliz-publish.mjs:458`, `scripts/repliz-publish.test.mjs`
 - AGENTS.md (Repliz/R2 Auto Publish Gate), `docs/repliz/integration-spec.md`
 - [requirements/rd-01-publish-pipeline](../requirements/rd-01-publish-pipeline.md) (RD-01-01)
