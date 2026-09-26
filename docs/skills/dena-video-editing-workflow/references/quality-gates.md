@@ -50,16 +50,16 @@ Every overlay or asset must do at least one job:
 
 Reject assets that are generic, fake-looking, privacy-risky, unreadable, or unrelated.
 
-If the user provides a URL or the transcript mentions a tool/product/site, Agent 04 must either:
+If the user provides a URL or the transcript mentions a tool/product/site, the Screen Plan phase must plan, and the Build phase must deliver, either:
 
 - provide local screenshot/screen-record assets matched to transcript windows, or
 - document why capture was unnecessary or unsafe and provide a better generated/diagram alternative.
 
-When `asset-plan.md` exists, QA must check for an `Imagegen Decision Log`.
+When `visual-plan.md` exists, QA must check for a `Visual Decision Log`.
 
-Fail Agent 04 output when:
+Fail the visual plan or asset production when:
 
-- visual assets exist but `asset-plan.md` has no `Imagegen Decision Log`
+- visual assets exist but `visual-plan.md` has no `Visual Decision Log`
 - an asset opportunity says no generated media was needed without an `imagegen_candidate` decision
 - a mood, background, reset-attention, texture, transition, or abstract workflow moment uses only a stiff card/SVG and does not explain why image generation was skipped
 - a generated asset has no provenance or prompt summary in `asset-manifest.json`
@@ -103,7 +103,7 @@ Fix errors before handoff. Review warnings before render.
 
 Run this gate only when the user chooses QA first, asks whether the edit is ready, requests a punch list, or needs regression review.
 
-Use Agent 07 verdicts:
+Use QA phase verdicts:
 
 - `pass`: ready for final render or publish.
 - `pass-with-minor-notes`: usable, with non-blocking polish notes.
@@ -111,6 +111,12 @@ Use Agent 07 verdicts:
 - `blocked`: cannot review because inputs, preview, render, or verification evidence are missing.
 
 Do not create `final-approval.md` unless the verdict is `pass`.
+
+## Phase Gates
+
+- Gate 1 (cut review, optional): `docs/agents/01-story.md`.
+- Gate 2 (visual plan, conditional on R1–R6): `docs/agents/02-screen-plan.md`.
+- Gate 3 (final review, mandatory): `docs/agents/03-build.md`.
 
 ## Render Gate
 
@@ -122,7 +128,7 @@ Before final render:
 4. Confirm audio sync and end cut.
 5. Render only after blockers are gone.
 
-After render, do a basic export sanity check before user review: file exists, duration is plausible, audio is present when expected, and the first/last frames are not blank. Full Agent 07 QA waits until the user chooses QA first.
+After render, do a basic export sanity check before user review: file exists, duration is plausible, audio is present when expected, and the first/last frames are not blank. The full QA phase waits until the user chooses QA first.
 
 ## Publish Gate
 
@@ -131,7 +137,7 @@ User review is mandatory. QA is optional and lives inside this review/publish ga
 1. Render the MP4 and send the result to the user.
 2. Offer three paths: publish as-is, run QA first, or request revisions.
 3. If the user chooses publish as-is, QA artifacts are not required.
-4. If the user chooses QA first, run Agent 07, then return here for explicit publish approval.
+4. If the user chooses QA first, run the QA phase as a fresh-context subagent, then return here for explicit publish approval.
 5. Only after explicit approval/confirmation, run:
 
 ```bash

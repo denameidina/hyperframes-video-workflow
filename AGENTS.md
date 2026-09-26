@@ -58,86 +58,69 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 
 - Every edited video must open with a contiguous, verbatim transcript excerpt
   that captures the core tension or peak problem at processed output
-  `00:00.00-00:03.00`, then continue into the explanation. Agent 02 owns the
-  source move; Agent 03 captions the same words for muted viewing.
+  `00:00.00-00:03.00`, then continue into the explanation. The Story phase owns
+  the source move; the Screen Plan phase captions the same words for muted viewing.
 - Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
 - Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
-- When a user provides a URL or the transcript mentions a tool/product/site, Agent 04 must research or inspect it, capture local screenshots/screen recordings when useful, and time those assets to the transcript context.
-- Agent 04 must write an `Imagegen Decision Log` for every visual-support opportunity; use Codex/image generation for grounded bitmap support assets when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
+- When a user provides a URL or the transcript mentions a tool/product/site, the Screen Plan phase must research or inspect it and plan captures timed to the transcript context; the Build phase captures local screenshots/screen recordings when useful.
+- The Screen Plan phase must write a `Visual Decision Log` in `visual-plan.md` for every visual-support opportunity; use Codex/image generation for grounded bitmap support assets when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
 
-## Dena Agent Workflow Discipline
+## Dena Workflow Discipline
 
-For Dena Meidina social-video work, use the specialized agents in `docs/agents/` as the operating workflow. These files are not optional notes; they are the project contract for planning, editing, assembling, and reviewing videos.
+For Dena Meidina social-video work, use the phase documents in `docs/agents/` as the operating workflow. They are the project contract for planning, editing, assembling, and reviewing videos. Decision record: `internal/docs/adr/0008-four-phase-workflow.md`.
 
 Start by reading the local workflow skill:
 
 `docs/skills/dena-video-editing-workflow/SKILL.md`
 
-Use that skill as the router, then read the specific agent file for the current stage.
+Use that skill as the router, then read the phase document for the current phase. Each phase document names the reference in `docs/agents/references/` to read at each step; read references only when that step needs them.
 
-### Default Agent Order
+### Phase Order
 
-Default edit workflow before user review:
+1. `docs/agents/01-story.md` — direction, transcript, hook locked from the transcript, cut, `processed.mp4`. Gate 1 (cut review) is optional: on only when the user asks or `creative-brief.md` sets `gate_cut: on`.
+2. `docs/agents/02-screen-plan.md` — captions, then one visual plan (`visual-plan.md`). Gate 2 stops only when a timeline row matches a risk trigger R1–R6.
+3. `docs/agents/03-build.md` — asset production, HyperFrames assembly, `npm run check`, render. Gate 3: stop for user review after render.
+4. `docs/agents/04-qa.md` — optional. Runs only when the user chooses QA first or asks for a readiness, punch-list, or regression review, and always as a fresh-context subagent.
 
-1. `docs/agents/01-creative-director.md`
-2. `docs/agents/02-transcript-cut-agent.md`
-3. `docs/agents/03-caption-subtitle-agent.md`
-4. `docs/agents/04-asset-generation-agent.md`
-5. `docs/agents/05-motion-overlay-agent.md`
-6. `docs/agents/06-hyperframes-assembly-agent.md`
-
-`docs/agents/07-qa-review-agent.md` is optional and runs from the user review/publish gate when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
-
-Run the agents sequentially unless the user explicitly requests a narrow technical fix. Do not jump to assembly before creative direction, cut logic, captions, assets, and motion have either been completed or explicitly marked unnecessary.
+Run the phases in order unless the user explicitly requests a narrow technical fix. Do not start Build before the Story and Screen Plan artifacts exist, including the `Gate 2 Result` section of `visual-plan.md`.
 
 ### Routing Rules
 
-- New raw video, reference video, "make this viral", "edit like this", hook/style direction, or format choice: start with Agent 01.
-- Silence cuts, transcript-derived three-second hook selection/reorder, filler removal, pacing, content structure, or processed media: use Agent 02.
-- Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, or CTA text: use Agent 03.
-- Screenshots, generated stills/video, b-roll, diagrams, UI mockups, stickers, textures, or proof visuals: use Agent 04.
-- Overlay timing, pattern interrupts, zooms, effects, cards, progress bars, or transition behavior: use Agent 05.
-- Editing `index.html`, `compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, or local asset wiring: use Agent 06 and the relevant HyperFrames skill.
-- Optional QA, punch list, render/platform readiness review, or regression review: use Agent 07.
+- New raw video, reference video, "make this viral", "edit like this", angle, hook, format, transcript, silence/filler cuts, pacing, speed, or processed media: Story.
+- Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, CTA text, or publish captions: Screen Plan (captions step).
+- Which moments get visuals, visual type (screenshot, generated still/video, diagram, proof card, label, sticker), placement, overlay timing, pattern interrupts, zooms, effects, progress bars, transitions, or SFX cues: Screen Plan (visual step).
+- Capturing/generating asset files, editing `index.html`, `compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, local asset wiring, or rendering: Build, plus the relevant HyperFrames skill.
+- Optional QA, punch list, render/platform readiness review, or regression review: QA.
 
 ### Discipline Rules
 
-1. Before acting as an agent, read that agent's markdown file completely.
-2. Read all required upstream files listed by that agent before making decisions.
-3. Produce the expected handoff artifacts for that agent in `videos/<slug>/` whenever a slug exists.
-4. If an upstream artifact is missing, either create it with the correct upstream agent first or write a readiness/blocker note. Do not silently invent missing decisions.
-5. Keep each agent inside its responsibility boundary. For example, Agent 05 may design motion timing, but Agent 06 implements it in HyperFrames.
-6. QA findings must route fixes back to the owning agent instead of becoming vague "polish" work.
-7. If the user says "lanjut agent berikutnya", continue to the next numbered file in `docs/agents/` and keep the same level of detail.
+1. Before acting in a phase, read that phase document completely.
+2. Read upstream artifacts in `videos/<slug>/`, not upstream phase documents.
+3. Produce the phase's output artifacts in `videos/<slug>/` whenever a slug exists.
+4. If an upstream artifact is missing, create it in the correct upstream phase first or write a readiness/blocker note. Do not silently invent missing decisions.
+5. Keep each phase inside its boundary. Screen Plan decides visuals and timing; Build implements them in HyperFrames.
+6. Review and QA findings route fixes back to the owning phase instead of becoming vague "polish" work.
+7. If the user says "lanjut fase berikutnya" (or "lanjut agent berikutnya"), continue to the next numbered phase document.
 
 ### Minimum Handoff Chain
 
-For a complete social video, expect this chain:
-
-- `creative-brief.md`
-- `edit-decision-notes.md`
-- `caption-plan.md`
-- `caption-beats.json`
-- `publish-captions.md`
-- `asset-plan.md` and `asset-manifest.json`, when assets are needed
-- `motion-plan.md`
-- `overlay-timeline.json`
-- `assembly-notes.md`
-- `assembly-checklist.md`
-- Optional after user chooses QA first at review/publish gate: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
+- Story: `creative-brief.md`, `metadata.json`, `transcript.json`, `edit-decision-notes.md`, `cut-list.json`, `processed.mp4`
+- Screen Plan: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`
+- Build: `assets/asset-manifest.json` (when assets exist), `assembly-notes.md`, `assembly-checklist.md`, render MP4
+- Optional QA: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
 
 ### Repliz/R2 Auto Publish Gate
 
 Auto publish is documented in `docs/repliz/integration-spec.md`.
 
-- After final render, stop and ask the user to review the edited video.
+- After final render, stop and ask the user to review the edited video (Gate 3).
 - At the review gate, offer: publish as-is, run QA first, or request revisions.
 - Do not upload to Cloudflare R2 or schedule Repliz until the user explicitly approves/confirms.
 - If the user chooses publish as-is, QA artifacts are not required.
-- If the user chooses QA first, run Agent 07 before asking for final publish approval.
+- If the user chooses QA first, run the QA phase as a fresh-context subagent before asking for final publish approval.
 - Only after approval, run `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
 - R2 uses Wrangler remote upload, `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and public base `https://<r2-public-domain>`.
 - Do not add S3 access keys, R2 secret keys, or `wrangler.jsonc` for this flow unless the user explicitly asks.
@@ -145,9 +128,9 @@ Auto publish is documented in `docs/repliz/integration-spec.md`.
 
 ### Interaction With HyperFrames
 
-Agent 06 does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow Agent 06. After editing any `.html` composition, run `npm run check` before reporting completion.
+The Build phase does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow `docs/agents/03-build.md`. After editing any `.html` composition, run `npm run check` before reporting completion.
 
-Docs-only edits to `docs/agents/*.md`, `AGENTS.md`, or `CLAUDE.md` do not require `npm run check` unless they also modify `.html` composition files.
+Docs-only edits to `docs/agents/**/*.md`, `AGENTS.md`, or `CLAUDE.md` do not require `npm run check` unless they also modify `.html` composition files.
 
 ## Skills — USE THESE FIRST
 

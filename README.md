@@ -129,7 +129,7 @@ docs/dena-social-video-style-guide.md   style guide Dena
 docs/repliz/integration-spec.md         spec R2/Repliz auto publish
 docs/initial-setup.md                   setup awal untuk human/agent
 docs/ai-agent-initial-setup.md          checklist setup khusus AI agent
-docs/agents/                            workflow agent 01-07
+docs/agents/                            workflow fase 01-04 + references/
 docs/skills/dena-video-editing-workflow/SKILL.md
 vendor/gsap.min.js                      runtime GSAP lokal
 vendor/whisper.cpp/                     submodule transkripsi lokal
@@ -146,18 +146,15 @@ Sebelum mengerjakan video Dena, baca file ini secara berurutan:
 1. `AGENTS.md`
 2. `docs/skills/dena-video-editing-workflow/SKILL.md`
 3. `docs/dena-social-video-style-guide.md`
-4. Agent yang relevan di `docs/agents/`
+4. Dokumen fase yang relevan di `docs/agents/`
 
 Default full workflow:
 
 ```text
-01 creative director
-02 transcript cut
-03 caption/subtitle
-04 asset generation
-05 motion/overlay
-06 HyperFrames assembly
-07 QA review
+01 story        (transcript, hook, cut)
+02 screen plan  (caption + rencana visual)
+03 build        (aset, HyperFrames, render)
+04 QA           (opsional, subagent)
 ```
 
 Jangan lompat ke assembly kecuali task memang narrow technical fix.

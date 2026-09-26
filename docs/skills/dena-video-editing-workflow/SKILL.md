@@ -7,7 +7,7 @@ description: Use when planning, editing, assembling, reviewing, or rendering Den
 
 ## Overview
 
-Use this skill as the router for Dena Meidina social-video work in this project. It enforces the `docs/agents/` sequence, Dena style guide, HyperFrames composition rules, handoff artifacts, and optional QA review gate.
+Use this skill as the router for Dena Meidina social-video work in this project. It enforces the phase order in `docs/agents/`, the Dena style guide, HyperFrames composition rules, handoff artifacts, and the review gates. Decision record: `internal/docs/adr/0008-four-phase-workflow.md`.
 
 ## Start Here
 
@@ -15,28 +15,25 @@ Before any Dena video task:
 
 1. Read `AGENTS.md`.
 2. Read `docs/dena-social-video-style-guide.md`.
-3. Identify the current workflow stage.
-4. Read the matching agent file in `docs/agents/` completely.
-5. Read required upstream artifacts listed by that agent.
-6. Produce the expected handoff files in `videos/<slug>/`.
+3. Identify the current phase.
+4. Read that phase document in `docs/agents/` completely.
+5. Read upstream artifacts in `videos/<slug>/`, not upstream phase documents.
+6. Read a reference in `docs/agents/references/` only at the step that names it.
+7. Produce the phase's output artifacts in `videos/<slug>/`.
 
-For the full chain and routing table, read `references/agent-chain.md`.
+For the full chain, gates, skip rules, and fix routing, read `references/phase-chain.md`.
 
 For validation, QA, and render gates, read `references/quality-gates.md`.
 
-## Stage Router
+## Phase Router
 
-Use exactly the agent that owns the current decision:
-
-| User need | Agent |
+| User need | Phase |
 | --- | --- |
-| New raw/reference video, angle, hook, format, style adaptation | `docs/agents/01-creative-director.md` |
-| Transcript, three-second spoken hook selection/reorder, silence/filler cuts, pacing, processed base video | `docs/agents/02-transcript-cut-agent.md` |
-| Captions, subtitles, verbatim hook card, phrase grouping, ASR correction | `docs/agents/03-caption-subtitle-agent.md` |
-| Screenshots, b-roll, generated images/video, diagrams, stickers | `docs/agents/04-asset-generation-agent.md` |
-| Overlay timing, pattern interrupts, zooms, effects, transitions | `docs/agents/05-motion-overlay-agent.md` |
-| `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly | `docs/agents/06-hyperframes-assembly-agent.md` |
-| Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/07-qa-review-agent.md` |
+| New raw/reference video, angle, hook, format, style adaptation, transcript, three-second spoken hook, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
+| Captions, subtitles, verbatim hook card, phrase grouping, ASR correction, CTA text, publish captions | `docs/agents/02-screen-plan.md` (captions step) |
+| Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
+| Capturing/generating asset files, `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
+| Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/04-qa.md` (fresh-context subagent) |
 | R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
@@ -45,14 +42,14 @@ Do not skip ahead unless the user explicitly requests a narrow technical fix and
 
 Use this when fixing a previous Dena edit, or when the user says the result was over-cut, captions drifted, or the process burned too much time/token.
 
-- Do not rerun the full agent chain by default. Reuse existing artifacts, route only the broken part, and update downstream files that depend on it.
-- Treat "boring motion", "too much transcript was cut", "needs non-slop assets", and "no sound effects" as one targeted revision path: keep the compact cut as the baseline when it feels denser, Agent 02 restores only missing context, Agent 04 creates local/manual explanatory assets when useful, Agent 05 adds purposeful motion plus SFX timing, Agent 06 assembles, and Agent 07 re-verifies.
-- Treat "captions skipped words" as a Caption Agent bug by default. Regenerate or realign from the locked processed word-level transcript so every surviving spoken word is represented by active running captions.
+- Do not rerun the full phase chain by default. Reuse existing artifacts, route only the broken part, and update downstream files that depend on it.
+- Treat "boring motion", "too much transcript was cut", "needs non-slop assets", and "no sound effects" as one targeted revision path: keep the compact cut as the baseline when it feels denser, the Story phase restores only missing context, the Screen Plan phase plans local/manual explanatory assets plus purposeful motion and SFX timing, the Build phase produces and assembles them, and the QA phase re-verifies when the user chooses QA.
+- Treat "captions skipped words" as a Screen Plan (captions step) bug by default. Regenerate or realign from the locked processed word-level transcript so every surviving spoken word is represented by active running captions.
 - Default recut intensity is `light-medium`: remove long silence, heavy filler, and clear repetition only. Do not force a viral hard-cut unless the user asks for aggressive pacing.
 - Lock the base cut before final captions. If `processed.mp4` changes, regenerate or realign `caption-beats.json` from the processed video instead of manually nudging old raw-timeline captions.
 - If captions, assets, motion, or SFX feel out of sync after a compact recut, transcribe the locked processed audio and retime `caption-beats.json`, `overlay-timeline.json`, HTML clips, and SFX cues from the same cue map.
 - If the user wants source code/editor footage visible as proof, keep overlays as compact callouts in unused top/side space. Do not use large privacy/context masks that hide the proof moment.
-- If the user provides a link or the transcript names a tool/product/site, route to Agent 04 for web research/inspection and local screenshot or screen-record capture before motion planning.
+- If the user provides a link or the transcript names a tool/product/site, route to the Screen Plan phase (visual step) for web research/inspection and a planned local screenshot or screen-record capture; the Build phase captures it.
 - If real captures do not explain the point well enough, use Codex/image generation for grounded bitmap stills or short support visuals instead of stiff filler cards.
 - Preview with frame grabs/contact sheets first. Run full render only after cut, captions, and overlays look correct, then rerender only for blocker/major fixes.
 - For Dena raw talking-head clips, preserve natural context without killing density. A compact 55-70s cut can beat a fuller 80-100s cut when the lesson still lands.
@@ -76,8 +73,8 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Keep Dena positioned as a credible AI systems builder, senior developer, founder/operator.
 - Every edited video opens with a contiguous, verbatim transcript excerpt that
   carries the core tension or peak problem at `00:00.00-00:03.00`, followed by
-  the explanation; Agent 02 documents the source move and Agent 03 captions the
-  same words for muted viewing.
+  the explanation; the Story phase documents the source move and the Screen Plan
+  phase captions the same words for muted viewing.
 - Default Dena storytelling/talking-head videos require running captions that cover every spoken word surviving the cut, not only highlight phrases.
 - Default processed speed is `1.2x`; any lower speed needs a documented clarity/emotion exception.
 - Keep captions readable on phone: short phrases, white/black base, selective yellow emphasis.
@@ -87,7 +84,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
 - After any `.html` edit, run `npm run check` and fix errors before handoff.
-- After final render, stop for user review. Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
+- After final render, stop for user review (Gate 3). Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
 - Repliz publish must use `--approved`; R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`.
 
 ## Handoff Contract
@@ -95,31 +92,32 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 For a complete edit, the expected artifact chain is:
 
 ```text
-videos/<slug>/creative-brief.md
-videos/<slug>/edit-decision-notes.md
-videos/<slug>/caption-plan.md
-videos/<slug>/caption-beats.json
-videos/<slug>/publish-captions.md
-videos/<slug>/asset-plan.md
-videos/<slug>/asset-manifest.json
-videos/<slug>/motion-plan.md
-videos/<slug>/overlay-timeline.json
-videos/<slug>/assembly-notes.md
-videos/<slug>/assembly-checklist.md
+Story:        videos/<slug>/creative-brief.md
+              videos/<slug>/metadata.json
+              videos/<slug>/transcript.json
+              videos/<slug>/edit-decision-notes.md   (ends with ## Cut Summary)
+              videos/<slug>/cut-list.json
+              videos/<slug>/processed.mp4
+Screen Plan:  videos/<slug>/caption-plan.md
+              videos/<slug>/caption-beats.json
+              videos/<slug>/publish-captions.md
+              videos/<slug>/visual-plan.md           (ends with ## Gate 2 Result)
+              videos/<slug>/overlay-timeline.json
+Build:        videos/<slug>/assets/asset-manifest.json   (when assets exist)
+              videos/<slug>/assembly-notes.md
+              videos/<slug>/assembly-checklist.md
 ```
 
-Only create asset artifacts when assets are needed. Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
+Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
 
 ## If Inputs Are Missing
 
 Do not invent missing upstream decisions.
 
-- Missing direction: run Agent 01.
-- Missing transcript/cut: run Agent 02.
-- Missing caption timing: run Agent 03.
-- Missing assets: run Agent 04 or mark assets unnecessary.
-- Missing motion plan: run Agent 05.
-- Missing assembly notes/checklist: run Agent 06.
-- User chose QA first and QA evidence is missing: run Agent 07.
+- Missing direction, transcript, hook, or cut: run the Story phase.
+- Missing caption timing or captions: run the Screen Plan phase (captions step).
+- Missing `visual-plan.md` or its Gate 2 Result: run the Screen Plan phase (visual step).
+- Missing assets, assembly notes, checklist, or render: run the Build phase.
+- User chose QA first and QA evidence is missing: run the QA phase as a fresh-context subagent.
 
 If the user asks for a narrow fix, document which upstream assumptions are being reused.
