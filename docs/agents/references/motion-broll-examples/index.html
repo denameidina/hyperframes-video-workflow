@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/motion-kit/motion-kit.js"></script>
+    <link rel="stylesheet" href="vendor/motion-kit/motion-kit.css" />
+    <style>
+      body { margin: 0; background: #050505; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #050505; }
+      #base-video { position: absolute; inset: 0; background: #3f3f46; z-index: 1; }
+      #face { position: absolute; left: 290px; top: 700px; width: 500px; height: 560px; border-radius: 240px; background: #52525b; }
+      #face-label { position: absolute; left: 0; right: 0; top: 1300px; text-align: center; font: 600 32px Arial, sans-serif; color: #d4d4d8; }
+      .broll { position: absolute; inset: 0; z-index: 22; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="broll-examples" data-start="0" data-width="1080" data-height="1920" data-duration="22">
+      <div id="base-video" class="clip" data-start="0" data-duration="22" data-track-index="1">
+        <div id="face"></div>
+        <div id="face-label">placeholder wajah</div>
+      </div>
+      <div id="ex-01-invoice-mount" class="broll" data-composition-id="ex-01-invoice" data-composition-src="compositions/ex-01-invoice.html"
+           data-start="0.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ex-02-chat-split-mount" class="broll" data-composition-id="ex-02-chat-split" data-composition-src="compositions/ex-02-chat-split.html"
+           data-start="7" data-duration="8" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ex-03-steps-panel-mount" class="broll" data-composition-id="ex-03-steps-panel" data-composition-src="compositions/ex-03-steps-panel.html"
+           data-start="15.3" data-duration="6.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      // Split treatment for ex-02: slide the base video into the bottom half, then back.
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 7);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 14.55);
+      window.__timelines['broll-examples'] = tl;
+    </script>
+  </body>
+</html>

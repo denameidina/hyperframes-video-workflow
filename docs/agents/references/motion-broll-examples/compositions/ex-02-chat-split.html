@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .bub { position: absolute; left: -330px; padding: 16px 24px; border-radius: 22px; background: #27272a; color: #fff; font-size: 30px; white-space: nowrap; }
+        .col { position: absolute; top: 0; width: 320px; }
+        .col .hd { position: absolute; left: 0; width: 320px; top: -130px; text-align: center; font-size: 26px; color: #71717a; }
+        .col .ic { position: absolute; left: 124px; top: -70px; }
+        .col .lb { position: absolute; left: 0; width: 320px; top: 40px; text-align: center; font-size: 30px; font-weight: 600; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="ex-02-chat-split" data-width="1080" data-height="1920" data-duration="8">
+        <div class="mk-stage">
+          <div class="mk-a" style="left:0;top:0;width:1080px;height:960px;background:#050505"></div>
+          <div class="mk-world">
+            <div class="mk-shape">
+              <div class="mk-layer" id="Lchat">
+                <div class="mk-row" style="left:-330px;top:36px;gap:12px;color:#fff;font-size:30px;font-weight:600"><span id="icMsg"></span>Chat klien</div>
+                <div class="bub" id="b0" style="top:110px">Kak, invoice-nya udah?</div>
+                <div class="bub" id="b1" style="top:210px">Bisa dikirim ulang?</div>
+                <div class="bub" id="b2" style="top:310px">Halo kak?</div>
+                <div class="mk-a" id="pending" style="left:-330px;top:430px;font-size:24px;color:#d4d4d8">Belum dibalas</div>
+              </div>
+              <div class="mk-layer" id="Lcompare">
+                <div class="mk-a" id="hl" style="top:-150px;height:300px;border-radius:28px;background:#f4f4f5"></div>
+                <div class="col" style="left:-350px"><div class="hd">Sebelum</div><div class="ic" id="icX"></div><div class="lb">Balas manual</div></div>
+                <div class="col" style="left:30px"><div class="hd">Sesudah</div><div class="ic" id="icOk"></div><div class="lb">Balas otomatis</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ex-02-chat-split';
+          const $ = M.finder(ID);
+          $('icMsg').innerHTML = M.icon('message', 32, '#ffffff');
+          $('icX').innerHTML = M.icon('x', 72, '#52525b', 2.4);
+          $('icOk').innerHTML = M.icon('check', 72, '#22c55e', 2.4);
+          const BUB = [0.7, 1.4, 2.1];
+          const hlL = M.track(-370, [[5.6, 10, M.SLOW]]);
+          const hlR = M.track(-10, [[5.6, 370, M.FAST]]);
+          M.clip(ID, {
+            W: 1080, H: 1920, T: 8, bg: null, center: [540, 480], intro: 0.2,
+            SH: {
+              chat: { w: 760, h: 520, r: 36, bg: '#111111', cam: 1.1 },
+              compare: { w: 760, h: 420, r: 36, bg: '#FFFFFF', cam: 1.1 },
+            },
+            start: 'chat', SEQ: [[4.0, 'compare']],
+            layers: [
+              { el: 'Lchat', tin: 0.2, tout: 4.0, anchor: 't', update: (t) => {
+                BUB.forEach((tb, i) => {
+                  const v = M.vis(t, tb, null, { din: 0, lin: 0.22 });
+                  const s = $('b' + i).style;
+                  s.opacity = v.o; s.filter = v.blur > 0.05 ? `blur(${v.blur}px)` : 'none'; s.transform = `translateY(${(1 - v.a) * 16}px)`;
+                });
+                $('pending').style.opacity = M.vis(t, 2.8, null, { din: 0, lin: 0.2 }).o;
+              } },
+              { el: 'Lcompare', tin: 4.0, tout: null, update: (t) => {
+                const L = hlL(t), R = hlR(t);
+                Object.assign($('hl').style, { left: L + 'px', width: Math.max(0, R - L) + 'px' });
+                $('icOk').style.transform = `scale(${1 + 0.12 * Math.sin(Math.PI * M.clamp((t - 5.65) / 0.3))})`;
+              } },
+            ],
+            cursor: { size: 44, clicks: [5.5], keys: [[0, 300, 330], [3.9, 300, 330], [5.2, 190, 30], [5.6, 190, 30], [6.4, 300, 300]] },
+          });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

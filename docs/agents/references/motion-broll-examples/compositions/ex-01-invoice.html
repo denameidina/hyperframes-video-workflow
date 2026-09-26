@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .sk { position: absolute; height: 14px; border-radius: 7px; background: #e4e4e7; }
+        .lbl { font-size: 26px; color: #52525b; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="ex-01-invoice" data-width="1080" data-height="1920" data-duration="6">
+        <div class="mk-stage">
+          <div class="mk-world">
+            <div class="mk-shape">
+              <div class="mk-layer" id="Lpill">
+                <div class="mk-row" style="transform:translate(-50%,-50%);gap:16px;font-size:44px;font-weight:600;letter-spacing:-.02em"><span id="icSend"></span>Kirim invoice</div>
+              </div>
+              <div class="mk-layer" id="Lcard">
+                <div class="mk-row mk-mono" style="left:-300px;top:40px;gap:14px;font-size:28px"><span id="icFile"></span>invoice-klien.pdf</div>
+                <div class="mk-a" style="left:-300px;top:98px;width:600px;height:2px;background:#e4e4e7"></div>
+                <div class="sk" id="sk0" style="left:-300px;top:136px"></div>
+                <div class="sk" id="sk1" style="left:-300px;top:172px"></div>
+                <div class="sk" id="sk2" style="left:-300px;top:208px"></div>
+                <div class="mk-a" style="left:-300px;top:300px;width:600px;height:16px;border-radius:8px;background:#e4e4e7"></div>
+                <div class="mk-a" id="bar" style="left:-300px;top:300px;height:16px;border-radius:8px;background:#facc15"></div>
+                <div class="mk-a lbl" style="left:-300px;top:340px">Mengirim ke klien</div>
+              </div>
+              <div class="mk-layer" id="Ldone">
+                <div class="mk-row" style="transform:translate(-50%,-50%);gap:16px;color:#fff;font-size:46px;font-weight:600;letter-spacing:-.02em"><span id="icCheck"></span>Terkirim</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ex-01-invoice';
+          const $ = M.finder(ID);
+          $('icSend').innerHTML = M.icon('arrow', 40, '#050505');
+          $('icFile').innerHTML = M.icon('file', 32, '#050505');
+          $('icCheck').innerHTML = M.icon('check', 44, '#ffffff', 3);
+          const SKW = [520, 440, 480];
+          M.clip(ID, {
+            W: 1080, H: 1920, T: 6, bg: '#050505', intro: 0.15,
+            SH: {
+              pill: { w: 520, h: 120, r: 60, bg: '#FFFFFF', cam: 1.5 },
+              card: { w: 700, h: 420, r: 40, bg: '#FFFFFF', cam: 1.25 },
+              done: { w: 460, h: 120, r: 60, bg: '#22c55e', cam: 1.5 },
+            },
+            start: 'pill', SEQ: [[1.6, 'card'], [4.2, 'done']],
+            shapePress: [1.2],
+            layers: [
+              { el: 'Lpill', tin: 0.15, tout: 1.6 },
+              { el: 'Lcard', tin: 1.6, tout: 4.2, anchor: 't', update: (t) => {
+                SKW.forEach((w, i) => { $('sk' + i).style.width = (w * M.eio((t - 1.85 - 0.12 * i) / 0.35)) + 'px'; });
+                $('bar').style.width = (600 * M.eio((t - 2.6) / 1.3)) + 'px';
+              } },
+              { el: 'Ldone', tin: 4.2, tout: null },
+            ],
+            cursor: { size: 44, clicks: [1.2], keys: [[0, 240, 300], [0.7, 240, 300], [1.1, 40, 10], [1.3, 40, 10], [2.0, 290, 300]] },
+          });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

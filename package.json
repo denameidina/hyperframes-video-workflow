@@ -11,6 +11,7 @@
     "publish": "npx --yes hyperframes@0.7.24 publish",
     "repliz:publish": "node scripts/repliz-publish.mjs",
     "test:repliz": "node --test scripts/repliz-publish.test.mjs",
-    "test:motion-kit": "node --test scripts/motion-kit.test.mjs"
+    "test:motion-kit": "node --test scripts/motion-kit.test.mjs",
+    "check:broll-examples": "node scripts/check-broll-examples.mjs"
   }
 }

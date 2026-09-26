@@ -72,7 +72,9 @@ npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approv
 ## Test
 
 ```bash
-npm run test:repliz   # node --test scripts/repliz-publish.test.mjs
+npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
+npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
+npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 ```
 
 ## Troubleshooting cepat

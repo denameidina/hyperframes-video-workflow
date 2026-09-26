@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .dot { position: absolute; width: 20px; height: 20px; border-radius: 10px; top: -40px; }
+        .lab { position: absolute; width: 260px; top: 0; text-align: center; font-size: 30px; font-weight: 600; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="ex-03-steps-panel" data-width="1080" data-height="1920" data-duration="6.5">
+        <div class="mk-stage">
+          <div class="mk-world">
+            <div class="mk-shape" style="border:1px solid rgba(255,255,255,.12);box-sizing:border-box">
+              <div class="mk-layer" id="Lsteps">
+                <div class="mk-a" id="ind" style="top:-70px;height:120px;border-radius:60px;background:#27272a"></div>
+                <div class="mk-a" style="left:-300px;top:-31px;width:600px;height:2px;background:#3f3f46"></div>
+                <div class="mk-a" id="fill" style="left:-300px;top:-31px;height:2px;background:#ffffff"></div>
+                <div class="dot" id="d0" style="left:-310px"></div>
+                <div class="dot" id="d1" style="left:-10px"></div>
+                <div class="dot" id="d2" style="left:290px"></div>
+                <div class="lab" id="l0" style="left:-430px">Catat</div>
+                <div class="lab" id="l1" style="left:-130px">Otomatis</div>
+                <div class="lab" id="l2" style="left:170px">Laporan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ex-03-steps-panel';
+          const $ = M.finder(ID);
+          const ACT = [0.9, 2.6, 4.3];
+          const indL = M.track(-430, [[2.6, -130, M.SLOW], [4.3, 170, M.SLOW]]);
+          const indR = M.track(-170, [[2.6, 130, M.FAST], [4.3, 430, M.FAST]]);
+          const fill = M.track(0, [[2.6, 300, M.SLOW], [4.3, 600, M.SLOW]]);
+          const dot = ACT.map((ta, i) => M.ctrack('#3f3f46', [[ta, '#facc15']].concat(i < 2 ? [[ACT[i + 1], '#ffffff']] : [])));
+          const lab = ACT.map((ta) => M.ctrack('#71717a', [[ta, '#ffffff']]));
+          M.clip(ID, {
+            W: 1080, H: 1920, T: 6.5, bg: null, center: [540, 470], intro: 0.2,
+            SH: { steps: { w: 900, h: 200, r: 100, bg: '#111111', cam: 1.0 } },
+            start: 'steps', SEQ: [],
+            layers: [
+              { el: 'Lsteps', tin: 0.2, tout: null, update: (t) => {
+                const v = M.vis(t, ACT[0], null, { din: 0, lin: 0.2 });
+                const L = indL(t), R = indR(t);
+                Object.assign($('ind').style, { left: L + 'px', width: Math.max(0, R - L) + 'px', opacity: v.o });
+                $('fill').style.width = Math.max(0, fill(t)) + 'px';
+                for (let i = 0; i < 3; i++) { $('d' + i).style.background = dot[i](t); $('l' + i).style.color = lab[i](t); }
+              } },
+            ],
+          });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
