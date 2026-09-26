@@ -1,108 +1,95 @@
-# Video Editing Workflow (7 Agent)
+# Video Editing Workflow (4 Fase)
 Status: operating standard
-Date: 2026-08-25
+Date: 2026-09-26
 
-Kanonik untuk: cara operasional menjalankan produksi video Dena via 7 agent.
+Kanonik untuk: cara operasional menjalankan produksi video Dena via 4 fase.
 Aturan/kriteria: [rd-03](../requirements/rd-03-video-editing-workflow.md);
-keputusan: [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md). Sumber
-detail tetap `docs/agents/01..07-*.md` dan
-`docs/skills/dena-video-editing-workflow/SKILL.md` (router).
+keputusan: [ADR-0008](../adr/0008-four-phase-workflow.md). Sumber detail:
+dokumen fase `docs/agents/01-story.md` … `docs/agents/04-qa.md`, referensi di
+`docs/agents/references/`, dan router `docs/skills/dena-video-editing-workflow/SKILL.md`.
 
 ## Urutan
 
-01 Creative Director → 02 Transcript/Cut → 03 Caption/Subtitle → 04 Asset
-Generation → 05 Motion/Overlay → 06 HyperFrames Assembly → (07 QA/Review,
-opsional di gate review). Jangan lompat ke assembly sebelum hulu selesai/ditandai
-tak perlu. Slug per video: `videos/<slug>/`.
+Story → (Gate 1 opsional) → Screen Plan → (Gate 2 kondisional) → Build →
+Gate 3 review user → (QA opsional, subagent) → gate publish. Jangan mulai Build
+sebelum artifact Story dan Screen Plan ada, termasuk `Gate 2 Result`. Slug per
+video: `videos/<slug>/`. Fase hilir membaca artifact hulu, bukan dokumen fase
+hulu; referensi dibaca hanya pada langkah yang menyebutnya.
 
-## Ikhtisar per agent
+## Ikhtisar per fase
 
-### 01 Creative Director
-Lapisan keputusan sebelum edit teknis (tidak cut/generate/assembly/render).
-Baca style guide + request. **Output:** `creative-brief.md` (content lane,
-premis, audience, hook utama + cadangan, struktur retensi, arah visual/caption,
-kebutuhan aset, CTA, risiko). Content lane (pilih 1 primer): `ai-systems`,
+### 1. Story (`docs/agents/01-story.md`)
+Audit media (`ffprobe`/`ffmpeg volumedetect`/`silencedetect=noise=-34dB:d=0.35`)
+→ transkripsi whisper lokal → angle, content lane (`ai-systems`,
 `developer-craft`, `founder-operator`, `journey-reflection`, `family-vlog`,
-`viral-character`. Hook: `callout|contrast|mistake|proof|mission|plot-twist` —
-tetapkan tension yang harus dicari; kunci kutipan verbatim hanya bila transkrip
-sudah ada, selain itu tandai provisional untuk Agent 02. CTA non-promissory.
-
-### 02 Transcript/Cut
-Raw → base editorial bersih. Baca brief dulu. **Output wajib:** `metadata.json`,
-`transcript.json`, `edit-decision-notes.md`, `cut-list.json`. Kondisional:
-`audio-clean.wav`, `processed.mp4`, `preview/*`. Audit media pakai
-`ffprobe`/`ffmpeg volumedetect`/`silencedetect=noise=-34dB:d=0.35`. Transkrip
-pakai whisper lokal. Cut berbasis amplitudo, bukan word-level. **Kecepatan
+`viral-character`), hook (`callout|contrast|mistake|proof|mission|plot-twist`)
+yang **selalu dikunci dari transkrip** → cut berbasis amplitudo → **kecepatan
 default 1.2x** (1.12–1.18x bila sumber cepat; lebih rendah wajib
-didokumentasikan). Base video 9:16 1080x1920 30fps, tanpa caption/overlay
-burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true peak −1.5..−1.0 dBFS.
-Serahkan timing word-level tiap kata yang lolos + ≥3 kandidat hook. Kunci tepat
-satu kutipan verbatim berisi intisari/puncak masalah, pindahkan ke output
-`00:00.00-00:03.00`, lanjutkan ke penjelasan, dan hapus kemunculan aslinya
-kecuali callback didokumentasikan. Catat source/output timing, alasan, transisi,
-dan penanganan duplikasi di `edit-decision-notes.md` + `cut-list.json`.
+didokumentasikan). Hook verbatim dipindah ke output `00:00.00-00:03.00`, kemunculan
+aslinya dihapus kecuali callback terdokumentasi. Base video 9:16 1080x1920 30fps
+tanpa caption/overlay burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true
+peak −1.5..−1.0 dBFS. **Output:** `creative-brief.md` (+ `visual_density`,
+`gate_cut`), `metadata.json`, `transcript.json`, `edit-decision-notes.md`
+(diakhiri `## Cut Summary`), `cut-list.json`, `processed.mp4`.
+**Gate 1** (opsional, default off): review cut hanya bila user minta atau
+`gate_cut: on`. Referensi: `hook-and-angle.md`, `cut-and-pacing.md`.
 
-### 03 Caption/Subtitle
-**Output wajib:** `caption-plan.md`, `caption-beats.json`, `publish-captions.md`.
-Tipe caption: `subtitle-beat` (default 1–4 kata, max 6), `hook-card`,
-`editorial-title`, `proof-label`, `cta-caption`. **Cakupan penuh** kata terucap
-(editorial title sparse hanya untuk section cinematic terdokumentasi). Timing:
-min 0.45s, nyaman 0.8–1.4s, hold panjang 1.8–2.5s. Safe: top 120px, bottom 220px.
-Koreksi ASR (cloud→Claude, chat gbt→ChatGPT, dst.). `publish-captions.md`: IG max
-1200 char, TikTok max 4000 char, sertakan character count. Track 2 = subtitle,
-track 5 = hook/title/CTA. Hook card `00:00.00-00:03.00` memakai kata yang sama
-dengan hook transkrip Agent 02 dan mencakup seluruh ucapan untuk muted viewing.
-
-### 04 Asset Generation
-**Output wajib:** `assets/asset-plan.md`, `asset-manifest.json` (aset di
-`videos/<slug>/assets/`). Nama file stabil/deskriptif. Kategori: `screenshot`,
-`generated-still`, `generated-video`, `diagram`, `icon-sticker`,
-`b-roll-from-source`, `reference-derived-style-note`. Satu `purpose` per aset.
-**`Imagegen Decision Log` wajib** untuk tiap peluang visual-support (fields:
-time, purpose, best_real_asset, simple_asset_option, imagegen_candidate,
-decision, reason) sebelum menyimpulkan generated tak perlu. Prioritas aset: real
-footage/capture > screenshot bukti > diagram sederhana > generated still >
-generated video. Tolak AI slop setelah 1 revisi. Riset URL: capture screenshot/
-rekaman lokal, time ke transkrip, redaksi data privat, tanpa remote fetch di
-render path.
-
-### 05 Motion/Overlay
-**Output wajib:** `motion-plan.md`, `overlay-timeline.json` (waktu processed-video).
-Layer/track 1–5 (lihat [visual-system](../design-system/visual-system.md)).
-Motion primitives + default (caption-pop 0.12–0.2s, hook-card-snap 0.2–0.35s,
+### 2. Screen Plan (`docs/agents/02-screen-plan.md`)
+**Langkah caption:** tipe `subtitle-beat` (default 1–4 kata, max 6),
+`hook-card`, `editorial-title`, `proof-label`, `cta-caption`; **cakupan penuh**
+kata terucap; timing min 0.45s, nyaman 0.8–1.4s, hold panjang 1.8–2.5s; safe top
+120px, bottom 220px; koreksi ASR; `publish-captions.md` IG max 1200 char, TikTok
+max 4000 char. Track 2 subtitle, track 5 hook/title/CTA. Hook card memakai kata
+yang sama dengan hook Story.
+**Langkah visual:** satu `visual-plan.md` (menggantikan rencana aset dan
+rencana motion lama): Visual Decision Log wajib untuk tiap peluang visual-support
+(time, line, purpose, best_real_asset, simple_asset_option,
+imagegen_candidate, decision, reason); prioritas aset real capture > screenshot
+bukti > diagram > generated still > generated video; riset URL/tool dan rencana
+capture; motion primitives (caption-pop 0.12–0.2s, hook-card-snap 0.2–0.35s,
 proof-card-slide 0.25–0.45s, punch-zoom 0.2–0.4s, flash-cut <0.12s, cta-morph
-2–4s). Density: low/medium(default)/high. Owns timing/intent SFX (bukan mix
-final); SFX audible di HP, di bawah speech. Kompat HyperFrames (deterministik).
+2–4s); density dari `visual_density`; cue SFX audible di HP namun di bawah speech.
+**Output:** `caption-plan.md`, `caption-beats.json`, `publish-captions.md`,
+`visual-plan.md`, `overlay-timeline.json`.
+**Gate 2** (kondisional): berhenti hanya bila baris Timeline kena R1–R6 (angka/
+klaim tak verbatim, data asli/privat, wajah tertutup >6s atau saat kalimat
+personal, wajah tertutup di 0–3s tanpa pilihan brief, CTA berjanji, generated
+yang menggambarkan orang/brand nyata). Referensi: `captions.md`,
+`caption-artifacts.md`, `visual-planning.md`, `motion-grammar.md`.
 
-### 06 HyperFrames Assembly
-Menulis HTML/CSS/GSAP nyata (implementasi, bukan ubah ide). Baca AGENTS.md +
-semua agent doc + skill `/hyperframes`+`/hyperframes-core` + `npx hyperframes docs`.
-**Output:** `index.html` (+ `compositions/*.html` bila perlu),
-`assembly-notes.md`, `assembly-checklist.md`. Kontrak: root `data-composition-id`
-+ `data-width/height/duration`; tiap elemen ber-waktu `class="clip"`+timing;
-tanpa overlap track sama; timeline paused terdaftar; deterministik; video muted +
-audio terpisah; aset lokal. Verifikasi `npm run check`, fix semua error. **Tidak
-publish dari assembly** — render untuk review lalu tawarkan publish/QA/revisi.
+### 3. Build (`docs/agents/03-build.md`)
+Cek kesiapan (termasuk `Gate 2 Result`) → capture/generate aset sesuai Asset
+Briefs ke `videos/<slug>/assets/` + `assets/asset-manifest.json` (file yang
+benar-benar dibuat) → baca skill `/hyperframes` + `/hyperframes-core` → rakit
+`index.html` (+ `compositions/*.html` bila perlu). Kontrak: root
+`data-composition-id` + `data-width/height/duration`; tiap elemen ber-waktu
+`class="clip"` + timing; tanpa overlap track sama; timeline paused terdaftar;
+deterministik; video muted + audio terpisah; aset lokal. `npm run check`, fix
+semua error, preview keyframe, tulis `assembly-notes.md` +
+`assembly-checklist.md`, render. **Gate 3** (wajib): berhenti untuk review user.
+Referensi: `asset-production.md`, `hyperframes-assembly.md`.
 
-### 07 QA/Review (opsional)
-Jalan hanya saat user memilih QA dulu / minta readiness/punch-list/regression.
-**Output:** `qa-report.md`, `qa-punch-list.md`; `final-approval.md` hanya bila
-`pass`. Verdict: `pass|pass-with-minor-notes|revise|blocked`. Severity:
-`blocker|major|minor|note`. 8 axis review (creative fit, style fit, caption
-readability, motion quality, teknis HyperFrames, audio, render, platform
-readiness). Threshold caption/audio sama seperti di [nfr](../architecture/nfr.md).
-`final-approval.md` = lulus QA internal, **bukan** izin publish (publish tetap
-butuh approval + `--approved`).
+### 4. QA (`docs/agents/04-qa.md`, opsional)
+Hanya bila user memilih QA dulu / minta readiness, punch-list, atau regression.
+Selalu dijalankan sebagai **subagent konteks baru** yang hanya menerima path
+slug, path render, `04-qa.md`, dan `references/qa-checklist.md`. **Output:**
+`qa-report.md`, `qa-punch-list.md`; `final-approval.md` hanya bila `pass`.
+Verdict: `pass|pass-with-minor-notes|revise|blocked`. Severity:
+`blocker|major|minor|note`. Temuan dirutekan ke fase pemilik. Threshold
+caption/audio sama seperti di [nfr](../architecture/nfr.md).
+`final-approval.md` = lulus QA internal, **bukan** izin publish.
 
 ## Gate review/publish
 
-Setelah render Agent 06: berhenti, minta user review. Tawarkan: publish as-is /
-QA dulu / revisi. Publish hanya via
+Setelah render Build: berhenti, minta user review (Gate 3). Tawarkan: publish
+as-is (default) / QA dulu / revisi. Publish hanya via
 `npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved`
-setelah approval. Lihat [publish-runbook](publish-runbook.md).
+setelah approval; artifact QA tidak disyaratkan. Lihat
+[publish-runbook](publish-runbook.md).
 
 ## Referensi
 
 - [rd-03](../requirements/rd-03-video-editing-workflow.md),
+  [ADR-0008](../adr/0008-four-phase-workflow.md),
   [design-system/visual-system](../design-system/visual-system.md),
   [agent-documentation-workflow](agent-documentation-workflow.md)

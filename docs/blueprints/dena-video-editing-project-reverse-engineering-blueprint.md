@@ -1,5 +1,7 @@
 # Dena Video Editing Project Reverse-Engineering Blueprint
 
+> Catatan: struktur sebelum 2026-09 (7 agent). Struktur berlaku: ADR-0008 (`internal/docs/adr/0008-four-phase-workflow.md`).
+
 Snapshot date: 2026-07-02
 
 This is a standalone reverse-engineering blueprint for the Dena Meidina video-editing project.

@@ -91,8 +91,8 @@ videos/<slug>/transcript.json
 ## Work Rules
 
 - For Dena social-video tasks, route through `docs/skills/dena-video-editing-workflow/SKILL.md`.
-- Use Agent 02 for transcript/cut work.
-- Use Agent 06 only when editing HyperFrames composition HTML.
+- Use the Story phase (`docs/agents/01-story.md`) for transcript/cut work.
+- Use the Build phase (`docs/agents/03-build.md`) only when editing HyperFrames composition HTML.
 - After editing any `.html` composition, run `npm run check`.
 - Docs-only edits do not require `npm run check`.
 - Do not commit or delete local media unless explicitly asked.

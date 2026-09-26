@@ -4,7 +4,7 @@ Date: 2026-07-20
 
 Kanonik untuk: sistem visual komposisi video Dena (warna, tipografi, kartu,
 caption, layer/track, z-index, safe area). Diturunkan dari `index.html` +
-`docs/dena-social-video-style-guide.md` + `docs/agents/03` & `05`.
+`docs/dena-social-video-style-guide.md` + `docs/agents/references/captions.md` & `motion-grammar.md`.
 
 ## Kanvas
 
@@ -67,7 +67,7 @@ Kontrak layer dari style guide (dipetakan ke penggunaan `index.html`):
 
 ## Z-index (urutan paint)
 
-Dari `index.html` (nilai aktual) dan panduan Agent 06:
+Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembly.md`:
 
 - Base video `1` → dim/vignette `10` → screenshot/b-roll/proof `~20-24` →
   efek/highlight/progress `~30-38` → caption `45` → hook/CTA `56-57`.
@@ -77,7 +77,7 @@ Dari `index.html` (nilai aktual) dan panduan Agent 06:
 - Hindari `120px` teratas (kecuali hook card) dan `220px` terbawah (kontrol
   TikTok/Reels). `index.html` menaruh caption pada `--safe-bottom: 270px`.
 
-## Motion primitives (default, Agent 05)
+## Motion primitives (default, fase Screen Plan)
 
 - `caption-pop` (scale 0.96→1, opacity 0→1, 0.12–0.2s) — dipakai di loop caption.
 - `hook-card-snap` (y −24→0, 0.2–0.35s, hold 2–3s).

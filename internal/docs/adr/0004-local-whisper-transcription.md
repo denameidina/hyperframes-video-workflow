@@ -32,5 +32,5 @@ Memakai **whisper.cpp** sebagai git submodule di `vendor/whisper.cpp` dengan mod
 ## Sources
 
 - `.gitmodules`, `docs/initial-setup.md`, `docs/ai-agent-initial-setup.md`
-- `docs/agents/02-transcript-cut-agent.md`, `docs/dena-social-video-style-guide.md`
+- `docs/agents/references/cut-and-pacing.md`, `docs/dena-social-video-style-guide.md`
 - [requirements/rd-04-transcription-setup](../requirements/rd-04-transcription-setup.md)

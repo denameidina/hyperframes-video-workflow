@@ -50,7 +50,7 @@ Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
 
 ## Kualitas audio (target terukur)
 
-Dari Agent 02 / style guide / Agent 07:
+Dari fase Story (`docs/agents/references/cut-and-pacing.md`) / style guide / fase QA:
 
 - Highpass `70–100 Hz`.
 - Integrated loudness `-16` s/d `-14 LUFS`.

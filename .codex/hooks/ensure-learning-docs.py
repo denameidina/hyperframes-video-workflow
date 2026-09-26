@@ -213,7 +213,7 @@ def stop(root: Path, data: dict[str, Any]) -> int:
 
 
 def self_test() -> int:
-    assert is_doc("docs/agents/02-transcript-cut-agent.md")
+    assert is_doc("docs/agents/01-story.md")
     assert is_doc("AGENTS.md")
     assert is_workflow("index.html")
     assert is_workflow(".codex/hooks.json")

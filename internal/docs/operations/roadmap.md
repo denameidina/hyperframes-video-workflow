@@ -7,19 +7,17 @@ dari dokumen nyata; bagian "Arah produk" menunggu input manusia (fase Wawancara)
 
 ## Dari kode/spec (terdokumentasi)
 
-### Imagegen fix (Agent 04)
-Spec `docs/asset-generation-imagegen-fix-spec.md` merencanakan agar Agent 04
-aktif mengevaluasi image generation untuk setiap peluang visual-support (bukan
-fallback lemah), tetap menolak AI slop. Patch dokumentasi (4 item):
+### Imagegen fix (selesai)
+Spec `docs/asset-generation-imagegen-fix-spec.md` (arsip) sudah diterapkan.
+Evaluasi image generation untuk setiap peluang visual-support kini tercatat
+sebagai `Visual Decision Log` di `visual-plan.md` (fase Screen Plan,
+`docs/agents/references/visual-planning.md`), dan QA gagal bila log itu hilang
+(`docs/skills/dena-video-editing-workflow/references/quality-gates.md`).
 
-1. Update `docs/agents/04-asset-generation-agent.md`.
-2. Update `docs/skills/dena-video-editing-workflow/references/quality-gates.md`
-   (QA gagal bila aset ada tanpa `Imagegen Decision Log`; gagal aset generik/palsu).
-3. Update `docs/dena-social-video-style-guide.md` (ganti bahasa longgar dengan
-   aturan decision-log).
-4. Opsional: mirror satu bullet di `AGENTS.md` + `CLAUDE.md`.
-
-Verifikasi: perubahan docs-only (tanpa `npm run check` kecuali `.html` diubah).
+### Validasi workflow 4 fase
+Video asli pertama setelah [ADR-0008](../adr/0008-four-phase-workflow.md) menjadi
+uji nyata struktur 4 fase. Catat temuan (gate, artifact, referensi yang dibaca)
+dan revisi lewat ADR baru bila perlu.
 
 ### Rilis open source
 `docs/open-source-release-checklist.md` merencanakan langkah rilis publik:

@@ -4,7 +4,7 @@ Date: 2026-07-20
 
 Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html`,
 `compositions/*.html`, CLI HyperFrames. Diturunkan dari `index.html`, AGENTS.md,
-`docs/agents/06-hyperframes-assembly-agent.md`, `hyperframes.json`.
+`docs/agents/03-build.md`, `docs/agents/references/hyperframes-assembly.md`, `hyperframes.json`.
 
 ## Struktur root
 

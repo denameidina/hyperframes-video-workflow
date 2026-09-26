@@ -12,7 +12,7 @@ framing produk dari wawancara (personal tool + template open-source).
    [operations/runbook](../operations/runbook.md).
 2. Taruh raw footage di `raw/` atau `videos/<slug>/`.
 3. Jalankan workflow agent mulai dari
-   `docs/skills/dena-video-editing-workflow/SKILL.md` → agent 01..06.
+   `docs/skills/dena-video-editing-workflow/SKILL.md` → fase 01..03 (QA opsional).
 4. `npm run render`, review, lalu publish ter-gate approval bila diinginkan.
 
 ## Untuk adopter template (open-source)

@@ -12,17 +12,14 @@ For every Dena social-video task, start with:
 
 `docs/skills/dena-video-editing-workflow/SKILL.md`
 
-Then route the work through the specialized agents in `docs/agents/`:
+Then route the work through the phase documents in `docs/agents/`:
 
-1. `01-creative-director.md` - angle, hook, content lane, visual grammar, CTA.
-2. `02-transcript-cut-agent.md` - transcript, source audit, silence/filler cuts, base pacing.
-3. `03-caption-subtitle-agent.md` - caption text, phrase grouping, highlights, ASR correction.
-4. `04-asset-generation-agent.md` - screenshots, generated visuals, b-roll, diagrams, proof assets.
-5. `05-motion-overlay-agent.md` - overlay timing, pattern interrupts, zooms, cards, transitions.
-6. `06-hyperframes-assembly-agent.md` - `index.html`, timed clips, tracks, GSAP, local asset wiring.
-7. Optional at user review/publish gate: `07-qa-review-agent.md` - QA, punch list, render/platform readiness review.
+1. `01-story.md` - source audit, transcript, angle, hook locked from transcript, cuts, base pacing, `processed.mp4`.
+2. `02-screen-plan.md` - captions, then one visual plan: visual choices, overlay timing, pattern interrupts, zooms, SFX cues.
+3. `03-build.md` - asset production, `index.html`, timed clips, tracks, GSAP, local asset wiring, render.
+4. Optional at user review/publish gate: `04-qa.md` - QA, punch list, render/platform readiness review.
 
-Do not jump to HyperFrames assembly before creative direction, cut logic, captions, assets, and motion are either completed or explicitly marked unnecessary.
+Do not jump to HyperFrames assembly before the Story and Screen Plan artifacts exist or are explicitly marked unnecessary.
 
 ## Public Profile Context
 
@@ -105,19 +102,13 @@ Do not over-edit into generic CapCut chaos. Dena's style is credible developer/f
 
 When user provides a raw vlog/monologue video:
 
-1. Creative direction
-   - Use Agent 01.
-   - Choose content lane, hook tension, format, retention spine, visual grammar,
-     and CTA. Lock the exact quote only when a transcript exists; otherwise mark
-     the hook provisional for Agent 02.
-   - Write `videos/<slug>/creative-brief.md`.
-
-2. Inspect source and build the base cut
-   - Use Agent 02.
+1. Story phase (`docs/agents/01-story.md`)
    - Get duration, fps, resolution, audio levels.
    - Identify whether it is talking-head, handheld vlog, or mixed.
    - Check if existing burned-in captions/text exist.
-   - Transcribe word-level.
+   - Transcribe word-level before choosing the hook.
+   - Choose content lane, hook tension, format, retention spine, visual grammar,
+     visual density, and CTA.
    - From the complete transcript, rank at least three hook candidates and lock
      one verbatim excerpt containing the core tension or peak problem.
    - Move the locked excerpt to processed output `00:00.00-00:03.00`, remove its
@@ -127,10 +118,9 @@ When user provides a raw vlog/monologue video:
    - Cut filler and repeated starts when meaning stays intact.
    - Keep human texture; do not remove every pause if it makes speech unnatural.
    - Build a tighter retention structure: hook, problem, insight, example, takeaway, CTA.
-   - Write `metadata.json`, `transcript.json`, `edit-decision-notes.md`, and `cut-list.json`.
+   - Write `creative-brief.md`, `metadata.json`, `transcript.json`, `edit-decision-notes.md`, and `cut-list.json`.
 
-3. Audio cleanup and timing
-   - Usually handled by Agent 02 when creating `processed.mp4`.
+2. Audio cleanup and timing (Story phase, when creating `processed.mp4`)
    - Reduce noise.
    - Normalize speech loudness.
    - Enhance clarity.
@@ -139,28 +129,25 @@ When user provides a raw vlog/monologue video:
    - If the speech becomes too rushed, use `1.12x-1.18x`.
    - Any exception to `1.2x` must be written in `edit-decision-notes.md` with the reason.
    - Keep cuts on sentence/phrase boundaries where possible.
+   - Gate 1 (optional): show `processed.mp4` and the Cut Summary only when the user asks or `gate_cut: on`.
 
-4. Caption plan
-   - Use Agent 03.
+3. Caption plan (Screen Plan phase, captions step)
    - Create readable caption beats, hook text, ASR corrections, and highlight logic.
    - For storytelling/talking-head edits, cover every spoken word that survives the cut with running active captions; group words into readable 1-4 word beats instead of dropping words.
-   - Write `caption-plan.md` and `caption-beats.json`.
+   - Write `caption-plan.md`, `caption-beats.json`, and `publish-captions.md`.
 
-5. Asset plan
-   - Use Agent 04 when screenshots, generated visuals, b-roll, diagrams, or proof assets are needed.
-   - If the user gives a URL or the story mentions a live tool/product/site, research/inspect it and create local screenshots, screen recordings, or captures matched to the transcript timeline.
-   - For every visual-support opportunity, Agent 04 must write an `Imagegen Decision Log`; try Codex/image generation for grounded bitmap stills when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
+4. Visual plan (Screen Plan phase, visual step)
+   - Decide which moments need screenshots, generated visuals, b-roll, diagrams, proof assets, overlays, cards, zooms, effects, or pattern interrupts.
+   - If the user gives a URL or the story mentions a live tool/product/site, research/inspect it and plan local screenshots, screen recordings, or captures matched to the transcript timeline.
+   - For every visual-support opportunity, write a `Visual Decision Log` entry in `visual-plan.md`; try Codex/image generation for grounded bitmap stills when a mood, abstract workflow, reset-attention, texture, transition, or background moment would otherwise become a stiff card/SVG.
    - Do not generate AI slop: reject generic, fake-looking, or transcript-detached generated assets.
-   - Skip only when assets are explicitly unnecessary.
-   - Write `asset-plan.md` and `asset-manifest.json` when used.
-
-6. Motion and overlay plan
-   - Use Agent 05 when overlays, cards, zooms, effects, or pattern interrupts are needed.
    - Plan purposeful SFX cues for designed recuts, and keep them audible under speech instead of merely present as files.
-   - Write `motion-plan.md` and `overlay-timeline.json`.
+   - Skip visuals only when they are explicitly unnecessary, and record that in `visual-plan.md`.
+   - Write `visual-plan.md` and `overlay-timeline.json`.
+   - Gate 2: stop only when a timeline row matches a risk trigger R1-R6.
 
-7. Visual layers in HyperFrames
-   - Use Agent 06.
+5. Assets and visual layers in HyperFrames (Build phase)
+   - Capture/generate the planned assets and record them in `assets/asset-manifest.json`.
    - Video/audio base layer.
    - Caption layer.
    - Effect layer.
@@ -168,10 +155,10 @@ When user provides a raw vlog/monologue video:
    - CTA/end layer.
    - Keep layers editable until final render.
 
-8. User review gate and optional QA
-   - Render and send the edit to the user first.
+6. User review gate and optional QA
+   - Render and send the edit to the user first (Gate 3).
    - Offer: publish as-is, QA first, or revisions.
-   - Use Agent 07 only when the user chooses QA first or asks for readiness/punch-list review.
+   - Run the QA phase only when the user chooses QA first or asks for readiness/punch-list review, as a fresh-context subagent.
    - If QA runs, write `qa-report.md` and `qa-punch-list.md`.
    - Create `final-approval.md` only after QA passes.
 
@@ -244,7 +231,7 @@ Default editorial flow:
    claim.
 
 Shorten the source only by removing silence or filler while preserving meaning.
-If no intact phrase fits the window, route the hook back to Agent 01 or the user
+If no intact phrase fits the window, stop and ask the user
 instead of fabricating dialogue or splicing separate words into a new claim.
 
 Default hook shape:
@@ -287,7 +274,7 @@ Do not copy:
 - villain/dark identity when Dena's topic is practical or human
 - cinematic seriousness without a grounded Dena moment
 
-For Kumar-inspired edits, adapt the structure only: identity contrast, bold mission, sparse title captions, aura/proof montage, and human release. Do not default to a red-black villain palette unless Agent 01 explicitly chooses that direction.
+For Kumar-inspired edits, adapt the structure only: identity contrast, bold mission, sparse title captions, aura/proof montage, and human release. Do not default to a red-black villain palette unless the Story phase brief explicitly chooses that direction.
 
 ## Overlay / Sticker / B-Roll Rules
 
@@ -322,7 +309,7 @@ Revision learnings from raw talking-head workflow edits:
 - If feedback says too much transcript was cut, restore only the missing context. Keep the compact version if it feels denser and more rewatchable; do not lengthen just to prove the transcript was preserved.
 - If caption feedback says words are missing, regenerate captions from the locked processed word-level transcript instead of making sparse highlight captions.
 - If image assets are needed, prefer real screenshots, screen recordings, UI crops, generated stills, simple diagrams, or designed cards based on the transcript context. Avoid generic AI b-roll that looks detached from the actual workflow.
-- Do not skip generated stills by default. If an asset pass uses only screenshots, SVGs, labels, or text cards, `asset-plan.md` must explain the imagegen decision per visual opportunity.
+- Do not skip generated stills by default. If a visual plan uses only screenshots, SVGs, labels, or text cards, the `Visual Decision Log` in `visual-plan.md` must explain the imagegen decision per visual opportunity.
 - If a user gives a link, inspect/research it and capture local visual proof where useful; do not rely only on generic cards to explain that link.
 - Use purposeful SFX for transitions, card hits, emphasis, and proof reveals when it supports the speech. Do not cover the talking-head audio.
 - If SFX feedback says there is no sound, measure the SFX stem and final render audio before approval. Too-quiet cues should be treated as missing, then boosted until they are audible but still under speech.
@@ -437,8 +424,8 @@ Expected files:
 - `caption-plan.md`.
 - `caption-beats.json`.
 - `publish-captions.md`.
-- `asset-plan.md` and `asset-manifest.json`, when assets are needed.
-- `motion-plan.md`.
+- `visual-plan.md`.
+- `assets/asset-manifest.json`, when assets exist.
 - `overlay-timeline.json`.
 - `assembly-notes.md`.
 - `assembly-checklist.md`.
@@ -476,9 +463,9 @@ When the user chooses QA first:
 - No private/client data may be visible.
 - Reference adaptation must still feel like Dena.
 - `final-approval.md` is QA approval only and is not required for publish as-is. Upload to R2 and Repliz scheduling still require explicit user approval and `--approved`.
-- Agent 07 must write a verdict in `qa-report.md`.
+- The QA phase must write a verdict in `qa-report.md`.
 
-Use Agent 07 verdicts only when QA runs:
+Use QA phase verdicts only when QA runs:
 
 - `pass`: ready for final render or publish.
 - `pass-with-minor-notes`: usable, with non-blocking polish notes.

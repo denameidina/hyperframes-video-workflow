@@ -4,7 +4,7 @@ Date: 2026-07-20
 
 Domain: penyiapan lingkungan + transkripsi lokal (whisper.cpp). Owner:
 `vendor/whisper.cpp`, `docs/initial-setup.md`, `docs/ai-agent-initial-setup.md`.
-Diturunkan dari setup docs, `.gitmodules`, dan Agent 02.
+Diturunkan dari setup docs, `.gitmodules`, dan fase Story (`docs/agents/references/cut-and-pacing.md`).
 
 ## Setup lingkungan
 

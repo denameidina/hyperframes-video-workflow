@@ -37,5 +37,5 @@ lalu dirender ke MP4 oleh CLI HyperFrames. Timeline animasi = satu GSAP timeline
 ## Sources
 
 - `index.html`, `package.json`, `hyperframes.json`, `vendor/gsap.min.js`
-- `docs/agents/06-hyperframes-assembly-agent.md`, AGENTS.md
+- `docs/agents/references/hyperframes-assembly.md`, AGENTS.md
 - [requirements/rd-02-composition-render](../requirements/rd-02-composition-render.md)

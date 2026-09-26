@@ -276,7 +276,7 @@ Command target:
 npm run render
 # Stop di sini dulu. Kirim hasil render ke user untuk review.
 # Pilihan user: publish as-is, QA dulu, atau revisi.
-# Jika user memilih QA dulu, jalankan Agent 07 lalu kembali ke gate review ini.
+# Jika user memilih QA dulu, jalankan fase QA (docs/agents/04-qa.md) lalu kembali ke gate review ini.
 # Setelah user approve/confirm hasil edit untuk publish:
 npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
 ```

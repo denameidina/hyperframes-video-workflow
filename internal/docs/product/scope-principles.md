@@ -6,8 +6,8 @@ Kanonik untuk: batas scope produk. Diisi dari wawancara (2026-07-20) + kode.
 
 ## In scope
 
-- Pipeline produksi video sosial Dena (7 agent: creative → cut → caption → aset →
-  motion → assembly → QA opsional).
+- Pipeline produksi video sosial Dena (4 fase: story → screen plan → build →
+  QA opsional).
 - Komposisi HyperFrames (HTML+GSAP) → render MP4 deterministik.
 - Transkripsi lokal (whisper.cpp) untuk merancang caption/cut.
 - Auto-publish render final ke Cloudflare R2 + Repliz (multi-platform),

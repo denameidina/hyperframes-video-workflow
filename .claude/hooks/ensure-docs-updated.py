@@ -6,7 +6,7 @@ import json, subprocess, sys
 #   scripts/        -> CLI publish R2/Repliz + test
 #   index.html      -> komposisi HyperFrames utama
 #   compositions/   -> sub-komposisi HyperFrames
-#   docs/agents/    -> kontrak workflow 7-agent (perilaku produksi)
+#   docs/agents/    -> kontrak workflow 4 fase + references (perilaku produksi)
 IMPLEMENTATION_PREFIXES = ("scripts/", "index.html", "compositions/", "docs/agents/")
 DOC_PREFIXES = ("internal/docs/", "AGENTS.md", "CLAUDE.md")
 

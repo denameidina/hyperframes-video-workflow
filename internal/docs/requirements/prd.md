@@ -31,7 +31,7 @@ git dan tanpa publish tak-disetujui.
 
 ## Kebutuhan fungsional (ringkas → detail)
 
-1. Produksi video 7-agent → [rd-03](rd-03-video-editing-workflow.md).
+1. Produksi video 4 fase → [rd-03](rd-03-video-editing-workflow.md).
 2. Komposisi & render deterministik → [rd-02](rd-02-composition-render.md).
 3. Auto-publish R2/Repliz ter-gate → [rd-01](rd-01-publish-pipeline.md).
 4. Transkripsi & setup lokal → [rd-04](rd-04-transcription-setup.md).

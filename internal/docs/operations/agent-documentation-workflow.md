@@ -17,7 +17,7 @@ Truth saat bekerja di repo ini.
 Repo punya dua konteks; kenali task-nya lebih dulu:
 
 - **Produksi video Dena** → mulai dari
-  `docs/skills/dena-video-editing-workflow/SKILL.md` (router) lalu agent yang
+  `docs/skills/dena-video-editing-workflow/SKILL.md` (router) lalu dokumen fase yang
   relevan (`docs/agents/`). Kanon internal:
   [operations/video-editing-workflow](video-editing-workflow.md),
   [rd-03](../requirements/rd-03-video-editing-workflow.md).

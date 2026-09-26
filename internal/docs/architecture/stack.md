@@ -41,7 +41,7 @@ komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
 | HyperFrames 0.7.24 | Render HTML → MP4, preview, lint, validate, inspect, publish | `npx --yes hyperframes@0.7.24 <cmd>` | `package.json` |
 | GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di `index.html` | `index.html:7` |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
-| ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual oleh Agent 02 | `docs/agents/02-transcript-cut-agent.md` |
+| ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
 | Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |
 | Wrangler | Auth + upload R2 (bukan S3 key) | `npx wrangler login`, `npx wrangler r2 ...` | `docs/repliz/integration-spec.md` |
 | Repliz API | Schedule post multi-platform | `fetch` ke `REPLIZ_API_BASE_URL`, HTTP Basic Auth | `scripts/repliz-publish.mjs` |

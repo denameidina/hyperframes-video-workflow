@@ -10,18 +10,20 @@ konfigurasi env, dan file project-level. Diturunkan dari
 
 ## Peta entitas
 
-| Entitas | Lokasi | Format | Owner (agent) |
+| Entitas | Lokasi | Format | Owner (fase) |
 | --- | --- | --- | --- |
 | Env config | `.env` (template `.env.example`) | dotenv | manusia |
 | Publish receipt / metadata | `videos/<slug>/repliz-publish.json` | JSON | CLI publish + manusia |
-| Publish captions | `videos/<slug>/publish-captions.md` | Markdown | Agent 03 |
-| Cut list | `videos/<slug>/cut-list.json` | JSON | Agent 02 |
-| Media metadata | `videos/<slug>/metadata.json` | JSON | Agent 02 |
-| Transcript | `videos/<slug>/transcript.json` | JSON (whisper) | Agent 02 |
-| Caption beats | `videos/<slug>/caption-beats.json` | JSON | Agent 03 |
-| Asset manifest | `videos/<slug>/assets/asset-manifest.json` | JSON | Agent 04 |
-| Overlay timeline | `videos/<slug>/overlay-timeline.json` | JSON | Agent 05 |
-| Komposisi | `index.html`, `compositions/*.html` | HTML+GSAP | Agent 06 |
+| Publish captions | `videos/<slug>/publish-captions.md` | Markdown | Screen Plan |
+| Creative brief | `videos/<slug>/creative-brief.md` | Markdown | Story |
+| Cut list | `videos/<slug>/cut-list.json` | JSON | Story |
+| Media metadata | `videos/<slug>/metadata.json` | JSON | Story |
+| Transcript | `videos/<slug>/transcript.json` | JSON (whisper) | Story |
+| Caption beats | `videos/<slug>/caption-beats.json` | JSON | Screen Plan |
+| Asset manifest | `videos/<slug>/assets/asset-manifest.json` | JSON | Build |
+| Overlay timeline | `videos/<slug>/overlay-timeline.json` | JSON | Screen Plan |
+| Visual plan | `videos/<slug>/visual-plan.md` | Markdown | Screen Plan |
+| Komposisi | `index.html`, `compositions/*.html` | HTML+GSAP | Build |
 | Project meta | `meta.json` | JSON | HyperFrames |
 | HyperFrames config | `hyperframes.json` | JSON | HyperFrames |
 
@@ -155,28 +157,43 @@ Caption final untuk IG.
 ```
 ```
 
-## `cut-list.json` (Agent 02)
+## `cut-list.json` (Story)
 
 `{ source, targetDuration, speed, segments: [{ sourceStart, sourceEnd, action, reason }], notes: [] }`.
 `action` ∈ `keep | tighten | move-to-hook | cut-silence | cut-filler | cut-repeat | cut-tangent | cut-unclear | preserve-human`.
 `speed` default `1.2`.
 
-## `caption-beats.json` (Agent 03)
+## `caption-beats.json` (Screen Plan)
 
 Top-level: `source`, `mode`, `duration`, `style { base, position, font, fill, stroke, highlight }`, `beats[]`, `uncertain[]`.
 Beat: `id`, `start`, `duration`, `text`, `highlight` (atau null), `type`, `position`, `sourceWords` (waktu processed-video), `notes`.
 `type` ∈ `subtitle-beat | hook-card | editorial-title | proof-label | cta-caption`.
 
-## `asset-manifest.json` (Agent 04)
+## `asset-manifest.json` (Build)
 
 Per asset: `id`, `file`, `type`, `purpose`, `timestamp { start, end }`, `required`, `provenance`, `source`, `privacy`, `style`, `doNotShow[]`, `handoff`.
 Aset generated menambah `promptSummary`, `rejectedAlternatives`.
 `provenance` ∈ `source-frame | source-video-segment | user-supplied | screenshot | screen-recording | web-research | generated | designed | reference-analysis`.
 
-## `overlay-timeline.json` (Agent 05)
+## `overlay-timeline.json` (Screen Plan)
 
 Top-level: `videoSlug`, `duration`, `motionDensity`, `visualGrammar`, `elements[]`, `conflicts[]`.
 Element: `id`, `type`, `track`, `start`, `duration`, `contentRef`, `assetRef`, `placement`, `motion`, `purpose`, `notes`, opsional `sfx { type, intensity, mustBeAudible, notes }`. Semua waktu = waktu processed-video.
+
+## `creative-brief.md` — Workflow Settings (Story)
+
+Bagian `## Workflow Settings`: `visual_density` ∈ `light | medium | heavy`
+(default `medium`), `gate_cut` ∈ `on | off` (default `off`). Hook `Status` selalu
+`locked-from-transcript`.
+
+## `visual-plan.md` (Screen Plan)
+
+Markdown dengan bagian `Inputs`, `Strategy`, `Visual Decision Log` (time, line,
+purpose, best real asset, simple asset option, imagegen candidate, decision,
+reason), `Timeline` (ID, in–out, line, visual type, placement/track, motion,
+SFX cue, illustrative, Gate 2 trigger), `Asset Briefs For Build`,
+`Conflicts And Resolutions`, `Gate 2 Result`, `Handoff`. Template:
+`docs/agents/references/visual-planning.md`.
 
 ## Komposisi HyperFrames (`index.html`)
 

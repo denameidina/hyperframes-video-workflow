@@ -10,7 +10,7 @@ domain ada di file `rd-NN-*.md`. Diturunkan dari perilaku nyata kode + spec.
 Repo mengerjakan dua fungsi besar yang berurutan:
 
 1. **Produksi video** — dari raw footage jadi komposisi HyperFrames siap render
-   (workflow 7 agent). Lihat [RD-03](rd-03-video-editing-workflow.md) dan
+   (workflow 4 fase). Lihat [RD-03](rd-03-video-editing-workflow.md) dan
    [RD-02](rd-02-composition-render.md).
 2. **Distribusi** — dari render final MP4 jadi post terjadwal multi-platform via
    R2 + Repliz. Lihat [RD-01](rd-01-publish-pipeline.md).
@@ -24,7 +24,7 @@ Fungsi pendukung: transkripsi lokal & setup lingkungan
 | --- | --- | --- |
 | Auto-publish R2/Repliz | [rd-01-publish-pipeline](rd-01-publish-pipeline.md) | `scripts/repliz-publish.mjs` |
 | Komposisi & render | [rd-02-composition-render](rd-02-composition-render.md) | `index.html`, HyperFrames |
-| Workflow editing (7 agent) | [rd-03-video-editing-workflow](rd-03-video-editing-workflow.md) | `docs/agents/*` |
+| Workflow editing (4 fase) | [rd-03-video-editing-workflow](rd-03-video-editing-workflow.md) | `docs/agents/*` |
 | Transkripsi & setup | [rd-04-transcription-setup](rd-04-transcription-setup.md) | whisper.cpp, setup docs |
 
 ## Batasan lintas domain (ubiquitous)
