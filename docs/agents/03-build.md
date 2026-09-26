@@ -69,7 +69,7 @@ motion, match Dena default style, reuse existing project structure).
 
 ## Steps
 
-1. **Readiness.** Confirm every input above exists and `visual-plan.md` has a
+1. **Readiness.** Confirm every Story and Screen Plan artifact above exists and `visual-plan.md` has a
    filled `## Gate 2 Result`. If anything is missing, stop and write an assembly
    readiness report naming the missing artifact and its owning phase; do not
    guess.
@@ -79,10 +79,13 @@ motion, match Dena default style, reuse existing project structure).
    `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
    `assembly-notes.md` under `## Asset Production`. Prepare a local, trimmed SFX
-   file for every SFX cue in the Timeline (no `data-media-start`; see Lean Fixing
+   file for every SFX cue in the Timeline, sourced from a local project library or
+   the `/hyperframes-media` bundled SFX library (no `data-media-start`; see Lean Fixing
    Defaults in `docs/skills/dena-video-editing-workflow/SKILL.md`). If a capture
-   shows data that would trip R2, or a fallback would trip R6, and Gate 2 did not
-   approve it, stop and ask the user before using it. Use stable, descriptive
+   shows text or data that would trip R1 or R2 and Gate 2 did not approve it,
+   stop and ask the user before using it. If a planned capture is unusable,
+   route the row back to Screen Plan (visual step) instead of picking a
+   replacement. Use stable, descriptive
    filenames:
    - Good: `assets/ai-workflow-control-room-12s.png`,
      `assets/crm-dashboard-proof-28s.png`,
@@ -103,7 +106,7 @@ motion, match Dena default style, reuse existing project structure).
    `docs/skills/dena-video-editing-workflow/references/quality-gates.md`.
 6. **Write handoff notes.** `assembly-notes.md` and `assembly-checklist.md`
    (formats in `docs/agents/references/hyperframes-assembly.md`).
-7. **Render.** `npm run render`, then the export sanity check from the Render
+7. **Render.** `npm run render -- --output renders/<slug>.mp4`, then the export sanity check from the Render
    Gate (file exists, duration plausible, audio present, first/last frames not
    blank).
 8. **Gate 3.** Apply Gate 3 below.
@@ -117,7 +120,7 @@ motion, match Dena default style, reuse existing project structure).
 - `videos/<slug>/processed-audio.wav`
 - `videos/<slug>/assembly-notes.md`
 - `videos/<slug>/assembly-checklist.md`
-- Render MP4
+- Render MP4: `renders/<slug>.mp4`
 - Optional: `videos/<slug>/storyboard.json`, `videos/<slug>/preview/keyframes/`,
   `videos/<slug>/warnings.md`, `videos/<slug>/render-notes.md`
 

@@ -3,7 +3,8 @@
 Contract, procedure, skeleton, and handoff formats for assembling the edit in
 HyperFrames. Loaded by `docs/agents/03-build.md` in the assembly step, after the
 `/hyperframes` and `/hyperframes-core` skills. Tracks and z-index follow
-`internal/docs/design-system/visual-system.md`.
+`internal/docs/design-system/visual-system.md`. Screen Plan reads only the
+HyperFrames Compatibility Notes section.
 
 ## HyperFrames Contract
 
@@ -325,7 +326,7 @@ Use this as a conceptual structure. Adapt to the actual project and current Hype
         data-start="0"
         data-duration="26.63"
         data-track-index="1"
-        src="videos/example/audio.wav"
+        src="videos/example/processed-audio.wav"
       ></audio>
 
       <div

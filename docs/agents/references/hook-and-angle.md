@@ -197,8 +197,8 @@ Bad default CTA:
 ## Three-Second Transcript Hook
 
 After the full transcript and content map are available, lock exactly one
-spoken source excerpt as the opening hook. Story phase owns the hook strategy;
-this agent owns selecting the real source moment that fulfills it.
+spoken source excerpt as the opening hook. The Story phase owns both the hook
+strategy and selecting the real source moment that fulfills it.
 
 The selected excerpt must:
 
@@ -214,7 +214,7 @@ The selected excerpt must:
   for an intentional callback; document any retained repetition.
 
 If no source excerpt fits within three seconds without changing meaning, mark
-the hook as `blocked` and route the decision to Story phase or the user. Do not
+the hook as `blocked` and ask the user. Do not
 substitute fabricated dialogue.
 
 Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
@@ -228,7 +228,7 @@ Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
 
 ## Hook Extraction
 
-This agent does not invent the hook strategy. It must identify at least three
+Hook extraction does not invent the hook strategy. It must identify at least three
 source-grounded candidates, then lock exactly one candidate using the
 Three-Second Transcript Hook contract above.
 

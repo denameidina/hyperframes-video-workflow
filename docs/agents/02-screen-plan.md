@@ -112,7 +112,9 @@ unobstructed, use only project-local assets).
 
 4. **Map and decide.** Read `docs/agents/references/visual-planning.md` (Asset
    Categories, Asset Decision Workflow steps 1–4, Dena-Specific Asset Rules,
-   Dena-Specific Examples, Default Asset Density). Write a Visual Decision Log
+   Dena-Specific Examples, Default Asset Density) and the image-generation
+   decision rules at the top of Generated Image Prompt Rules in
+   `docs/agents/references/asset-production.md`. Write a Visual Decision Log
    entry for every visual-support opportunity before concluding generated media
    is unnecessary.
 5. **Research links and tools.** If the user gave a URL or the transcript names
@@ -131,7 +133,9 @@ unobstructed, use only project-local assets).
    Overlay Timeline Format in `docs/agents/references/motion-grammar.md` for
    `overlay-timeline.json`. All times are processed-video time and share one
    cue map with `caption-beats.json`. Timeline IDs are the join key (see the
-   template), and `assetRef` uses each Asset Brief's Planned file.
+   template), and `assetRef` uses each Asset Brief's Planned file. A hook card or
+   CTA card that is a caption beat is referenced from `overlay-timeline.json` by
+   its caption beat `id` in `contentRef` (motion only); Build renders it once.
 8. **Gate 2.** Apply Gate 2 below.
 
 If no visuals are needed, still write `visual-plan.md` with a Visual Decision
@@ -155,20 +159,23 @@ the matching trigger IDs in the row's `Gate 2 trigger` column (`-` when none):
 
 | # | Trigger |
 | --- | --- |
-| R1 | A number, price, percentage, result, client name, or quote on screen that is not verbatim from the transcript and was not given by the user |
+| R1 | A number, price, percentage, result, client name, or quote on screen (a Timeline row's On-screen text or a caption beat) that is not verbatim from the transcript and was not given by the user. Digits and words for the same number match (`3 kali` = `tiga kali`); a changed form or unit (`3X`, `300%`) does not |
 | R2 | A screenshot or recording that shows real client or product data, or private information |
 | R3 | A visual that covers Dena's face completely for more than 6 seconds, or covers a personal, emotional, or opinion line |
-| R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `creative-brief.md` explicitly chose that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
+| R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `## User Approvals` in `creative-brief.md` allows that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
 | R5 | A CTA that implies a promise ("nanti gue share/kirim/bahas…") without the user's explicit approval |
 | R6 | Generated image or video that depicts a real person or a real brand |
 
 Decide each trigger from `visual-plan.md` plus these artifacts:
 
-- R1: `processed-transcript.json` for verbatim wording; `## User Approvals` in
-  `creative-brief.md` for user-supplied facts.
+- R1: `processed-transcript.json` for verbatim wording; the `proof-label`,
+  `hook-card`, and `editorial-title` beats in `caption-beats.json`;
+  `## User Approvals` in `creative-brief.md` for user-supplied facts.
 - R4: `## User Approvals` in `creative-brief.md` for an approved hook visual.
-- R5: the `cta-caption` beats in `caption-beats.json`, even when the CTA has no
-  Timeline row, and `## User Approvals` for an approved promise.
+- R5: the `cta-caption` beats and the beats of the last spoken lines in
+  `caption-beats.json`, `publish-captions.md`, and any CTA Timeline row;
+  `## User Approvals` for an approved promise. Record a caption-only CTA finding
+  in Gate 2 Result as `CTA`.
 - R2, R3, R6: the Timeline row, its On-screen text, and its Asset Brief.
 
 - Any trigger found: stop. Show only the flagged rows, each with its trigger and
@@ -197,7 +204,7 @@ Bad handoff:
 
 Good handoff:
 
-> `V-02` covers output `12-16s`, line "AI bukan gimmick". Subtle background/side card on track 4, not full-screen; fade in 0.3s with a soft whoosh under speech. Generated, so it must not be presented as proof. No robots, no readable fake UI. Keep Dena's face visible.
+> `ov-002` covers output `12-16s`, line "AI bukan gimmick". Subtle background/side card on track 4, not full-screen; fade in 0.3s with a soft whoosh under speech. Generated, so it must not be presented as proof. No robots, no readable fake UI. Keep Dena's face visible.
 
 ## Fix Routing
 

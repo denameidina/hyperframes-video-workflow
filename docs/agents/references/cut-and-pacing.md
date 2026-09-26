@@ -275,7 +275,7 @@ Do not flatten captions or overlays into `processed.mp4`.
 
 ## Audio Cleanup Handoff
 
-This agent may perform basic audio cleanup, but deep audio design belongs to a later sound/music agent if one exists.
+The Story phase may perform basic audio cleanup; SFX files and the final mix belong to the Build phase.
 
 Basic cleanup may include:
 

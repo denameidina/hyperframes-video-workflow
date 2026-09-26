@@ -322,9 +322,7 @@ Every actionable finding should include:
 Recommended owner values:
 
 - `Story phase`
-- `Story phase`
 - `Screen Plan phase (captions step)`
-- `Screen Plan phase (visual step)`
 - `Screen Plan phase (visual step)`
 - `Build phase`
 - `User Decision`
@@ -424,7 +422,7 @@ One short paragraph explaining whether the edit is ready and why.
 
 ## Required Next Step
 
-State exactly which agent should act next and what it should fix.
+State exactly which phase should act next and what it should fix.
 ```
 
 ## Punch List Format

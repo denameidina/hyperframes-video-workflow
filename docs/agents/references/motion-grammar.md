@@ -354,7 +354,7 @@ High density must still feel intentional.
 
 ## Sound/Motion Coordination
 
-This agent owns SFX cue timing and intent. It does not do the final audio mix, but it must make the audio handoff specific enough that SFX can be implemented and verified.
+The Screen Plan phase (visual step) owns SFX cue timing and intent. It does not do the final audio mix, but it must make the audio handoff specific enough that SFX can be implemented and verified.
 
 Useful notes:
 
@@ -514,7 +514,7 @@ A good Motion/Overlay pass:
 - Defines SFX cues that make transitions and proof reveals feel intentional.
 - Uses assets only where they help.
 - Keeps every motion tied to a purpose.
-- Hands off clean timing to HyperFrames Assembly.
+- Hands off clean timing to the Build phase.
 
 A weak pass:
 

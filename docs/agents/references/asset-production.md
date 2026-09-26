@@ -2,9 +2,15 @@
 
 Rules for capturing and generating the assets that `visual-plan.md` asks for,
 and for recording them in `assets/asset-manifest.json`. Loaded by
-`docs/agents/03-build.md` in the asset production step.
+`docs/agents/03-build.md` in the asset production step. Screen Plan also reads
+URL Research And Screen Capture Rules and the image-generation decision rules
+here: those decision rules apply when Screen Plan fills the Visual Decision Log.
+In Build, follow the Visual Decision Log and route disagreements back to Screen
+Plan.
 
 ## Asset Production Steps
+
+Steps 1–4 of the Asset Decision Workflow are in `visual-planning.md`.
 
 ### 5. Generate Or Prepare Asset
 
@@ -158,7 +164,7 @@ Full business architecture with 14 integrations and tiny labels.
 
 ## Asset Manifest Format
 
-Create `asset-manifest.json`.
+Create `assets/asset-manifest.json`.
 
 ```json
 {
@@ -272,6 +278,8 @@ For every captured or generated asset, add this block to
 
 ```md
 ### <asset-id>
+
+Timeline ID:
 
 Prompt (generated media only):
 

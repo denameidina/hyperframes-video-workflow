@@ -347,7 +347,8 @@ in `### 3A. Visual Decision Log`.
 
 In the Timeline, `ID` is the join key: reuse it as the element `id` in
 `overlay-timeline.json`, as the heading of its Asset Brief, and in the `handoff`
-field of its `assets/asset-manifest.json` entry. `On-screen text` lists every word
+field of its `assets/asset-manifest.json` entry. Use the `ov-NNN` form from the
+Overlay Timeline Format in `motion-grammar.md`. `On-screen text` lists every word
 the visual shows. `Illustrative` is `yes` when the visual is generated, mocked, or
 otherwise not real proof.
 
@@ -390,6 +391,8 @@ otherwise not real proof.
 ### <timeline-id>
 
 - Type:
+- Purpose:
+- Privacy notes:
 - Planned file: `assets/<descriptive-name>.<ext>`
 - Content:
 - Style:
@@ -407,7 +410,7 @@ otherwise not real proof.
 
 ## Gate 2 Result
 
-- Triggers found: <none | timeline IDs with R1-R6>
+- Triggers found: <none | timeline IDs or `CTA`, each with R1-R6>
 - User decision per flagged row:
 - Result: <Gate 2: no triggers | Gate 2: approved by user on YYYY-MM-DD>
 
