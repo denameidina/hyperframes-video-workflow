@@ -22,7 +22,8 @@ dengan STANDAR DOCS repo (docs-driven) dan aturan HyperFrames.
 3. Keputusan arsitektural → ADR baru di `adr/NNNN-*.md`.
 4. Implementasi:
    - Komposisi `.html` → ikuti [rd-02](../requirements/rd-02-composition-render.md)
-     + skill HyperFrames; jalankan `npm run check`.
+     + skill HyperFrames; jalankan `npm run video -- check <slug>` (template root:
+     `npm run check`).
    - CLI publish `scripts/*.mjs` → tambah/ubah test di
      `scripts/repliz-publish.test.mjs`; jalankan `npm run test:repliz`.
 5. Perbarui doc tersentuh + link di index; commit bareng kode.
@@ -30,8 +31,9 @@ dengan STANDAR DOCS repo (docs-driven) dan aturan HyperFrames.
 
 ## Verifikasi wajib
 
-- Edit `.html` komposisi → `npm run check` (lint + validate + inspect), fix semua
-  error.
+- Edit `.html` komposisi video → `npm run video -- check <slug>`; template root →
+  `npm run check` (lint + validate + inspect); fix semua error.
+- Edit `scripts/video.mjs` → `npm run test:video`.
 - Edit `scripts/repliz-publish.mjs` → `npm run test:repliz`.
 - Edit murni docs (`internal/docs/**`, `docs/agents/*.md`, `AGENTS.md`,
   `CLAUDE.md`) tanpa `.html` → tidak perlu `npm run check`; nyatakan eksplisit

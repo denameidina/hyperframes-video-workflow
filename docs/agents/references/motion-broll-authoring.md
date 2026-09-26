@@ -8,7 +8,7 @@ take every label and quote from the transcript):
 
 ## Host Setup
 
-Once per video, in `index.html` `<head>`, after `vendor/gsap.min.js`:
+The Dena starter (`templates/dena-video/index.html`, copied by `npm run video -- new <slug>`) already has this in `videos/<slug>/index.html`. For any other host, add it once in `<head>`, after `vendor/gsap.min.js`:
 
 ```html
 <script src="vendor/motion-kit/motion-kit.js"></script>
@@ -173,11 +173,12 @@ After writing a clip and mounting it, snapshot it at the brief's key-word times
 (host time), including each settled state and a couple of mid-morph moments:
 
 ```bash
-env -u GEMINI_API_KEY npx --yes hyperframes@0.7.24 snapshot --at 12.9,13.6,14.8 -o renders/snapshots/<slug> .
+npm run video -- snapshot <slug> --at 12.9,13.6,14.8
 ```
 
-`env -u GEMINI_API_KEY` keeps frames on this machine: with the key set, snapshot
-sends frames to Gemini for `--describe`. Open the contact sheet and every frame
+The script removes `GEMINI_API_KEY` for the run, so frames stay on this machine
+(with the key set, snapshot sends frames to Gemini for `--describe`). Frames land
+in `videos/<slug>/snapshots/`. Open the contact sheet and every frame
 that looks off. Fix anything cramped, clipped, unreadable, off-word, or with the
 cursor outside the frame, then check once more.
 

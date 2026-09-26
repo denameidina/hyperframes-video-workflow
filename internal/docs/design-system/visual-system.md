@@ -3,14 +3,14 @@ Status: accepted (reverse-engineered)
 Date: 2026-07-20
 
 Kanonik untuk: sistem visual komposisi video Dena (warna, tipografi, kartu,
-caption, layer/track, z-index, safe area). Diturunkan dari `index.html` +
+caption, layer/track, z-index, safe area). Diturunkan dari starter `templates/dena-video/index.html` +
 `docs/dena-social-video-style-guide.md` + `docs/agents/references/captions.md` & `motion-grammar.md`.
 
 ## Kanvas
 
 - Ukuran tetap **1080x1920** (9:16), `overflow: hidden`, background `#000`.
 - Root komposisi background `#050505`, `box-sizing: border-box` global.
-- Variabel CSS root komposisi (dari `index.html`):
+- Variabel CSS root komposisi (starter `templates/dena-video/index.html`; nilai lama dari komposisi video sebelumnya):
   `--white:#fff`, `--black:#050505`, `--panel:rgba(5,5,5,0.9)`,
   `--yellow:#facc15`, `--green:#22c55e`, `--muted:#d4d4d8`, `--safe-bottom:270px`.
 
@@ -87,8 +87,8 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 
 ## Motion b-roll (motion-kit)
 
-- Engine `vendor/motion-kit/` dimuat sekali di `index.html`; setiap clip adalah
-  sub-composition `compositions/broll/*.html` di **track 4**. Mount host ber-class
+- Engine `vendor/motion-kit/` dimuat sekali di `videos/<slug>/index.html` (starter); setiap clip adalah
+  sub-composition `videos/<slug>/compositions/broll/*.html` di **track 4**. Mount host ber-class
   `broll` (`position:absolute; inset:0; z-index:22`), di bawah caption (45) dan
   hook/CTA (56–57).
 - Token: kanvas `#050505`; shape putih `#FFFFFF` (tinta `#050505`) atau panel

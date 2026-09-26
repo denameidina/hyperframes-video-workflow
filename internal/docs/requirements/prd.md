@@ -16,7 +16,7 @@ git dan tanpa publish tak-disetujui.
 ## Tujuan produk
 
 - **Produksi konsisten:** setiap video memenuhi bar style guide + kontrak
-  HyperFrames dan lulus `npm run check`.
+  HyperFrames dan lulus `npm run video -- check <slug>`.
 - **Distribusi aman:** publish ke R2+Repliz ter-gate approval, idempoten, tanpa
   secret di repo.
 - **Dapat diadopsi:** kode dirilis open-source (MIT) sebagai template.

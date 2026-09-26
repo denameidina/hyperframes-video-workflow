@@ -32,7 +32,7 @@ For validation, QA, and render gates, read `references/quality-gates.md`.
 | New raw/reference video, angle, hook, format, style adaptation, transcript, three-second spoken hook, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
 | Captions, subtitles, verbatim hook card, phrase grouping, ASR correction, CTA text, publish captions | `docs/agents/02-screen-plan.md` (captions step) |
 | Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
-| Capturing/generating asset files, `index.html`, `compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
+| Capturing/generating asset files, `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
 | Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/04-qa.md` (fresh-context subagent) |
 | R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
@@ -83,7 +83,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - CTA must be non-promissory unless the user explicitly approves a promise.
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
-- After any `.html` edit, run `npm run check` and fix errors before handoff.
+- After any video `.html` edit, run `npm run video -- check <slug>` (root template: `npm run check`) and fix errors before handoff. Never edit the root `index.html` for a video (ADR-0010).
 - After final render, stop for user review (Gate 3). Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
 - Repliz publish must use `--approved`; R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`.
 

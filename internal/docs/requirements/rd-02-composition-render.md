@@ -83,8 +83,9 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system
-  shall menjalankan `npm run check` (lint + validate + inspect) dan memperbaiki
-  semua error sebelum handoff.
+  shall menjalankan `npm run video -- check <slug>` untuk komposisi video (atau
+  `npm run check` untuk template root; lint + validate + inspect) dan
+  memperbaiki semua error sebelum handoff.
 - **RD-02-14** (Optional) — Where hanya file docs (`docs/agents/*.md`, `AGENTS.md`,
   `CLAUDE.md`) diubah tanpa `.html`, the system shall boleh melewati `npm run check`.
 

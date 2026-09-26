@@ -28,7 +28,7 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 3. Publish:
 
 ```bash
-npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 Script akan: cek `--approved` → load env → baca metadata/description → susun target

@@ -39,9 +39,10 @@ komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
 | Komponen | Peran | Cara dipanggil | Sumber |
 | --- | --- | --- | --- |
 | HyperFrames 0.7.24 | Render HTML → MP4, preview, lint, validate, inspect, publish | `npx --yes hyperframes@0.7.24 <cmd>` | `package.json` |
-| GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di `index.html` | `index.html:7` |
+| GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di template/starter dan tiap `videos/<slug>/index.html` | `index.html:7` |
 | motion-kit | Engine motion b-roll: satu shape morph + kursor, spring closed-form, frame = fungsi waktu lokal clip | Vendored `vendor/motion-kit/`, di-`<script>` + `<link>` di `index.html`; clip memanggil `M.clip()` | `docs/agents/references/motion-broll-authoring.md` |
 | render-blur | Pass motion blur opsional: render 4× fps → ffmpeg `tmix` → fps asal, audio disalin | `npm run render:blur -- --slug <slug>` | `scripts/render-blur.mjs` |
+| video CLI | Scaffold + jalankan proyek HyperFrames per video | `npm run video -- new\|check\|dev\|snapshot\|render <slug>` | `scripts/video.mjs` |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
 | ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
 | Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |

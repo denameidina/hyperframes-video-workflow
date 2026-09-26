@@ -24,7 +24,7 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Asset manifest | `videos/<slug>/assets/asset-manifest.json` | JSON | Build |
 | Overlay timeline | `videos/<slug>/overlay-timeline.json` | JSON | Screen Plan |
 | Visual plan | `videos/<slug>/visual-plan.md` | Markdown | Screen Plan |
-| Komposisi | `index.html`, `compositions/*.html` | HTML+GSAP | Build |
+| Komposisi video | `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html` (di-ignore) | HTML+GSAP | Build |
 | Project meta | `meta.json` | JSON | HyperFrames |
 | HyperFrames config | `hyperframes.json` | JSON | HyperFrames |
 
@@ -197,7 +197,7 @@ SFX cue, illustrative, Gate 2 trigger), `Asset Briefs For Build`,
 `Conflicts And Resolutions`, `Gate 2 Result`, `Handoff`. Template:
 `docs/agents/references/visual-planning.md`.
 
-## Komposisi HyperFrames (`index.html`)
+## Komposisi HyperFrames (`videos/<slug>/index.html`)
 
 Root: `data-composition-id`, `data-start`, `data-width=1080`, `data-height=1920`,
 `data-duration` (detik). Setiap elemen ber-waktu: `class="clip"`, `data-start`,

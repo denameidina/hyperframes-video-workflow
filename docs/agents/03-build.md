@@ -16,7 +16,7 @@ Use this phase when:
 - Story and Screen Plan artifacts exist, including `## Gate 2 Result` in
   `visual-plan.md`.
 - Planned assets need to be captured, generated, cropped, or recorded.
-- `index.html` or `compositions/*.html` must be created or updated to match the
+- `videos/<slug>/index.html` or `videos/<slug>/compositions/*.html` must be created or updated to match the
   plans.
 - The video must stay editable as separate layers instead of being burned into
   the source MP4.
@@ -61,8 +61,8 @@ Bad assembly:
 
 From `videos/<slug>/`: `creative-brief.md`, `edit-decision-notes.md`,
 `processed.mp4` (and separate audio, if present), `caption-plan.md`,
-`caption-beats.json`, `visual-plan.md`, `overlay-timeline.json`. Also: existing
-`index.html`, `compositions/*.html`, `meta.json`, local fonts, textures,
+`caption-beats.json`, `visual-plan.md`, `overlay-timeline.json`. Also: the video's
+HyperFrames project (`index.html`, `compositions/*.html` in `videos/<slug>/`), local fonts, textures,
 screenshots, b-roll, stickers, icons, generated media, and user constraints
 (keep all overlays editable, no generated media, no remote assets, no heavy
 motion, match Dena default style, reuse existing project structure).
@@ -92,6 +92,10 @@ motion, match Dena default style, reuse existing project structure).
      `assets/crm-dashboard-proof-28s.png`,
      `assets/manual-to-automated-diagram.svg`
    - Bad: `assets/image1.png`, `assets/final-final.png`, `assets/cool-bg.mp4`
+2a. **Scaffold the project.** If `videos/<slug>/index.html` does not exist, run
+   `npm run video -- new <slug>` (starter from `templates/dena-video/`, duration
+   from `processed.mp4`). All composition work happens in `videos/<slug>/`;
+   never edit the root `index.html` for a video (ADR-0010).
 3. **Load HyperFrames rules.** Read the `/hyperframes` and `/hyperframes-core`
    skills, and as needed `npx hyperframes docs data-attributes`,
    `compositions`, `gsap`, `rendering`, `troubleshooting`. Tracks, z-index, and
@@ -104,30 +108,30 @@ motion, match Dena default style, reuse existing project structure).
    raw-time ASR extract.
 4a. **Author motion b-roll.** For each `motion-broll` row, follow
    `docs/agents/references/motion-broll-authoring.md`: write the clip at its
-   Planned file, mount it in `index.html` on track 4, add the split transform
+   Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
    when the treatment is split, then run the Still Check at the brief's key-word
    times and fix what it shows before step 5.
-5. **Verify.** Run `npm run check` and fix every error; review warnings. Preview
+5. **Verify.** Run `npm run video -- check <slug>` and fix every error; review warnings. Preview
    keyframes as listed in the Render Gate of
    `docs/skills/dena-video-editing-workflow/references/quality-gates.md`.
 6. **Write handoff notes.** `assembly-notes.md` and `assembly-checklist.md`
    (formats in `docs/agents/references/hyperframes-assembly.md`).
-7. **Render.** `npm run render -- --output renders/<slug>.mp4` (or, for a final render with motion blur, `npm run render:blur -- --slug <slug>`, which writes `renders/<slug>-blur.mp4`), then the export sanity check from the Render
+7. **Render.** `npm run video -- render <slug>` (writes `videos/<slug>/renders/<slug>.mp4`; add `--blur` for a final render with motion blur, which writes `<slug>-blur.mp4`), then the export sanity check from the Render
    Gate (file exists, duration plausible, audio present, first/last frames not
    blank).
 8. **Gate 3.** Apply Gate 3 below.
 
 ## Outputs
 
-- `index.html`
-- `compositions/broll/*.html` for motion b-roll clips; other `compositions/*.html`
-  only when sub-compositions are justified
+- `videos/<slug>/index.html`
+- `videos/<slug>/compositions/broll/*.html` for motion b-roll clips; other
+  `compositions/*.html` only when sub-compositions are justified
 - `videos/<slug>/assets/*` and `videos/<slug>/assets/asset-manifest.json`, when
   assets exist
 - `videos/<slug>/processed-audio.wav`
 - `videos/<slug>/assembly-notes.md`
 - `videos/<slug>/assembly-checklist.md`
-- Render MP4: `renders/<slug>.mp4`
+- Render MP4: `videos/<slug>/renders/<slug>.mp4`
 - Optional: `videos/<slug>/storyboard.json`, `videos/<slug>/preview/keyframes/`,
   `videos/<slug>/warnings.md`, `videos/<slug>/render-notes.md`
 
@@ -163,7 +167,7 @@ Do not upload or schedule publishing from this phase.
 Only after the user's explicit approval:
 
 ```bash
-npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 QA artifacts are not required when the user approves without QA. Details:

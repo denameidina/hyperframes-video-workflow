@@ -82,7 +82,7 @@ Use that skill as the router, then read the phase document for the current phase
 
 1. `docs/agents/01-story.md` — direction, transcript, hook locked from the transcript, cut, `processed.mp4`. Gate 1 (cut review) is optional: on only when the user asks or `creative-brief.md` sets `gate_cut: on`.
 2. `docs/agents/02-screen-plan.md` — captions, then one visual plan (`visual-plan.md`). Gate 2 stops only when a timeline row matches a risk trigger R1–R6.
-3. `docs/agents/03-build.md` — asset production, HyperFrames assembly, `npm run check`, render. Gate 3: stop for user review after render.
+3. `docs/agents/03-build.md` — asset production, HyperFrames assembly in `videos/<slug>/`, `npm run video -- check <slug>`, render. Gate 3: stop for user review after render.
 4. `docs/agents/04-qa.md` — optional. Runs only when the user chooses QA first or asks for a readiness, punch-list, or regression review, and always as a fresh-context subagent.
 
 Run the phases in order unless the user explicitly requests a narrow technical fix. Do not start Build before the Story and Screen Plan artifacts exist, including the `Gate 2 Result` section of `visual-plan.md`.
@@ -92,7 +92,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 - New raw video, reference video, "make this viral", "edit like this", angle, hook, format, transcript, silence/filler cuts, pacing, speed, or processed media: Story.
 - Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, CTA text, or publish captions: Screen Plan (captions step).
 - Which moments get visuals, visual type (screenshot, generated still/video, diagram, proof card, label, sticker), placement, overlay timing, pattern interrupts, zooms, effects, progress bars, transitions, or SFX cues: Screen Plan (visual step).
-- Capturing/generating asset files, editing `index.html`, `compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, local asset wiring, or rendering: Build, plus the relevant HyperFrames skill.
+- Capturing/generating asset files, editing `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, local asset wiring, or rendering: Build, plus the relevant HyperFrames skill.
 - Optional QA, punch list, render/platform readiness review, or regression review: QA.
 
 ### Discipline Rules
@@ -121,14 +121,14 @@ Auto publish is documented in `docs/repliz/integration-spec.md`.
 - Do not upload to Cloudflare R2 or schedule Repliz until the user explicitly approves/confirms.
 - If the user chooses publish as-is, QA artifacts are not required.
 - If the user chooses QA first, run the QA phase as a fresh-context subagent before asking for final publish approval.
-- Only after approval, run `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
+- Only after approval, run `npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`.
 - R2 uses Wrangler remote upload, `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and public base `https://<r2-public-domain>`.
 - Do not add S3 access keys, R2 secret keys, or `wrangler.jsonc` for this flow unless the user explicitly asks.
 - Do not test or call Repliz unless the user explicitly asks; R2-only smoke tests are allowed when requested.
 
 ### Interaction With HyperFrames
 
-The Build phase does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow `docs/agents/03-build.md`. After editing any `.html` composition, run `npm run check` before reporting completion.
+The Build phase does not replace HyperFrames skills. When writing or modifying HyperFrames compositions, read `/hyperframes` and the routed HyperFrames skill first, then follow `docs/agents/03-build.md`. After editing a video composition, run `npm run video -- check <slug>`; after editing the root template, run `npm run check`. Do this before reporting completion.
 
 Docs-only edits to `docs/agents/**/*.md`, `AGENTS.md`, or `CLAUDE.md` do not require `npm run check` unless they also modify `.html` composition files.
 
@@ -167,8 +167,14 @@ npm run test:repliz  # unit test R2/Repliz CLI without real network
 npm run test:motion-kit        # unit test motion b-roll engine
 npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
+npm run video -- new <slug>    # scaffold videos/<slug>/ from the Dena starter
+npm run video -- check <slug>  # lint + validate + inspect one video project
+npm run video -- dev <slug>    # preview one video project (long-running)
+npm run video -- snapshot <slug> --at 1.5,3  # stills, no Gemini upload
+npm run video -- render <slug> [--blur]      # render to videos/<slug>/renders/
+npm run test:video             # unit test the video CLI
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
-npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 npx hyperframes lint --verbose  # include info-level findings
 npx hyperframes lint --json     # machine-readable output for CI
 npx hyperframes docs <topic> # reference docs in terminal
@@ -196,14 +202,16 @@ https://hyperframes.heygen.com/llms.txt
 
 ## Project Structure
 
-- `index.html` — main composition (root timeline)
-- `compositions/` — sub-compositions referenced via `data-composition-src`
+- `index.html` — HyperFrames blank portrait template (not a video; ADR-0010)
+- `templates/dena-video/` — Dena starter copied by `npm run video -- new <slug>`
+- `videos/<slug>/` — one ignored HyperFrames project per video (`index.html`, `compositions/`, `assets/`, `renders/`)
+- `compositions/` — sub-compositions for the root template only
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
 ## Linting — ALWAYS RUN AFTER CHANGES
 
-After creating or editing any `.html` composition, **always** run the full check before considering the task complete:
+After creating or editing a video composition, **always** run `npm run video -- check <slug>`; for the root template run the check below. Do this before considering the task complete:
 
 ```bash
 npm run check

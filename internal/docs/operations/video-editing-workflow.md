@@ -67,7 +67,7 @@ benar-benar dibuat) → baca skill `/hyperframes` + `/hyperframes-core` → tuli
 `index.html` (+ `compositions/*.html` bila perlu). Kontrak: root
 `data-composition-id` + `data-width/height/duration`; tiap elemen ber-waktu
 `class="clip"` + timing; tanpa overlap track sama; timeline paused terdaftar;
-deterministik; video muted + audio terpisah; aset lokal. `npm run check`, fix
+deterministik; video muted + audio terpisah; aset lokal. `npm run video -- check <slug>`, fix
 semua error, preview keyframe, tulis `assembly-notes.md` +
 `assembly-checklist.md`, render (opsional `npm run render:blur`). **Gate 3** (wajib): berhenti untuk review user.
 Referensi: `asset-production.md`, `hyperframes-assembly.md`,
@@ -87,7 +87,7 @@ caption/audio sama seperti di [nfr](../architecture/nfr.md).
 
 Setelah render Build: berhenti, minta user review (Gate 3). Tawarkan: publish
 as-is (default) / QA dulu / revisi. Publish hanya via
-`npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved`
+`npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`
 setelah approval; artifact QA tidak disyaratkan. Lihat
 [publish-runbook](publish-runbook.md).
 

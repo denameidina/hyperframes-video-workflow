@@ -158,7 +158,7 @@ Preferred overlay structure:
   data-duration="3.4"
   data-track-index="4"
 >
-  <img src="videos/example/assets/crm-dashboard-proof-18s.png" alt="" />
+  <img src="assets/crm-dashboard-proof-18s.png" alt="" />
   <figcaption>CRM flow before automation</figcaption>
 </figure>
 ```
@@ -224,7 +224,7 @@ If the composition uses `data-layout-allow-overflow`, document why in `assembly-
 After editing any `.html` composition, run:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 Also use targeted HyperFrames checks when needed:
@@ -238,124 +238,14 @@ Fix all errors before handoff. Review warnings before user review or optional QA
 
 ## HTML Skeleton
 
-Use this as a conceptual structure. Adapt to the actual project and current HyperFrames docs.
-
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dena Social Video</title>
-    <script src="vendor/gsap.min.js"></script>
-    <style>
-      :root {
-        --safe-top: 120px;
-        --safe-bottom: 220px;
-        --caption-fill: #ffffff;
-        --caption-stroke: #111111;
-        --caption-highlight: #ffd84d;
-      }
-
-      body {
-        margin: 0;
-        background: #000;
-        font-family: Inter, Arial, sans-serif;
-      }
-
-      [data-composition-id] {
-        position: relative;
-        width: 1080px;
-        height: 1920px;
-        overflow: hidden;
-        background: #000;
-      }
-
-      .clip {
-        position: absolute;
-      }
-
-      .base-video {
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-      }
-
-      .caption {
-        left: 80px;
-        right: 80px;
-        bottom: var(--safe-bottom);
-        z-index: 40;
-        text-align: center;
-        color: var(--caption-fill);
-        font-size: 72px;
-        font-weight: 900;
-        line-height: 0.95;
-        text-shadow:
-          0 4px 0 var(--caption-stroke),
-          0 10px 22px rgba(0, 0, 0, 0.45);
-      }
-
-      .caption .highlight {
-        color: var(--caption-highlight);
-      }
-    </style>
-  </head>
-  <body>
-    <main
-      data-composition-id="dena-example-social-video"
-      data-width="1080"
-      data-height="1920"
-      data-duration="26.63"
-    >
-      <video
-        id="base-video"
-        class="clip base-video"
-        data-start="0"
-        data-duration="26.63"
-        data-track-index="1"
-        src="videos/example/processed.mp4"
-        muted
-        playsinline
-      ></video>
-
-      <audio
-        id="base-audio"
-        data-start="0"
-        data-duration="26.63"
-        data-track-index="1"
-        src="videos/example/processed-audio.wav"
-      ></audio>
-
-      <div
-        id="cap-001"
-        class="clip caption"
-        data-start="0.0"
-        data-duration="1.2"
-        data-track-index="2"
-      >
-        AI-NYA <span class="highlight">BUKAN</span> MASALAH
-      </div>
-    </main>
-
-    <script>
-      window.__timelines = window.__timelines || {};
-
-      const timeline = gsap.timeline({ paused: true });
-      timeline.fromTo(
-        "#cap-001",
-        { autoAlpha: 0, y: 18, scale: 0.96 },
-        { autoAlpha: 1, y: 0, scale: 1, duration: 0.16 },
-        0
-      );
-
-      window.__timelines["dena-example-social-video"] = timeline;
-    </script>
-  </body>
-</html>
-```
+The canonical skeleton is the Dena starter `templates/dena-video/index.html`.
+`npm run video -- new <slug>` copies it to `videos/<slug>/index.html` and fills the
+composition id (`dena-<slug>`) and duration. It follows
+`internal/docs/design-system/visual-system.md`: base video track 1, base audio
+track 10, progress track 3, captions alternating tracks 2 and 8, hook/CTA track 5,
+b-roll mounts track 4, SFX tracks 11+, caption z-index 45, hook/CTA 56, `.broll` 22.
+Media paths are relative to the project (`processed.mp4`, `processed-audio.wav`,
+`assets/...`).
 
 ## Assembly Notes Format
 
@@ -407,7 +297,7 @@ Create `videos/<slug>/assembly-notes.md`:
 
 ## Verification
 
-- npm run check:
+- npm run video -- check <slug>:
 - npx hyperframes lint --verbose:
 - warnings reviewed:
 
@@ -442,7 +332,7 @@ Create `videos/<slug>/assembly-checklist.md`:
 - [ ] Overlays do not hide important face/object regions
 - [ ] Text fits inside containers
 - [ ] Planned SFX cues are implemented or documented
-- [ ] `npm run check` passes
+- [ ] `npm run video -- check <slug>` passes
 - [ ] Warnings are reviewed
 ```
 

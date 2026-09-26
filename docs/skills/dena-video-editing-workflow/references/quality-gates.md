@@ -95,7 +95,7 @@ For `.html` composition work:
 Run after any `.html` edit:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 Fix errors before handoff. Review warnings before render.
@@ -123,7 +123,7 @@ Do not create `final-approval.md` unless the verdict is `pass`.
 
 Before final render:
 
-1. Run `npm run check`.
+1. Run `npm run video -- check <slug>`.
 2. Preview keyframes: first frame, `1.5s`, `3s`, first caption, densest caption, first overlay, most complex motion, CTA, final frame.
 3. Confirm no private data is visible.
 4. Confirm audio sync and end cut.
@@ -142,7 +142,7 @@ User review is mandatory. QA is optional and lives inside this review/publish ga
 5. Only after explicit approval/confirmation, run:
 
 ```bash
-npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 The script must refuse upload/scheduling without `--approved`. R2 uses Wrangler

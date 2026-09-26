@@ -22,7 +22,7 @@ The edit cannot render, cannot be reviewed, or would clearly fail on platform.
 
 Examples:
 
-- `npm run check` fails.
+- `npm run video -- check <slug>` fails.
 - video or audio is missing.
 - captions are invisible or always visible.
 - render is blank, frozen, or out of sync.
@@ -178,7 +178,7 @@ Check the composition contract:
 Required command:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 If this command fails, the verdict is `blocked` or `revise` depending on whether visual review is still possible.
@@ -257,7 +257,7 @@ If files are missing, write a `blocked` QA report with the missing list. Do not 
 Run:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 If `.html` was changed after the last assembly handoff, the check must be rerun.
@@ -474,7 +474,7 @@ Create `videos/<slug>/final-approval.md` only when the verdict is `pass`:
 - [ ] SFX cues audible when planned
 - [ ] Speed is `1.2x` or documented exception
 - [ ] Audio acceptable
-- [ ] `npm run check` passed
+- [ ] `npm run video -- check <slug>` passed
 - [ ] Render reviewed
 - [ ] No blocker or major issues
 
@@ -485,7 +485,7 @@ Create `videos/<slug>/final-approval.md` only when the verdict is `pass`:
 - Platform:
 - CTA:
 - User publish approval: pending
-- R2/Repliz command after approval: `npm run repliz:publish -- --slug videos/<slug> --file <render.mp4> --approved`
+- R2/Repliz command after approval: `npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`
 ```
 
 Do not create `final-approval.md` for `pass-with-minor-notes`, `revise`, or `blocked`.
@@ -582,7 +582,7 @@ Assign to:
 
 A QA pass is complete only when:
 
-- `npm run check` passes
+- `npm run video -- check <slug>` passes
 - preview or render has been reviewed
 - no blockers remain
 - no major issues remain

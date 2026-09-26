@@ -33,14 +33,16 @@ Pastikan folder kerja ada: `mkdir -p raw videos references renders` (+ `.gitkeep
 ## Loop editing harian
 
 ```bash
-npm run dev      # server preview HyperFrames (long-running; jalankan di background)
-npm run check    # lint + validate + inspect — WAJIB setelah tiap edit .html
-npm run render   # render MP4
-npm run render:blur -- --slug <slug>  # opsional: render final dengan motion blur (4× lebih lama)
-npm run publish  # link shareable HyperFrames
+npm run video -- new <slug>       # proyek video dari starter Dena (sekali per video)
+npm run video -- dev <slug>       # preview (long-running; jalankan di background)
+npm run video -- check <slug>     # lint + validate + inspect — WAJIB setelah tiap edit .html
+npm run video -- snapshot <slug> --at 1.5,3   # still check tanpa upload ke Gemini
+npm run video -- render <slug>    # render → videos/<slug>/renders/<slug>.mp4
+npm run video -- render <slug> --blur  # opsional: render final dengan motion blur (4× lebih lama)
+npm run check                     # hanya untuk template root index.html
 ```
 
-> `npm run dev` memblokir sampai dihentikan. Di agent/automation jalankan sebagai
+> `npm run video -- dev <slug>` (dan `npm run dev`) memblokir sampai dihentikan. Di agent/automation jalankan sebagai
 > background process, jangan foreground (akan timeout & server mati).
 
 Referensi HyperFrames tanpa jaringan: `npx hyperframes docs <topic>` (topik:
@@ -67,7 +69,7 @@ amplitudo, bukan word-level timing (lihat
 Lihat [publish-runbook](publish-runbook.md). Ringkas — hanya setelah approval user:
 
 ```bash
-npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 ## Test
@@ -76,13 +78,14 @@ npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approv
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
+npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 ```
 
 ## Troubleshooting cepat
 
 - Preview blank / render gagal setelah clone → cek media lokal yang dirujuk
-  `index.html` sudah ada.
-- `npm run check` error → perbaiki semua error sebelum handoff/render.
+  `videos/<slug>/index.html` sudah ada (proyek video tidak ikut ter-clone).
+- `npm run video -- check <slug>` error → perbaiki semua error sebelum handoff/render.
 - Publish berhenti "Missing env" → lengkapi `.env` dari `.env.example`.
 - Publish berhenti "user approval" → tambah `--approved` setelah review.

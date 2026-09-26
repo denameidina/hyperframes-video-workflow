@@ -452,7 +452,7 @@ An edit is not publishable just because it renders. After render, the user revie
 
 When the user chooses QA first:
 
-- `npm run check` must pass after any `.html` composition edit.
+- `npm run video -- check <slug>` must pass after any video composition edit.
 - First frame and first 3 seconds must work without audio.
 - Captions must be readable at phone size.
 - Storytelling captions must account for every spoken word in the locked processed transcript.

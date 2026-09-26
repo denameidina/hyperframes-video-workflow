@@ -17,7 +17,7 @@ Use this reference when deciding which Dena video phase to run and what artifact
    - Gate 2 (conditional): stops only when a timeline row matches R1–R6.
 
 3. `docs/agents/03-build.md`
-   - Owns: URL/web captures, screen recordings, generated stills/video, UI crops, diagrams, `index.html`, optional `compositions/*.html`, local asset wiring, timed clips, GSAP timeline registration, render.
+   - Owns: URL/web captures, screen recordings, generated stills/video, UI crops, diagrams, `videos/<slug>/index.html`, optional `videos/<slug>/compositions/*.html`, local asset wiring, timed clips, GSAP timeline registration, render.
    - Reads: Story and Screen Plan artifacts, `/hyperframes` routed docs.
    - Writes: `assets/asset-manifest.json`, asset files, composition files, `assembly-notes.md`, `assembly-checklist.md`, render MP4.
    - Gate 3 (mandatory): stop for user review; offer publish as-is, QA first, or revisions.
@@ -58,5 +58,5 @@ If the user says:
 - `audit dulu`: inspect source/reference and produce evidence before changing files.
 - `buat workflow`: create or update docs first; do not jump into editing.
 - `render final`: run required technical checks, render, then stop at Gate 3.
-- `publish final` or `publish as-is`: verify explicit user approval, then use `npm run repliz:publish -- --slug <videos/slug> --file <render.mp4> --approved`.
+- `publish final` or `publish as-is`: verify explicit user approval, then use `npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`.
 - `QA first`: run the QA phase as a fresh-context subagent, then return to Gate 3.
