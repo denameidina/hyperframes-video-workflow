@@ -1,100 +1,8 @@
-# Agent 01 - Creative Director
+# Hook And Angle (Reference)
 
-## Purpose
-
-The Creative Director is the first agent in every Dena Meidina social video workflow.
-
-Its job is to decide what the video should become before any technical editing starts. It turns a raw vlog/monologue/reference brief into a clear editorial direction: angle, audience, hook, retention structure, visual mood, CTA, and handoff instructions for downstream agents.
-
-This agent does not cut video, generate assets, write HyperFrames compositions, or render anything. It creates the decision layer that prevents every later agent from making random style choices.
-
-## When To Use
-
-Use this agent first when:
-
-- Dena provides a new raw video in `raw/`.
-- Dena provides a reference video in `references/` and asks to adapt the style.
-- A previous edit feels weak and needs a stronger angle.
-- The team needs to choose between multiple hook/story directions.
-- The requested format is broad, such as "make this viral", "edit like this reference", "buat lebih cinematic", or "bikin orang stop scrolling".
-
-Do not use this agent for:
-
-- Pure technical fixes after direction is already locked.
-- Caption typo fixes.
-- Render/lint/debug tasks.
-- Simple file organization.
-
-## Required Reading
-
-Before making any decision, read:
-
-- `docs/dena-social-video-style-guide.md`
-- The user request for the current video.
-- Any available `edit-decision-notes.md`, `storyboard.json`, or previous output for the same slug.
-- Any reference video notes supplied by the user.
-
-If a reference video exists, inspect it as evidence. Do not infer from memory when a local file is available.
-
-## Core Principle
-
-Dena's strongest social videos should feel like:
-
-> A credible AI systems builder showing real founder/operator insight in a way that is direct, human, and scroll-stopping.
-
-The Creative Director must protect this identity. Do not turn Dena into a generic motivational creator, generic CapCut account, or copycat of a reference.
-
-Reference styles are ingredients, not costumes.
-
-## Inputs
-
-The agent may receive:
-
-- Raw video path, usually `raw/<file>.mp4`
-- Reference video path, usually `references/<file>.mp4`
-- Transcript, if already generated
-- User goal, such as:
-  - "edit like Kumar"
-  - "make this more viral"
-  - "more cinematic"
-  - "cut silent/redundant words"
-  - "add hook, overlay, CTA"
-- Target platform:
-  - Instagram Reels
-  - TikTok
-  - YouTube Shorts
-- Optional constraints:
-  - target duration
-  - no AI-generated faces
-  - keep original footage untouched
-  - must include a specific CTA
-  - must preserve a specific moment
-
-## Outputs
-
-This agent produces a markdown brief for downstream agents.
-
-Preferred output file:
-
-`videos/<slug>/creative-brief.md`
-
-If no video slug exists yet, output the brief in the response first and recommend a slug.
-
-The brief must include:
-
-- Chosen content lane
-- One-sentence premise
-- Audience
-- Emotional promise
-- Primary hook
-- Backup hooks
-- Retention structure
-- Visual direction
-- Caption direction
-- Asset needs
-- CTA
-- Risks
-- Handoff instructions
+Rules for choosing the angle, the three-second transcript hook, and writing
+`creative-brief.md`. Loaded by `docs/agents/01-story.md` at the step that names
+it. Workflow order lives in the phase documents, not here.
 
 ## Decision Workflow
 
@@ -161,13 +69,11 @@ Pick one hook type:
 
 The first 3 seconds must work with audio muted.
 
-The hook strategy starts here, but the final opening audio must be grounded in
-the transcript. If a transcript already exists, base the primary and backup
-hooks on exact spoken lines and include their source timestamps. If the
-transcript does not exist yet, mark the hook as `provisional`, define the
-tension Agent 02 should search for, and let Agent 02 lock the verbatim source
-excerpt after transcription. Do not invent a spoken claim and hand it off as
-though it exists in the footage.
+The hook strategy starts here, and the final opening audio must be grounded in
+the transcript. The Story phase transcribes the source before this step, so
+base the primary and backup hooks on exact spoken lines and include their
+source timestamps. Do not invent a spoken claim and hand it off as though it
+exists in the footage.
 
 ### 4. Decide The Format
 
@@ -265,7 +171,7 @@ Required: optional
 Do not show: fake ChatGPT UI, unreadable dashboards, random neon robots
 ```
 
-If the user provides a URL or the story depends on a live tool/product/site, request Agent 04 to research or inspect that link and create local screenshot/screen-record assets when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.
+If the user provides a URL or the story depends on a live tool/product/site, request Screen Plan phase (visual step) to research or inspect that link and create local screenshot/screen-record assets when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.
 
 When a real capture is not enough, explicitly allow Codex/image generation for grounded bitmap support assets. Generated assets should clarify mood, metaphor, or process, but must not be presented as real proof.
 
@@ -287,6 +193,85 @@ Bad default CTA:
 - "Komen `mau`, nanti gue kirim source code."
 - "Gue bakal breakdown lengkap di video berikutnya."
 - "DM gue, nanti gue share template."
+
+## Three-Second Transcript Hook
+
+After the full transcript and content map are available, lock exactly one
+spoken source excerpt as the opening hook. Story phase owns the hook strategy;
+this agent owns selecting the real source moment that fulfills it.
+
+The selected excerpt must:
+
+- Contain the core tension, peak problem, contradiction, proof, or curiosity
+  gap that makes the viewer want the explanation.
+- Use a contiguous, verbatim spoken phrase from the source.
+- Start at output `00:00.00` and end no later than output `00:03.00` after the
+  selected speed adjustment.
+- Preserve the original meaning. Shorten only by removing silence or filler;
+  do not splice separate words into a claim Dena never made.
+- Lead directly into the explanation or setup after the hook.
+- Be removed from its original later position unless the Creative Brief asks
+  for an intentional callback; document any retained repetition.
+
+If no source excerpt fits within three seconds without changing meaning, mark
+the hook as `blocked` and route the decision to Story phase or the user. Do not
+substitute fabricated dialogue.
+
+Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
+
+- exact spoken quote
+- source start and end
+- processed output start and end
+- selection reason
+- transition into the explanation
+- original-occurrence handling: `removed` or `intentional-callback`
+
+## Hook Extraction
+
+This agent does not invent the hook strategy. It must identify at least three
+source-grounded candidates, then lock exactly one candidate using the
+Three-Second Transcript Hook contract above.
+
+Find:
+
+- Strongest sentence
+- Most surprising sentence
+- Most specific pain
+- Best proof statement
+- Most emotional line
+- Best CTA line
+
+Return at least 3 hook candidate clips with timestamps. Every candidate should
+be evaluated against its processed duration; a candidate longer than three
+seconds may inform the choice but cannot become the locked opening unchanged.
+
+Example:
+
+```md
+## Hook Candidates
+
+1. 00:42.10-00:47.30
+   Text: "AI-nya bukan masalah. Workflow bisnisnya yang belum jelas."
+   Why: strong contradiction, fits Story phase `contrast` hook.
+
+2. 01:08.20-01:13.90
+   Text: "Tiga jam kerja manual ini bisa gue bikin jalan otomatis."
+   Why: proof hook, concrete business value.
+```
+
+After the candidates, add the locked decision:
+
+```md
+## Three-Second Transcript Hook
+
+- Status: locked
+- Exact spoken quote: "Workflow bisnisnya yang belum jelas."
+- Source: 00:43.20-00:45.70
+- Output: 00:00.00-00:02.50
+- Why: states the peak problem without revealing the explanation
+- Transition: resume with the original setup at output 00:02.50
+- Original occurrence: removed
+```
 
 ## Output Template
 
@@ -322,13 +307,13 @@ Use this template for every brief.
 
 ## Hook
 
-Status: <provisional|locked-from-transcript>
+Status: locked-from-transcript
 
 Primary hook:
 
-Exact spoken quote, if transcript exists:
+Exact spoken quote:
 
-Source timestamp, if transcript exists:
+Source timestamp:
 
 Backup hooks:
 
@@ -351,6 +336,11 @@ Muted-viewer hook:
 - Selected format:
 - Why this format:
 
+## Workflow Settings
+
+- visual_density: <light|medium|heavy> (default medium)
+- gate_cut: <on|off> (default off)
+
 ## Visual Direction
 
 - Visual grammar:
@@ -368,7 +358,7 @@ Muted-viewer hook:
 - Caption emphasis:
 - Forbidden tone:
 
-## Asset Requests
+## Visual Direction Notes
 
 1. Asset:
    Purpose:
@@ -390,29 +380,24 @@ Backup CTA:
 
 ## Handoff
 
-For Transcript/Cut Agent:
+For Screen Plan phase (captions step):
 
-- Transcript tension to find:
-- Hook status to validate:
 - Required opening: verbatim source excerpt at 00:00.00-00:03.00, followed by
   the explanation flow.
 
-For Caption Agent:
+For Screen Plan phase (visual step):
 
-For Asset Generation Agent:
+For Build phase:
 
-For HyperFrames Assembly Agent:
-
-For QA Agent:
+For QA phase:
 ```
 
 ## Quality Bar
 
-A Creative Director brief is good when:
+A Story phase brief is good when:
 
 - The hook is specific enough to write on screen immediately.
-- The hook is either locked to an exact transcript quote or clearly marked
-  provisional for Agent 02 to validate after transcription.
+- The hook is locked to an exact transcript quote with its source timestamp.
 - The video can be explained in one sentence.
 - The downstream agents know exactly what to do next.
 - The direction still sounds like Dena.
@@ -481,25 +466,13 @@ Humanizer CTA:
 Kalau topik ini relate, komen "workflow".
 ```
 
-## Handoff Contract
-
-The Creative Director must hand off decisions, not tasks alone.
-
-Bad handoff:
-
-> Add cool overlays and make captions better.
-
-Good handoff:
-
-> Use `cinematic-operator` grammar. Keep captions sparse during the manifesto line. Add dashboard proof overlay only when Dena mentions workflow automation. Do not add random AI robot imagery. CTA should invite a comment without promising a future breakdown.
-
 ## Failure Modes
 
 If transcript quality is poor:
 
 - Mark unclear sections.
 - Do not invent missing meaning.
-- Ask Transcript/Cut Agent to verify exact wording before final caption.
+- Ask Story phase to verify exact wording before final caption.
 
 If raw video lacks a clear story:
 
@@ -517,15 +490,3 @@ If the hook feels clickbait:
 - Rewrite it around a real tension from the video.
 - Use proof or contrast instead of exaggeration.
 
-## First Downstream Agents
-
-This agent is designed to hand off to:
-
-1. Transcript/Cut Agent
-2. Caption/Subtitle Agent
-3. Asset Generation Agent
-4. Motion/Overlay Agent
-5. HyperFrames Assembly Agent
-6. QA/Review Agent
-
-Those agents should be documented separately in `docs/agents/`.

@@ -1,118 +1,8 @@
-# Agent 02 - Transcript/Cut Agent
+# Cut And Pacing (Reference)
 
-## Purpose
-
-The Transcript/Cut Agent turns raw footage into a clean, editorially usable base video.
-
-Its job is to inspect the source, transcribe speech, understand sentence-level meaning, remove dead air and redundant speech, preserve the strongest story moments, and produce a cut plan that downstream agents can trust.
-
-This agent is the bridge between Creative Director strategy and visual execution. It does not choose the main angle from scratch, design captions, generate images, create overlays, author HyperFrames timelines, or render the final social video.
-
-## Position In Workflow
-
-This is the second agent.
-
-Run order:
-
-1. Creative Director
-2. Transcript/Cut Agent
-3. Caption/Subtitle Agent
-4. Asset Generation Agent
-5. Motion/Overlay Agent
-6. HyperFrames Assembly Agent
-7. QA/Review Agent
-
-The Transcript/Cut Agent must read the Creative Director brief before making cut decisions.
-
-## When To Use
-
-Use this agent when:
-
-- A raw monologue/vlog/talking-head video needs to be edited.
-- A rough first cut needs silence, filler, and repeated words removed.
-- The video needs transcript-based editing.
-- The source has long pauses, repeated starts, unclear sections, or rambling structure.
-- Downstream agents need accurate timing, transcript, and processed base footage.
-
-Do not use this agent when:
-
-- The task is only caption styling.
-- The task is only visual overlays.
-- The source has no speech and is purely montage/B-roll.
-- The final direction has not been set by Creative Director.
-- The user only asks for a reference analysis, not an edit.
-
-## Required Reading
-
-Before working, read:
-
-- `docs/dena-social-video-style-guide.md`
-- `docs/agents/01-creative-director.md`
-- `videos/<slug>/creative-brief.md`, if available
-- Existing `transcript.json`, `edit-decision-notes.md`, `cut-list.json`, or `processed.mp4` for the same slug
-- The user request for the current video
-
-If no creative brief exists, stop and ask for Agent 01 to run first, unless the user explicitly says this is a technical-only cut.
-
-## Core Principle
-
-Cut for meaning first, rhythm second, speed third.
-
-The goal is not to remove every breath. The goal is to make Dena sound sharp, natural, and credible.
-
-A good cut preserves:
-
-- Dena's real voice
-- The strongest insight
-- Natural emotion
-- Sentence meaning
-- Proof moments
-- Context needed for the hook and CTA
-
-A bad cut creates:
-
-- Robotic pacing
-- Missing context
-- Jump cuts that feel anxious
-- Captions that no longer match speech
-- A video that is shorter but less persuasive
-
-## Inputs
-
-The agent may receive:
-
-- Raw video: `raw/<file>.mp4`
-- Creative brief: `videos/<slug>/creative-brief.md`
-- Existing transcript: `videos/<slug>/transcript.json`
-- Reference video notes
-- User constraints:
-  - target duration
-  - speed multiplier
-  - preserve a specific quote
-  - cut a specific section
-  - keep original audio feel
-  - produce draft only
-
-## Outputs
-
-Preferred output folder:
-
-`videos/<slug>/`
-
-Required outputs:
-
-- `metadata.json`
-- `transcript.json`
-- `edit-decision-notes.md`
-- `cut-list.json`
-
-Conditional outputs:
-
-- `audio-clean.wav` if audio cleanup is performed separately
-- `processed.mp4` if the agent is asked to create the base cut
-- `preview/contact-sheet.jpg` or `preview/processed-sheet.jpg` if useful
-
-This agent must leave enough information for another agent to reproduce or revise the cut.
+Rules for media audit, transcription, cuts, speed, audio cleanup, and
+`edit-decision-notes.md`. Loaded by `docs/agents/01-story.md` at the step that
+names it. Workflow order lives in the phase documents, not here.
 
 ## Media Audit
 
@@ -197,7 +87,7 @@ For storytelling/talking-head edits, downstream captions depend on complete word
 - a processed-timeline word-level transcript, or
 - a reliable raw-to-processed time mapping in `cut-list.json`.
 
-Do not hand off only sentence-level notes when Agent 03 needs running captions.
+Do not hand off only sentence-level notes when Screen Plan phase (captions step) needs running captions.
 
 ## Content Map
 
@@ -217,38 +107,6 @@ Create a sequence like:
 ```
 
 The content map helps avoid cutting only by waveform.
-
-## Three-Second Transcript Hook
-
-After the full transcript and content map are available, lock exactly one
-spoken source excerpt as the opening hook. Agent 01 owns the hook strategy;
-this agent owns selecting the real source moment that fulfills it.
-
-The selected excerpt must:
-
-- Contain the core tension, peak problem, contradiction, proof, or curiosity
-  gap that makes the viewer want the explanation.
-- Use a contiguous, verbatim spoken phrase from the source.
-- Start at output `00:00.00` and end no later than output `00:03.00` after the
-  selected speed adjustment.
-- Preserve the original meaning. Shorten only by removing silence or filler;
-  do not splice separate words into a claim Dena never made.
-- Lead directly into the explanation or setup after the hook.
-- Be removed from its original later position unless the Creative Brief asks
-  for an intentional callback; document any retained repetition.
-
-If no source excerpt fits within three seconds without changing meaning, mark
-the hook as `blocked` and route the decision to Agent 01 or the user. Do not
-substitute fabricated dialogue.
-
-Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
-
-- exact spoken quote
-- source start and end
-- processed output start and end
-- selection reason
-- transition into the explanation
-- original-occurrence handling: `removed` or `intentional-callback`
 
 ## Cut Categories
 
@@ -345,53 +203,6 @@ Avoid speed changes when:
 - The clip relies on natural timing or humor.
 - There is music sync that would break.
 - The user asks to preserve the original delivery.
-
-## Hook Extraction
-
-This agent does not invent the hook strategy. It must identify at least three
-source-grounded candidates, then lock exactly one candidate using the
-Three-Second Transcript Hook contract above.
-
-Find:
-
-- Strongest sentence
-- Most surprising sentence
-- Most specific pain
-- Best proof statement
-- Most emotional line
-- Best CTA line
-
-Return at least 3 hook candidate clips with timestamps. Every candidate should
-be evaluated against its processed duration; a candidate longer than three
-seconds may inform the choice but cannot become the locked opening unchanged.
-
-Example:
-
-```md
-## Hook Candidates
-
-1. 00:42.10-00:47.30
-   Text: "AI-nya bukan masalah. Workflow bisnisnya yang belum jelas."
-   Why: strong contradiction, fits Creative Director `contrast` hook.
-
-2. 01:08.20-01:13.90
-   Text: "Tiga jam kerja manual ini bisa gue bikin jalan otomatis."
-   Why: proof hook, concrete business value.
-```
-
-After the candidates, add the locked decision:
-
-```md
-## Three-Second Transcript Hook
-
-- Status: locked
-- Exact spoken quote: "Workflow bisnisnya yang belum jelas."
-- Source: 00:43.20-00:45.70
-- Output: 00:00.00-00:02.50
-- Why: states the peak problem without revealing the explanation
-- Transition: resume with the original setup at output 00:02.50
-- Original occurrence: removed
-```
 
 ## Edit Decision List
 
@@ -571,46 +382,16 @@ Use this template for `edit-decision-notes.md`.
 
 ## Handoff
 
-For Caption Agent:
+For Screen Plan phase (captions step):
 
-For Asset Generation Agent:
+For Screen Plan phase (visual step):
 
-For Motion/Overlay Agent:
+For Screen Plan phase (visual step):
 
-For HyperFrames Assembly Agent:
+For Build phase:
 
-For QA Agent:
+For QA phase:
 ```
-
-## Handoff Contract
-
-The Transcript/Cut Agent must hand off timing with enough precision for caption and overlay work.
-
-Handoff must include:
-
-- final processed video path
-- exact output duration
-- transcript path
-- processed-timeline word-level transcript or raw-to-processed timing map
-- cut-list path
-- three hook candidate timestamps
-- locked three-second hook quote, source timing, output timing, transition, and
-  original-occurrence handling
-- key quote timestamps
-- sections where captions need extra care
-- sections where overlays should support meaning
-- sections where ASR is uncertain
-
-Bad handoff:
-
-> I cut the boring parts. Captions can start now.
-
-Good handoff:
-
-> `processed.mp4` is 54.2s at 1.18x. The locked verbatim hook is source
-> `00:42.1-00:44.7`, now output `00:00.0-00:02.6`; its original occurrence is
-> removed and the explanation resumes at output `00:02.6`. ASR may confuse
-> `Claude` with `cloud` at output `00:18.2`.
 
 ## Quality Bar
 
@@ -667,7 +448,7 @@ If the source video is too long:
 
 If there are multiple strong angles:
 
-- Keep the one selected by Creative Director.
+- Keep the one selected by Story phase.
 - Put alternate candidates under `Unused Strong Moments`.
 
 If the audio is bad:
@@ -680,25 +461,10 @@ If the source has burned-in captions:
 
 - Note their location.
 - Avoid crop/caption decisions that conflict with them.
-- Tell Caption Agent whether new captions should avoid or replace that area.
+- Tell Screen Plan phase (captions step) whether new captions should avoid or replace that area.
 
 If the edit becomes too short:
 
 - Re-add the best proof or context moment.
 - Do not pad with weak setup.
 
-## Relationship To Other Agents
-
-Creative Director decides what the video should say.
-
-Transcript/Cut Agent decides what source moments survive.
-
-Caption Agent decides how words appear on screen.
-
-Asset Generation Agent creates missing visuals.
-
-Motion/Overlay Agent decides how visual elements move.
-
-HyperFrames Assembly Agent builds the layered composition.
-
-QA Agent checks whether the final output still matches the original direction.
