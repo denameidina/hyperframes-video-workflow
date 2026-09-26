@@ -27,7 +27,7 @@ Image generation must be tried at least once when all are true:
 - The current alternative would be a stiff text card, generic SVG, or empty decorative background.
 - The prompt can be grounded in the transcript without fake UI, fake client data, generated people, or robot/neon AI cliches.
 
-If the generated result looks generic or fake after one revision, remove it and document the rejection in `visual-plan.md`.
+If the generated result looks generic or fake after one revision, remove it and document the rejection in `assembly-notes.md`.
 
 Do not generate when:
 
@@ -125,10 +125,10 @@ When the user provides a URL, or the transcript names a specific product/site/to
 
 1. Research or inspect the current page before planning the asset.
 2. Capture local screenshots or short screen recordings when the real UI helps the viewer understand the point.
-3. Match every capture to a transcript time window and explain the reason in `visual-plan.md`.
+3. Match every capture to its Timeline row and transcript window in `visual-plan.md`.
 4. Store captures under `videos/<slug>/assets/`; no remote images, videos, or live fetches in the render path.
 5. Crop for phone readability and redact private/session data.
-6. If the page is inaccessible, private, or visually unhelpful, document that and use a generated still, simple diagram, or designed card instead.
+6. If the page is inaccessible, private, or visually unhelpful, document that in `assembly-notes.md` and route the row back to the Screen Plan phase (visual step) to choose a generated still, simple diagram, or designed card instead.
 
 For a product/tool URL, prefer real captured UI for proof/context. Use generated assets for mood, abstraction, or process visualization, not as fake proof of what the live product does.
 
@@ -235,7 +235,7 @@ A weak asset pass:
 
 If no asset is needed:
 
-- Say so in `visual-plan.md`.
+- The Visual Decision Log in `visual-plan.md` records it; Build adds nothing.
 - Do not invent assets to fill the quota.
 
 If proof assets contain private data:
@@ -254,7 +254,7 @@ If generated media includes bad text:
 
 - Do not use the text.
 - Crop it out or regenerate text-free.
-- Let Caption/Overlay agents add real text separately.
+- Let the Screen Plan phase add real text separately.
 
 If the reference style conflicts with Dena's credibility:
 

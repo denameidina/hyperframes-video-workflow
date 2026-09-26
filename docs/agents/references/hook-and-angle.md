@@ -171,7 +171,7 @@ Required: optional
 Do not show: fake ChatGPT UI, unreadable dashboards, random neon robots
 ```
 
-If the user provides a URL or the story depends on a live tool/product/site, request Screen Plan phase (visual step) to research or inspect that link and create local screenshot/screen-record assets when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.
+If the user provides a URL or the story depends on a live tool/product/site, request Screen Plan phase (visual step) to research or inspect that link and plan local screenshot/screen-record captures, which the Build phase makes when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.
 
 When a real capture is not enough, explicitly allow Codex/image generation for grounded bitmap support assets. Generated assets should clarify mood, metaphor, or process, but must not be presented as real proof.
 
@@ -340,6 +340,12 @@ Muted-viewer hook:
 
 - visual_density: <light|medium|heavy> (default medium)
 - gate_cut: <on|off> (default off)
+
+## User Approvals
+
+- Facts, numbers, names, or quotes the user supplied for on-screen use:
+- CTA promise approved by the user: <no | exact promise>
+- Hook visual allowed to cover the face in 00:00.00-00:03.00: <no | description>
 
 ## Visual Direction
 

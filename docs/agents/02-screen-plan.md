@@ -81,8 +81,8 @@ does not improve understanding, retention, or emotional force, remove it.
 ## Inputs
 
 From `videos/<slug>/`: `creative-brief.md`, `edit-decision-notes.md` (including
-Cut Summary), `transcript.json` with processed-timeline timing, `processed.mp4`,
-`cut-list.json`. Also: user notes about caption or visual style, reference video
+Cut Summary), `processed-transcript.json` (processed-timeline word timing),
+`transcript.json` (raw timeline), `processed.mp4`, `cut-list.json`. Also: user notes about caption or visual style, reference video
 notes, user-provided URLs or screenshots, platform target (Instagram Reels,
 TikTok, YouTube Shorts), and user constraints (minimal effects, no generated
 media, no generated people, no fake product UI, no client data, keep face
@@ -93,7 +93,7 @@ unobstructed, use only project-local assets).
 ### Captions step
 
 1. **Confirm cut lock.** Read `docs/agents/references/captions.md` section
-   Caption Timing Lock. If `processed.mp4` or processed-timeline word timing is
+   Caption Timing Lock. If `processed.mp4` or `processed-transcript.json` is
    missing, write only a provisional caption plan marked as provisional and
    route back to Story.
 2. **Write caption beats.** Follow `docs/agents/references/captions.md` (caption
@@ -117,17 +117,21 @@ unobstructed, use only project-local assets).
    is unnecessary.
 5. **Research links and tools.** If the user gave a URL or the transcript names
    a tool/product/site, inspect it now and write what Build must capture in the
-   Asset Briefs For Build section, tied to the transcript window.
+   Asset Briefs For Build section, tied to the transcript window. Use URL
+   Research And Screen Capture Rules in `docs/agents/references/asset-production.md`
+   for what to research and what a useful capture looks like; Build captures.
 6. **Plan motion.** Read `docs/agents/references/motion-grammar.md` (grammar by
    format, primitives, pattern interrupts, timing, placement, density levels and
    Visual Density Mapping, sound/motion coordination, Dena-specific motion
-   rules). Tracks and z-index follow
+   rules) and HyperFrames Compatibility Notes in
+   `docs/agents/references/hyperframes-assembly.md`. Tracks and z-index follow
    `internal/docs/design-system/visual-system.md`.
 7. **Write the plan.** Use the Visual Plan Template in
    `docs/agents/references/visual-planning.md` for `visual-plan.md`, and the
    Overlay Timeline Format in `docs/agents/references/motion-grammar.md` for
    `overlay-timeline.json`. All times are processed-video time and share one
-   cue map with `caption-beats.json`.
+   cue map with `caption-beats.json`. Timeline IDs are the join key (see the
+   template), and `assetRef` uses each Asset Brief's Planned file.
 8. **Gate 2.** Apply Gate 2 below.
 
 If no visuals are needed, still write `visual-plan.md` with a Visual Decision
@@ -157,6 +161,15 @@ the matching trigger IDs in the row's `Gate 2 trigger` column (`-` when none):
 | R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `creative-brief.md` explicitly chose that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
 | R5 | A CTA that implies a promise ("nanti gue share/kirim/bahas…") without the user's explicit approval |
 | R6 | Generated image or video that depicts a real person or a real brand |
+
+Decide each trigger from `visual-plan.md` plus these artifacts:
+
+- R1: `processed-transcript.json` for verbatim wording; `## User Approvals` in
+  `creative-brief.md` for user-supplied facts.
+- R4: `## User Approvals` in `creative-brief.md` for an approved hook visual.
+- R5: the `cta-caption` beats in `caption-beats.json`, even when the CTA has no
+  Timeline row, and `## User Approvals` for an approved promise.
+- R2, R3, R6: the Timeline row, its On-screen text, and its Asset Brief.
 
 - Any trigger found: stop. Show only the flagged rows, each with its trigger and
   one safe alternative. The user approves, changes, or drops each row. Record

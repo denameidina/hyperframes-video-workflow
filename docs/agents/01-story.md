@@ -89,10 +89,12 @@ A bad cut creates:
 1. **Read context.** `docs/dena-social-video-style-guide.md`, the user request,
    reference notes, and existing artifacts for the slug. If a reference video
    exists, inspect it as evidence; do not infer from memory when a local file is
-   available.
+   available. Create `videos/<slug>/` if needed and place the raw file there as
+   `source.mp4` (copy or symlink).
 2. **Audit and transcribe.** Read `docs/agents/references/cut-and-pacing.md`
    sections Media Audit, Transcription Workflow, and Content Map. Write
-   `metadata.json` and `transcript.json`.
+   `metadata.json` and `transcript.json` (rename Whisper's
+   `transcript-large-v3-turbo.json` output; raw timeline).
 3. **Direct.** Read `docs/agents/references/hook-and-angle.md` section Decision
    Workflow (and Kumar-Inspired Adaptation Rules when a reference calls for it).
    Choose content lane, premise, audience, emotional promise, retention spine,
@@ -111,7 +113,9 @@ A bad cut creates:
 7. **Build the base video.** Sections Processed Base Video and Audio Cleanup
    Handoff. Write `processed.mp4` (and `audio-clean.wav` when audio is cleaned
    separately). Verify orientation with a frame grab before a long encode (DJI
-   rotation note in the style guide).
+   rotation note in the style guide). Then transcribe `processed.mp4` with the
+   same Transcription Workflow and save it as `processed-transcript.json`: the
+   processed-timeline word timing that Screen Plan uses.
 8. **Write notes.** Use the Output Template in
    `docs/agents/references/cut-and-pacing.md` for `edit-decision-notes.md`, and
    end it with the Cut Summary below.
@@ -123,7 +127,8 @@ All in `videos/<slug>/`:
 
 - `creative-brief.md` (hook `locked-from-transcript`, `visual_density`, `gate_cut`)
 - `metadata.json`
-- `transcript.json`
+- `transcript.json` (raw timeline)
+- `processed-transcript.json` (processed timeline)
 - `edit-decision-notes.md` (ends with `## Cut Summary`)
 - `cut-list.json`
 - `processed.mp4`
@@ -173,7 +178,7 @@ visual work:
 - final processed video path
 - exact output duration
 - transcript path
-- processed-timeline word-level transcript or raw-to-processed timing map
+- processed-timeline word-level transcript path (`processed-transcript.json`)
 - cut-list path
 - three hook candidate timestamps
 - locked three-second hook quote, source timing, output timing, transition, and

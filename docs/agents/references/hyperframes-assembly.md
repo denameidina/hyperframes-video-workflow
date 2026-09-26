@@ -64,7 +64,7 @@ Check that the upstream files exist and agree with each other:
 - style lane
 - user constraints
 
-If `caption-beats.json` and `overlay-timeline.json` disagree, do not silently merge them. Write the conflict in `assembly-notes.md` and send it back to the relevant upstream agent.
+If `caption-beats.json` and `overlay-timeline.json` disagree, do not silently merge them. Write the conflict in `assembly-notes.md` and send it back to the owning upstream phase.
 
 ### 2. Prepare Composition Settings
 
@@ -197,7 +197,7 @@ Rules:
 - time cues to the same processed-video timeline as captions and overlays
 - keep SFX under speech; do not mask spoken words
 - document any skipped cue in `assembly-notes.md`
-- if no SFX asset exists for a required cue, route back to Screen Plan phase (visual step) instead of silently omitting it
+- if no SFX asset exists for a required cue, produce one in the asset production step instead of silently omitting it
 
 Do not rely on remote sound URLs in the render path.
 
@@ -377,7 +377,7 @@ Create `videos/<slug>/assembly-notes.md`:
 - Cut notes:
 - Caption beats:
 - Asset manifest:
-- Motion plan:
+- Visual plan:
 - Overlay timeline:
 
 ## Composition Files
@@ -385,6 +385,11 @@ Create `videos/<slug>/assembly-notes.md`:
 - index.html:
 - sub-compositions:
 - assets:
+
+## Asset Production
+
+- One Capture And Privacy Record per captured or generated asset (format in
+  `docs/agents/references/asset-production.md`).
 
 ## Key Decisions
 

@@ -47,13 +47,15 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   atau `final-approval.md`.
 - **RD-03-12** (Optional) — Where user memilih QA, fase QA shall berjalan di
   subagent yang hanya menerima path slug, path render,
-  `docs/agents/04-qa.md`, dan `docs/agents/references/qa-checklist.md`.
+  `docs/agents/04-qa.md`, `docs/agents/references/qa-checklist.md`, serta
+  batasan QA dari user bila ada.
 
 ## Handoff artifacts
 
 - **RD-03-13** (Ubiquitous) — The system shall menghasilkan artifact milik tiap
   fase di `videos/<slug>/` bila slug ada: Story (`creative-brief.md`,
-  `metadata.json`, `transcript.json`, `edit-decision-notes.md`, `cut-list.json`,
+  `metadata.json`, `transcript.json`, `processed-transcript.json`,
+  `edit-decision-notes.md`, `cut-list.json`,
   `processed.mp4`), Screen Plan (`caption-plan.md`, `caption-beats.json`,
   `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`), Build
   (`assets/asset-manifest.json` bila ada aset, `assembly-notes.md`,

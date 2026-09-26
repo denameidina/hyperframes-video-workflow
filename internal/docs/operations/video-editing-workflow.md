@@ -29,7 +29,8 @@ didokumentasikan). Hook verbatim dipindah ke output `00:00.00-00:03.00`, kemuncu
 aslinya dihapus kecuali callback terdokumentasi. Base video 9:16 1080x1920 30fps
 tanpa caption/overlay burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true
 peak −1.5..−1.0 dBFS. **Output:** `creative-brief.md` (+ `visual_density`,
-`gate_cut`), `metadata.json`, `transcript.json`, `edit-decision-notes.md`
+`gate_cut`, `## User Approvals`), `metadata.json`, `transcript.json`,
+`processed-transcript.json`, `edit-decision-notes.md`
 (diakhiri `## Cut Summary`), `cut-list.json`, `processed.mp4`.
 **Gate 1** (opsional, default off): review cut hanya bila user minta atau
 `gate_cut: on`. Referensi: `hook-and-angle.md`, `cut-and-pacing.md`.

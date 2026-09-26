@@ -55,7 +55,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - For Dena raw talking-head clips, preserve natural context without killing density. A compact 55-70s cut can beat a fuller 80-100s cut when the lesson still lands.
 - If the user says SFX has no sound, verify both the solo SFX stem and the final render audio with a level scan. File existence is not enough; cues that peak too low are effectively missing.
 - For transcript quality, use the project-local Whisper install in `vendor/whisper.cpp` with `ggml-large-v3-turbo.bin`; convert source audio to WAV first and pass an Indonesian/domain-term prompt.
-- If a longer HyperFrames render stalls in default low-memory mode after passing check/snapshot review, retry the final render with `PRODUCER_LOW_MEMORY_MODE=false` and document the workaround in `render-review.md`.
+- If a longer HyperFrames render stalls in default low-memory mode after passing check/snapshot review, retry the final render with `PRODUCER_LOW_MEMORY_MODE=false` and document the workaround in `render-notes.md`.
 - When a session produces a workflow learning, update the relevant docs in the same turn; the project-local `.codex` Stop hook enforces this for learning prompts and workflow/config changes.
 - Jangan pakai `data-media-start` pada elemen `<audio>` HyperFrames; klipnya jadi senyap
   di render. Potong file SFX-nya lebih dulu, lalu rujuk hasil potongannya.
@@ -79,7 +79,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Default processed speed is `1.2x`; any lower speed needs a documented clarity/emotion exception.
 - Keep captions readable on phone: short phrases, white/black base, selective yellow emphasis.
 - Keep overlays purposeful: clarify, prove, reset attention, or transition. URL/tool/product mentions need researched/captured or generated context assets when they help viewer understanding.
-- Motion plans for designed recuts must include purposeful, audible-but-under-speech SFX cues when transitions, proof reveals, or title hits need impact.
+- Visual plans for designed recuts must include purposeful, audible-but-under-speech SFX cues when transitions, proof reveals, or title hits need impact.
 - CTA must be non-promissory unless the user explicitly approves a promise.
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
@@ -95,13 +95,14 @@ For a complete edit, the expected artifact chain is:
 Story:        videos/<slug>/creative-brief.md
               videos/<slug>/metadata.json
               videos/<slug>/transcript.json
+              videos/<slug>/processed-transcript.json
               videos/<slug>/edit-decision-notes.md   (ends with ## Cut Summary)
               videos/<slug>/cut-list.json
               videos/<slug>/processed.mp4
 Screen Plan:  videos/<slug>/caption-plan.md
               videos/<slug>/caption-beats.json
               videos/<slug>/publish-captions.md
-              videos/<slug>/visual-plan.md           (ends with ## Gate 2 Result)
+              videos/<slug>/visual-plan.md           (includes ## Gate 2 Result)
               videos/<slug>/overlay-timeline.json
 Build:        videos/<slug>/assets/asset-manifest.json   (when assets exist)
               videos/<slug>/assembly-notes.md

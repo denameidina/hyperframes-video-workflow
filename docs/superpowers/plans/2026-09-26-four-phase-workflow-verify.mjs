@@ -64,6 +64,29 @@ const INTENTIONAL = {
     'provisional for Agent 02 to validate after transcription.',
     '- Transcript tension to find:',
     '- Hook status to validate:',
+    // V4 walkthrough fixes (Task 10): ownership after the phase split.
+    'If the user provides a URL or the story depends on a live tool/product/site, request Agent 04 to research or inspect that link and create local screenshot/screen-record assets when useful. Do not solve URL context with generic cards unless the real capture is unsafe, unavailable, or visually unhelpful.',
+  ]),
+  // V4 walkthrough fixes (Task 10): retired role names and Build no longer writes the visual plan.
+  '03': new Set([
+    '- `side-label`: proof labels, usually handoff to overlay agent.',
+  ]),
+  '04': new Set([
+    'If the generated result looks generic or fake after one revision, remove it and document the rejection in `asset-plan.md`.',
+    '3. Match every capture to a transcript time window and explain the reason in `asset-plan.md`.',
+    '6. If the page is inaccessible, private, or visually unhelpful, document that and use a generated still, simple diagram, or designed card instead.',
+    '- Say so in `asset-plan.md`.',
+    '- Let Caption/Overlay agents add real text separately.',
+  ]),
+  '06': new Set([
+    'If `caption-beats.json` and `overlay-timeline.json` disagree, do not silently merge them. Write the conflict in `assembly-notes.md` and send it back to the relevant upstream agent.',
+    '- if no SFX asset exists for a required cue, route back to Motion/Overlay Agent instead of silently omitting it',
+    '- Motion plan:',
+  ]),
+  '07': new Set([
+    '- SFX cues from the motion plan are present and audible enough to register without covering speech',
+    'If the user requested final render readiness, render and review the MP4 after checks pass:',
+    'npm run render',
   ]),
 };
 

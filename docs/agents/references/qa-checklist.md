@@ -147,7 +147,7 @@ Check:
 - large overlays do not hide the speaker too long
 - motion is not too frantic for the content lane
 - CTA transition is clean
-- SFX cues from the motion plan are present and audible enough to register without covering speech
+- SFX cues from the visual plan are present and audible enough to register without covering speech
 
 Default pattern interrupt cadence:
 
@@ -303,11 +303,7 @@ For longer videos, full playback is still preferred before a `pass` verdict.
 
 ### 5. Review Render If Available
 
-If the user requested final render readiness, render and review the MP4 after checks pass:
-
-```bash
-npm run render
-```
+Review the MP4 named in the QA prompt after checks pass. Do not re-render: Build owns rendering. If the render is missing or stale, report a `blocker` assigned to the Build phase.
 
 If a render fails, classify the issue as `blocker` and assign it to the Build phase unless the cause is clearly upstream.
 

@@ -19,6 +19,7 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Cut list | `videos/<slug>/cut-list.json` | JSON | Story |
 | Media metadata | `videos/<slug>/metadata.json` | JSON | Story |
 | Transcript | `videos/<slug>/transcript.json` | JSON (whisper) | Story |
+| Processed transcript | `videos/<slug>/processed-transcript.json` | JSON (whisper, waktu processed) | Story |
 | Caption beats | `videos/<slug>/caption-beats.json` | JSON | Screen Plan |
 | Asset manifest | `videos/<slug>/assets/asset-manifest.json` | JSON | Build |
 | Overlay timeline | `videos/<slug>/overlay-timeline.json` | JSON | Screen Plan |
@@ -184,7 +185,8 @@ Element: `id`, `type`, `track`, `start`, `duration`, `contentRef`, `assetRef`, `
 
 Bagian `## Workflow Settings`: `visual_density` ∈ `light | medium | heavy`
 (default `medium`), `gate_cut` ∈ `on | off` (default `off`). Hook `Status` selalu
-`locked-from-transcript`.
+`locked-from-transcript`. Bagian `## User Approvals` mencatat fakta dari user,
+janji CTA yang disetujui, dan hook visual yang boleh menutup wajah (dipakai Gate 2).
 
 ## `visual-plan.md` (Screen Plan)
 

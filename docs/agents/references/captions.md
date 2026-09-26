@@ -257,7 +257,7 @@ Caption placement options:
 - `mid-lower`: when bottom is busy.
 - `top-card`: hook only.
 - `center-title`: editorial title only.
-- `side-label`: proof labels, usually handoff to overlay agent.
+- `side-label`: proof labels, usually handoff to the Screen Plan phase (visual step).
 
 The Screen Plan phase (captions step) should specify placement, but Build phase decides final CSS implementation.
 

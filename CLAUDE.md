@@ -112,7 +112,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 
 ### Minimum Handoff Chain
 
-- Story: `creative-brief.md`, `metadata.json`, `transcript.json`, `edit-decision-notes.md`, `cut-list.json`, `processed.mp4`
+- Story: `creative-brief.md`, `metadata.json`, `transcript.json`, `processed-transcript.json`, `edit-decision-notes.md`, `cut-list.json`, `processed.mp4`
 - Screen Plan: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`
 - Build: `assets/asset-manifest.json` (when assets exist), `assembly-notes.md`, `assembly-checklist.md`, render MP4
 - Optional QA: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes

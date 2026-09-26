@@ -75,9 +75,15 @@ motion, match Dena default style, reuse existing project structure).
    guess.
 2. **Produce assets.** Read `docs/agents/references/asset-production.md`. For
    each Asset Brief in `visual-plan.md`, capture or generate the file into
-   `videos/<slug>/assets/`, record it in `videos/<slug>/assets/asset-manifest.json`
-   (Asset Manifest Format), and add a Capture And Privacy Record to
-   `assembly-notes.md`. Use stable, descriptive filenames:
+   `videos/<slug>/assets/` under its Planned file name, record it in
+   `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
+   Timeline ID in `handoff`), and add a Capture And Privacy Record to
+   `assembly-notes.md` under `## Asset Production`. Prepare a local, trimmed SFX
+   file for every SFX cue in the Timeline (no `data-media-start`; see Lean Fixing
+   Defaults in `docs/skills/dena-video-editing-workflow/SKILL.md`). If a capture
+   shows data that would trip R2, or a fallback would trip R6, and Gate 2 did not
+   approve it, stop and ask the user before using it. Use stable, descriptive
+   filenames:
    - Good: `assets/ai-workflow-control-room-12s.png`,
      `assets/crm-dashboard-proof-28s.png`,
      `assets/manual-to-automated-diagram.svg`
@@ -88,7 +94,10 @@ motion, match Dena default style, reuse existing project structure).
    safe area follow `internal/docs/design-system/visual-system.md`.
 4. **Assemble.** Follow `docs/agents/references/hyperframes-assembly.md`
    (HyperFrames Contract, Assembly Procedure, HTML Skeleton, HyperFrames
-   Compatibility Notes, Common Failure Modes).
+   Compatibility Notes, Common Failure Modes). For the separate `<audio>`
+   element, extract the audio of `processed.mp4` (or use `audio-clean.wav` when
+   Story made one) to `videos/<slug>/processed-audio.wav`; never use Story's
+   raw-time ASR extract.
 5. **Verify.** Run `npm run check` and fix every error; review warnings. Preview
    keyframes as listed in the Render Gate of
    `docs/skills/dena-video-editing-workflow/references/quality-gates.md`.
@@ -105,6 +114,7 @@ motion, match Dena default style, reuse existing project structure).
 - `compositions/*.html`, only when sub-compositions are justified
 - `videos/<slug>/assets/*` and `videos/<slug>/assets/asset-manifest.json`, when
   assets exist
+- `videos/<slug>/processed-audio.wav`
 - `videos/<slug>/assembly-notes.md`
 - `videos/<slug>/assembly-checklist.md`
 - Render MP4
@@ -115,6 +125,7 @@ motion, match Dena default style, reuse existing project structure).
 
 Stop after the render and send it to the user with:
 
+- render MP4 path
 - composition file paths
 - asset paths
 - source video path
@@ -131,8 +142,9 @@ Offer three paths:
 1. **Approve** (default): go to the publish gate.
 2. **QA first**: run `docs/agents/04-qa.md` as a fresh-context subagent, then
    return here.
-3. **Revise**: route each fix to its owning phase (Fix Routing in each phase
-   doc), then re-assemble and re-render.
+3. **Revise**: route each fix to its owning phase (Fix Routing in
+   `docs/skills/dena-video-editing-workflow/references/phase-chain.md`), then
+   re-assemble and re-render.
 
 Do not upload or schedule publishing from this phase.
 

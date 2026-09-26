@@ -345,6 +345,12 @@ plan: every visual moment is chosen once, here. The `Line` column of the Visual
 Decision Log records the spoken words for the window, in addition to the fields
 in `### 3A. Visual Decision Log`.
 
+In the Timeline, `ID` is the join key: reuse it as the element `id` in
+`overlay-timeline.json`, as the heading of its Asset Brief, and in the `handoff`
+field of its `assets/asset-manifest.json` entry. `On-screen text` lists every word
+the visual shows. `Illustrative` is `yes` when the visual is generated, mocked, or
+otherwise not real proof.
+
 ```md
 # Visual Plan - <video slug>
 
@@ -376,14 +382,15 @@ in `### 3A. Visual Decision Log`.
 
 ## Timeline
 
-| ID | In-Out | Line | Visual type | Placement / Track | Motion in / out | SFX cue | Illustrative | Gate 2 trigger |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ID | In-Out | Line | Visual type | On-screen text | Placement / Track | Motion in / out | SFX cue | Illustrative | Gate 2 trigger |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## Asset Briefs For Build
 
 ### <timeline-id>
 
 - Type:
+- Planned file: `assets/<descriptive-name>.<ext>`
 - Content:
 - Style:
 - Dimensions:

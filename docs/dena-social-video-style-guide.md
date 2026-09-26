@@ -457,7 +457,7 @@ When the user chooses QA first:
 - Hook, middle proof/insight, and CTA must match the creative brief.
 - Overlays must clarify, prove, reset attention, or transition.
 - URL/tool/product mentions must have real captured or generated context assets when they materially help the viewer understand the story.
-- SFX cues must be audible in the final render when the motion plan calls for them.
+- SFX cues must be audible in the final render when the visual plan calls for them.
 - CTA must be non-promissory unless the user explicitly approved a promise.
 - Audio must be clear, synced, and not harsh.
 - No private/client data may be visible.
