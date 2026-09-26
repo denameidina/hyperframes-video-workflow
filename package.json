@@ -14,6 +14,8 @@
     "test:motion-kit": "node --test scripts/motion-kit.test.mjs",
     "check:broll-examples": "node scripts/check-broll-examples.mjs",
     "test:render-blur": "node --test scripts/render-blur.test.mjs",
-    "render:blur": "node scripts/render-blur.mjs"
+    "render:blur": "node scripts/render-blur.mjs",
+    "video": "node scripts/video.mjs",
+    "test:video": "node --test scripts/video.test.mjs"
   }
 }

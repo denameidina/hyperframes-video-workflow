@@ -16,3 +16,4 @@ jobs:
       - run: npm run test:repliz
       - run: npm run test:motion-kit
       - run: npm run test:render-blur
+      - run: npm run test:video
