@@ -1,144 +1,7 @@
-# Agent 07 - QA/Review Agent
+# QA Checklist (Reference)
 
-## Purpose
-
-The QA/Review Agent is an optional quality gate for Dena Meidina social video edits.
-
-Its job is to review the assembled HyperFrames composition and any rendered output against the creative brief, Dena style guide, caption plan, motion plan, technical HyperFrames contract, audio quality, platform constraints, and viewer experience.
-
-This agent does not invent a new creative direction, rewrite the whole edit, generate assets, author the primary composition, upload to R2, or schedule Repliz. It audits, classifies issues, gives precise revision instructions, and decides whether the edit is ready for render, publish approval, or another revision pass.
-
-## Position In Workflow
-
-This is the optional seventh agent.
-
-Run order:
-
-1. Creative Director
-2. Transcript/Cut Agent
-3. Caption/Subtitle Agent
-4. Asset Generation Agent
-5. Motion/Overlay Agent
-6. HyperFrames Assembly Agent
-7. Optional QA/Review Agent at the user review/publish gate
-
-After Agent 06, the default path is render -> user review gate. Run this agent only when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
-
-## When To Use
-
-Use this agent when the user chooses QA first or explicitly asks for review, and:
-
-- `index.html` or `compositions/*.html` has been assembled.
-- A preview, render, or near-final edit needs QA approval.
-- The team needs a punch list before final render.
-- The user asks whether an edit is ready to post.
-- A rendered MP4 needs review for timing, audio, captions, overlays, or style fit.
-- A previous revision needs regression review.
-- A final render needs QA before R2/Repliz publishing.
-
-Do not use this agent when:
-
-- The creative brief has not been written.
-- The cut is not locked.
-- Captions and overlays have not been assembled.
-- The user only wants ideation or reference analysis.
-- The user only wants to personally review the rendered edit before deciding.
-- The task is to implement a known fix. Send that to the relevant upstream agent.
-
-## Required Reading
-
-Before reviewing, read:
-
-- `AGENTS.md`
-- `docs/dena-social-video-style-guide.md`
-- `docs/agents/01-creative-director.md`
-- `docs/agents/02-transcript-cut-agent.md`
-- `docs/agents/03-caption-subtitle-agent.md`
-- `docs/agents/04-asset-generation-agent.md`
-- `docs/agents/05-motion-overlay-agent.md`
-- `docs/agents/06-hyperframes-assembly-agent.md`
-- `videos/<slug>/creative-brief.md`
-- `videos/<slug>/edit-decision-notes.md`
-- `videos/<slug>/caption-plan.md`
-- `videos/<slug>/caption-beats.json`
-- `videos/<slug>/asset-plan.md`, if available
-- `videos/<slug>/asset-manifest.json`, if available
-- `videos/<slug>/motion-plan.md`
-- `videos/<slug>/overlay-timeline.json`
-- `videos/<slug>/assembly-notes.md`
-- `videos/<slug>/assembly-checklist.md`
-- `index.html`
-- any referenced `compositions/*.html`
-
-If the review involves a rendered MP4, inspect the rendered file as evidence instead of relying only on source files.
-
-## Core Principle
-
-QA must protect both the viewer experience and the render contract.
-
-The review should answer two questions:
-
-1. Would a real Instagram/TikTok viewer understand and keep watching this?
-2. Will HyperFrames render the same intended result reliably?
-
-Good QA is evidence-based:
-
-- cites exact timecodes
-- cites file paths or clip ids when relevant
-- separates blockers from taste notes
-- assigns each fix to the right upstream agent
-- verifies commands before claiming readiness
-
-Bad QA:
-
-- says "looks good" without preview evidence
-- accepts unreadable captions because the HTML validates
-- accepts broken render behavior because the first frame looks fine
-- rewrites the entire concept at the last stage
-- hides uncertainty instead of marking it
-
-## Inputs
-
-The agent may receive:
-
-- assembled `index.html`
-- `compositions/*.html`
-- `videos/<slug>/assembly-notes.md`
-- `videos/<slug>/assembly-checklist.md`
-- source `processed.mp4`
-- separate audio file
-- rendered MP4
-- preview screenshots or keyframes
-- creative/cut/caption/asset/motion documents
-- user constraints:
-  - needs approval only
-  - fix blockers only
-  - compare against reference
-  - prepare for Reels
-  - prepare for TikTok
-  - no render yet
-  - final render required
-
-## Outputs
-
-Preferred output folder:
-
-`videos/<slug>/`
-
-Required outputs when Agent 07 runs:
-
-- `qa-report.md`
-- `qa-punch-list.md`
-
-Conditional outputs:
-
-- `render-review.md` if a rendered MP4 exists or final render was requested
-- `final-approval.md` only when the edit passes
-- `qa-snapshots/` if screenshots/keyframes are captured
-
-The QA report is the decision record. It must be clear enough that another agent can execute the revisions without asking what went wrong.
-
-`final-approval.md` is an internal QA pass, not user permission to publish. If the user chooses publish as-is, QA artifacts and `final-approval.md` are not required. R2 upload and Repliz scheduling require explicit user approval and the CLI flag `--approved`.
+Verdicts, severity, review axes, procedure, and report formats for the optional
+QA phase. Loaded by `docs/agents/04-qa.md`.
 
 ## Verdicts
 
@@ -446,7 +309,7 @@ If the user requested final render readiness, render and review the MP4 after ch
 npm run render
 ```
 
-If a render fails, classify the issue as `blocker` and assign it to the HyperFrames Assembly Agent unless the cause is clearly upstream.
+If a render fails, classify the issue as `blocker` and assign it to the Build phase unless the cause is clearly upstream.
 
 ### 6. Write Findings
 
@@ -462,12 +325,12 @@ Every actionable finding should include:
 
 Recommended owner values:
 
-- `Creative Director`
-- `Transcript/Cut Agent`
-- `Caption/Subtitle Agent`
-- `Asset Generation Agent`
-- `Motion/Overlay Agent`
-- `HyperFrames Assembly Agent`
+- `Story phase`
+- `Story phase`
+- `Screen Plan phase (captions step)`
+- `Screen Plan phase (visual step)`
+- `Screen Plan phase (visual step)`
+- `Build phase`
 - `User Decision`
 
 ### 7. Decide Verdict
@@ -514,7 +377,7 @@ One short paragraph explaining whether the edit is ready and why.
 
 | Severity | Timecode | Owner | Issue | Required Fix |
 | --- | --- | --- | --- | --- |
-| major | 00:02.10 | Caption/Subtitle Agent | Hook text is too long to read muted. | Split into 2 shorter beats or reduce wording. |
+| major | 00:02.10 | Screen Plan phase (captions step) | Hook text is too long to read muted. | Split into 2 shorter beats or reduce wording. |
 
 ## Creative Fit
 
@@ -648,9 +511,9 @@ Likely causes:
 
 Assign to:
 
-- Creative Director for hook/story/CTA
-- Motion/Overlay Agent for attention rhythm
-- Caption/Subtitle Agent for text force
+- Story phase for hook/story/CTA
+- Screen Plan phase (visual step) for attention rhythm
+- Screen Plan phase (captions step) for text force
 
 ### Captions Are Technically Correct But Hard To Watch
 
@@ -664,8 +527,8 @@ Likely causes:
 
 Assign to:
 
-- Caption/Subtitle Agent for grouping/text
-- HyperFrames Assembly Agent for layout implementation
+- Screen Plan phase (captions step) for grouping/text
+- Build phase for layout implementation
 
 ### Overlay Looks Good In Source But Bad In Render
 
@@ -679,8 +542,8 @@ Likely causes:
 
 Assign to:
 
-- HyperFrames Assembly Agent
-- Asset Generation Agent if the source asset itself is poor
+- Build phase
+- Screen Plan phase (visual step) if the source asset itself is poor
 
 ### Audio Passes But Feels Uncomfortable
 
@@ -694,8 +557,8 @@ Likely causes:
 
 Assign to:
 
-- Transcript/Cut Agent for edit/cut problems
-- HyperFrames Assembly Agent for media wiring problems
+- Story phase for edit/cut problems
+- Build phase for media wiring problems
 - User Decision if a source recording limitation cannot be fixed cleanly
 
 ### Reference Style Was Copied Too Closely
@@ -709,25 +572,9 @@ Likely causes:
 
 Assign to:
 
-- Creative Director for style correction
-- Motion/Overlay Agent for visual grammar
-- HyperFrames Assembly Agent for implementation changes
-
-## Relationship To Other Agents
-
-Creative Director owns story, hook, content lane, and CTA.
-
-Transcript/Cut Agent owns source pacing, silence cuts, speech continuity, and processed media.
-
-Caption/Subtitle Agent owns caption text, grouping, highlights, ASR corrections, and caption timing.
-
-Asset Generation Agent owns screenshot, image, b-roll, sticker, diagram, and generated asset quality.
-
-Motion/Overlay Agent owns attention rhythm, overlay motion, pattern interrupts, and transition design.
-
-HyperFrames Assembly Agent owns the HTML/CSS/GSAP implementation and render contract.
-
-QA/Review Agent owns the QA decision record and revision routing when QA is requested.
+- Story phase for style correction
+- Screen Plan phase (visual step) for visual grammar
+- Build phase for implementation changes
 
 ## Definition Of Done
 
@@ -747,3 +594,4 @@ A QA pass is complete only when:
 - report and punch list are written
 
 If any of these are missing, do not approve the edit.
+
