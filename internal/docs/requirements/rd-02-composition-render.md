@@ -63,6 +63,23 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-19** (Unwanted) — If `--slug` berisi karakter selain huruf kecil, angka,
   dan tanda hubung, then `render:blur` shall menolak tanpa merender.
 
+## Proyek per video
+
+- **RD-02-20** (Ubiquitous) — The system shall menjaga `index.html` root sebagai
+  template HyperFrames blank portrait; komposisi video shall hidup di
+  `videos/<slug>/index.html`.
+- **RD-02-21** (Event-driven) — When `npm run video -- new <slug>` dijalankan,
+  the system shall menyalin `templates/dena-video/` ke `videos/<slug>/`, mengganti
+  `__SLUG__` dan `__DURATION__`, membuat `compositions/broll/` dan `assets/`, dan
+  membuat symlink `vendor -> ../../vendor`.
+- **RD-02-22** (Unwanted) — If `videos/<slug>/index.html` sudah ada, then
+  `video new` shall menolak tanpa mengubah file apa pun.
+- **RD-02-23** (Event-driven) — When `npm run video -- render <slug>` dijalankan,
+  the system shall merender `videos/<slug>` ke `videos/<slug>/renders/<slug>.mp4`
+  (atau `<slug>-blur.mp4` dengan `--blur`).
+- **RD-02-24** (Ubiquitous) — Proses anak `scripts/video.mjs` shall berjalan tanpa
+  `GEMINI_API_KEY` di environment.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system
