@@ -36,6 +36,7 @@ Pastikan folder kerja ada: `mkdir -p raw videos references renders` (+ `.gitkeep
 npm run dev      # server preview HyperFrames (long-running; jalankan di background)
 npm run check    # lint + validate + inspect — WAJIB setelah tiap edit .html
 npm run render   # render MP4
+npm run render:blur -- --slug <slug>  # opsional: render final dengan motion blur (4× lebih lama)
 npm run publish  # link shareable HyperFrames
 ```
 
@@ -74,6 +75,7 @@ npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approv
 ```bash
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
+npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 ```
 
