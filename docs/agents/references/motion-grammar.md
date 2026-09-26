@@ -1,123 +1,12 @@
-# Agent 05 - Motion/Overlay Agent
+# Motion Grammar (Reference)
 
-## Purpose
-
-The Motion/Overlay Agent designs how captions, assets, proof cards, effects, zooms, labels, and pattern interrupts move through the timeline.
-
-Its job is to turn `caption-beats.json` and `asset-manifest.json` into a clear motion plan: what appears, when it appears, where it appears, how it enters, how it exits, and why it exists.
-
-This agent does not cut the base video, rewrite captions, generate assets, author final HyperFrames HTML, or render the final video.
-
-## Position In Workflow
-
-This is the fifth agent.
-
-Run order:
-
-1. Creative Director
-2. Transcript/Cut Agent
-3. Caption/Subtitle Agent
-4. Asset Generation Agent
-5. Motion/Overlay Agent
-6. HyperFrames Assembly Agent
-7. QA/Review Agent
-
-The Motion/Overlay Agent receives content, captions, and assets, then creates a timeline blueprint for the HyperFrames Assembly Agent.
-
-## When To Use
-
-Use this agent when:
-
-- Captions need kinetic motion.
-- Assets need timed entry/exit.
-- The edit needs pattern interrupts.
-- The video needs zooms, punch-ins, flashes, cards, proof overlays, progress bars, lower-thirds, or CTA transitions.
-- A reference style needs motion mechanics adapted.
-- The video feels visually flat after the base cut.
-
-Do not use this agent when:
-
-- The cut is not locked.
-- Caption timing is not available.
-- Assets are not available or at least planned.
-- The user only wants a plain caption embed.
-- The task is final HTML implementation.
-
-## Required Reading
-
-Before working, read:
-
-- `docs/dena-social-video-style-guide.md`
-- `docs/agents/01-creative-director.md`
-- `docs/agents/02-transcript-cut-agent.md`
-- `docs/agents/03-caption-subtitle-agent.md`
-- `docs/agents/04-asset-generation-agent.md`
-- `videos/<slug>/creative-brief.md`
-- `videos/<slug>/edit-decision-notes.md`
-- `videos/<slug>/caption-plan.md`
-- `videos/<slug>/caption-beats.json`
-- `videos/<slug>/asset-plan.md`, if available
-- `videos/<slug>/asset-manifest.json`, if available
-
-If caption or asset inputs are missing, produce only a provisional motion plan.
-
-## Core Principle
-
-Motion must guide attention.
-
-Every motion choice needs a reason:
-
-- reveal meaning
-- emphasize a claim
-- prove a point
-- reset attention
-- transition between ideas
-- create rhythm
-- protect readability
-
-Motion is not decoration. If an effect does not improve understanding, retention, or emotional force, remove it.
-
-## Inputs
-
-The agent may receive:
-
-- `processed.mp4`
-- `creative-brief.md`
-- `edit-decision-notes.md`
-- `caption-plan.md`
-- `caption-beats.json`
-- `asset-plan.md`
-- `asset-manifest.json`
-- reference analysis notes
-- user constraints:
-  - minimal effects
-  - cinematic style
-  - fast TikTok style
-  - no heavy shake
-  - no generated media
-  - keep face unobstructed
-
-## Outputs
-
-Preferred output folder:
-
-`videos/<slug>/`
-
-Required outputs:
-
-- `motion-plan.md`
-- `overlay-timeline.json`
-
-Optional outputs:
-
-- `motion-review-notes.md`
-- `preview/overlay-map.jpg` if visual mapping is useful
-
-This agent outputs a plan, not a final composition.
+Rules for motion, pattern interrupts, placement, density, SFX cues, and the
+`overlay-timeline.json` format. Loaded by `docs/agents/02-screen-plan.md` in the
+visual step.
 
 ## Motion Layer Responsibilities
 
-The Motion/Overlay Agent designs timing and behavior for:
+The Screen Plan phase (visual step) designs timing and behavior for:
 
 - caption entrances/exits
 - hook card motion
@@ -136,18 +25,6 @@ The Motion/Overlay Agent designs timing and behavior for:
 - SFX cue timing tied to motion beats
 
 It does not decide final CSS implementation details beyond clear intent and constraints.
-
-## Track Model
-
-Use the project layer contract:
-
-- Track `1`: processed main video and separate audio.
-- Track `2`: main captions/subtitles.
-- Track `3`: retention effects, emphasis flashes, zoom labels, progress markers.
-- Track `4`: contextual overlays, screenshots, images, b-roll, mini clips, stickers.
-- Track `5`: hook card, editorial title, big takeaway, CTA/end card.
-
-The Motion/Overlay Agent should propose track indexes. HyperFrames Assembly Agent implements them.
 
 ## Motion Grammar By Format
 
@@ -563,7 +440,7 @@ Each element needs:
 
 Use processed-video time.
 
-When an element needs sound, add an `sfx` object or a matching SFX entry in `motion-plan.md`:
+When an element needs sound, add an `sfx` object or a matching SFX entry in `visual-plan.md`:
 
 ```json
 "sfx": {
@@ -573,105 +450,6 @@ When an element needs sound, add an `sfx` object or a matching SFX entry in `mot
   "notes": "Under speech; supports proof card reveal"
 }
 ```
-
-## Motion Plan Template
-
-Create `motion-plan.md`.
-
-```md
-# Motion Plan - <video slug>
-
-## Inputs
-
-- Processed video:
-- Creative brief:
-- Caption beats:
-- Asset manifest:
-
-## Strategy
-
-- Visual grammar:
-- Motion density:
-- Primary motion primitives:
-- Pattern interrupt cadence:
-- Safe area concerns:
-
-## Timeline
-
-| Time | Track | Element | Motion | Purpose | Notes |
-| --- | --- | --- | --- | --- | --- |
-
-## Caption Motion
-
-- Main caption motion:
-- Hook motion:
-- Editorial title motion:
-- CTA motion:
-
-## Asset Overlay Motion
-
-- Asset:
-  Time:
-  Motion:
-  Placement:
-  Purpose:
-  Conflict notes:
-
-## Effects
-
-- Zooms:
-- Flashes:
-- Dims:
-- Progress markers:
-- SFX suggestions:
-- SFX audibility target:
-
-## Conflicts And Resolutions
-
-- Conflict:
-  Resolution:
-
-## Handoff
-
-For HyperFrames Assembly Agent:
-
-For QA Agent:
-```
-
-## HyperFrames Compatibility Notes
-
-The Motion/Overlay Agent should keep the plan easy to implement in HyperFrames.
-
-Every planned timed element should map cleanly to:
-
-- `class="clip"`
-- `data-start`
-- `data-duration`
-- `data-track-index`
-- stable `id`
-
-Animation should be deterministic:
-
-- no random values
-- no network fetches
-- no time-dependent behavior
-- no external CDN assumptions
-
-Prefer simple GSAP-compatible motion:
-
-- opacity
-- x/y
-- scale
-- rotation only when subtle
-- clip-path only when necessary
-- filter/blur only when performance is safe
-
-Avoid:
-
-- complex shader assumptions
-- huge layered blur effects
-- dozens of simultaneous moving elements
-- CSS that may render inconsistently
 
 ## Dena-Specific Motion Rules
 
@@ -761,12 +539,12 @@ If the screen is crowded:
 If assets are weak:
 
 - Mark them optional or reject them.
-- Ask Asset Generation Agent for replacements.
+- Ask Screen Plan phase (visual step) for replacements.
 - Use simple text/card instead.
 
 If captions are too dense:
 
-- Ask Caption Agent to regroup.
+- Ask Screen Plan phase (captions step) to regroup.
 - Reduce overlay density.
 - Avoid proof cards during dense caption bursts.
 
@@ -787,16 +565,12 @@ If source footage is shaky/low quality:
 - Use overlays to stabilize attention.
 - Keep motion subtle.
 
-## Relationship To Other Agents
+## Visual Density Mapping
 
-Creative Director decides the style and story direction.
+`creative-brief.md` sets `visual_density`. Map it to the levels above:
 
-Caption Agent decides exact words and caption timing.
-
-Asset Generation Agent provides the visual ingredients.
-
-Motion/Overlay Agent decides movement, placement, layering, and interaction.
-
-HyperFrames Assembly Agent implements the plan.
-
-QA Agent checks readability, overlap, timing, and brand fit.
+| `visual_density` | Motion density level | Asset density |
+| --- | --- | --- |
+| `light` | `low` | lower end of Default Asset Density in `visual-planning.md` |
+| `medium` (default) | `medium` | Default Asset Density |
+| `heavy` | `high` | upper end of Default Asset Density; still one idea per visual |
