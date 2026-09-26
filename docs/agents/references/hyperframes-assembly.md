@@ -1,157 +1,9 @@
-# Agent 06 - HyperFrames Assembly Agent
+# HyperFrames Assembly (Reference)
 
-## Purpose
-
-The HyperFrames Assembly Agent turns the approved cut, captions, assets, and motion plan into an editable HyperFrames composition.
-
-Its job is to author the actual HTML/CSS/GSAP layer structure, wire all timed clips, place media, register timelines, and make sure the project passes HyperFrames validation before the edit goes to user review.
-
-This agent does not choose the creative angle, rewrite the cut, invent new captions, generate new assets, or approve the final video. It implements the approved blueprint as a deterministic composition.
-
-## Position In Workflow
-
-This is the sixth agent.
-
-Run order:
-
-1. Creative Director
-2. Transcript/Cut Agent
-3. Caption/Subtitle Agent
-4. Asset Generation Agent
-5. Motion/Overlay Agent
-6. HyperFrames Assembly Agent
-7. Optional QA/Review Agent at the user review/publish gate
-
-The HyperFrames Assembly Agent receives the timeline blueprint from the Motion/Overlay Agent and produces the working composition that can be rendered for user review. The QA/Review Agent inspects it only when the user chooses QA first or asks for readiness review.
-
-## When To Use
-
-Use this agent when:
-
-- The cut, captions, assets, and motion plan are ready to assemble.
-- A talking-head recut needs designed overlays, captions, proof cards, or CTA cards.
-- A motion plan needs to become actual HyperFrames HTML.
-- Existing composition files need to be updated to match a new edit plan.
-- The video must remain editable as separate layers instead of being burned into the source MP4.
-- The user asks to implement the edit in HyperFrames.
-
-Do not use this agent when:
-
-- The source cut is not locked.
-- Captions or overlay timing are still being written.
-- Assets are not prepared or at least clearly planned.
-- The user only wants analysis, a creative brief, or a motion plan.
-- The task is only QA, final render review, or publishing.
-- The project is not a HyperFrames project and no conversion/initialization has been approved.
-
-## Required Reading
-
-Before working, read:
-
-- `AGENTS.md`
-- `docs/dena-social-video-style-guide.md`
-- `docs/agents/01-creative-director.md`
-- `docs/agents/02-transcript-cut-agent.md`
-- `docs/agents/03-caption-subtitle-agent.md`
-- `docs/agents/04-asset-generation-agent.md`
-- `docs/agents/05-motion-overlay-agent.md`
-- HyperFrames entry skill: `/hyperframes`
-- HyperFrames core skill: `/hyperframes-core`
-- HyperFrames local docs as needed:
-  - `npx hyperframes docs data-attributes`
-  - `npx hyperframes docs compositions`
-  - `npx hyperframes docs gsap`
-  - `npx hyperframes docs rendering`
-  - `npx hyperframes docs troubleshooting`
-- `videos/<slug>/creative-brief.md`
-- `videos/<slug>/edit-decision-notes.md`
-- `videos/<slug>/caption-plan.md`
-- `videos/<slug>/caption-beats.json`
-- `videos/<slug>/asset-plan.md`, if available
-- `videos/<slug>/asset-manifest.json`, if available
-- `videos/<slug>/motion-plan.md`
-- `videos/<slug>/overlay-timeline.json`
-
-If any upstream plan is missing, stop and produce an assembly readiness report instead of guessing the final structure.
-
-## Core Principle
-
-Assembly must be faithful, inspectable, and deterministic.
-
-The composition should make the approved edit real without hiding decisions inside a rendered file. Captions, overlays, cards, screenshots, video, and audio should remain separate timed layers that can be inspected and adjusted.
-
-Good assembly:
-
-- preserves the approved cut and timing
-- keeps each visual layer editable
-- follows the HyperFrames timing contract exactly
-- uses local assets with stable paths
-- passes validation before handoff
-- avoids clever runtime behavior that can break rendering
-
-Bad assembly:
-
-- burns all overlays into the source video too early
-- uses random timing or runtime clocks
-- loads remote assets during render
-- creates overlapping clips on the same track
-- hides text behind platform UI
-- fixes visual problems by ignoring lint warnings
-- changes the creative idea without sending it back upstream
-
-## Inputs
-
-The agent may receive:
-
-- `processed.mp4`
-- separate extracted audio, if present
-- `creative-brief.md`
-- `edit-decision-notes.md`
-- `caption-plan.md`
-- `caption-beats.json`
-- `asset-plan.md`
-- `asset-manifest.json`
-- `motion-plan.md`
-- `overlay-timeline.json`
-- existing `index.html`
-- existing `compositions/*.html`
-- existing `meta.json`
-- local fonts, textures, screenshots, b-roll, stickers, icons, and generated media
-- reference analysis notes
-- user constraints:
-  - keep all overlays editable
-  - no generated media
-  - no remote assets
-  - no heavy motion
-  - match Dena default style
-  - cinematic operator style
-  - reuse existing project structure
-
-## Outputs
-
-Primary project outputs:
-
-- `index.html`
-- `compositions/*.html`, only when sub-compositions are justified
-- updated local asset references
-
-Preferred video working folder:
-
-`videos/<slug>/`
-
-Required handoff outputs:
-
-- `videos/<slug>/assembly-notes.md`
-- `videos/<slug>/assembly-checklist.md`
-
-Optional outputs:
-
-- `videos/<slug>/storyboard.json`
-- `videos/<slug>/preview/keyframes/`
-- `videos/<slug>/warnings.md`
-- `videos/<slug>/render-notes.md`, only if a render was requested
-
-This agent may render previews if needed, but publish approval belongs to the user. QA is optional at the review/publish gate.
+Contract, procedure, skeleton, and handoff formats for assembling the edit in
+HyperFrames. Loaded by `docs/agents/03-build.md` in the assembly step, after the
+`/hyperframes` and `/hyperframes-core` skills. Tracks and z-index follow
+`internal/docs/design-system/visual-system.md`.
 
 ## HyperFrames Contract
 
@@ -196,33 +48,6 @@ Sub-compositions:
 - Register the sub-composition timeline under its own composition id.
 - Keep sub-composition assets local and deterministic.
 - Do not hide broken root structure inside a sub-composition.
-
-## Track Model
-
-Use this project layer contract:
-
-- Track `1`: processed main video and separate audio.
-- Track `2`: main captions/subtitles.
-- Track `3`: retention effects, emphasis flashes, zoom labels, progress markers.
-- Track `4`: contextual overlays, screenshots, images, b-roll, mini clips, stickers.
-- Track `5`: hook card, editorial title, big takeaway, CTA/end card.
-
-Important:
-
-- `data-track-index` controls temporal overlap rules, not visual stacking.
-- Use CSS `z-index` for paint order.
-- Same-track clips must not overlap in time.
-- Different tracks may overlap when the design requires it.
-- Do not put all overlays on one track if their timings overlap.
-
-Default z-index guidance:
-
-- base video: `1`
-- dim/vignette layer: `10`
-- screenshots/b-roll/proof cards: `20`
-- effects/highlights/progress: `30`
-- captions: `40`
-- hook/title/CTA cards: `50`
 
 ## Assembly Procedure
 
@@ -289,7 +114,7 @@ Convert `caption-beats.json` into timed caption clips.
 
 Rules:
 
-- preserve caption text unless the Caption Agent marked a correction
+- preserve caption text unless the Screen Plan phase (captions step) marked a correction
 - keep each caption beat editable as text
 - preserve full spoken-word coverage from `caption-beats.json`; do not collapse running captions into sparse highlight-only text
 - use stable ids such as `cap-001`
@@ -339,7 +164,7 @@ Preferred overlay structure:
 
 ### 6. Implement Motion
 
-Translate `motion-plan.md` into GSAP timeline steps.
+Translate `visual-plan.md` into GSAP timeline steps.
 
 Rules:
 
@@ -364,7 +189,7 @@ Do not add new motion because it looks interesting. Only implement motion that s
 
 ### 6a. Implement SFX Cues
 
-If `motion-plan.md` or `overlay-timeline.json` includes SFX cues, wire them as local audio assets or a prepared SFX stem.
+If `visual-plan.md` or `overlay-timeline.json` includes SFX cues, wire them as local audio assets or a prepared SFX stem.
 
 Rules:
 
@@ -372,7 +197,7 @@ Rules:
 - time cues to the same processed-video timeline as captions and overlays
 - keep SFX under speech; do not mask spoken words
 - document any skipped cue in `assembly-notes.md`
-- if no SFX asset exists for a required cue, route back to Motion/Overlay Agent instead of silently omitting it
+- if no SFX asset exists for a required cue, route back to Screen Plan phase (visual step) instead of silently omitting it
 
 Do not rely on remote sound URLs in the render path.
 
@@ -723,35 +548,38 @@ Fix:
 - use stable font size with responsive constraints
 - split caption beat upstream if needed
 
-## Relationship To Other Agents
+## HyperFrames Compatibility Notes
 
-Creative Director defines the story and visual lane.
+The Screen Plan phase (visual step) should keep the plan easy to implement in HyperFrames.
 
-Transcript/Cut Agent locks the source cut and source duration.
+Every planned timed element should map cleanly to:
 
-Caption/Subtitle Agent provides readable caption beats and language corrections.
+- `class="clip"`
+- `data-start`
+- `data-duration`
+- `data-track-index`
+- stable `id`
 
-Asset Generation Agent provides safe, purposeful assets.
+Animation should be deterministic:
 
-Motion/Overlay Agent defines timing, movement, and attention logic.
+- no random values
+- no network fetches
+- no time-dependent behavior
+- no external CDN assumptions
 
-HyperFrames Assembly Agent implements those decisions in the composition.
+Prefer simple GSAP-compatible motion:
 
-QA/Review Agent optionally tests whether the assembled video actually works for the viewer and for the renderer.
+- opacity
+- x/y
+- scale
+- rotation only when subtle
+- clip-path only when necessary
+- filter/blur only when performance is safe
 
-## Handoff To User Review Gate
+Avoid:
 
-The handoff must include:
+- complex shader assumptions
+- huge layered blur effects
+- dozens of simultaneous moving elements
+- CSS that may render inconsistently
 
-- composition file paths
-- asset paths
-- source video path
-- audio path
-- `assembly-notes.md`
-- `assembly-checklist.md`
-- latest verification command output summary
-- unresolved warnings
-- known visual risks
-- key moments the user or optional QA should inspect
-
-Do not upload or schedule publishing from assembly. Render for user review, then offer publish as-is, QA first, or revisions.
