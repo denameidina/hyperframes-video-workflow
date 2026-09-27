@@ -185,6 +185,23 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   diredaksi, then bar redaksi shall sudah menutup bagian itu sejak frame pertama
   clip, sehingga teks yang disembunyikan tidak pernah terbaca selama kartu
   bergerak masuk.
+- **RD-03-50** (Event-driven) — When fase Screen Plan memilih motion visual,
+  agen shall membaca `vendor/asset-lib/CATALOG.md` dan contact sheet gaya itu
+  (`docs/agents/references/asset-catalog/sheets/`) sebelum meminta aset baru
+  per video.
+- **RD-03-51** (Ubiquitous) — Palet dan tipografi di Style B-roll Brief shall
+  berupa preset bernama (`sk-pal-*`, `sk-grade-px-*`, `sk-type-*`) yang ada di
+  `vendor/asset-lib/asset-lib.css`, atau hex eksplisit dengan alasan.
+- **RD-03-52** (Ubiquitous) — Aset pustaka di daftar `Assets:` shall ditulis
+  dengan id katalog yang ada di `vendor/asset-lib/catalog.json`.
+- **RD-03-53** (Ubiquitous) — Pustaka aset shall mencatat setiap file di
+  `catalog.json` dan `LICENSES.md`, ter-track di git, dengan total (pustaka +
+  contact sheet) ≤ 25 MB.
+- **RD-03-54** (Ubiquitous) — Setiap dokumen dari `SK.doc` shall menampilkan
+  tag "Ilustrasi"; tag itu tidak bisa dimatikan.
+- **RD-03-55** (Unwanted) — If sebuah aset per video menduplikasi aset yang
+  sudah ada di pustaka, then fase Build shall memakai aset pustaka, kecuali
+  brief mencatat alasannya.
 
 ## Referensi
 
