@@ -4,6 +4,13 @@
     {"clip": "mg-01-count", "duration": 5.5, "treatment": "cutaway", "stills": [1.2, 5.2]},
     {"clip": "mg-02-compare-bars", "duration": 6, "treatment": "split", "stills": [1.5, 5.7]},
     {"clip": "mg-03-icon-grid", "duration": 6, "treatment": "cutaway", "stills": [1.0, 5.7]},
-    {"clip": "mg-04-arrow-flow", "duration": 6, "treatment": "panel", "stills": [2.0, 5.7]}
+    {"clip": "mg-04-arrow-flow", "duration": 6, "treatment": "panel", "stills": [2.0, 5.7]},
+    {"clip": "mg-05-race-timeline", "duration": 7, "treatment": "cutaway", "stills": [1.2, 5.6]},
+    {"clip": "mg-06-before-venn", "duration": 6, "treatment": "split", "stills": [1.55, 5.2]},
+    {"clip": "mg-07-funnel-stack", "duration": 7, "treatment": "panel", "stills": [2.8, 6.4]},
+    {"clip": "mg-08-dots-bubbles", "duration": 7, "treatment": "cutaway", "stills": [2.6, 6.4]},
+    {"clip": "mg-09-province-pin", "duration": 6, "treatment": "cutaway", "stills": [2.6, 4.6]},
+    {"clip": "mg-10-route", "duration": 6, "treatment": "split", "stills": [2.4, 5.0]},
+    {"clip": "mg-11-kpi-orbit", "duration": 7, "treatment": "cutaway", "stills": [2.8, 6.4]}
   ]
 }

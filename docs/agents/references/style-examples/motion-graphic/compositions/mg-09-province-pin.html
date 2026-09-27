@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the places are named to show the mechanism. In a real clip the provinces and the pin are the ones the speaker names (Gate 2 R1); the province map is Natural Earth 5.1.2 and is not a statement of current borders. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #title { position: absolute; left: 80px; top: 300px; font-size: 64px; font-weight: 800; color: var(--sk-ink); }
+        #sub { position: absolute; left: 82px; top: 384px; font-size: 32px; color: var(--sk-muted); }
+        #mapbox { position: absolute; left: 0; top: 520px; width: 1080px; height: 640px; overflow: hidden; }
+        #map { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        #pin { position: absolute; left: 0; top: 0; width: 40px; }
+        .lab { position: absolute; padding: 6px 16px; border-radius: 10px; background: var(--sk-ink); color: #ffffff; font-size: 30px; font-weight: 700; white-space: nowrap; }
+        #src { position: absolute; left: 80px; top: 1200px; font-size: 26px; color: var(--sk-muted); }
+      </style>
+      <div id="root" data-composition-id="mg-09-province-pin" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-mg" style="--sk-bg:#f4efe6;--sk-ink:#1c1917;--sk-accent:#2563eb;--sk-muted:#a8a29e">
+
+          <div id="title">Pelanggan kami ada di</div>
+          <div id="sub">ilustrasi &middot; peta: Natural Earth</div>
+          <div id="mapbox"><div id="map"></div><div class="sk-pin" id="pin"></div></div>
+          <div class="lab" id="l0">Jawa Barat</div>
+          <div class="lab" id="l1">Jawa Timur</div>
+          <div class="lab" id="l2">Sulawesi Selatan</div>
+          <div id="src">Natural Earth 5.1.2 (33 provinsi)</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-09-province-pin';
+          const $ = SK.finder(ID);
+
+          // view: lon 104..122 across the frame (Java to Sulawesi), map pixels scaled by K and shifted
+          const K = 1080 / ((122 - 104) * 50), OX = -(104 - 94) * 50 * K, OY = -(7.5 - 0) * 50 * K + 40;
+          const NAMES = ['jawa-barat', 'jawa-timur', 'sulawesi-selatan'];
+          $('map').innerHTML = SK.mapSvg('id-provinces', { fill: '#cfc6b4', regions: Object.fromEntries(NAMES.map((n) => [n, '#cfc6b4'])) });
+          $('map').style.transform = `translate(${OX.toFixed(1)}px,${OY.toFixed(1)}px) scale(${K})`;
+          // find regions by data attribute (the linter rejects template-literal selectors)
+          const all = Array.from($('map').querySelectorAll('[data-region]'));
+          const regions = NAMES.map((n) => all.find((p) => p.getAttribute('data-region') === n));
+          const at = [1.0, 1.6, 2.2];
+          // label anchors: each province's city, in frame pixels
+          const pt = (c) => { const g = SK.geo(...SK.CITIES[c], 'id-provinces'); return { x: OX + g.x * K, y: 520 + OY + g.y * K }; };
+          const anchors = [pt('bandung'), pt('surabaya'), pt('makassar')];
+          const pin = pt('makassar');
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.enter($('title'), t - 0.1, 'rise'); SK.enter($('sub'), t - 0.3, 'fade');
+            $('mapbox').style.opacity = M.eo((t - 0.3) / 0.4).toFixed(4);
+            regions.forEach((r, i) => { r.setAttribute('fill', M.eo((t - at[i]) / 0.3) > 0.5 ? '#2563eb' : '#cfc6b4'); });
+            anchors.forEach((a, i) => {
+              const el = $('l' + i);
+              el.style.left = (i === 2 ? a.x - 300 : a.x - 60).toFixed(1) + 'px';   // Sulawesi's label sits left of the city, inside the frame
+              el.style.top = (a.y + (i === 1 ? 44 : -86)).toFixed(1) + 'px';
+              SK.enter(el, t - at[i] - 0.1, 'pop');
+            });
+            SK.enter($('pin'), t - 3.4, 'drop', { dy: 160 });
+            $('pin').style.left = (pin.x - 20).toFixed(1) + 'px';
+            $('pin').style.top = (pin.y - 520 - 60).toFixed(1) + 'px';
+            SK.enter($('src'), t - 0.6, 'fade');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

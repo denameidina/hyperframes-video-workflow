@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #card { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; background: var(--sk-bg); }
+        .st { position: absolute; left: 0; width: 1080px; height: 330px; }
+        #before { top: 130px; } #after { top: 490px; }
+        .st .k { position: absolute; left: 90px; top: 20px; font-size: 40px; font-weight: 700; color: var(--sk-muted); letter-spacing: .06em; text-transform: uppercase; }
+        .st .v { position: absolute; left: 90px; top: 80px; font-size: 170px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+        .st .n { position: absolute; left: 600px; top: 150px; font-size: 44px; font-weight: 600; color: var(--sk-ink); }
+        #before .v { color: var(--sk-muted); }
+        #after { background: var(--sk-bg); }
+        #after .v { color: var(--sk-accent); }
+        #edge { position: absolute; top: 490px; width: 8px; height: 330px; background: var(--sk-ink); }
+        #venn { position: absolute; left: 0; top: 0; }
+        .vl { position: absolute; top: 700px; font-size: 52px; font-weight: 700; color: var(--sk-ink); }
+        #mid { position: absolute; left: 0; right: 0; top: 440px; text-align: center; font-size: 60px; font-weight: 800; color: #ffffff; }
+      </style>
+      <div id="root" data-composition-id="mg-06-before-venn" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-mg sk-pal-mg-sunrise">
+
+          <div id="card"></div>
+          <div class="st" id="before"><div class="k">Dulu</div><div class="v">3 hari</div><div class="n">rekap stok manual</div></div>
+          <div class="st" id="after"><div class="k">Sekarang</div><div class="v">2 jam</div><div class="n">rekap stok otomatis</div></div>
+          <div id="edge"></div>
+          <svg id="venn" width="1080" height="960" viewBox="0 0 1080 960"><circle id="cA" cx="0" cy="480" r="230" fill="var(--sk-accent)" style="mix-blend-mode:multiply" /><circle id="cB" cx="0" cy="480" r="230" fill="var(--sk-accent-2)" style="mix-blend-mode:multiply" /></svg>
+          <div class="vl" id="lA" style="left:150px">Cepat</div>
+          <div class="vl" id="lB" style="left:780px">Rapi</div>
+          <div id="mid">Sistem</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-06-before-venn';
+          const $ = SK.finder(ID);
+
+          // before-after: the "after" panel wipes in from the left on "sekarang" (1.3 s)
+          const wipe = (t) => M.eo((t - 1.3) / 0.5);
+          // venn: the two circles slide together from 3.2 s; the overlap tints by multiply
+          const xa = M.track(160, [[3.4, 430, M.SLOW]]), xb = M.track(920, [[3.4, 650, M.SLOW]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('card').style.transform = `translateY(${(-(1 - M.eo(t / 0.35)) * 960).toFixed(2)}px)`;
+            const out = M.eo((t - 2.8) / 0.3);
+            SK.enter($('before'), t - 0.3, 'fade');
+            const w = wipe(t);
+            $('before').style.filter = `grayscale(${w.toFixed(3)})`;
+            $('after').style.clipPath = `inset(0 ${((1 - w) * 100).toFixed(2)}% 0 0)`;
+            $('edge').style.transform = `translateX(${(w * 1080 - 4).toFixed(2)}px)`;
+            $('edge').style.opacity = (w > 0 && w < 1 ? 1 : 0).toString();
+            for (const id of ['before', 'after']) $(id).style.opacity = (1 - out).toFixed(4);
+            const vin = M.eo((t - 3.0) / 0.3);
+            $('cA').setAttribute('cx', xa(t).toFixed(2)); $('cB').setAttribute('cx', xb(t).toFixed(2));
+            $('venn').style.opacity = vin.toFixed(4);
+            SK.enter($('lA'), t - 3.3, 'rise'); SK.enter($('lB'), t - 3.5, 'rise');
+            SK.enter($('mid'), t - 4.1, 'pop');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

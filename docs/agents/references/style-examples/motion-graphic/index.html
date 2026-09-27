@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-motion-graphic" data-start="0" data-width="1080" data-height="1920" data-duration="25.5">
-      <div id="base-video" class="clip" data-start="0" data-duration="25.5" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-motion-graphic" data-start="0" data-width="1080" data-height="1920" data-duration="75">
+      <div id="base-video" class="clip" data-start="0" data-duration="75" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -38,6 +38,20 @@
            data-start="13" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="mg-04-arrow-flow-mount" class="broll" data-composition-id="mg-04-arrow-flow" data-composition-src="compositions/mg-04-arrow-flow.html"
            data-start="19.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-05-race-timeline-mount" class="broll" data-composition-id="mg-05-race-timeline" data-composition-src="compositions/mg-05-race-timeline.html"
+           data-start="26" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-06-before-venn-mount" class="broll" data-composition-id="mg-06-before-venn" data-composition-src="compositions/mg-06-before-venn.html"
+           data-start="33.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-07-funnel-stack-mount" class="broll" data-composition-id="mg-07-funnel-stack" data-composition-src="compositions/mg-07-funnel-stack.html"
+           data-start="40" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-08-dots-bubbles-mount" class="broll" data-composition-id="mg-08-dots-bubbles" data-composition-src="compositions/mg-08-dots-bubbles.html"
+           data-start="47.5" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-09-province-pin-mount" class="broll" data-composition-id="mg-09-province-pin" data-composition-src="compositions/mg-09-province-pin.html"
+           data-start="55" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-10-route-mount" class="broll" data-composition-id="mg-10-route" data-composition-src="compositions/mg-10-route.html"
+           data-start="61.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mg-11-kpi-orbit-mount" class="broll" data-composition-id="mg-11-kpi-orbit" data-composition-src="compositions/mg-11-kpi-orbit.html"
+           data-start="68" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -45,6 +59,10 @@
       // Split treatment: slide the base video into the bottom half for the clip, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 6.5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 12.05);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 33.5);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 39.05);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 61.5);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 67.05);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-motion-graphic'] = tl;
     </script>

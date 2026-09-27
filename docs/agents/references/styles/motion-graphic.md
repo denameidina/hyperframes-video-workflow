@@ -5,7 +5,7 @@ and relationships, with no cursor and no UI chrome. Loaded by
 `docs/agents/02-screen-plan.md` (visual step, after `styles/README.md`) and
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`) on top of `vendor/motion-kit/` (`window.M`, including `M.icon`).
-Worked examples: `docs/agents/references/style-examples/motion-graphic/` (`mg-01` … `mg-04`,
+Worked examples: `docs/agents/references/style-examples/motion-graphic/` (`mg-01` … `mg-11`,
 `npm run check:style-examples -- motion-graphic`).
 
 ## When To Use
@@ -110,6 +110,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **dot-matrix** | 10×10 dots; a share fills with the accent | A % that should feel concrete | Fill sweeps in, done on "persen" | rapid soft ticks | Rounding that changes the meaning | 100 dots, fill order by index, `M.ctrack` |
 | **map-pin** | Flat map; region tints, pin drops | A named place or market | Pin drops on the place name | pin tick | Wrong geography | flat SVG map asset + `'drop'` (map asset from sub-project 2 pipeline) |
 | **bubble-move** | 1–3 bubbles travel across two axes with a big year behind | "dari … ke …" over time | Travel lasts the phrase; stops on the end value | soft whoosh | Unlabelled axes; invented trajectories | `x/y/r` via `M.track`, year via `SK.count` |
+| **province-glow** | A province map; each named province fills with the accent in turn, with a label | Where customers or offices are ("Jawa Barat, Jawa Timur…") | Each province fills on its name, 0.3 s | soft pop per region | Tinting provinces that were not named; claiming current administrative borders (NE 5.1.2 = 33 provinces) | `SK.mapSvg('id-provinces', { regions })`, fill via `M.track` |
+| **route-arc** | An arc draws from city A to city B on a Southeast Asia or world map; a dot travels along it | "kirim dari Jakarta ke Singapura", expansion | The arc draws over the phrase; the dot arrives on the destination name | whoosh | Straight lines; routes to places nobody named | `SK.geo` + `SK.arcPath(p0, p1, bend)` + `SK.draw`, dot via `SK.tip` |
+| **kpi-cards** | 2–3 stat cards: icon, count-up number, up/down arrow | Several business numbers in one breath | Each card enters with its number; the count stops on the last syllable | tick per card | Numbers nobody said; more than three cards | `SK.icon` + `SK.count` + `.sk-a` cards with `'rise'` |
+| **icon-orbit** | A label in the middle; tool icons enter one by one and orbit | "nyambung ke semua tools", integrations | One icon per named tool; slow orbit (≤ 20°/s) | soft blip | Real brand logos (use generic icons); spinning fast | `SK.icon` placed on an angle via `M.track`, fixed radius |
 
 ## References
 
@@ -253,6 +257,8 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | bar-compare, stack-up | rising swoosh / soft thud per mark | 0.1–0.14 |
 | arrow-flow, cycle-loop | pen swish / low rotating whoosh | 0.08–0.12 |
 | scale-compare | deep soft boom | 0.14–0.18 |
+| map-pin, province-glow, icon-orbit | pin tick / soft pop / blip | 0.08–0.12 |
+| route-arc, bubble-move | whoosh | 0.1–0.14 |
 
 ## Examples
 
@@ -262,6 +268,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | `style-examples/motion-graphic/compositions/mg-02-compare-bars.html` | bar-compare + scale-compare bracket, night palette, relative (no values) | split |
 | `style-examples/motion-graphic/compositions/mg-03-icon-grid.html` | icon-grid (Isotype legend) + one tinted unit | cutaway |
 | `style-examples/motion-graphic/compositions/mg-04-arrow-flow.html` | arrow-flow + cycle-loop on a panel card | panel |
+| `style-examples/motion-graphic/compositions/mg-05-race-timeline.html` | bar-race + timeline, fintech palette | cutaway |
+| `style-examples/motion-graphic/compositions/mg-06-before-venn.html` | before-after (two rows, "before" greyed) + venn, sunrise palette | split |
+| `style-examples/motion-graphic/compositions/mg-07-funnel-stack.html` | funnel + stack-up, Jakarta type, pictograms | panel |
+| `style-examples/motion-graphic/compositions/mg-08-dots-bubbles.html` | dot-matrix + bubble-move, AI-violet palette | cutaway |
+| `style-examples/motion-graphic/compositions/mg-09-province-pin.html` | map-pin + province-glow on `SK.mapSvg('id-provinces')` | cutaway |
+| `style-examples/motion-graphic/compositions/mg-10-route.html` | route-arc on the `sea` map between `SK.CITIES` | split |
+| `style-examples/motion-graphic/compositions/mg-11-kpi-orbit.html` | kpi-cards + icon-orbit, data type | cutaway |
 
 ## Anti-slop Checklist
 

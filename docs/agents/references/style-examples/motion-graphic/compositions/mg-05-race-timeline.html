@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the channels, years, and values are invented to show the mechanism. In a real clip every label is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #title { position: absolute; left: 80px; top: 170px; font-size: 64px; font-weight: 700; color: var(--sk-ink); }
+        #sub { position: absolute; left: 82px; top: 250px; font-size: 32px; color: var(--sk-muted); }
+        #year { position: absolute; right: 80px; top: 150px; font-size: 120px; font-weight: 800; letter-spacing: -0.04em; color: var(--sk-accent); font-feature-settings: "tnum" 1; }
+        .row { position: absolute; left: 80px; height: 96px; width: 920px; }
+        .row b { position: absolute; left: 0; top: 0; height: 96px; border-radius: 0 16px 16px 0; background: #334155; }
+        .row span { position: absolute; left: 24px; top: 26px; font-size: 38px; font-weight: 700; color: var(--sk-ink); white-space: nowrap; }
+        #r0 b { background: var(--sk-accent); }
+        #tl { position: absolute; left: 0; top: 0; }
+        .yr { position: absolute; top: 1420px; width: 160px; text-align: center; font-size: 36px; font-weight: 700; color: var(--sk-muted); }
+        #dot { position: absolute; left: 0; top: 0; width: 34px; height: 34px; border-radius: 50%; background: var(--sk-accent); }
+      </style>
+      <div id="root" data-composition-id="mg-05-race-timeline" data-width="1080" data-height="1920" data-duration="7">
+        <div class="sk-stage sk-mg sk-pal-mg-fintech">
+
+          <div id="title">Kanal penjualan</div>
+          <div id="sub">ilustrasi &middot; urutan berubah tiap tahun</div>
+          <div id="year">2022</div>
+          <div class="row" id="r0"><b></b><span>Marketplace</span></div>
+          <div class="row" id="r1"><b></b><span>Chat</span></div>
+          <div class="row" id="r2"><b></b><span>Toko fisik</span></div>
+          <div class="row" id="r3"><b></b><span>Website</span></div>
+          <svg id="tl" width="1080" height="1920" viewBox="0 0 1080 1920"><path id="axis" class="sk-stroke" d="M140 1380 L940 1380" style="stroke:#475569;stroke-width:6" /><path id="t0" class="sk-stroke" d="M180 1360 L180 1400" style="stroke:#94a3b8;stroke-width:6" /><path id="t1" class="sk-stroke" d="M540 1360 L540 1400" style="stroke:#94a3b8;stroke-width:6" /><path id="t2" class="sk-stroke" d="M900 1360 L900 1400" style="stroke:#94a3b8;stroke-width:6" /></svg>
+          <div class="yr" style="left:100px">2022</div><div class="yr" style="left:460px">2023</div><div class="yr" style="left:820px">2024</div>
+          <div id="dot"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-05-race-timeline';
+          const $ = SK.finder(ID);
+
+          // values per year (illustrative); rank → row top
+          const V = { r0: [30, 55, 90], r1: [60, 70, 85], r2: [80, 50, 40], r3: [20, 35, 60] };
+          const Y = [2.0, 4.0];            // the year changes at these times
+          const val = (id, t) => { const v = V[id]; const a = M.eo((t - Y[0]) / 0.6), b = M.eo((t - Y[1]) / 0.6); return v[0] + (v[1] - v[0]) * a + (v[2] - v[1]) * b; };
+          const top = (rank) => 420 + rank * 130;
+          // rank of each row in each year; rows glide to the new rank just after the year changes (staggered)
+          const rankIn = (k) => { const order = Object.keys(V).sort((x, y) => V[y][k] - V[x][k]); return (id) => order.indexOf(id); };
+          const R = [0, 1, 2].map(rankIn);
+          const rows = Object.keys(V).map((id, i) => ({ id, i, el: $(id), bar: $(id).querySelector('b') }));
+          const dotX = M.track(180, [[Y[0], 540, M.SLOW], [Y[1], 900, M.SLOW]]);
+          SK.clip(ID, { T: 7, update: (t) => {
+            SK.enter($('title'), t - 0.1, 'rise'); SK.enter($('sub'), t - 0.25, 'fade');
+            $('year').textContent = String(t < Y[0] + 0.3 ? 2022 : t < Y[1] + 0.3 ? 2023 : 2024);
+            for (const r of rows) {
+              const a = M.eo((t - Y[0] - 0.35 - r.i * 0.05) / 0.45), b = M.eo((t - Y[1] - 0.35 - r.i * 0.05) / 0.45);
+              const y = top(R[0](r.id)) + (top(R[1](r.id)) - top(R[0](r.id))) * a + (top(R[2](r.id)) - top(R[1](r.id))) * b;
+              r.el.style.top = y.toFixed(2) + 'px';
+              r.bar.style.width = (val(r.id, t) * 9.2 * M.eo((t - 0.4 - r.i * 0.08) / 0.5)).toFixed(1) + 'px';
+              SK.enter(r.el, t - 0.4 - r.i * 0.08, 'fade');
+            }
+            SK.draw($('axis'), M.eo((t - 0.3) / 0.5));
+            ['t0', 't1', 't2'].forEach((id, i) => SK.draw($(id), M.eo((t - 0.6 - i * 0.1) / 0.2)));
+            $('dot').style.transform = `translate(${(dotX(t) - 17).toFixed(2)}px, 1363px)`;
+            $('dot').style.opacity = M.eo((t - 0.8) / 0.2).toFixed(4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

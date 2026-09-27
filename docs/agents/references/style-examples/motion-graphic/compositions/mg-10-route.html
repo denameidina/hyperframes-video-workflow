@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the cities are named to show the mechanism. In a real clip the route joins the places the speaker names (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #card { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; background: var(--sk-bg); overflow: hidden; }
+        #map { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        #arcs { position: absolute; left: 0; top: 0; }
+        .dot { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--sk-accent); }
+        .city { position: absolute; padding: 6px 14px; border-radius: 10px; background: #e6edf7; color: #0b1220; font-size: 30px; font-weight: 700; white-space: nowrap; }
+        #title { position: absolute; left: 70px; top: 850px; font-size: 56px; font-weight: 800; color: var(--sk-ink); }
+      </style>
+      <div id="root" data-composition-id="mg-10-route" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-mg sk-pal-mg-fintech">
+
+          <div id="card"><div id="map"></div>
+            <svg id="arcs" width="1080" height="960" viewBox="0 0 1080 960"><path id="a0" class="sk-stroke" style="stroke:var(--sk-accent);stroke-width:7;stroke-dasharray:0" /><path id="a1" class="sk-stroke" style="stroke:var(--sk-accent-2);stroke-width:7" /></svg>
+            <div class="dot" id="d0"></div><div class="dot" id="d1" style="background:var(--sk-accent-2)"></div>
+            <div class="city" id="cJ">Jakarta</div><div class="city" id="cS">Singapura</div><div class="city" id="cM">Manila</div>
+            <div id="title">Kirim ke luar negeri</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-10-route';
+          const $ = SK.finder(ID);
+
+          const K = 1080 / 1980;   // the Southeast Asia map (1980 x 1332) fitted to the card width
+          $('map').innerHTML = SK.mapSvg('sea', { fill: '#1e293b', stroke: '#0b1220', regions: { indonesia: '#334155' } });
+          $('map').style.transform = `scale(${K})`;
+          const P = (c) => { const g = SK.geo(...SK.CITIES[c], 'sea'); return { x: g.x * K, y: g.y * K - 40 }; };
+          const J = P('jakarta'), S = P('singapore'), Mn = P('manila');
+          $('map').style.top = '-40px';
+          $('a0').setAttribute('d', SK.arcPath(J, S, 0.35));
+          $('a1').setAttribute('d', SK.arcPath(J, Mn, -0.25));
+          const place = (id, p, dx, dy) => { $(id).style.left = (p.x + dx).toFixed(1) + 'px'; $(id).style.top = (p.y + dy).toFixed(1) + 'px'; };
+          place('cJ', J, -60, 24); place('cS', S, -150, -64); place('cM', Mn, -40, -64);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('card').style.transform = `translateY(${(-(1 - M.eo(t / 0.35)) * 960).toFixed(2)}px)`;
+            SK.enter($('title'), t - 0.3, 'rise');
+            SK.enter($('cJ'), t - 0.5, 'pop');
+            for (const [k, t0, dur, city] of [[0, 0.8, 1.3, 'cS'], [1, 2.8, 1.4, 'cM']]) {
+              const u = M.eo((t - t0) / dur), path = $('a' + k);
+              SK.draw(path, u);
+              const p = SK.tip(path, u), d = $('d' + k);
+              d.style.transform = `translate(${(p.x - 13).toFixed(2)}px,${(p.y - 13).toFixed(2)}px)`;
+              d.style.opacity = u > 0 ? '1' : '0';
+              SK.enter($(city), t - t0 - dur + 0.1, 'pop');
+            }
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

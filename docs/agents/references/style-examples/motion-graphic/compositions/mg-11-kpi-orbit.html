@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        .kpi { position: absolute; left: 80px; width: 920px; height: 230px; border-radius: 28px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+        .kpi .ic { position: absolute; left: 40px; top: 60px; }
+        .kpi .lb { position: absolute; left: 170px; top: 50px; font-size: 38px; font-weight: 600; color: var(--sk-muted); }
+        .kpi .nm { position: absolute; left: 170px; top: 100px; font-size: 88px; font-weight: 700; line-height: 1; color: var(--sk-ink); font-feature-settings: "tnum" 1; }
+        .kpi .dl { position: absolute; right: 40px; top: 70px; }
+        #core { position: absolute; left: 390px; top: 820px; width: 300px; height: 300px; border-radius: 50%; background: var(--sk-ink); color: #ffffff; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 52px; font-weight: 700; line-height: 1.05; }
+        .orb { position: absolute; left: 0; top: 0; width: 132px; height: 132px; border-radius: 50%; background: #ffffff; box-shadow: 0 8px 22px rgba(0,0,0,.1); display: flex; align-items: center; justify-content: center; }
+      </style>
+      <div id="root" data-composition-id="mg-11-kpi-orbit" data-width="1080" data-height="1920" data-duration="7">
+        <div class="sk-stage sk-mg sk-type-mg-data" style="--sk-bg:#f5f4f0;--sk-ink:#0d0d0d;--sk-accent:#15803d;--sk-accent-2:#b91c1c;--sk-muted:#6b7280">
+
+          <div class="kpi" id="k0" style="top:240px"><div class="ic"></div><div class="lb">Omzet</div><div class="nm sk-mono">Rp 0 jt</div><div class="dl"></div></div>
+          <div class="kpi" id="k1" style="top:500px"><div class="ic"></div><div class="lb">Pelanggan</div><div class="nm sk-mono">0</div><div class="dl"></div></div>
+          <div class="kpi" id="k2" style="top:760px"><div class="ic"></div><div class="lb">Waktu admin</div><div class="nm sk-mono">0 jam</div><div class="dl"></div></div>
+          <div id="core">1 sistem</div>
+          <div class="orb" id="o0"></div><div class="orb" id="o1"></div><div class="orb" id="o2"></div><div class="orb" id="o3"></div><div class="orb" id="o4"></div><div class="orb" id="o5"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-11-kpi-orbit';
+          const $ = SK.finder(ID);
+
+          // kpi-cards: icon, count-up, up/down arrow per card (illustrative numbers)
+          const KP = [['coins', 48, 'Rp ', ' jt', 'trending-up', 'var(--sk-accent)'], ['users', 1250, '', '', 'trending-up', 'var(--sk-accent)'], ['clock', 6, '', ' jam', 'trending-down', 'var(--sk-accent-2)']];
+          KP.forEach(([ic, , , , dl, col], i) => {
+            $('k' + i).querySelector('.ic').innerHTML = SK.icon(ic, { size: 104, sw: 5, color: '#0d0d0d' });
+            $('k' + i).querySelector('.dl').innerHTML = SK.icon(dl, { size: 88, sw: 6, color: col });
+          });
+          // icon-orbit: generic tool icons join one by one and circle the core slowly
+          const ORB = ['message-circle', 'receipt', 'database', 'calendar', 'truck', 'wallet'];
+          ORB.forEach((ic, i) => { $('o' + i).innerHTML = SK.icon(ic, { size: 64, sw: 4, color: '#0d0d0d' }); });
+          SK.clip(ID, { T: 7, update: (t) => {
+            const out = M.eo((t - 3.4) / 0.3);
+            KP.forEach(([, n, pre, suf], i) => {
+              const el = $('k' + i), t0 = 0.3 + i * 0.5;
+              SK.enter(el, t - t0, 'rise');
+              el.style.opacity = (Math.min(1, Math.max(0, (t - t0) / 0.2)) * (1 - out)).toFixed(4);
+              el.querySelector('.nm').textContent = pre + SK.count(t, t0 + 0.1, t0 + 1.0, 0, n) + suf;
+            });
+            SK.enter($('core'), t - 3.7, 'pop');
+            ORB.forEach((_, i) => {
+              const el = $('o' + i), join = 4.0 + i * 0.3;
+              const ang = (i * 60 - 90 + Math.max(0, t - 4.0) * 16) * Math.PI / 180, R = 300;
+              el.style.transform = `translate(${(540 + Math.cos(ang) * R - 66).toFixed(2)}px,${(970 + Math.sin(ang) * R - 66).toFixed(2)}px)`;
+              el.style.opacity = M.eo((t - join) / 0.25).toFixed(4);
+            });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
