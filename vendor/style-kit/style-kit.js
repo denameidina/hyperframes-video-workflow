@@ -323,4 +323,30 @@ SK.dollyZoom = (u,o={})=>{
   const P0=o.P0||SK.P, z0=o.z0??-400, d1=Math.min(o.d1??200,-z0*0.85), d=d1*clamp(u);
   return {P:P0*(z0+d)/z0, d};
 };
+// ---- text and impact helpers (sub-project 2a) ----------------------------------------------------
+const escHtml = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* typeOn: write the first ceil(u * length) characters of text into el, plus a caret while typing and
+   blinking at 2 Hz after (o.t = clip time for the blink; o.caret = false hides it). The DOM is only
+   touched when the visible text changes. Returns the number of characters shown. */
+SK.typeOn = (el,text,u,o={})=>{
+  const n=Math.max(0,Math.ceil(clamp(u)*text.length-1e-9));
+  const on=o.caret!==false&&(u<1||((o.t??0)%1)<0.5);
+  const html=escHtml(text.slice(0,n))+(on?'<span class="sk-caret"></span>':'');
+  if(el._skType!==html){el.innerHTML=html; el._skType=html;}
+  return n;
+};
+/* shake: a decaying impact offset {x, y (px), r (deg)} for dur seconds after t0 (stamp slams, hits);
+   zero before t0 and after t0 + dur */
+SK.shake = (t,t0,o={})=>{
+  const amp=o.amp??10, dur=o.dur??0.3, fq=o.freq??30, d=t-t0;
+  if(d<0||d>dur) return {x:0,y:0,r:0};
+  const k=amp*(1-d/dur);
+  return {x:k*Math.sin(d*fq*6.2832), y:k*0.6*Math.cos(d*fq*4.7), r:k*0.08*Math.sin(d*fq*5.3)};
+};
+/* arcPath: a quadratic arc from p0 to p1 ({x, y}); the control point sits at the midpoint pushed
+   bend × distance to the left of the direction of travel (negative bends right) */
+SK.arcPath = (p0,p1,bend=0.25)=>{
+  const cx=(p0.x+p1.x)/2+(p1.y-p0.y)*bend, cy=(p0.y+p1.y)/2-(p1.x-p0.x)*bend;
+  return `M${f2(p0.x)} ${f2(p0.y)} Q${f2(cx)} ${f2(cy)} ${f2(p1.x)} ${f2(p1.y)}`;
+};
 })();

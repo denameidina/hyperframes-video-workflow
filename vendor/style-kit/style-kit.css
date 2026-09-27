@@ -46,3 +46,5 @@
 .sk-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-style: preserve-3d; }
 .sk-ly { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
 .sk-ly > img.sk-plate { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+/* typing caret (SK.typeOn) */
+.sk-caret { display: inline-block; width: .08em; height: .9em; margin-left: .05em; vertical-align: -.08em; background: currentColor; }

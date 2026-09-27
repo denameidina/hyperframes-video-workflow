@@ -478,3 +478,37 @@ test('dollyZoom keeps the subject size while the camera dollies', () => {
   assert.equal(SK.dollyZoom(0, { P0, z0 }).P, P0);
   assert.ok(SK.dollyZoom(1, { P0, z0, d1: 5000 }).d < -z0, 'dolly stops short of the subject');
 });
+
+test('typeOn writes the first ceil(u × length) characters, escapes HTML, and blinks the caret', () => {
+  const { SK } = load();
+  const el = { innerHTML: '' };
+  assert.equal(SK.typeOn(el, 'a<b>', 0.5, { t: 0.2 }), 2);
+  assert.equal(el.innerHTML, 'a&lt;<span class="sk-caret"></span>');
+  assert.equal(SK.typeOn(el, 'a<b>', 1, { t: 0.7 }), 4);
+  assert.equal(el.innerHTML, 'a&lt;b&gt;', 'caret is off in the second half of each second once typing is done');
+  SK.typeOn(el, 'abc', 1, { caret: false });
+  assert.equal(el.innerHTML, 'abc');
+  assert.equal(SK.typeOn(el, 'abc', 0), 0);
+  let writes = 0;
+  const spy = { set innerHTML(v) { writes++; this._v = v; }, get innerHTML() { return this._v; } };
+  SK.typeOn(spy, 'abc', 0.5, { t: 0 }); SK.typeOn(spy, 'abc', 0.55, { t: 0.1 });
+  assert.equal(writes, 1, 'unchanged text is not rewritten');
+});
+
+test('shake is zero outside [t0, t0 + dur], decays, and is deterministic', () => {
+  const { SK } = load();
+  const plain = (o) => JSON.parse(JSON.stringify(o)); // the vm realm has its own Object prototype
+  assert.deepEqual(plain(SK.shake(0.9, 1)), { x: 0, y: 0, r: 0 });
+  assert.deepEqual(plain(SK.shake(1.31, 1)), { x: 0, y: 0, r: 0 });
+  const early = SK.shake(1.01, 1), late = SK.shake(1.25, 1);
+  assert.deepEqual(plain(early), plain(SK.shake(1.01, 1)));
+  assert.ok(Math.hypot(early.x, early.y) > Math.hypot(late.x, late.y));
+  assert.ok(Math.abs(SK.shake(1.01, 1, { amp: 20 }).y) > Math.abs(early.y));
+});
+
+test('arcPath bends the control point perpendicular to the route', () => {
+  const { SK } = load();
+  assert.equal(SK.arcPath({ x: 0, y: 0 }, { x: 100, y: 0 }), 'M0.0 0.0 Q50.0 -25.0 100.0 0.0');
+  assert.equal(SK.arcPath({ x: 0, y: 0 }, { x: 100, y: 0 }, -0.5), 'M0.0 0.0 Q50.0 50.0 100.0 0.0');
+  assert.equal(SK.arcPath({ x: 0, y: 0 }, { x: 0, y: 100 }, 0), 'M0.0 0.0 Q0.0 50.0 0.0 100.0');
+});
