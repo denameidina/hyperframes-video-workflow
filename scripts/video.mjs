@@ -2,9 +2,11 @@
 // Per-video HyperFrames projects under videos/<slug>/ (ADR-0010).
 // Spec: docs/superpowers/specs/2026-09-26-per-video-projects-design.md
 // Usage: npm run video -- <new|check|dev|snapshot|render> <slug> [--duration s] [--at t,...] [--blur]
+//        npm run video -- cutout <slug> --from <s> --dur <s> --name NN-name   (matted mix-media cut-out)
+// Cut-out spec: docs/superpowers/specs/2026-09-27-vox-mix-media-design.md
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -75,20 +77,65 @@ export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
         ? [['node', [join(root, 'scripts', 'render-blur.mjs'), '--slug', slug, '--project', dir]]]
         : [hf('render', '--quality', 'high', '-o', join(dir, 'renders', `${slug}.mp4`), dir)];
     default:
-      throw new Error(`unknown command "${cmd}" (use new, check, dev, snapshot, render)`);
+      throw new Error(`unknown command "${cmd}" (use new, check, dev, snapshot, render, cutout)`);
   }
+}
+
+export const CUTOUT_NAME_RE = /^\d\d-[a-z0-9][a-z0-9-]*$/;
+export const CUTOUT_MAX_DUR = 15;
+
+/* cutout: cut a segment of processed.mp4 and matte it into a transparent WebM for a mix-media clip.
+   The segment starts at the clip's host time, so the cut-out stays in sync with the audio. */
+export function cutoutPlan(slug, { from, dur, name, root = '.', probe = probeDuration }) {
+  const dir = projectDir(slug, root);
+  const f = Number(from), d = Number(dur);
+  if (from === undefined || !Number.isFinite(f) || f < 0) throw new Error('--from must be a number of seconds >= 0');
+  if (!(d > 0 && d <= CUTOUT_MAX_DUR)) throw new Error(`--dur must be > 0 and <= ${CUTOUT_MAX_DUR} seconds`);
+  if (typeof name !== 'string' || !CUTOUT_NAME_RE.test(name)) throw new Error('--name must look like NN-name (for example 04-dena)');
+  const media = join(dir, 'processed.mp4');
+  if (!existsSync(media)) throw new Error(`${media} not found; a cut-out is cut from the processed video`);
+  const total = probe(media);
+  if (f + d > total + 1e-6) throw new Error(`--from + --dur (${f + d} s) is past the end of processed.mp4 (${total} s)`);
+  const seg = join(dir, 'assets', 'frames', `${name}-seg.mp4`);
+  const out = join(dir, 'assets', 'cutouts', `${name}.webm`);
+  return {
+    seg,
+    out,
+    cmds: [
+      ['ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(f), '-t', String(d), '-i', media, '-an', '-c:v', 'libx264', '-crf', '16', seg]],
+      hf('remove-background', seg, '-o', out),
+    ],
+  };
 }
 
 export function main(argv, { run = spawnSync, env = process.env, root = '.' } = {}) {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
-    options: { at: { type: 'string' }, blur: { type: 'boolean', default: false }, duration: { type: 'string' } },
+    options: {
+      at: { type: 'string' }, blur: { type: 'boolean', default: false }, duration: { type: 'string' },
+      from: { type: 'string' }, dur: { type: 'string' }, name: { type: 'string' },
+    },
   });
   const [cmd, slug] = positionals;
   if (cmd === 'new') {
     const { dir, duration } = scaffold({ slug, root, duration: values.duration });
     console.log(`created ${dir} (${duration} s)`);
+    return;
+  }
+  if (cmd === 'cutout') {
+    const { seg, out, cmds } = cutoutPlan(slug, { ...values, root, probe: (f) => probeDuration(f, run) });
+    mkdirSync(join(projectDir(slug, root), 'assets', 'frames'), { recursive: true });
+    mkdirSync(join(projectDir(slug, root), 'assets', 'cutouts'), { recursive: true });
+    // never reuse an old file: a failed or skipped matte must not leave a stale cut-out behind
+    rmSync(seg, { force: true });
+    rmSync(out, { force: true });
+    for (const [c, a] of cmds) {
+      const r = run(c, a, { stdio: 'inherit', env });
+      if (r.status !== 0) throw new Error(`${c} ${a.slice(0, 3).join(' ')} exited with ${r.status}`);
+    }
+    if (!existsSync(out) || statSync(out).size === 0) throw new Error(`remove-background did not write ${out}`);
+    console.log(`cut-out ${out}`);
     return;
   }
   const cmds = commandsFor(cmd, slug, { at: values.at, blur: values.blur, root });

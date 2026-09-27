@@ -45,6 +45,10 @@ Rough.js code is included.
 - Caveat (`vendor/style-kit/fonts/Caveat-Variable.woff2`, latin subset from
   `@fontsource-variable/caveat@5.3.0`): SIL Open Font License 1.1, Copyright 2014
   The Caveat Project Authors (`vendor/style-kit/fonts/OFL-Caveat.txt`).
+- Newsreader (`vendor/style-kit/fonts/Newsreader-Variable.woff2`, latin subset
+  from `@fontsource-variable/newsreader@5.3.0`): SIL Open Font License 1.1,
+  Copyright 2020 The Newsreader Project Authors
+  (`vendor/style-kit/fonts/OFL-Newsreader.txt`).
 
 ## paper-pack (`vendor/paper-pack`)
 
@@ -55,3 +59,11 @@ Rough.js code is included.
   project with Codex image generation; project assets under this repo's license.
 - Example cut-outs in `docs/agents/references/style-examples/assets/` (laptop,
   phone): generated for this project with Codex image generation.
+- `vendor/paper-pack/map-indonesia.svg`: derived from Natural Earth 1:50m Admin 0
+  – Countries (https://www.naturalearthdata.com), public domain.
+- `docs/agents/references/style-examples/assets/cap-ken-burns.png`: a screenshot
+  of the English Wikipedia article "Ken Burns effect"
+  (https://en.wikipedia.org/wiki/Ken_Burns_effect), text available under
+  CC BY-SA 4.0; captured 2026-09-27, credited on screen in the examples.
+- `docs/agents/references/style-examples/assets/placeholder-cutout.webm`: this
+  project's own render of `docs/agents/references/mix-media-placeholder/`.

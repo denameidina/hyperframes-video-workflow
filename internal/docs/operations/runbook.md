@@ -39,6 +39,7 @@ npm run video -- check <slug>     # lint + validate + inspect — WAJIB setelah 
 npm run video -- snapshot <slug> --at 1.5,3   # still check tanpa upload ke Gemini
 npm run video -- render <slug>    # render → videos/<slug>/renders/<slug>.mp4
 npm run video -- render <slug> --blur  # opsional: render final dengan motion blur (4× lebih lama)
+npm run video -- cutout <slug> --from <s> --dur <s> --name NN-dena  # cutout mix-media → assets/cutouts/NN-dena.webm
 npm run check                     # hanya untuk template root index.html
 ```
 

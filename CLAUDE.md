@@ -179,6 +179,7 @@ npm run video -- check <slug>  # lint + validate + inspect one video project
 npm run video -- dev <slug>    # preview one video project (long-running)
 npm run video -- snapshot <slug> --at 1.5,3  # stills, no Gemini upload
 npm run video -- render <slug> [--blur]      # render to videos/<slug>/renders/
+npm run video -- cutout <slug> --from 31.2 --dur 5 --name 07-dena  # matte a mix-media cut-out
 npm run test:video             # unit test the video CLI
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved

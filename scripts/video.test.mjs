@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { HYPERFRAMES, checkSlug, commandsFor, fillTemplate, main, resolveDuration, scaffold } from './video.mjs';
+import { HYPERFRAMES, checkSlug, commandsFor, cutoutPlan, fillTemplate, main, resolveDuration, scaffold } from './video.mjs';
 
 function tempRoot() {
   const root = mkdtempSync(join(tmpdir(), 'video-test-'));
@@ -100,5 +100,61 @@ test('main runs commands without GEMINI_API_KEY and stops on failure', () => {
 test('main refuses to run on a project that does not exist', () => {
   const root = tempRoot();
   assert.throws(() => main(['check', 'ghost'], { root, env: {}, run: () => ({ status: 0 }) }), /npm run video -- new ghost/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+// ---- cutout (sub-project 2b) ----
+
+function cutoutRoot() {
+  const root = tempRoot();
+  scaffold({ slug: 'demo', root, duration: '20' });
+  writeFileSync(join(root, 'videos/demo/processed.mp4'), 'x');
+  return root;
+}
+
+test('cutoutPlan validates input and builds ffmpeg + remove-background calls', () => {
+  const root = cutoutRoot();
+  const probe = () => 20;
+  const p = cutoutPlan('demo', { from: '4.5', dur: '3', name: '04-dena', root, probe });
+  const dir = join(root, 'videos/demo');
+  assert.equal(p.seg, join(dir, 'assets/frames/04-dena-seg.mp4'));
+  assert.equal(p.out, join(dir, 'assets/cutouts/04-dena.webm'));
+  assert.deepEqual(p.cmds[0], ['ffmpeg', ['-y', '-loglevel', 'error', '-ss', '4.5', '-t', '3', '-i', join(dir, 'processed.mp4'), '-an', '-c:v', 'libx264', '-crf', '16', p.seg]]);
+  assert.deepEqual(p.cmds[1], ['npx', ['--yes', HYPERFRAMES, 'remove-background', p.seg, '-o', p.out]]);
+  assert.throws(() => cutoutPlan('demo', { dur: '3', name: '04-dena', root, probe }), /--from/);
+  assert.throws(() => cutoutPlan('demo', { from: '-1', dur: '3', name: '04-dena', root, probe }), /--from/);
+  assert.throws(() => cutoutPlan('demo', { from: '0', dur: '0', name: '04-dena', root, probe }), /--dur/);
+  assert.throws(() => cutoutPlan('demo', { from: '0', dur: '16', name: '04-dena', root, probe }), /--dur/);
+  assert.throws(() => cutoutPlan('demo', { from: '0', dur: '3', name: 'dena', root, probe }), /--name/);
+  assert.throws(() => cutoutPlan('demo', { from: '0', dur: '3', name: '04-../x', root, probe }), /--name/);
+  assert.throws(() => cutoutPlan('demo', { from: '18', dur: '3', name: '04-dena', root, probe }), /past the end/);
+  rmSync(join(dir, 'processed.mp4'));
+  assert.throws(() => cutoutPlan('demo', { from: '0', dur: '3', name: '04-dena', root, probe }), /processed\.mp4 not found/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('main cutout removes the old output, runs both steps, and checks the new file', () => {
+  const root = cutoutRoot();
+  const out = join(root, 'videos/demo/assets/cutouts/04-dena.webm');
+  mkdirSync(join(root, 'videos/demo/assets/cutouts'), { recursive: true });
+  writeFileSync(out, 'stale');
+  const calls = [];
+  const run = (c, a) => {
+    calls.push(c === 'npx' ? a[2] : c);
+    if (c === 'ffprobe') return { status: 0, stdout: '20\n' };
+    if (c === 'npx') { assert.equal(existsSync(out), false, 'old cut-out removed before the matte'); writeFileSync(out, 'webm'); }
+    return { status: 0 };
+  };
+  main(['cutout', 'demo', '--from', '2', '--dur', '3', '--name', '04-dena'], { root, env: {}, run });
+  assert.deepEqual(calls, ['ffprobe', 'ffmpeg', 'remove-background']);
+  assert.equal(readFileSync(out, 'utf8'), 'webm');
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('main cutout fails when remove-background writes nothing', () => {
+  const root = cutoutRoot();
+  const run = (c) => (c === 'ffprobe' ? { status: 0, stdout: '20\n' } : { status: 0 });
+  assert.throws(() => main(['cutout', 'demo', '--from', '0', '--dur', '2', '--name', '05-dena'], { root, env: {}, run }), /did not write .*05-dena\.webm/);
+  assert.throws(() => main(['cutout', 'demo', '--from', '0', '--dur', '2', '--name', '05-dena'], { root, env: {}, run: (c) => (c === 'ffprobe' ? { status: 0, stdout: '20' } : { status: 1 }) }), /exited with 1/);
   rmSync(root, { recursive: true, force: true });
 });
