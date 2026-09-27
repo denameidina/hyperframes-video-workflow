@@ -11,6 +11,8 @@ const STYLES = [
   { file: 'motion-graphic.md', patterns: 12, refs: 6, prefix: 'mg-' },
   { file: 'whiteboard.md', patterns: 10, refs: 6, prefix: 'wb-' },
   { file: 'stop-motion.md', patterns: 12, refs: 6, prefix: 'sm-' },
+  { file: 'vox.md', patterns: 12, refs: 6, prefix: 'vx-', sections: ['Documents', 'Document Ethics'] },
+  { file: 'mix-media.md', patterns: 12, refs: 6, prefix: 'mm-', treatments: ['collage'], sections: ['Treatment: collage', 'Matte Notes'] },
 ];
 
 const section = (md, title) => {
@@ -24,7 +26,7 @@ for (const s of STYLES) {
   const md = readFileSync(new URL('styles/' + s.file, REF), 'utf8');
 
   test(`${s.file}: has the required sections`, () => {
-    for (const h of ['When To Use', 'Look', 'Timing', 'Patterns', 'References', 'Build Recipe', 'SFX', 'Examples', 'Anti-slop Checklist']) section(md, h);
+    for (const h of ['When To Use', 'Look', 'Timing', 'Patterns', 'References', 'Build Recipe', 'SFX', 'Examples', 'Anti-slop Checklist', ...(s.sections ?? [])]) section(md, h);
   });
 
   test(`${s.file}: at least ${s.patterns} patterns, each with every column filled`, () => {
@@ -53,7 +55,7 @@ for (const s of STYLES) {
     assert.ok(items.length >= 8, `${items.length} items`);
   });
 
-  test(`${s.file}: at least 4 examples that exist and cover cutaway, split, and panel`, () => {
+  test(`${s.file}: at least 4 examples that exist and cover ${(s.treatments ?? ['cutaway', 'split', 'panel']).join(', ')}`, () => {
     const rows = section(md, 'Examples').split('\n').filter((l) => l.startsWith('| `style-examples/'));
     assert.ok(rows.length >= 4, `${rows.length} examples`);
     const treatments = new Set();
@@ -63,7 +65,7 @@ for (const s of STYLES) {
       assert.ok(existsSync(new URL(path, REF)), `${path} is missing`);
       treatments.add(r.split('|').slice(-2, -1)[0].trim());
     }
-    assert.deepEqual([...treatments].sort(), ['cutaway', 'panel', 'split']);
+    assert.deepEqual([...treatments].sort(), [...(s.treatments ?? ['cutaway', 'panel', 'split'])].sort());
   });
 }
 
@@ -80,5 +82,5 @@ test('every example clip on disk is mounted in the example host, and every mount
   const clips = [...host.matchAll(/data-composition-src="compositions\/([^"]+)"/g)].map((m) => m[1]);
   const onDisk = readdirSync(new URL('style-examples/compositions/', REF)).filter((f) => f.endsWith('.html'));
   assert.deepEqual([...clips].sort(), [...onDisk].sort());
-  assert.equal(clips.length, 17);
+  assert.equal(clips.length, 28);
 });

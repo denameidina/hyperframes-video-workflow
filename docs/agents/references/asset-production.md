@@ -62,7 +62,8 @@ If generated, include the prompt or short prompt summary.
 ## Style Assets
 
 Bitmaps a style b-roll clip lists under `Assets:` in its Style B-roll Brief
-(stop-motion cut-outs, a whiteboard prop, a collage piece). Produce them in Build
+(stop-motion cut-outs, a whiteboard prop, a collage piece, a VOX capture, a
+mix-media speaker cut-out). Produce them in Build
 step 2, before the clip is written. Paper textures, tape, pins, sticky notes, and
 the whiteboard hand already live in `vendor/paper-pack/` — use those instead of
 generating new ones.
@@ -73,6 +74,8 @@ generating new ones.
 | `cc0` | download from ambientCG, Poly Haven, or a Wikimedia Commons file marked CC0 or Public Domain; confirm the license on the asset's own page | `assets/cc0/<source>-<id>.<ext>` | `provenance: "cc0"`, `source` = asset URL + id, `license`, `downloaded` (date) |
 | `dena-footage` | `ffmpeg -ss <processed time> -i processed.mp4 -frames:v 1 assets/frames/NN.png`, then `npx --yes hyperframes@0.7.24 remove-background assets/frames/NN.png -o assets/cutouts/NN-dena.png` | `assets/cutouts/NN-dena.png` | `provenance: "dena-footage"`, `source` = processed time |
 | `user` | the user's file; remove the background the same way when needed | `assets/cutouts/NN-name.png` | `provenance: "user"`, `source` = what the user gave |
+| `capture` (VOX document) | a screenshot of the real page per Screenshot Rules and URL Research below; crop to the quoted region, redact private data | `assets/captures/NN-name.png` | `type: "screenshot"`, `provenance: "screenshot"`, `source` = URL, `captured` (date), license when the text is licensed (e.g. CC BY-SA) |
+| `dena-video` (mix-media speaker) | `npm run video -- cutout <slug> --from <clip start> --dur <clip duration> --name NN-dena` (segment of `processed.mp4` → `remove-background`; ≤ 15 s; it fails if nothing is written) | `assets/cutouts/NN-dena.webm` | `provenance: "dena-footage"`, `source` = processed time range |
 
 Cut-out Recipe (`codex`), filled per object:
 
@@ -89,6 +92,10 @@ Avoid: glossy 3D render, photorealism, checkerboard, fake transparency grid
 Rules:
 
 - Never generate Dena's likeness; a Dena cut-out comes only from her footage.
+- In an agent shell whose command hook rewrites `npx`, run
+  `remove-background` as `rtk proxy npx …` and confirm the
+  "Removed background from N frames" line; `video cutout` spawns it without a
+  shell and checks the output itself.
 - A generated cut-out never shows a real person or brand (Gate 2 R6).
 - No text inside generated images; words are live text in the clip.
 - Check every cut-out over a grey and a kraft ground. Reject blurry edges, a

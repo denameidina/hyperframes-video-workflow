@@ -16,9 +16,9 @@ Worked examples: `docs/agents/references/style-examples/`
 | `broll-text` | Full-frame kinetic typography of the spoken words | `broll-text.md` | available |
 | `motion-graphic` | Flat infographic: numbers, bars, rings, icons, arrows | `motion-graphic.md` | available |
 | `whiteboard` | Hand-drawn lines and handwriting on a board, marker follows | `whiteboard.md` | available |
-| `vox` | Paper texture, document clippings, highlighter, map zooms | — | planned (sub-project 2b) |
+| `vox` | A real capture or an "Ilustrasi" document on paper, highlighter on the spoken phrase, red pen, map zooms | `vox.md` | available |
 | `stop-motion` | Paper cut-outs moving in steps (on twos), torn edges, tape, pins | `stop-motion.md` | available |
-| `mix-media` | Dena keeps talking on a paper collage (alpha cut-out of her footage) | — | planned (sub-project 2b) |
+| `mix-media` | Dena keeps talking on a paper collage (matted cut-out of her footage) | `mix-media.md` | available |
 | `parallax` | 2.5D: a photo split into depth layers, camera moves through | — | planned (sub-project 3) |
 
 Only `available` types may appear in a `visual-plan.md` decision.
@@ -40,7 +40,10 @@ Match the line, not the topic:
 | describes manual work, a pile of tasks, or concrete objects | `stop-motion` (stack-pile, sticky-wall, slide-on-twos) | handmade paper objects make the manual feel tangible |
 | swaps, tears away, or throws out an old way ("dulu… sekarang", "jangan") | `stop-motion` (pin-and-swap, tear-reveal, crumple-away) | a physical swap reads instantly |
 | quotes what someone said | `stop-motion` (replacement-face + speech bubble) or `whiteboard` (speech-bubble) | a paper figure carries the role without a fake likeness |
-| needs proof | capture (`use-real`) | no style replaces real evidence |
+| quotes or points at an article, report, post, or website | `vox` (capture + highlight-sweep, pinned-source) | the viewer sees the words the claim comes from, with the source on screen |
+| names a place, city, or market | `vox` (map-zoom) | the pin lands where the place really is (`SK.geo`) |
+| names several tools or sources, or says "gue" / "dulu vs sekarang" while her presence matters | `mix-media` (screenshot-orbit, arrow-to-speaker, polaroid-frame) | Dena stays on screen while the world around her changes |
+| needs proof | capture (`use-real`) or `vox` with a real capture | a capture is the evidence; `vox` frames it and cites it |
 | is personal, emotional, or an opinion | none (`skip`) | keep Dena's face |
 
 ## Variety Rules
@@ -54,7 +57,10 @@ Match the line, not the topic:
   `visual-plan.md` under `## Motion Behaviours`.
 - Treatments, density, and face rules are the ones in `motion-broll-planning.md`
   (cutaway / split / panel, 2 s of face between cutaways, cutaway ≤ 10 s, no face
-  cover in `00:00.00–00:03.00` without approval).
+  cover in `00:00.00–00:03.00` without approval). `mix-media` adds the `collage`
+  treatment: Dena stays visible, so it never trips R3 or R4.
+- `mix-media` is a peak: at most ~20% of the video, at most two collage clips in a
+  row.
 
 ## Style B-roll Brief
 
@@ -64,18 +70,21 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 ```md
 ### <ov-NNN>
 
-- Type: <broll-text | motion-graphic | whiteboard | stop-motion>
+- Type: <broll-text | motion-graphic | whiteboard | stop-motion | vox | mix-media>
 - Purpose:
 - Required: <yes | no>
 - Privacy notes:
 - Do not cover: <e.g. Dena's face in 0–3 s, the caption area>
 - Planned file: `compositions/broll/NN-name.html`
 - Placement / Track: <treatment> / track 4
-- Treatment: <cutaway | split | panel> — <reason>
+- Treatment: <cutaway | split | panel | collage (mix-media only)> — <reason>
 - Pattern: <pattern names from the style's Patterns table>
 - Palette: <--sk-bg, --sk-ink, --sk-accent, --sk-accent-2, --sk-muted as hex>
 - Font: <display | sans | hand>, sizes in px
 - Pen (whiteboard only): <marker | hand>
+- Document (vox only): <capture `assets/captures/NN-name.png` | illustrative>
+- Source line (vox capture only): <outlet or domain, date, license if any>
+- Cutout (mix-media only): from <host s>, dur <s>, name <NN-dena>; front layer <yes | no>
 - Assets: <each bitmap the clip needs, or "none">
   - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript>
 - In–out (host time): <start>–<end> s
@@ -91,7 +100,7 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 Naming and timeline entry follow the motion b-roll rules: `NN` is the Timeline ID
 number padded to two digits, the clip id is `broll-NN-name`, the mount id
 `broll-NN-name-mount`; in `overlay-timeline.json` the row has `type` equal to the
-style (`"broll-text"`, `"motion-graphic"`, `"whiteboard"`, or `"stop-motion"`),
+style (`"broll-text"`, `"motion-graphic"`, `"whiteboard"`, `"stop-motion"`, `"vox"`, or `"mix-media"`),
 `track: 4`, `assetRef: "compositions/broll/NN-name.html"`, and the treatment in
 `placement`. A style clip is not an asset: it gets no `asset-manifest.json` entry,
 but every file in its `Assets:` list does (Style Assets in `asset-production.md`).
@@ -103,14 +112,19 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
   `broll`, track 4, `id` = `broll-NN-name-mount`, `data-duration` = clip `T`).
 - One clip = one sub-composition that calls `SK.clip(id, { T, update })`
   synchronously; `update(t)` is a pure function of clip-local time.
-- The stage is `<div class="sk-stage sk-text|sk-mg|sk-wb|sk-stop">`; override the
+- The stage is `<div class="sk-stage sk-text|sk-mg|sk-wb|sk-stop|sk-vox">`; override the
   palette on it with `style="--sk-bg:…"` or add a paper class (`sk-kraft`, …).
   Use `bg: null` for split and panel.
 - Paper-pack files are referenced as `vendor/paper-pack/…` (host-relative); never
   write `../` in a url (the linter rejects it). Repeated paper objects are divs
   with a class (`.sk-sticky`, `.sk-pin`, …), not repeated `<img>` tags.
-- Fonts: switch with `.sk-display`, `.sk-sans`, `.sk-hand`; never name a font
-  family in a clip's `<style>`.
+- Fonts: switch with `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`; never
+  name a font family in a clip's `<style>`.
+- `mix-media` host recipe (collage): an opaque full-frame collage mount on track 4,
+  the matted speaker `<video class="clip cutout sk-sticker-cut" muted>` on track 6
+  (same start and duration, made with `npm run video -- cutout`), and an optional
+  front mount `.broll-front` on track 7. Never tween `#base-video` opacity; the
+  opaque collage covers it. Details: `mix-media.md`.
 - Never set `visibility` on elements inside a clip (it would survive the mount
   being hidden); hide with `opacity` or `display`.
 - Still Check: `npm run video -- snapshot <slug> --at <key-word times>` and fix
