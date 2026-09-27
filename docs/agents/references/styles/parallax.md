@@ -67,16 +67,47 @@ Rules:
 
 ## Look
 
-| Token | Default | Alt A "archive" | Alt B "night desk" | Alt C "paper stage" |
+| Grade (on the stage) | filter | haze | grain | status |
 | --- | --- | --- | --- | --- |
-| backdrop | the plate | the plate, desaturated + grain | navy plate | `.sk-kraft` / `.sk-paper-cream` |
-| subject edge | ~1 px feather + light wrap (edge tinted by the plate) | same, plus film grain on all layers | same | `.sk-cut` hard shadow |
-| haze | none | `.sk-paper-crumpled` at 10–15% | dark navy fog 15% | tissue (`.sk-paper-white` 20%) |
+| `.sk-grade-px-default` | `none` | none | 0 | legacy |
+| `.sk-grade-px-archive` | `grayscale(.6) contrast(1.05)` | #d9d4c7 12% | 0.18 | legacy |
+| `.sk-grade-px-night-desk` | `brightness(.9)` | #0f1e3d 15% | 0.12 | legacy |
+| `.sk-grade-px-paper-stage` | `none` | #f5f3f4 20% | 0.1 | legacy |
+| `.sk-grade-px-golden-hour` | `sepia(.15) saturate(1.1) brightness(1.03)` | #ffb86b 12% | 0.12 | new |
+| `.sk-grade-px-blue-hour` | `saturate(.9) hue-rotate(-8deg) brightness(.92)` | #1e3a8a 18% | 0.12 | new |
+| `.sk-grade-px-faded-film` | `contrast(.9) saturate(.8) brightness(1.05)` | #f5e6d0 10% | 0.2 | new |
+| `.sk-grade-px-mono-archive` | `grayscale(1) contrast(1.1)` | #d9d4c7 12% | 0.22 | new |
+
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-px-memory` | — | Geist | — | Instrument Serif | — |
+| `.sk-type-px-label` | — | Geist | — | — | — |
+
+- Put the grade class on the stage (`<div class="sk-stage sk-grade-px-golden-hour">`): it sets the
+  `.sk-view` filter, the `.sk-haze` layer (add `<div class="sk-haze"></div>` above the world), and
+  the `.sk-grain` opacity. Write the class in the brief's `Palette:`.
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
 
 - The same grain on every layer so they read as one image.
 - A contact shadow under a cut-out subject (a soft ellipse on the plate) sells
   the depth.
 - Give the subject a 1–2% scale "breath" over the shot so it isn't a frozen card.
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Scenes | `scene.warung-counter`, `scene.cafe-cowork`, `scene.city-dusk`, `scene.server-room`, `scene.street-motor` | `../asset-catalog/sheets/scene.webp` |
+| Grain and haze | `texture.film`, `palette.px-golden-hour`, `palette.px-blue-hour`, `palette.px-faded-film` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/preset-parallax.webp` |
+| Memory frame | `frame.polaroid`, `frame.polaroid-tilt` | `../asset-catalog/sheets/frame-1.webp` |
+| Collage layers | `paper.lightbulb`, `paper.parcel-box`, `texture.linen` | `../asset-catalog/sheets/paper-2.webp`, `../asset-catalog/sheets/texture-2.webp` |
+| Type | `font.instrument-serif` | `../asset-catalog/sheets/font.webp` |
 
 ## Timing
 

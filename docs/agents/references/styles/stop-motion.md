@@ -33,23 +33,42 @@ a Dena cut-out comes only from her footage.
 
 ## Look
 
-| Token | Default (`.sk-stop`) | Alt A "notebook" | Alt B "night desk" | Alt C "blueprint paper" |
-| --- | --- | --- | --- | --- |
-| background class | `.sk-kraft` | `.sk-lined` | `.sk-kraft-dark` | `.sk-grid` |
-| `--sk-ink` | `#2b2118` | `#1f2937` | `#f5efe6` | `#1e3a5f` |
-| `--sk-accent` | `#b5452b` | `#dc2626` | `#f59e0b` | `#b5452b` |
-| `--sk-accent-2` | `#2f6f8f` | `#2563eb` | `#7dd3fc` | `#2f6f8f` |
-| `--sk-muted` | `#8a7355` | `#9ca3af` | `#a8a29e` | `#7ea3d4` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-stop-default` | `#bb8f4d` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-kraft` | legacy |
+| `.sk-pal-stop-notebook` | `#f5f3f4` | `#1f2937` | `#dc2626` | `#2563eb` | `#9ca3af` | `.sk-lined` | legacy |
+| `.sk-pal-stop-night-desk` | `#a68768` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink |
+| `.sk-pal-stop-blueprint-paper` | `#f5f3f4` | `#1e3a5f` | `#b5452b` | `#2f6f8f` | `#7ea3d4` | `.sk-grid` | legacy |
+| `.sk-pal-stop-warung` | `#ba8e4e` | `#2b2118` | `#d62828` | `#2a9d8f` | `#8a7355` | `.sk-tex-cardboard` | new |
+| `.sk-pal-stop-school-craft` | `#f5f3f4` | `#1f2937` | `#f4a261` | `#3a86ff` | `#adb5bd` | `.sk-paper-white` | new |
+| `.sk-pal-stop-midnight-desk` | `#2a1f17` | `#f5efe6` | `#e9c46a` | `#7dd3fc` | `#a8a29e` | overlay `.sk-tex-film` | new |
+| `.sk-pal-stop-pastel-cut` | `#f5ebd0` | `#2b2d42` | `#ffafcc` | `#a2d2ff` | `#bdb2a0` | `.sk-paper-cream` | new |
 
-- Palette is free per clip; write the background class and hex values in the
-  brief's `Palette:`.
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-stop-default` | — | Geist | — | — | — |
+| `.sk-type-stop-school` | — | Patrick Hand | — | — | — |
+| `.sk-type-stop-label` | Archivo Black | Geist | — | — | — |
+
+- `.sk-kraft-dark` averages #a68768: in `night-desk` the light ink goes on dark paper pieces, never straight on the backdrop.
+
+- Put the palette class on the stage (`<div class="sk-stage sk-stop sk-pal-stop-pastel-cut">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
+
 - Paper backgrounds: `.sk-paper-white`, `.sk-paper-cream`, `.sk-paper-grey`,
   `.sk-paper-crumpled`, `.sk-kraft`, `.sk-kraft-ribbed`, `.sk-kraft-dark`,
   `.sk-lined`, `.sk-grid`, `.sk-newsprint` (`paper-pack.css`, loaded after
-  `style-kit.css`). Give each piece its own paper; one texture everywhere reads
+  `style-kit.css`), plus the library's `.sk-tex-cardboard`, `.sk-tex-wood-desk`, `.sk-tex-cork`,
+  `.sk-tex-paper-tan` (`texture-*.webp`). Give each piece its own paper; one texture everywhere reads
   digital (Charlie and Lola).
 - Paper objects: `.sk-sticky`, `.sk-pin`, `.sk-clip`, `.sk-tape-a`,
-  `.sk-tape-b` — size them with `width` only (`aspect-ratio` keeps the shape).
+  `.sk-tape-b`, and the library's `.sk-obj-*` (tapes, scraps, stationery, stickers, and
+  topic cut-outs such as `.sk-obj-coin-stack`, see `paper-*.webp`) — size them with
+  `width` only (`aspect-ratio` keeps the shape).
   Use these divs, not `<img>`, so one clip can repeat an object.
 - Shadow: `.sk-cut` — a hard offset shadow, one light direction for every piece.
   Put `.sk-cut` on a wrapper and the torn `clip-path` on an inner element; a
@@ -57,6 +76,20 @@ a Dena cut-out comes only from her footage.
 - Type on paper: `.sk-display` for stamped labels, `.sk-hand` for handwriting on
   notes; never name a font family in a clip `<style>`.
 - Grain: one `.sk-grain` overlay per clip, moved by `SK.grain` each step.
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Topic cut-outs | `paper.coin-stack`, `paper.banknote-generic`, `paper.chat-bubble`, `paper.ai-chip`, `paper.warung-front`, `paper.shopping-bag`, `paper.parcel-box`, `paper.lightbulb`, `paper.calculator` | `../asset-catalog/sheets/paper-2.webp` |
+| Stationery | `paper.scrap-torn-yellow`, `paper.sticky-pink`, `paper.receipt-blank`, `paper.ticket-stub`, `paper.washi-pink` | `../asset-catalog/sheets/paper-1.webp` |
+| Grounds | `texture.cardboard`, `texture.wood-desk`, `texture.kraft` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
+| Torn edges | `frame.torn-all`, `frame.torn-rough` | `../asset-catalog/sheets/frame-1.webp` |
+| Labels | `pict.coins`, `font.patrick-hand`, `font.archivo-black` | `../asset-catalog/sheets/pictogram.webp`, `../asset-catalog/sheets/font.webp` |
 
 ## Timing
 

@@ -31,16 +31,32 @@ map; when → timeline; how → flow; why → cause diagram.
 
 ## Look
 
-| Token | Default (`.sk-wb`) | Alt A "kraft" | Alt B "blackboard" | Alt C "blueprint" |
-| --- | --- | --- | --- | --- |
-| `--sk-bg` | `#fbfbf8` | `#efe6d6` | `#1f2a24` | `#123a6b` |
-| `--sk-ink` | `#151515` | `#2b2118` | `#f1f5f0` | `#eaf2ff` |
-| `--sk-accent` | `#dc2626` | `#c2410c` | `#fde047` | `#fbbf24` |
-| `--sk-accent-2` | `#2563eb` | `#1d4ed8` | `#93c5fd` | `#f472b6` |
-| `--sk-muted` | `#9ca3af` | `#a08c70` | `#6b7f72` | `#7ea3d4` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-wb-default` | `#fbfbf8` | `#151515` | `#dc2626` | `#2563eb` | `#9ca3af` | — | legacy |
+| `.sk-pal-wb-kraft` | `#efe6d6` | `#2b2118` | `#c2410c` | `#1d4ed8` | `#a08c70` | — | legacy |
+| `.sk-pal-wb-blackboard` | `#1f2a24` | `#f1f5f0` | `#fde047` | `#93c5fd` | `#6b7f72` | — | legacy |
+| `.sk-pal-wb-blueprint` | `#123a6b` | `#eaf2ff` | `#fbbf24` | `#f472b6` | `#7ea3d4` | — | legacy |
+| `.sk-pal-wb-graph-paper` | `#f7f9fc` | `#1f2937` | `#e11d48` | `#0284c7` | `#cbd5e1` | `.sk-tex-graph` | new |
+| `.sk-pal-wb-chalk-green` | `#233027` | `#f4f1e8` | `#ffd166` | `#8ecae6` | `#5f7a6b` | `.sk-tex-blackboard` | new |
+| `.sk-pal-wb-napkin` | `#fbf6ee` | `#3b2f2f` | `#2563eb` | `#dc2626` | `#cbbfae` | — | new |
+| `.sk-pal-wb-neon-marker` | `#111111` | `#f5f5f5` | `#ff3ea5` | `#3ef0ff` | `#555555` | — | new |
 
-- Palette is free per clip; write hex values in the brief's `Palette:`. Black
-  line art plus one or two accents used only for emphasis (RSA Animate).
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-wb-caveat` | — | — | Caveat | — | — |
+| `.sk-type-wb-kalam` | — | — | Kalam | — | — |
+| `.sk-type-wb-neat` | — | — | Patrick Hand | — | — |
+| `.sk-type-wb-marker` | Permanent Marker | — | Caveat | — | — |
+
+- Put the palette class on the stage (`<div class="sk-stage sk-wb sk-pal-wb-neon-marker">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
+
+- Black line art plus one or two accents used only for emphasis (RSA Animate).
 - Lettering: Caveat 700 (`.sk-wb` default). Three sizes only — title ~100 px,
   keyword 84–120 px, note ≥ 44 px (Rohde's hierarchy).
 - Line weight: 7 px ink (`.sk-wb .sk-stroke`), 9–12 px for accent circles and
@@ -49,8 +65,24 @@ map; when → timeline; how → flow; why → cause diagram.
   `SK.line`, `SK.rect`, `SK.ellipse`, `SK.arrow` (seeded, deterministic).
 - Pen (brief `Pen:`): `marker` (default) — `SK.MARKER_SVG` placed with
   `SK.placeMarker`; or `hand` — the flat illustrated hand from the paper pack
-  (`<img class="sk-hand-img">` placed with `SK.placeHand`, poses `write` and
-  `point`). Only this flat hand; a realistic stock hand clashes with line art.
+  (`<img class="sk-hand-img">` placed with `SK.placeHand`, poses `write`,
+  `point`, and from the asset library `hold-card`, `swipe`, `erase`, `hold-highlighter`). Only this flat hand; a realistic stock hand clashes with line art.
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| People | `doodle.stand`, `doodle.point`, `doodle.think`, `doodle.shrug`, `doodle.celebrate`, `doodle.sit-laptop` | `../asset-catalog/sheets/doodle-1.webp` |
+| Arrows and structure | `doodle.arrow-curve`, `doodle.connector-elbow`, `doodle.bracket-curly`, `doodle.cycle-arrows`, `doodle.fork-split` | `../asset-catalog/sheets/doodle-1.webp` |
+| Bubbles and accents | `doodle.speech-round`, `doodle.thought`, `doodle.lightbulb-hand`, `doodle.burst` | `../asset-catalog/sheets/doodle-1.webp` |
+| Any icon as a doodle (`SK.rough` on an `icon.*`) | `icon.rocket`, `icon.target`, `icon.handshake` | `../asset-catalog/sheets/doodle-rough.webp` |
+| Boards | `texture.whiteboard`, `texture.blackboard`, `texture.graph` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
+| Hands | `hand.write`, `hand.point`, `hand.erase`, `hand.hold-card` | `../asset-catalog/sheets/hand.webp` |
+| Lettering | `font.kalam`, `font.patrick-hand`, `font.permanent-marker` | `../asset-catalog/sheets/font.webp` |
 
 ## Timing
 

@@ -144,8 +144,9 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   mencatat alasannya di Visual Decision Log.
 - **RD-03-36** (Ubiquitous) — Setiap baris `broll-text`, `motion-graphic`,
   `whiteboard`, `stop-motion`, `vox`, `mix-media`, atau `parallax` di `visual-plan.md` shall punya Style B-roll
-  Brief dengan treatment, pola, palet (hex), font, beat per kata, dan daftar
-  `Assets:`.
+  Brief dengan treatment, pola, palet (preset `sk-pal-*` atau hex), tipografi
+  (preset `sk-type-*` atau `.sk-f-*`), beat per kata, `Library assets:`, dan
+  daftar `Assets:`.
 - **RD-03-37** (Unwanted) — If teks atau angka yang tampil di clip style b-roll
   tidak verbatim dari transkrip dan tidak diberikan user, then Gate 2 shall
   menandainya sebagai R1.

@@ -29,16 +29,33 @@ Show selected words, not the whole sentence (Takahashi, Dylan cue cards).
 
 ## Look
 
-| Token | Default (`.sk-text`) | Alt A "paper" | Alt B "signal" | Alt C "ink blue" |
-| --- | --- | --- | --- | --- |
-| `--sk-bg` | `#0a0a0a` | `#f2f0ea` | `#111111` | `#0b1f4d` |
-| `--sk-ink` | `#fafafa` | `#111111` | `#f5f5f5` | `#f8fafc` |
-| `--sk-accent` | `#facc15` | `#ff4d00` | `#22d3ee` | `#fde047` |
-| `--sk-accent-2` | `#ef4444` | `#2563eb` | `#f43f5e` | `#fb7185` |
-| `--sk-muted` | `#737373` | `#8a8578` | `#525252` | `#64748b` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-text-default` | `#0a0a0a` | `#fafafa` | `#facc15` | `#ef4444` | `#737373` | — | legacy |
+| `.sk-pal-text-paper` | `#f2f0ea` | `#111111` | `#ff4d00` | `#2563eb` | `#8a8578` | — | legacy — exception: accent |
+| `.sk-pal-text-signal` | `#111111` | `#f5f5f5` | `#22d3ee` | `#f43f5e` | `#525252` | — | legacy |
+| `.sk-pal-text-ink-blue` | `#0b1f4d` | `#f8fafc` | `#fde047` | `#fb7185` | `#64748b` | — | legacy |
+| `.sk-pal-text-jakarta-dusk` | `#1a1033` | `#fff4e6` | `#ff8a3d` | `#ff4f8b` | `#7a6a99` | — | new |
+| `.sk-pal-text-risograph` | `#f6efe2` | `#1d3fbb` | `#e8336d` | `#00897b` | `#a79f8f` | overlay `.sk-tex-riso` | new |
+| `.sk-pal-text-terminal` | `#0b0f0c` | `#d7ffd9` | `#39ff88` | `#ffb000` | `#4f6b55` | — | new |
+| `.sk-pal-text-cream-red` | `#f3ead8` | `#1a1a1a` | `#d62828` | `#003049` | `#9a8f7a` | — | new |
 
-- Palette is free per clip; write the hex values in the brief's `Palette:`.
-  Override on the stage: `<div class="sk-stage sk-text" style="--sk-bg:#f2f0ea;…">`.
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-text-poster` | Anton | Geist | — | — | — |
+| `.sk-type-text-editorial` | Bebas Neue | Instrument Serif | — | — | — |
+| `.sk-type-text-brutal` | Archivo Black | Space Grotesk | — | — | — |
+| `.sk-type-text-terminal` | JetBrains Mono | JetBrains Mono | — | — | JetBrains Mono |
+
+- `.sk-pal-text-paper` accent (2.92:1) — only for payoff words ≥ 180 px.
+
+- Put the palette class on the stage (`<div class="sk-stage sk-text sk-pal-text-cream-red">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
+
 - One accent per state. The accent marks the payoff word only.
 - Type: Anton (`.sk-display`, the `.sk-text` default) for slams and stacks;
   Geist 700–800 (`.sk-sans`) for quotes and sentences; never name a font family
@@ -47,6 +64,18 @@ Show selected words, not the whole sentence (Takahashi, Dylan cue cards).
   36–48 px. Nothing under 36 px.
 - Safe area: keep text inside x 80–1000 and y 180–1400; below y 1400 belong the
   captions (`--safe-bottom`) and the platform UI.
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Display type | `font.anton`, `font.bebas-neue`, `font.archivo-black`, `font.instrument-serif`, `font.jetbrains-mono`, `font.space-grotesk` | `../asset-catalog/sheets/font.webp` |
+| Texture and overlay | `texture.halftone`, `texture.riso`, `texture.concrete-light`, `texture.plaster` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
+| Marks on words | `frame.swash-1`, `frame.swash-2`, `frame.swash-3`, `frame.swash-4`, `doodle.burst`, `doodle.circle-loose`, `doodle.underline-wave` | `../asset-catalog/sheets/frame-1.webp`, `../asset-catalog/sheets/frame-2.webp`, `../asset-catalog/sheets/doodle-1.webp` |
 
 ## Timing
 

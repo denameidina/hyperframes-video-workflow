@@ -64,9 +64,13 @@ If generated, include the prompt or short prompt summary.
 Bitmaps a style b-roll clip lists under `Assets:` in its Style B-roll Brief
 (stop-motion cut-outs, a whiteboard prop, a collage piece, a VOX capture, a
 mix-media speaker cut-out). Produce them in Build
-step 2, before the clip is written. Paper textures, tape, pins, sticky notes, and
-the whiteboard hand already live in `vendor/paper-pack/` — use those instead of
-generating new ones.
+step 2, before the clip is written. Check the shared library first: `vendor/asset-lib/CATALOG.md`
+and the sheets in `docs/agents/references/asset-catalog/sheets/` hold icons, pictograms,
+doodles, marks, stamps, frames, VOX document templates, maps, textures, paper objects, cut-outs,
+hands, and layered scenes (plus the paper pack). Use a library asset when it fits; generate a
+new one only for what the library lacks and note why in the brief (RD-03-55). A new asset that
+would help future videos can be added to the library (`vendor/asset-lib/src/items.json`,
+`npm run asset-lib -- build`, `sheets`) instead of staying in one video.
 
 | Source in the brief | How | File | Manifest |
 | --- | --- | --- | --- |
@@ -99,6 +103,14 @@ Rules:
   "Removed background from N frames" line; `video cutout` spawns it without a
   shell and checks the output itself.
 - A generated cut-out never shows a real person or brand (Gate 2 R6).
+- Run `codex-image` jobs one at a time. Concurrent runs can hand one job another
+  job's image (seen 2026-09-27: two scene references came back byte-identical);
+  after a batch, check that every output's SHA-256 is unique and that each image
+  shows what its name says.
+- `codex-image` exit 6 ("opaque background") checks the corners: a subject that
+  touches a corner on purpose (an arm entering from the bottom-right) trips it
+  although the alpha is real. Measure the alpha (`ffmpeg … alphaextract,signalstats`:
+  `YMIN=0` means transparent pixels exist) before regenerating.
 - No text inside generated images; words are live text in the clip.
 - Check every cut-out over a grey and a kraft ground. Reject blurry edges, a
   painted checkerboard, extra fingers, plastic-looking paper, or anything generic

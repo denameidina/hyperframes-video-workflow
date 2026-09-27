@@ -129,6 +129,12 @@ motion, match Dena default style, reuse existing project structure).
    blank).
 8. **Gate 3.** Apply Gate 3 below.
 
+Library assets from the brief come from `vendor/asset-lib/` (already loaded by the starter):
+insert `SK.icon`/`SK.doodle`/`SK.doc`/… HTML once before `SK.clip`, draw doodles with
+`SK.drawSeq` over their `.sk-dpath` paths, use `.sk-obj-*` divs for paper objects, and read a
+scene's layers from `vendor/asset-lib/scenes/<name>/scene.json`. Per-video assets are produced
+only for what the library lacks (RD-03-55).
+
 ## Outputs
 
 - `videos/<slug>/index.html`

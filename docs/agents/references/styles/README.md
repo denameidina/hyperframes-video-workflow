@@ -83,8 +83,8 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Placement / Track: <treatment> / track 4
 - Treatment: <cutaway | split | panel | collage (mix-media only) | parallax-stage (parallax only)> — <reason>
 - Pattern: <pattern names from the style's Patterns table>
-- Palette: <--sk-bg, --sk-ink, --sk-accent, --sk-accent-2, --sk-muted as hex>
-- Font: <display | sans | hand>, sizes in px
+- Palette: <preset class, e.g. `sk-pal-wb-graph-paper` (+ its add class), or hex values with the reason>
+- Type: <preset class, e.g. `sk-type-wb-kalam`, or font classes `.sk-f-*`>, sizes in px
 - Pen (whiteboard only): <marker | hand>
 - Document (vox only): <capture `assets/captures/NN-name.png` | illustrative>
 - Source line (vox capture only): <outlet or domain, date, license if any>
@@ -92,8 +92,9 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Layers (parallax only): <each layer: file or class, z, source (photo | codex | collage | archive), provenance>
 - Camera (parallax only): <dolly-in | pan | orbit | dolly-zoom | tilt; amount; landing word>
 - Focus (parallax only): <focus depth; rack from → to on which word, or none>
-- Assets: <each bitmap the clip needs, or "none">
-  - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript>
+- Library assets: <catalog ids from `vendor/asset-lib/CATALOG.md`, e.g. `doodle.think`, `paper.coin-stack`, `map.java`, or "none">
+- Assets: <each per-video bitmap the clip needs, or "none">
+  - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript> — <why the library has nothing that fits>
 - In–out (host time): <start>–<end> s
 - Beats on words:
   - "<word>" @ <host time> → <what appears or changes>
@@ -115,7 +116,11 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
 ## Build Contract (all styles)
 
 - Host setup: the Dena starter already loads `vendor/style-kit/style-kit.js` and
-  `style-kit.css` after motion-kit, then `vendor/paper-pack/paper-pack.css`. Mounts are the same as motion b-roll (class
+  `style-kit.css` after motion-kit, then `vendor/paper-pack/paper-pack.css`, then the asset
+  library (`vendor/asset-lib/asset-lib.js` + `.css`: `SK.icon`, `SK.pict`, `SK.doodle`,
+  `SK.mark`, `SK.rough`, `SK.stamp`, `SK.frame`, `SK.tornFrame`, `SK.doc`, `SK.geo(…, map)`,
+  `SK.asset`; classes `.sk-pal-*`, `.sk-type-*`, `.sk-grade-px-*`, `.sk-f-*`, `.sk-tex-*`,
+  `.sk-obj-*`). Insert library HTML once, outside `update(t)`. Mounts are the same as motion b-roll (class
   `broll`, track 4, `id` = `broll-NN-name-mount`, `data-duration` = clip `T`).
 - One clip = one sub-composition that calls `SK.clip(id, { T, update })`
   synchronously; `update(t)` is a pure function of clip-local time.

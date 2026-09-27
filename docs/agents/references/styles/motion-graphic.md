@@ -30,23 +30,55 @@ a second clip.
 
 ## Look
 
-| Token | Default (`.sk-mg`) | Alt A "night" | Alt B "economist" | Alt C "mint" |
-| --- | --- | --- | --- | --- |
-| `--sk-bg` | `#f4efe6` | `#0f172a` | `#f5f4f0` | `#ecfdf5` |
-| `--sk-ink` | `#1c1917` | `#f8fafc` | `#0d0d0d` | `#052e16` |
-| `--sk-accent` | `#2563eb` | `#38bdf8` | `#e3120b` | `#059669` |
-| `--sk-accent-2` | `#f97316` | `#f472b6` | `#6b7280` | `#f59e0b` |
-| `--sk-muted` | `#a8a29e` | `#64748b` | `#b8b8b8` | `#86efac` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-mg-default` | `#f4efe6` | `#1c1917` | `#2563eb` | `#f97316` | `#a8a29e` | — | legacy — exception: accent2 |
+| `.sk-pal-mg-night` | `#0f172a` | `#f8fafc` | `#38bdf8` | `#f472b6` | `#64748b` | — | legacy |
+| `.sk-pal-mg-economist` | `#f5f4f0` | `#0d0d0d` | `#e3120b` | `#6b7280` | `#b8b8b8` | — | legacy |
+| `.sk-pal-mg-mint` | `#ecfdf5` | `#052e16` | `#059669` | `#f59e0b` | `#86efac` | — | legacy — exception: accent2 |
+| `.sk-pal-mg-fintech` | `#0b1220` | `#e6edf7` | `#22c55e` | `#f43f5e` | `#475569` | — | new |
+| `.sk-pal-mg-sunrise` | `#fff7ed` | `#1c1917` | `#c2410c` | `#7c3aed` | `#d6c7b4` | — | new |
+| `.sk-pal-mg-mono-ink` | `#fafafa` | `#0a0a0a` | `#e11d48` | `#525252` | `#d4d4d4` | — | new |
+| `.sk-pal-mg-ai-violet` | `#13111c` | `#f5f3ff` | `#a78bfa` | `#2dd4bf` | `#4c4868` | — | new |
 
-- Palette is free per clip; write hex values in the brief's `Palette:`. The
-  accent marks the one value the speaker names; everything else is ink or muted.
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-mg-clean` | — | Geist | — | — | — |
+| `.sk-type-mg-jakarta` | Plus Jakarta Sans | Plus Jakarta Sans | — | — | — |
+| `.sk-type-mg-data` | — | Space Grotesk | — | — | JetBrains Mono |
+| `.sk-type-mg-expressive` | Bricolage Grotesque | Geist | — | — | — |
+
+- `.sk-pal-mg-default` and `.sk-pal-mg-mint` accent-2 (2.45:1, 2.04:1) — only as bar or area fills, never for text or thin lines.
+
+- Put the palette class on the stage (`<div class="sk-stage sk-mg sk-pal-mg-ai-violet">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
+- The accent marks the one value the speaker names; everything else is ink or muted.
 - Type: Geist (`.sk-mg` default) 600–800; big numbers 180–220 px with tight
   tracking (`letter-spacing: -0.04em`), labels 44–64 px, notes ≥ 34 px.
 - Shapes: flat fills, no gradients, no 3D, no drop shadows on chart marks. A
   panel card may carry one soft shadow.
-- Icons: one set only — `M.icon(name, size, colour, stroke)` (Lucide, one stroke
-  weight) or flat filled pictograms drawn in the clip. Never mix the two in one clip.
+- Icons: one set only per clip — line icons `SK.icon(id, { size, sw, color })` (266 Lucide
+  icons, see `icon-*.webp`; `M.icon` is the same set) or filled pictograms
+  `SK.pict(id, { size, color })` (70 Phosphor, `pictogram.webp`). Never mix the two in one clip.
 - Bars start at zero. Repeat icons to show more; never scale one icon up (Isotype).
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Line icons | `icon.coins`, `icon.chart-line`, `icon.users`, `icon.store`, `icon.bot`, `icon.clock`, `icon.receipt`, `icon.truck` | `../asset-catalog/sheets/icon-1.webp`, `../asset-catalog/sheets/icon-2.webp`, `../asset-catalog/sheets/icon-3.webp` |
+| Isotype pictograms | `pict.person`, `pict.coins`, `pict.storefront`, `pict.package`, `pict.robot`, `pict.clock` | `../asset-catalog/sheets/pictogram.webp` |
+| Maps behind data | `map.world`, `map.sea`, `map.id-provinces` | `../asset-catalog/sheets/map.webp` |
+| Type | `font.plus-jakarta-sans`, `font.bricolage-grotesque`, `font.space-grotesk` | `../asset-catalog/sheets/font.webp` |
+| Ground | `texture.dots` | `../asset-catalog/sheets/texture-1.webp` |
 
 ## Timing
 

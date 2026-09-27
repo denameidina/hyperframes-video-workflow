@@ -117,6 +117,10 @@ unobstructed, use only project-local assets).
    `docs/agents/references/asset-production.md`. Write a Visual Decision Log
    entry for every visual-support opportunity before concluding generated media
    is unnecessary.
+   Before deciding a visual, read `vendor/asset-lib/CATALOG.md` (grep the line's topic tag:
+   `uang`, `ai`, `chat`, `umkm`, …) and open the contact sheets for the candidate style in
+   `docs/agents/references/asset-catalog/sheets/`; choose a palette and type preset from the style
+   reference's `## Look`, and list library ids in the brief's `Library assets:` (RD-03-50..52).
 5. **Research links and tools.** If the user gave a URL or the transcript names
    a tool/product/site, inspect it now and write what Build must capture in the
    Asset Briefs For Build section, tied to the transcript window. Use URL

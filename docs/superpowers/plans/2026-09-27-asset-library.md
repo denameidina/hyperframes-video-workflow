@@ -28,7 +28,7 @@
   `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`
 - Replacement steps give exact **old** and **new** blocks; each old block must match exactly once — if not, stop and re-read the file.
 - In this agent shell the `rtk` hook rewrites some commands: run raw `curl`/`cat` of JSON as `rtk proxy …`; `npm run` and `node` are unaffected.
-- Codex jobs take 1–3 min each: run them as background commands, at most three at a time.
+- Codex jobs take 1–3 min each: run them as background commands **one at a time**. (Executing this plan on 2026-09-27, three concurrent `codex-image` runs handed one scene job another job's image — two references came back byte-identical; check SHA-256 uniqueness after every batch.)
 
 ## File Structure
 
@@ -1082,7 +1082,12 @@ export function processImage(input, output, { max = 720, pad = 4 } = {}) {
     const x = Math.max(0, x1 - pad), y = Math.max(0, y1 - pad), w = x2 - x1 + 1 + 2 * pad, h = y2 - y1 + 1 + 2 * pad;
     const scale = Math.max(w, h) > max ? (w >= h ? `scale=${max}:-2:flags=lanczos` : `scale=-2:${max}:flags=lanczos`) : 'null';
     const crop = `crop=${w}:${h}:${x}:${y},${scale}`;
-    if (output.endsWith('.webp')) run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', crop, '-c:v', 'libwebp', '-quality', '80', '-lossless', '0', output]);
+    if (output.endsWith('.webp')) {
+      // Homebrew ffmpeg may lack libwebp: crop/scale with ffmpeg, encode with cwebp (keeps alpha)
+      const png = join(tmp, 'crop.png');
+      run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', crop, png]);
+      run('cwebp', ['-quiet', '-q', '80', png, '-o', output]);
+    }
     else run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', `${crop},split[a][b];[a]palettegen=max_colors=256:reserve_transparent=1[p];[b][p]paletteuse=alpha_threshold=128`, output]);
     return { w, h };
   } finally { rmSync(tmp, { recursive: true, force: true }); }
@@ -2615,7 +2620,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 - Consumes: `processImage` (`npm run asset-lib -- process`), the build's paper/hand handling (Task 3).
 - Produces: `.sk-obj-<name>` for each paper object (size it with `width`; `aspect-ratio` keeps the shape); `SK.HAND['hold-card'|'swipe'|'erase'|'hold-highlighter']` for `SK.placeHand(el, tip, { pose })`.
 
-Codex rules for this task: `S=~/.claude/skills/codex-image/scripts/codex-image.sh`; run each job in the background (`run_in_background`), at most three at once; write outputs to `$TMPDIR/asset-lib-staging/` and append their `shasum -a 256` to `$TMPDIR/asset-lib-staging/SHA256SUMS`. Review every output on a grey (#8a8a8a) and a kraft ground (compose with ffmpeg `overlay`, then Read the PNG). **Reject** (and regenerate with the same spec) any image with text, letters, numbers, or logos; a real banknote design; wrong fingers; plastic "AI glossy" shading; a light direction other than top-left; a perspective that does not match its family; an object that does not read in 0.5 s at 300 px. Never keep a stand-in.
+Codex rules for this task: `S=~/.claude/skills/codex-image/scripts/codex-image.sh`; run each job in the background (`run_in_background`), one at a time; write outputs to `$TMPDIR/asset-lib-staging/` and append their `shasum -a 256` to `$TMPDIR/asset-lib-staging/SHA256SUMS`. Review every output on a grey (#8a8a8a) and a kraft ground (compose with ffmpeg `overlay`, then Read the PNG). **Reject** (and regenerate with the same spec) any image with text, letters, numbers, or logos; a real banknote design; wrong fingers; plastic "AI glossy" shading; a light direction other than top-left; a perspective that does not match its family; an object that does not read in 0.5 s at 300 px. Never keep a stand-in.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -2837,7 +2842,7 @@ SPEC
 
 | name | scene | light | foreground (front layer) | middle (mid layer) |
 | --- | --- | --- | --- | --- |
-| warung-counter | a small Indonesian warung counter with glass jars of snacks and a hanging plastic curtain, street behind | warm late-afternoon light from the left | the counter with the jars | hanging snack sachets and the curtain |
+| warung-counter | a small Indonesian warung counter with glass jars of snacks and a hanging plastic curtain, street behind | warm late-afternoon light from the left | the counter with the jars | the hanging snack sachets (not the translucent curtain) |
 | cafe-cowork | a café table by a big window with a laptop and a coffee cup, a city street outside | soft morning light from the window at left | the table with laptop and cup | the window frame and a potted plant |
 | city-dusk | a generic Southeast Asian city skyline at dusk seen from a rooftop, no landmark | orange and violet dusk, sun low at left | the rooftop railing and a water tank | the nearer towers |
 | server-room | a server room corridor with racks of blinking lights and cable trays | cool blue light with small green LEDs | the nearest rack on the right | the middle racks |
@@ -2867,11 +2872,11 @@ SPEC
 
 ```bash
 d=vendor/asset-lib/scenes/<name>; mkdir -p $d
-ffmpeg -loglevel error -y -i "$TMPDIR/asset-lib-staging/<name>-plate.png" -vf "scale=1080:1920:flags=lanczos" -c:v libwebp -quality 80 $d/plate.webp
+ffmpeg -loglevel error -y -i "$TMPDIR/asset-lib-staging/<name>-plate.png" -vf "scale=1080:1920:flags=lanczos" -frames:v 1 -update 1 "$TMPDIR/<name>-plate-1080.png" && cwebp -quiet -q 80 "$TMPDIR/<name>-plate-1080.png" -o $d/plate.webp  # this ffmpeg has no libwebp
 for L in mid front; do ffmpeg -loglevel error -y -i "$TMPDIR/asset-lib-staging/<name>-$L-green.png" -vf "scale=1080:1920:flags=lanczos,colorkey=0x00FF00:0.32:0.08,despill=type=green,format=rgba,split[a][b];[a]palettegen=max_colors=256:reserve_transparent=1[p];[b][p]paletteuse=alpha_threshold=128" $d/$L.png; done
 ```
 
-Check alignment: overlay `mid.png` and `front.png` on `plate.webp` with ffmpeg and Read the result — no double edges, no green fringe. Regenerate a layer that drifted.
+Check alignment: overlay `mid.png` and `front.png` on `plate.webp` with ffmpeg and Read the result — no double edges, no green fringe. Regenerate a layer that drifted. Never put a translucent object (plastic curtain, glass, smoke) on a green layer: it keys into green fringes — leave it in the plate or drop it. When the scene itself has green (server LEDs), ask for a magenta `#FF00FF` background and key `colorkey=0xFF00FF:0.30:0.08` without `despill`; check every returned layer's background colour — Codex may return black instead of the asked colour.
 
 - [ ] **Step 3: Add the items**
 
@@ -3014,15 +3019,17 @@ only when nothing here fits the line, and say why in the brief (RD-03-55).
 | … | … | `../asset-catalog/sheets/<page>.webp` |
 ```
 
-| Style | Rows (need → ids → sheet) |
+| Style | Rows (need → ids → sheets) |
 | --- | --- |
-| broll-text | display type → `font.anton`, `font.bebas-neue`, `font.archivo-black`, `font.instrument-serif`, `font.jetbrains-mono`, `font.space-grotesk` → `font.webp`; texture/overlay → `texture.halftone`, `texture.riso`, `texture.concrete-light`, `texture.plaster` → `texture-1.webp`, `texture-2.webp`; marks on words → `frame.swash-1`, `frame.swash-2`, `frame.swash-3`, `frame.swash-4`, `doodle.burst`, `doodle.circle-loose`, `doodle.underline-wave` → `frame.webp`, `doodle.webp` |
-| motion-graphic | line icons → `icon.coins`, `icon.chart-line`, `icon.users`, `icon.store`, `icon.bot`, `icon.clock`, `icon.receipt`, `icon.truck` → `icon-1.webp`; Isotype → `pict.person`, `pict.coins`, `pict.storefront`, `pict.package`, `pict.robot`, `pict.clock` → `pictogram.webp`; maps behind data → `map.world`, `map.sea`, `map.id-provinces` → `map.webp`; type → `font.plus-jakarta-sans`, `font.bricolage-grotesque`, `font.space-grotesk` → `font.webp`; ground → `texture.dots` → `texture-1.webp` |
-| whiteboard | people → `doodle.stand`, `doodle.point`, `doodle.think`, `doodle.shrug`, `doodle.celebrate`, `doodle.sit-laptop` → `doodle.webp`; arrows and structure → `doodle.arrow-curve`, `doodle.connector-elbow`, `doodle.bracket-curly`, `doodle.cycle-arrows`, `doodle.fork-split` → `doodle.webp`; bubbles and accents → `doodle.speech-round`, `doodle.thought`, `doodle.lightbulb-hand`, `doodle.burst` → `doodle.webp`; any icon as a doodle → `SK.rough` on `icon.*` → `doodle-rough.webp`; boards → `texture.whiteboard`, `texture.blackboard`, `texture.graph` → `texture-1.webp`, `texture-2.webp`; hands → `hand.write`, `hand.point`, `hand.erase`, `hand.hold-card` → `hand.webp`; lettering → `font.kalam`, `font.patrick-hand`, `font.permanent-marker` → `font.webp` |
-| vox | documents → `doc.article`, `doc.report-page`, `doc.spreadsheet`, `doc.chat-thread`, `doc.email`, `doc.social-post`, `doc.receipt`, `doc.invoice`, `doc.search-results`, `doc.terminal` → `doc-1.webp`, `doc-2.webp`; red pen → `mark.red-circle`, `mark.red-underline`, `mark.red-arrow`, `mark.red-check`, `mark.red-cross` → `frame.webp`; stamps → `frame.stamp-ilustrasi`, `frame.stamp-contoh` → `frame.webp`; maps → `map.indonesia`, `map.id-provinces`, `map.java`, `map.sea`, `map.world` → `map.webp`; desk → `texture.cork`, `texture.paper-tan`, `paper.washi-grid`, `paper.tape-clear`, `paper.binder-clip` → `texture-1.webp`, `paper.webp`; type → `font.dm-serif-display`, `font.special-elite` → `font.webp` |
-| stop-motion | topic cut-outs → `paper.coin-stack`, `paper.banknote-generic`, `paper.chat-bubble`, `paper.ai-chip`, `paper.warung-front`, `paper.shopping-bag`, `paper.parcel-box`, `paper.lightbulb`, `paper.calculator` → `paper.webp`; stationery → `paper.scrap-torn-yellow`, `paper.sticky-pink`, `paper.receipt-blank`, `paper.ticket-stub`, `paper.washi-pink` → `paper.webp`; grounds → `texture.cardboard`, `texture.wood-desk`, `texture.kraft` → `texture-1.webp`, `texture-2.webp`; torn edges → `frame.torn-all`, `frame.torn-rough` → `frame.webp`; labels → `pict.coins`, `font.patrick-hand`, `font.archivo-black` → `pictogram.webp`, `font.webp` |
-| mix-media | frames → `frame.polaroid`, `frame.polaroid-tilt`, `frame.film-strip-3`, `frame.browser-generic`, `frame.phone-generic`, `frame.torn-top` → `frame.webp`; stickers → `paper.star-sticker`, `paper.arrow-sticker`, `paper.check-sticker`, `doodle.arrow-loop`, `doodle.circle-double` → `paper.webp`, `doodle.webp`; overlays → `texture.riso`, `texture.halftone` → `texture-1.webp`; type → `font.permanent-marker`, `font.instrument-serif`, `font.special-elite` → `font.webp` |
-| parallax | scenes → `scene.warung-counter`, `scene.cafe-cowork`, `scene.city-dusk`, `scene.server-room`, `scene.street-motor` → `scene.webp`; grain and haze → `texture.film`, `palette.px-golden-hour`, `palette.px-blue-hour`, `palette.px-faded-film` → `texture-1.webp`, `preset-parallax.webp`; memory frame → `frame.polaroid`, `frame.polaroid-tilt` → `frame.webp`; collage layers → `paper.lightbulb`, `paper.parcel-box`, `texture.linen` → `paper.webp`, `texture-2.webp`; type → `font.instrument-serif` → `font.webp` |
+| broll-text | Display type → `font.anton`, `font.bebas-neue`, `font.archivo-black`, `font.instrument-serif`, `font.jetbrains-mono`, `font.space-grotesk` → `font.webp`; Texture and overlay → `texture.halftone`, `texture.riso`, `texture.concrete-light`, `texture.plaster` → `texture-1.webp`, `texture-2.webp`; Marks on words → `frame.swash-1`, `frame.swash-2`, `frame.swash-3`, `frame.swash-4`, `doodle.burst`, `doodle.circle-loose`, `doodle.underline-wave` → `frame-1.webp`, `frame-2.webp`, `doodle-1.webp` |
+| motion-graphic | Line icons → `icon.coins`, `icon.chart-line`, `icon.users`, `icon.store`, `icon.bot`, `icon.clock`, `icon.receipt`, `icon.truck` → `icon-1.webp`, `icon-2.webp`, `icon-3.webp`; Isotype pictograms → `pict.person`, `pict.coins`, `pict.storefront`, `pict.package`, `pict.robot`, `pict.clock` → `pictogram.webp`; Maps behind data → `map.world`, `map.sea`, `map.id-provinces` → `map.webp`; Type → `font.plus-jakarta-sans`, `font.bricolage-grotesque`, `font.space-grotesk` → `font.webp`; Ground → `texture.dots` → `texture-1.webp` |
+| whiteboard | People → `doodle.stand`, `doodle.point`, `doodle.think`, `doodle.shrug`, `doodle.celebrate`, `doodle.sit-laptop` → `doodle-1.webp`; Arrows and structure → `doodle.arrow-curve`, `doodle.connector-elbow`, `doodle.bracket-curly`, `doodle.cycle-arrows`, `doodle.fork-split` → `doodle-1.webp`; Bubbles and accents → `doodle.speech-round`, `doodle.thought`, `doodle.lightbulb-hand`, `doodle.burst` → `doodle-1.webp`; Any icon as a doodle (`SK.rough` on an `icon.*`) → `icon.rocket`, `icon.target`, `icon.handshake` → `doodle-rough.webp`; Boards → `texture.whiteboard`, `texture.blackboard`, `texture.graph` → `texture-1.webp`, `texture-2.webp`; Hands → `hand.write`, `hand.point`, `hand.erase`, `hand.hold-card` → `hand.webp`; Lettering → `font.kalam`, `font.patrick-hand`, `font.permanent-marker` → `font.webp` |
+| vox | Documents (always tagged Ilustrasi) → `doc.article`, `doc.report-page`, `doc.spreadsheet`, `doc.chat-thread`, `doc.email`, `doc.social-post`, `doc.receipt`, `doc.invoice`, `doc.search-results`, `doc.terminal` → `doc-1.webp`, `doc-2.webp`; Red pen → `mark.red-circle`, `mark.red-underline`, `mark.red-arrow`, `mark.red-check`, `mark.red-cross` → `frame-2.webp`; Stamps → `frame.stamp-ilustrasi`, `frame.stamp-contoh` → `frame-1.webp`; Maps → `map.indonesia`, `map.id-provinces`, `map.java`, `map.sea`, `map.world` → `map.webp`; Desk → `texture.cork`, `texture.paper-tan`, `paper.washi-grid`, `paper.tape-clear`, `paper.binder-clip` → `texture-1.webp`, `paper-1.webp`; Type → `font.dm-serif-display`, `font.special-elite` → `font.webp` |
+| stop-motion | Topic cut-outs → `paper.coin-stack`, `paper.banknote-generic`, `paper.chat-bubble`, `paper.ai-chip`, `paper.warung-front`, `paper.shopping-bag`, `paper.parcel-box`, `paper.lightbulb`, `paper.calculator` → `paper-2.webp`; Stationery → `paper.scrap-torn-yellow`, `paper.sticky-pink`, `paper.receipt-blank`, `paper.ticket-stub`, `paper.washi-pink` → `paper-1.webp`; Grounds → `texture.cardboard`, `texture.wood-desk`, `texture.kraft` → `texture-1.webp`, `texture-2.webp`; Torn edges → `frame.torn-all`, `frame.torn-rough` → `frame-1.webp`; Labels → `pict.coins`, `font.patrick-hand`, `font.archivo-black` → `pictogram.webp`, `font.webp` |
+| mix-media | Frames → `frame.polaroid`, `frame.polaroid-tilt`, `frame.film-strip-3`, `frame.browser-generic`, `frame.phone-generic`, `frame.torn-top` → `frame-1.webp`; Stickers → `paper.star-sticker`, `paper.arrow-sticker`, `paper.check-sticker`, `doodle.arrow-loop`, `doodle.circle-double` → `paper-1.webp`, `paper-2.webp`, `doodle-1.webp`; Overlays → `texture.riso`, `texture.halftone` → `texture-1.webp`; Type → `font.permanent-marker`, `font.instrument-serif`, `font.special-elite` → `font.webp` |
+| parallax | Scenes → `scene.warung-counter`, `scene.cafe-cowork`, `scene.city-dusk`, `scene.server-room`, `scene.street-motor` → `scene.webp`; Grain and haze → `texture.film`, `palette.px-golden-hour`, `palette.px-blue-hour`, `palette.px-faded-film` → `texture-1.webp`, `preset-parallax.webp`; Memory frame → `frame.polaroid`, `frame.polaroid-tilt` → `frame-1.webp`; Collage layers → `paper.lightbulb`, `paper.parcel-box`, `texture.linen` → `paper-2.webp`, `texture-2.webp`; Type → `font.instrument-serif` → `font.webp` |
+
+(Sheet names follow the rendered pages: kinds with more cells than one page holds are split into `-1`, `-2`, …)
 
 Run: `npm run test:style-kit`
 Expected: PASS (every style: sections, presets named, ≥ 12 real ids, sheets exist).

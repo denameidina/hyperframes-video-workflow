@@ -54,14 +54,33 @@ Rules:
 
 ## Look
 
-| Token | Default | Alt A "notebook" | Alt B "kraft desk" | Alt C "night zine" |
-| --- | --- | --- | --- | --- |
-| backdrop class | `.sk-grid` | `.sk-lined` | `.sk-kraft` | `.sk-kraft-dark` |
-| `--sk-ink` | `#2b2118` | `#1f2937` | `#2b2118` | `#f5efe6` |
-| `--sk-accent` | `#b5452b` | `#dc2626` | `#b5452b` | `#f59e0b` |
-| `--sk-accent-2` | `#2f6f8f` | `#2563eb` | `#2f6f8f` | `#7dd3fc` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-mm-default` | `#f5f3f4` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-grid` | legacy |
+| `.sk-pal-mm-notebook` | `#f5f3f4` | `#1f2937` | `#dc2626` | `#2563eb` | `#9ca3af` | `.sk-lined` | legacy |
+| `.sk-pal-mm-kraft-desk` | `#bb8f4d` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-kraft` | legacy |
+| `.sk-pal-mm-night-zine` | `#a68768` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink |
+| `.sk-pal-mm-zine-pink` | `#f5f3f4` | `#111111` | `#ff3d8b` | `#1f6feb` | `#9e9e9e` | `.sk-paper-white`, overlay `.sk-tex-riso` | new |
+| `.sk-pal-mm-scrapbook` | `#bb8f4d` | `#2b2118` | `#e76f51` | `#2a9d8f` | `#8a7355` | `.sk-kraft` | new |
+| `.sk-pal-mm-xerox` | `#c4b9b4` | `#111111` | `#ff2a2a` | `#5f5f5f` | `#8a8a8a` | `.sk-paper-grey`, overlay `.sk-tex-halftone` | new |
+| `.sk-pal-mm-pop-collage` | `#ffd23f` | `#1a1a1a` | `#ee4266` | `#3bceac` | `#8a7355` | overlay `.sk-tex-halftone` | new |
 
-- Stage theme `.sk-stop` plus a backdrop class; palette free per clip.
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-mm-zine` | Permanent Marker | Geist | — | — | — |
+| `.sk-type-mm-editorial` | — | Space Grotesk | — | Instrument Serif | — |
+| `.sk-type-mm-typewriter` | — | Special Elite | — | — | — |
+
+- `.sk-kraft-dark` averages #a68768: in `night-zine` the light ink goes on dark paper pieces, never straight on the backdrop.
+
+- Put the palette class on the stage (`<div class="sk-stage sk-stop sk-pal-mm-pop-collage">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
+
+- Stage theme `.sk-stop` plus a backdrop class and a palette preset from the table above.
 - The speaker always gets `.sk-sticker-cut`: a ~10 px off-white (#F6F2E9) ring and
   a hard shadow — it makes the matte look intentional and hides rough edges.
 - Clutter lives in the corners and the top third; keep the **face zone** clear —
@@ -69,6 +88,19 @@ Rules:
 - No texture, grain, halftone, or colour effect on the speaker; only on the
   collage.
 - One light direction for every shadow (`.sk-cut`, `.sk-sticker-cut`).
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Frames | `frame.polaroid`, `frame.polaroid-tilt`, `frame.film-strip-3`, `frame.browser-generic`, `frame.phone-generic`, `frame.torn-top` | `../asset-catalog/sheets/frame-1.webp` |
+| Stickers | `paper.star-sticker`, `paper.arrow-sticker`, `paper.check-sticker`, `doodle.arrow-loop`, `doodle.circle-double` | `../asset-catalog/sheets/paper-1.webp`, `../asset-catalog/sheets/paper-2.webp`, `../asset-catalog/sheets/doodle-1.webp` |
+| Overlays | `texture.riso`, `texture.halftone` | `../asset-catalog/sheets/texture-1.webp` |
+| Type | `font.permanent-marker`, `font.instrument-serif`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
 
 ## Timing
 

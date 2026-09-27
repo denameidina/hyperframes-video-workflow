@@ -54,13 +54,31 @@ Every VOX clip shows one of two document kinds; the brief says which
 
 ## Look
 
-| Token | Default (`.sk-vox`) | Alt A "newsprint" | Alt B "dark desk" | Alt C "blueprint" |
-| --- | --- | --- | --- | --- |
-| background class | `.sk-paper-cream` | `.sk-newsprint` | `.sk-kraft-dark` | `.sk-grid` |
-| `--sk-ink` | `#1b1b1b` | `#1b1b1b` | `#f5efe6` | `#1e3a5f` |
-| `--sk-accent` (highlighter) | `#ffe14d` | `#ffe14d` | `#ffe14d` | `#ffe14d` |
-| `--sk-accent-2` (red pen) | `#d7263d` | `#d7263d` | `#ff6b6b` | `#d7263d` |
-| `--sk-muted` | `#8c8577` | `#6b665c` | `#a8a29e` | `#7ea3d4` |
+| Palette | bg | ink | accent | accent-2 | muted | add | status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `.sk-pal-vox-default` | `#f5ebd0` | `#1b1b1b` | `#ffe14d` | `#d7263d` | `#8c8577` | `.sk-paper-cream` | legacy |
+| `.sk-pal-vox-newsprint` | `#c4b9b4` | `#1b1b1b` | `#ffe14d` | `#d7263d` | `#6b665c` | `.sk-newsprint` | legacy |
+| `.sk-pal-vox-dark-desk` | `#a68768` | `#f5efe6` | `#ffe14d` | `#ff6b6b` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink, accent2 |
+| `.sk-pal-vox-blueprint` | `#f5f3f4` | `#1e3a5f` | `#ffe14d` | `#d7263d` | `#7ea3d4` | `.sk-grid` | legacy |
+| `.sk-pal-vox-archive-sepia` | `#caa77a` | `#2a1f14` | `#f2c14e` | `#9b2226` | `#8a7a5c` | `.sk-tex-paper-tan` | new |
+| `.sk-pal-vox-cork-board` | `#ab6f3e` | `#1b1b1b` | `#ffe14d` | `#6e0d10` | `#6b4f33` | `.sk-tex-cork` | new |
+| `.sk-pal-vox-evidence` | `#1d1f22` | `#f1ede4` | `#ffe14d` | `#e5383b` | `#6b6f76` | — | new |
+| `.sk-pal-vox-pastel-brief` | `#eef2f7` | `#1e293b` | `#a7f3d0` | `#e11d48` | `#94a3b8` | — | new |
+
+| Type preset | display | body | hand | serif | mono |
+| --- | --- | --- | --- | --- | --- |
+| `.sk-type-vox-paper` | — | Geist | — | Newsreader | — |
+| `.sk-type-vox-magazine` | — | Space Grotesk | — | DM Serif Display | — |
+| `.sk-type-vox-archive` | — | Newsreader | — | Special Elite | — |
+
+- `.sk-kraft-dark` averages #a68768: in `dark-desk` the light ink goes on dark paper pieces, never straight on the backdrop.
+
+- Put the palette class on the stage (`<div class="sk-stage sk-vox sk-pal-vox-pastel-brief">`),
+  plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
+  brief's `Palette:`; hex values are still allowed when a video needs its own colours (say why).
+- Type presets set `--sk-font-*`; `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`
+  follow them. Font classes for one-offs: `.sk-f-<font>` (see `font.webp`).
+- One palette preset per style per video, unless a palette change marks a new story section.
 
 - One highlighter colour across the whole video, so it reads as a signature
   (*Explained*).
@@ -69,9 +87,27 @@ Every VOX clip shows one of two document kinds; the brief says which
 - Type: headlines and pull-quotes in Newsreader (`.sk-serif`), labels and source
   lines in Geist (`.sk-source`, `.sk-tag`).
 - Maps: `vendor/paper-pack/map-indonesia.svg` (Natural Earth, desaturated
-  sand/grey), pins from `.sk-pin`, place labels on a paper chip.
+  sand/grey) and the library's `world`, `sea`, `id-provinces`, `java`
+  (`SK.geo(lat, lon, map)`, `map.webp`; 37 more cities in `SK.CITIES`), pins from `.sk-pin`,
+  place labels on a paper chip. The province map is Natural Earth 5.1.2 (33 provinces, before
+  the Kalimantan Utara and Papua splits) — never use it to state current borders.
 - Grain: one `.sk-grain` overlay moved by `SK.grain`; imperfection is the brand —
   "you don't want it to look perfect" (Vox art director, via Storybench).
+
+## Kit
+
+Library assets for this style — look at the sheets before choosing, then list the ids in the
+brief's `Library assets:` (`vendor/asset-lib/CATALOG.md` has every id, tag, and source). Make a
+new asset only when nothing here fits the line, and say why in the brief (RD-03-55).
+
+| Need | Catalog ids | Sheet |
+| --- | --- | --- |
+| Documents (always tagged Ilustrasi) | `doc.article`, `doc.report-page`, `doc.spreadsheet`, `doc.chat-thread`, `doc.email`, `doc.social-post`, `doc.receipt`, `doc.invoice`, `doc.search-results`, `doc.terminal` | `../asset-catalog/sheets/doc-1.webp`, `../asset-catalog/sheets/doc-2.webp` |
+| Red pen | `mark.red-circle`, `mark.red-underline`, `mark.red-arrow`, `mark.red-check`, `mark.red-cross` | `../asset-catalog/sheets/frame-2.webp` |
+| Stamps | `frame.stamp-ilustrasi`, `frame.stamp-contoh` | `../asset-catalog/sheets/frame-1.webp` |
+| Maps | `map.indonesia`, `map.id-provinces`, `map.java`, `map.sea`, `map.world` | `../asset-catalog/sheets/map.webp` |
+| Desk | `texture.cork`, `texture.paper-tan`, `paper.washi-grid`, `paper.tape-clear`, `paper.binder-clip` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/paper-1.webp` |
+| Type | `font.dm-serif-display`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
 
 ## Timing
 

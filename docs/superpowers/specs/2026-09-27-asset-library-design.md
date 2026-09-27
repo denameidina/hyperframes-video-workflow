@@ -1,6 +1,6 @@
 # Pustaka Aset Bersama + Preset Palet/Tipografi (Sub-proyek 1 dari "Style Enrichment") — Design
 
-Status: approved (brainstorming 2026-09-27; spike + replay plan lolos 2026-09-27), belum diimplementasi
+Status: implemented 2026-09-27 (branch `feat/asset-lib`)
 Date: 2026-09-27
 Branch: `feat/asset-lib`
 Dibangun di atas: style-kit (ADR-0012), paper pack (ADR-0013), VOX/mix-media
@@ -706,3 +706,20 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
   gagal sebelum batas terlampaui.
 - **Nama ikon Lucide berubah** di versi mendatang: data dibekukan pada 1.48.0,
   jadi tidak terpengaruh.
+
+## Temuan saat implementasi (2026-09-27)
+
+- Contact sheet yang isinya melebihi satu halaman dipecah jadi `-1`, `-2`
+  (doodle, frame, paper, icon, doc, texture); `## Kit` merujuk nama halaman itu.
+- `SK.stamp` mengukur teks dari tinggi **dan** lebar badge (teks badge persegi
+  sempat meluap).
+- `paper/` berukuran 8,1 MB pada 720 px (perkiraan awal ~4 MB); total pustaka +
+  sheet tetap di bawah 25 MB.
+- `codex-image` yang dijalankan paralel pernah menyerahkan gambar job lain
+  (dua referensi scene identik byte). Job Codex dijalankan satu per satu dan
+  keunikan SHA-256 dicek setelah setiap batch.
+- Exit 6 `codex-image` ("opaque background") bisa false positive saat subjek
+  sengaja menyentuh sudut (lengan dari kanan bawah); alpha diukur langsung
+  (`alphaextract,signalstats`, `YMIN=0`) sebelum membuat ulang.
+- Tiga pengecualian kontras `.sk-kraft-dark` dipertahankan sebagai default
+  sampai Dena memutuskan lain.
