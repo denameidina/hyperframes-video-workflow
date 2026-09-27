@@ -1,9 +1,20 @@
-// Asset library guard (spec: docs/superpowers/specs/2026-09-27-asset-library-design.md, "Pengujian").
-// Later tasks replace this header and append build, catalog, preset, runtime, and sheet checks.
+// Asset library guard (spec: docs/superpowers/specs/2026-09-27-asset-library-design.md, "Pengujian"):
+// path + map helpers, generated files up to date, catalog ↔ files ↔ LICENSES, budget, presets contrast,
+// fonts, hand anchors, and the SK runtime (icons, pictograms, strokes, rough, stamps, frames, docs, maps).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 import { absolutize, shapeToPath, splitSubpaths, stringify, tokenize } from './lib/svg-path.mjs';
 import { dp, geomPath, mapSvg, ringArea } from './lib/geo-svg.mjs';
+import { buildAll, LIB, OUTPUTS, parseStrokeSvg, pngSize, STYLE_KEY, STYLES, TAGS } from './lib/asset-lib-build.mjs';
+
+const ROOT = fileURLToPath(new URL('../', import.meta.url));
+const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const catalog = JSON.parse(read(`${LIB}/catalog.json`));
 
 // ---- svg-path ----------------------------------------------------------------------------------------
 test('splitSubpaths makes relative commands, H/V, implicit lineto, and compact arc flags absolute', () => {
@@ -48,4 +59,89 @@ test('geomPath projects equirectangular pixels, skips far rings and tiny islands
   const svg = mapSvg(box, [{ id: 'provinces', each: true, fill: '#b9ad96', features: [{ id: 'a', geometry: sq }] }], 'note');
   assert.match(svg, /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 2400 950" width="2400" height="950"><!-- note --><g id="provinces"/);
   assert.match(svg, /<path id="a" d="M300 375/);
+});
+
+// ---- build outputs -----------------------------------------------------------------------------------
+test('generated files match a fresh build (run: npm run asset-lib -- build)', () => {
+  for (const [p, c] of Object.entries(buildAll(ROOT))) assert.equal(read(p), c, `${p} is stale`);
+});
+// ---- catalog -----------------------------------------------------------------------------------------
+test('catalog ids are unique and every entry has a known kind, styles, and vocabulary tags', () => {
+  const ids = catalog.map((e) => e.id);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const e of catalog) {
+    assert.ok(e.styles.length && e.styles.every((s) => STYLES.includes(s)), e.id);
+    assert.ok(e.tags.length && e.tags.every((t) => TAGS.includes(t)), e.id);
+    assert.ok(e.use, `${e.id} has no use`);
+  }
+});
+test('every catalog file exists and is tracked in git', () => {
+  const tracked = new Set(execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' }).split('\n'));
+  for (const e of catalog.filter((x) => x.file)) {
+    assert.ok(existsSync(join(ROOT, e.file)), `${e.id}: ${e.file} is missing`);
+    if (e.kind !== 'scene') assert.ok(tracked.has(e.file), `${e.id}: ${e.file} is not tracked in git`);
+  }
+});
+const libFiles = (dir = '') => readdirSync(join(ROOT, LIB, dir), { withFileTypes: true }).flatMap((d) => {
+  const p = dir ? `${dir}/${d.name}` : d.name;
+  if (d.isDirectory()) return p === 'src' ? [] : libFiles(p);
+  return d.name.startsWith('.') ? [] : [p];
+});
+test('every library file outside src/ has a LICENSES.md row', () => {
+  const lic = read(`${LIB}/LICENSES.md`);
+  for (const f of libFiles()) {
+    if (OUTPUTS.includes(f) || f.endsWith('/scene.json')) continue;
+    assert.ok(lic.includes('| `' + f + '` |'), `${f} is missing from ${LIB}/LICENSES.md`);
+  }
+});
+test('the library and its contact sheets stay within 25 MB', () => {
+  const sheets = 'docs/agents/references/asset-catalog/sheets';
+  const lib = libFiles().reduce((n, f) => n + statSync(join(ROOT, LIB, f)).size, 0);
+  const sh = existsSync(join(ROOT, sheets)) ? readdirSync(join(ROOT, sheets)).reduce((n, f) => n + statSync(join(ROOT, sheets, f)).size, 0) : 0;
+  assert.ok(lib + sh <= 25 * 1024 * 1024, `${((lib + sh) / 1048576).toFixed(2)} MB`);
+});
+test('texture JPGs stay ≤ 400 KB and PNG assets keep alpha', () => {
+  for (const f of libFiles()) {
+    if (f.endsWith('.jpg')) assert.ok(statSync(join(ROOT, LIB, f)).size <= 400 * 1024, f);
+    if (f.endsWith('.png')) {
+      const b = readFileSync(join(ROOT, LIB, f));
+      assert.ok(b[25] === 6 || b[25] === 4 || (b[25] === 3 && b.includes(Buffer.from('tRNS'))), `${f} has no alpha`);
+    }
+  }
+});
+// ---- runtime -----------------------------------------------------------------------------------------
+function load() {
+  const ctx = { document: { querySelector: () => null }, gsap: { timeline: () => ({ to() { return this; } }) } };
+  ctx.window = ctx;
+  vm.createContext(ctx);
+  for (const f of ['vendor/motion-kit/motion-kit.js', 'vendor/style-kit/style-kit.js', `${LIB}/asset-lib.js`]) vm.runInContext(read(f), ctx);
+  return ctx.SK;
+}
+test('asset-lib refuses to load before style-kit', () => {
+  const ctx = {}; ctx.window = ctx; vm.createContext(ctx);
+  assert.throws(() => vm.runInContext(read(`${LIB}/asset-lib.js`), ctx), /load vendor\/style-kit\/style-kit\.js before asset-lib\.js/);
+});
+test('SK.icon and SK.pict return sized SVG strings and name close matches for unknown ids', () => {
+  const SK = load();
+  const s = SK.icon('coins', { size: 120, sw: 3, color: '#123456' });
+  assert.match(s, /^<svg class="sk-icon" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#123456" stroke-width="0\.600"/);
+  assert.equal((s.match(/<path /g) || []).length, 4);
+  assert.equal(SK.icon('icon.coins'), SK.icon('coins'));
+  assert.throws(() => SK.icon('coin'), /unknown icon "coin" \(did you mean .*coins/);
+  assert.match(SK.pict('robot', { size: 48, color: 'red' }), /^<svg class="sk-pict" width="48" height="48" viewBox="0 0 256 256" fill="red"><path d="M/);
+  assert.equal(SK.asset('icon.coins').inline, "SK.icon('coins')");
+});
+test('SK.rough is deterministic per seed, redraws each path once, and resets the length cache', () => {
+  const SK = load();
+  const mk = () => {
+    const p = { d: 'M0 0L20 0', _skLen: 20, getTotalLength: () => 20, getPointAtLength: (s) => ({ x: s, y: 0 }), setAttribute(k, v) { this[k] = v; } };
+    return { p, svg: { querySelectorAll: () => [p] } };
+  };
+  const a = mk(), b = mk(), c = mk();
+  SK.rough(a.svg, { seed: 4 }); SK.rough(b.svg, { seed: 4 }); SK.rough(c.svg, { seed: 5 });
+  assert.equal(a.p.d, b.p.d);
+  assert.notEqual(a.p.d, c.p.d);
+  assert.match(a.p.d, /^M-?\d+\.\d{2} -?\d+\.\d{2}C/);
+  assert.equal(a.p._skLen, null);
+  const once = a.p.d; SK.rough(a.svg, { seed: 9 }); assert.equal(a.p.d, once);
 });

@@ -1,0 +1,20 @@
+{
+  "source": {"package": "@phosphor-icons/core", "version": "2.1.1", "license": "MIT", "weight": "fill", "tarball": "https://registry.npmjs.org/@phosphor-icons/core/-/core-2.1.1.tgz"},
+  "tags": {
+    "person": ["orang"], "users-three": ["orang"], "user": ["orang"], "baby": ["orang"], "student": ["orang"],
+    "money": ["uang"], "coins": ["uang"], "coin": ["uang"], "bank": ["uang"], "wallet": ["uang"], "credit-card": ["uang"], "receipt": ["uang"], "ticket": ["uang"],
+    "storefront": ["umkm", "bisnis"], "shopping-cart": ["bisnis"], "buildings": ["bisnis"], "factory": ["bisnis"], "rocket": ["bisnis"], "target": ["bisnis"], "handshake": ["bisnis"],
+    "package": ["logistik"], "truck": ["logistik"],
+    "laptop": ["perangkat"], "device-mobile": ["perangkat"], "desktop": ["perangkat"],
+    "robot": ["ai"], "cpu": ["ai"], "lightbulb": ["ide"],
+    "clock": ["waktu"], "calendar": ["waktu"], "hourglass": ["waktu"],
+    "chat-circle": ["chat"], "envelope": ["chat"], "phone": ["chat"],
+    "star": ["status"], "trophy": ["status"], "flag": ["status"], "thumbs-up": ["status"], "warning": ["status"], "check-circle": ["status"], "x-circle": ["status"],
+    "lock": ["keamanan"], "shield-check": ["keamanan"], "key": ["keamanan"],
+    "globe": ["tempat"], "map-pin": ["tempat"],
+    "house": ["hidup"], "heart": ["hidup"], "car": ["hidup"], "motorcycle": ["hidup"], "airplane": ["hidup"], "bicycle": ["hidup"], "bus": ["hidup"], "coffee": ["hidup"], "fork-knife": ["hidup"], "tree": ["hidup"], "leaf": ["hidup"], "drop": ["hidup"], "sun": ["hidup"], "moon": ["hidup"], "cloud": ["hidup"],
+    "lightning": ["benda"], "fire": ["benda"], "gift": ["benda"],
+    "chart-bar": ["data"], "chart-pie": ["data"],
+    "file": ["kerja"], "folder": ["kerja"], "briefcase": ["kerja"], "gear": ["kerja"]
+  }
+}

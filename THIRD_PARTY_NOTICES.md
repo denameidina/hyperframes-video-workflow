@@ -50,6 +50,18 @@ Rough.js code is included.
   Copyright 2020 The Newsreader Project Authors
   (`vendor/style-kit/fonts/OFL-Newsreader.txt`).
 
+## asset-lib (`vendor/asset-lib`)
+
+The runtime, build scripts, SVG doodles, marks, stamps, frames, and document
+templates are this project's own work (MIT). Per-file sources are listed in
+`vendor/asset-lib/LICENSES.md` (generated from `vendor/asset-lib/src`).
+
+- Icons (`vendor/asset-lib/icons/lucide.json`): path data from
+  `lucide-static@1.48.0` (https://lucide.dev), ISC License.
+- Pictograms (`vendor/asset-lib/pictograms/phosphor.json`): path data from
+  `@phosphor-icons/core@2.1.1` fill weight (https://phosphoricons.com), MIT License.
+
+
 ## paper-pack (`vendor/paper-pack`)
 
 - Paper and kraft textures: ambientCG (https://ambientcg.com), Creative Commons

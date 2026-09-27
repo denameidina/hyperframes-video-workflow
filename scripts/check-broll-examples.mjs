@@ -30,6 +30,7 @@ try {
   cpSync('vendor/motion-kit', join(dir, 'vendor/motion-kit'), { recursive: true });
   cpSync('vendor/style-kit', join(dir, 'vendor/style-kit'), { recursive: true });
   cpSync('vendor/paper-pack', join(dir, 'vendor/paper-pack'), { recursive: true });
+  cpSync('vendor/asset-lib', join(dir, 'vendor/asset-lib'), { recursive: true, filter: (f) => !f.includes('/src') });
   const { at } = JSON.parse(readFileSync(join(SRC, 'snapshots.json'), 'utf8'));
   hf('lint', dir);
   hf('validate', dir);

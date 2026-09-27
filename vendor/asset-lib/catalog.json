@@ -1,0 +1,5911 @@
+[
+ {
+  "id": "icon.bot",
+  "kind": "icon",
+  "inline": "SK.icon('bot')",
+  "use": "SK.icon('bot')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.brain",
+  "kind": "icon",
+  "inline": "SK.icon('brain')",
+  "use": "SK.icon('brain')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.brain-circuit",
+  "kind": "icon",
+  "inline": "SK.icon('brain-circuit')",
+  "use": "SK.icon('brain-circuit')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cpu",
+  "kind": "icon",
+  "inline": "SK.icon('cpu')",
+  "use": "SK.icon('cpu')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.sparkles",
+  "kind": "icon",
+  "inline": "SK.icon('sparkles')",
+  "use": "SK.icon('sparkles')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.wand-sparkles",
+  "kind": "icon",
+  "inline": "SK.icon('wand-sparkles')",
+  "use": "SK.icon('wand-sparkles')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.message-square-code",
+  "kind": "icon",
+  "inline": "SK.icon('message-square-code')",
+  "use": "SK.icon('message-square-code')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.workflow",
+  "kind": "icon",
+  "inline": "SK.icon('workflow')",
+  "use": "SK.icon('workflow')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.network",
+  "kind": "icon",
+  "inline": "SK.icon('network')",
+  "use": "SK.icon('network')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.git-branch",
+  "kind": "icon",
+  "inline": "SK.icon('git-branch')",
+  "use": "SK.icon('git-branch')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.code",
+  "kind": "icon",
+  "inline": "SK.icon('code')",
+  "use": "SK.icon('code')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.terminal",
+  "kind": "icon",
+  "inline": "SK.icon('terminal')",
+  "use": "SK.icon('terminal')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.database",
+  "kind": "icon",
+  "inline": "SK.icon('database')",
+  "use": "SK.icon('database')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.server",
+  "kind": "icon",
+  "inline": "SK.icon('server')",
+  "use": "SK.icon('server')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cloud",
+  "kind": "icon",
+  "inline": "SK.icon('cloud')",
+  "use": "SK.icon('cloud')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cloud-upload",
+  "kind": "icon",
+  "inline": "SK.icon('cloud-upload')",
+  "use": "SK.icon('cloud-upload')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cloud-download",
+  "kind": "icon",
+  "inline": "SK.icon('cloud-download')",
+  "use": "SK.icon('cloud-download')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.webhook",
+  "kind": "icon",
+  "inline": "SK.icon('webhook')",
+  "use": "SK.icon('webhook')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.plug",
+  "kind": "icon",
+  "inline": "SK.icon('plug')",
+  "use": "SK.icon('plug')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.zap",
+  "kind": "icon",
+  "inline": "SK.icon('zap')",
+  "use": "SK.icon('zap')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cog",
+  "kind": "icon",
+  "inline": "SK.icon('cog')",
+  "use": "SK.icon('cog')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.settings",
+  "kind": "icon",
+  "inline": "SK.icon('settings')",
+  "use": "SK.icon('settings')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.sliders-horizontal",
+  "kind": "icon",
+  "inline": "SK.icon('sliders-horizontal')",
+  "use": "SK.icon('sliders-horizontal')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.scan-search",
+  "kind": "icon",
+  "inline": "SK.icon('scan-search')",
+  "use": "SK.icon('scan-search')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.scan-text",
+  "kind": "icon",
+  "inline": "SK.icon('scan-text')",
+  "use": "SK.icon('scan-text')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.file-code",
+  "kind": "icon",
+  "inline": "SK.icon('file-code')",
+  "use": "SK.icon('file-code')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.binary",
+  "kind": "icon",
+  "inline": "SK.icon('binary')",
+  "use": "SK.icon('binary')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.braces",
+  "kind": "icon",
+  "inline": "SK.icon('braces')",
+  "use": "SK.icon('braces')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.banknote",
+  "kind": "icon",
+  "inline": "SK.icon('banknote')",
+  "use": "SK.icon('banknote')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.coins",
+  "kind": "icon",
+  "inline": "SK.icon('coins')",
+  "use": "SK.icon('coins')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.wallet",
+  "kind": "icon",
+  "inline": "SK.icon('wallet')",
+  "use": "SK.icon('wallet')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.credit-card",
+  "kind": "icon",
+  "inline": "SK.icon('credit-card')",
+  "use": "SK.icon('credit-card')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.receipt",
+  "kind": "icon",
+  "inline": "SK.icon('receipt')",
+  "use": "SK.icon('receipt')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.piggy-bank",
+  "kind": "icon",
+  "inline": "SK.icon('piggy-bank')",
+  "use": "SK.icon('piggy-bank')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.hand-coins",
+  "kind": "icon",
+  "inline": "SK.icon('hand-coins')",
+  "use": "SK.icon('hand-coins')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.badge-percent",
+  "kind": "icon",
+  "inline": "SK.icon('badge-percent')",
+  "use": "SK.icon('badge-percent')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.percent",
+  "kind": "icon",
+  "inline": "SK.icon('percent')",
+  "use": "SK.icon('percent')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.trending-up",
+  "kind": "icon",
+  "inline": "SK.icon('trending-up')",
+  "use": "SK.icon('trending-up')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.trending-down",
+  "kind": "icon",
+  "inline": "SK.icon('trending-down')",
+  "use": "SK.icon('trending-down')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.chart-line",
+  "kind": "icon",
+  "inline": "SK.icon('chart-line')",
+  "use": "SK.icon('chart-line')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.chart-column",
+  "kind": "icon",
+  "inline": "SK.icon('chart-column')",
+  "use": "SK.icon('chart-column')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.chart-pie",
+  "kind": "icon",
+  "inline": "SK.icon('chart-pie')",
+  "use": "SK.icon('chart-pie')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.chart-bar",
+  "kind": "icon",
+  "inline": "SK.icon('chart-bar')",
+  "use": "SK.icon('chart-bar')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.calculator",
+  "kind": "icon",
+  "inline": "SK.icon('calculator')",
+  "use": "SK.icon('calculator')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.landmark",
+  "kind": "icon",
+  "inline": "SK.icon('landmark')",
+  "use": "SK.icon('landmark')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.scale",
+  "kind": "icon",
+  "inline": "SK.icon('scale')",
+  "use": "SK.icon('scale')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.gem",
+  "kind": "icon",
+  "inline": "SK.icon('gem')",
+  "use": "SK.icon('gem')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-dollar-sign",
+  "kind": "icon",
+  "inline": "SK.icon('circle-dollar-sign')",
+  "use": "SK.icon('circle-dollar-sign')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.tag",
+  "kind": "icon",
+  "inline": "SK.icon('tag')",
+  "use": "SK.icon('tag')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.tags",
+  "kind": "icon",
+  "inline": "SK.icon('tags')",
+  "use": "SK.icon('tags')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.ticket",
+  "kind": "icon",
+  "inline": "SK.icon('ticket')",
+  "use": "SK.icon('ticket')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.store",
+  "kind": "icon",
+  "inline": "SK.icon('store')",
+  "use": "SK.icon('store')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shopping-cart",
+  "kind": "icon",
+  "inline": "SK.icon('shopping-cart')",
+  "use": "SK.icon('shopping-cart')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shopping-bag",
+  "kind": "icon",
+  "inline": "SK.icon('shopping-bag')",
+  "use": "SK.icon('shopping-bag')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.package",
+  "kind": "icon",
+  "inline": "SK.icon('package')",
+  "use": "SK.icon('package')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.package-check",
+  "kind": "icon",
+  "inline": "SK.icon('package-check')",
+  "use": "SK.icon('package-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.truck",
+  "kind": "icon",
+  "inline": "SK.icon('truck')",
+  "use": "SK.icon('truck')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.warehouse",
+  "kind": "icon",
+  "inline": "SK.icon('warehouse')",
+  "use": "SK.icon('warehouse')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.factory",
+  "kind": "icon",
+  "inline": "SK.icon('factory')",
+  "use": "SK.icon('factory')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.building",
+  "kind": "icon",
+  "inline": "SK.icon('building')",
+  "use": "SK.icon('building')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.building-complex",
+  "kind": "icon",
+  "inline": "SK.icon('building-complex')",
+  "use": "SK.icon('building-complex')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.briefcase",
+  "kind": "icon",
+  "inline": "SK.icon('briefcase')",
+  "use": "SK.icon('briefcase')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.handshake",
+  "kind": "icon",
+  "inline": "SK.icon('handshake')",
+  "use": "SK.icon('handshake')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.presentation",
+  "kind": "icon",
+  "inline": "SK.icon('presentation')",
+  "use": "SK.icon('presentation')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.target",
+  "kind": "icon",
+  "inline": "SK.icon('target')",
+  "use": "SK.icon('target')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.trophy",
+  "kind": "icon",
+  "inline": "SK.icon('trophy')",
+  "use": "SK.icon('trophy')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.award",
+  "kind": "icon",
+  "inline": "SK.icon('award')",
+  "use": "SK.icon('award')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.rocket",
+  "kind": "icon",
+  "inline": "SK.icon('rocket')",
+  "use": "SK.icon('rocket')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.flag",
+  "kind": "icon",
+  "inline": "SK.icon('flag')",
+  "use": "SK.icon('flag')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.megaphone",
+  "kind": "icon",
+  "inline": "SK.icon('megaphone')",
+  "use": "SK.icon('megaphone')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.clipboard-list",
+  "kind": "icon",
+  "inline": "SK.icon('clipboard-list')",
+  "use": "SK.icon('clipboard-list')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.clipboard-check",
+  "kind": "icon",
+  "inline": "SK.icon('clipboard-check')",
+  "use": "SK.icon('clipboard-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.file-text",
+  "kind": "icon",
+  "inline": "SK.icon('file-text')",
+  "use": "SK.icon('file-text')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.file-spreadsheet",
+  "kind": "icon",
+  "inline": "SK.icon('file-spreadsheet')",
+  "use": "SK.icon('file-spreadsheet')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.files",
+  "kind": "icon",
+  "inline": "SK.icon('files')",
+  "use": "SK.icon('files')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.folder",
+  "kind": "icon",
+  "inline": "SK.icon('folder')",
+  "use": "SK.icon('folder')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.folder-open",
+  "kind": "icon",
+  "inline": "SK.icon('folder-open')",
+  "use": "SK.icon('folder-open')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.archive",
+  "kind": "icon",
+  "inline": "SK.icon('archive')",
+  "use": "SK.icon('archive')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.stamp",
+  "kind": "icon",
+  "inline": "SK.icon('stamp')",
+  "use": "SK.icon('stamp')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.signature",
+  "kind": "icon",
+  "inline": "SK.icon('signature')",
+  "use": "SK.icon('signature')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.message-circle",
+  "kind": "icon",
+  "inline": "SK.icon('message-circle')",
+  "use": "SK.icon('message-circle')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.message-square",
+  "kind": "icon",
+  "inline": "SK.icon('message-square')",
+  "use": "SK.icon('message-square')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.messages-square",
+  "kind": "icon",
+  "inline": "SK.icon('messages-square')",
+  "use": "SK.icon('messages-square')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.mail",
+  "kind": "icon",
+  "inline": "SK.icon('mail')",
+  "use": "SK.icon('mail')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.mail-open",
+  "kind": "icon",
+  "inline": "SK.icon('mail-open')",
+  "use": "SK.icon('mail-open')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.send",
+  "kind": "icon",
+  "inline": "SK.icon('send')",
+  "use": "SK.icon('send')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.inbox",
+  "kind": "icon",
+  "inline": "SK.icon('inbox')",
+  "use": "SK.icon('inbox')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.phone",
+  "kind": "icon",
+  "inline": "SK.icon('phone')",
+  "use": "SK.icon('phone')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.phone-call",
+  "kind": "icon",
+  "inline": "SK.icon('phone-call')",
+  "use": "SK.icon('phone-call')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bell",
+  "kind": "icon",
+  "inline": "SK.icon('bell')",
+  "use": "SK.icon('bell')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bell-ring",
+  "kind": "icon",
+  "inline": "SK.icon('bell-ring')",
+  "use": "SK.icon('bell-ring')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.at-sign",
+  "kind": "icon",
+  "inline": "SK.icon('at-sign')",
+  "use": "SK.icon('at-sign')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.share-2",
+  "kind": "icon",
+  "inline": "SK.icon('share-2')",
+  "use": "SK.icon('share-2')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.reply",
+  "kind": "icon",
+  "inline": "SK.icon('reply')",
+  "use": "SK.icon('reply')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.forward",
+  "kind": "icon",
+  "inline": "SK.icon('forward')",
+  "use": "SK.icon('forward')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.mic",
+  "kind": "icon",
+  "inline": "SK.icon('mic')",
+  "use": "SK.icon('mic')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.video",
+  "kind": "icon",
+  "inline": "SK.icon('video')",
+  "use": "SK.icon('video')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.camera",
+  "kind": "icon",
+  "inline": "SK.icon('camera')",
+  "use": "SK.icon('camera')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.image",
+  "kind": "icon",
+  "inline": "SK.icon('image')",
+  "use": "SK.icon('image')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.link",
+  "kind": "icon",
+  "inline": "SK.icon('link')",
+  "use": "SK.icon('link')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.qr-code",
+  "kind": "icon",
+  "inline": "SK.icon('qr-code')",
+  "use": "SK.icon('qr-code')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.user",
+  "kind": "icon",
+  "inline": "SK.icon('user')",
+  "use": "SK.icon('user')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.users",
+  "kind": "icon",
+  "inline": "SK.icon('users')",
+  "use": "SK.icon('users')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.user-plus",
+  "kind": "icon",
+  "inline": "SK.icon('user-plus')",
+  "use": "SK.icon('user-plus')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.user-check",
+  "kind": "icon",
+  "inline": "SK.icon('user-check')",
+  "use": "SK.icon('user-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.user-x",
+  "kind": "icon",
+  "inline": "SK.icon('user-x')",
+  "use": "SK.icon('user-x')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.user-round",
+  "kind": "icon",
+  "inline": "SK.icon('user-round')",
+  "use": "SK.icon('user-round')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.users-round",
+  "kind": "icon",
+  "inline": "SK.icon('users-round')",
+  "use": "SK.icon('users-round')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.contact",
+  "kind": "icon",
+  "inline": "SK.icon('contact')",
+  "use": "SK.icon('contact')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.baby",
+  "kind": "icon",
+  "inline": "SK.icon('baby')",
+  "use": "SK.icon('baby')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.graduation-cap",
+  "kind": "icon",
+  "inline": "SK.icon('graduation-cap')",
+  "use": "SK.icon('graduation-cap')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.hand",
+  "kind": "icon",
+  "inline": "SK.icon('hand')",
+  "use": "SK.icon('hand')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.heart-handshake",
+  "kind": "icon",
+  "inline": "SK.icon('heart-handshake')",
+  "use": "SK.icon('heart-handshake')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.face-slightly-smiling",
+  "kind": "icon",
+  "inline": "SK.icon('face-slightly-smiling')",
+  "use": "SK.icon('face-slightly-smiling')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.face-slightly-frowning",
+  "kind": "icon",
+  "inline": "SK.icon('face-slightly-frowning')",
+  "use": "SK.icon('face-slightly-frowning')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.face-neutral",
+  "kind": "icon",
+  "inline": "SK.icon('face-neutral')",
+  "use": "SK.icon('face-neutral')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.face-grinning",
+  "kind": "icon",
+  "inline": "SK.icon('face-grinning')",
+  "use": "SK.icon('face-grinning')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.face-angry",
+  "kind": "icon",
+  "inline": "SK.icon('face-angry')",
+  "use": "SK.icon('face-angry')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.thumbs-up",
+  "kind": "icon",
+  "inline": "SK.icon('thumbs-up')",
+  "use": "SK.icon('thumbs-up')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.thumbs-down",
+  "kind": "icon",
+  "inline": "SK.icon('thumbs-down')",
+  "use": "SK.icon('thumbs-down')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.crown",
+  "kind": "icon",
+  "inline": "SK.icon('crown')",
+  "use": "SK.icon('crown')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.clock",
+  "kind": "icon",
+  "inline": "SK.icon('clock')",
+  "use": "SK.icon('clock')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.alarm-clock",
+  "kind": "icon",
+  "inline": "SK.icon('alarm-clock')",
+  "use": "SK.icon('alarm-clock')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.timer",
+  "kind": "icon",
+  "inline": "SK.icon('timer')",
+  "use": "SK.icon('timer')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.hourglass",
+  "kind": "icon",
+  "inline": "SK.icon('hourglass')",
+  "use": "SK.icon('hourglass')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.calendar",
+  "kind": "icon",
+  "inline": "SK.icon('calendar')",
+  "use": "SK.icon('calendar')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.calendar-check",
+  "kind": "icon",
+  "inline": "SK.icon('calendar-check')",
+  "use": "SK.icon('calendar-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.calendar-clock",
+  "kind": "icon",
+  "inline": "SK.icon('calendar-clock')",
+  "use": "SK.icon('calendar-clock')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.refresh-cw",
+  "kind": "icon",
+  "inline": "SK.icon('refresh-cw')",
+  "use": "SK.icon('refresh-cw')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.rotate-ccw",
+  "kind": "icon",
+  "inline": "SK.icon('rotate-ccw')",
+  "use": "SK.icon('rotate-ccw')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.repeat",
+  "kind": "icon",
+  "inline": "SK.icon('repeat')",
+  "use": "SK.icon('repeat')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.laptop",
+  "kind": "icon",
+  "inline": "SK.icon('laptop')",
+  "use": "SK.icon('laptop')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.monitor",
+  "kind": "icon",
+  "inline": "SK.icon('monitor')",
+  "use": "SK.icon('monitor')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.smartphone",
+  "kind": "icon",
+  "inline": "SK.icon('smartphone')",
+  "use": "SK.icon('smartphone')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.tablet",
+  "kind": "icon",
+  "inline": "SK.icon('tablet')",
+  "use": "SK.icon('tablet')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.keyboard",
+  "kind": "icon",
+  "inline": "SK.icon('keyboard')",
+  "use": "SK.icon('keyboard')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.mouse",
+  "kind": "icon",
+  "inline": "SK.icon('mouse')",
+  "use": "SK.icon('mouse')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.printer",
+  "kind": "icon",
+  "inline": "SK.icon('printer')",
+  "use": "SK.icon('printer')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.wifi",
+  "kind": "icon",
+  "inline": "SK.icon('wifi')",
+  "use": "SK.icon('wifi')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.battery-low",
+  "kind": "icon",
+  "inline": "SK.icon('battery-low')",
+  "use": "SK.icon('battery-low')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.battery-full",
+  "kind": "icon",
+  "inline": "SK.icon('battery-full')",
+  "use": "SK.icon('battery-full')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.hard-drive",
+  "kind": "icon",
+  "inline": "SK.icon('hard-drive')",
+  "use": "SK.icon('hard-drive')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.usb",
+  "kind": "icon",
+  "inline": "SK.icon('usb')",
+  "use": "SK.icon('usb')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.headphones",
+  "kind": "icon",
+  "inline": "SK.icon('headphones')",
+  "use": "SK.icon('headphones')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.watch",
+  "kind": "icon",
+  "inline": "SK.icon('watch')",
+  "use": "SK.icon('watch')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.tv",
+  "kind": "icon",
+  "inline": "SK.icon('tv')",
+  "use": "SK.icon('tv')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.lock",
+  "kind": "icon",
+  "inline": "SK.icon('lock')",
+  "use": "SK.icon('lock')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.lock-open",
+  "kind": "icon",
+  "inline": "SK.icon('lock-open')",
+  "use": "SK.icon('lock-open')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.lock-keyhole-open",
+  "kind": "icon",
+  "inline": "SK.icon('lock-keyhole-open')",
+  "use": "SK.icon('lock-keyhole-open')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shield",
+  "kind": "icon",
+  "inline": "SK.icon('shield')",
+  "use": "SK.icon('shield')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shield-check",
+  "kind": "icon",
+  "inline": "SK.icon('shield-check')",
+  "use": "SK.icon('shield-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shield-alert",
+  "kind": "icon",
+  "inline": "SK.icon('shield-alert')",
+  "use": "SK.icon('shield-alert')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.key",
+  "kind": "icon",
+  "inline": "SK.icon('key')",
+  "use": "SK.icon('key')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.key-round",
+  "kind": "icon",
+  "inline": "SK.icon('key-round')",
+  "use": "SK.icon('key-round')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.fingerprint-pattern",
+  "kind": "icon",
+  "inline": "SK.icon('fingerprint-pattern')",
+  "use": "SK.icon('fingerprint-pattern')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.eye",
+  "kind": "icon",
+  "inline": "SK.icon('eye')",
+  "use": "SK.icon('eye')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.eye-off",
+  "kind": "icon",
+  "inline": "SK.icon('eye-off')",
+  "use": "SK.icon('eye-off')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.scan-face",
+  "kind": "icon",
+  "inline": "SK.icon('scan-face')",
+  "use": "SK.icon('scan-face')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.check",
+  "kind": "icon",
+  "inline": "SK.icon('check')",
+  "use": "SK.icon('check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.check-check",
+  "kind": "icon",
+  "inline": "SK.icon('check-check')",
+  "use": "SK.icon('check-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.x",
+  "kind": "icon",
+  "inline": "SK.icon('x')",
+  "use": "SK.icon('x')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-check",
+  "kind": "icon",
+  "inline": "SK.icon('circle-check')",
+  "use": "SK.icon('circle-check')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-x",
+  "kind": "icon",
+  "inline": "SK.icon('circle-x')",
+  "use": "SK.icon('circle-x')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-alert",
+  "kind": "icon",
+  "inline": "SK.icon('circle-alert')",
+  "use": "SK.icon('circle-alert')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.triangle-alert",
+  "kind": "icon",
+  "inline": "SK.icon('triangle-alert')",
+  "use": "SK.icon('triangle-alert')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.info",
+  "kind": "icon",
+  "inline": "SK.icon('info')",
+  "use": "SK.icon('info')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-question-mark",
+  "kind": "icon",
+  "inline": "SK.icon('circle-question-mark')",
+  "use": "SK.icon('circle-question-mark')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.ban",
+  "kind": "icon",
+  "inline": "SK.icon('ban')",
+  "use": "SK.icon('ban')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.octagon-x",
+  "kind": "icon",
+  "inline": "SK.icon('octagon-x')",
+  "use": "SK.icon('octagon-x')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.loader",
+  "kind": "icon",
+  "inline": "SK.icon('loader')",
+  "use": "SK.icon('loader')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-right",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-right')",
+  "use": "SK.icon('arrow-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-left",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-left')",
+  "use": "SK.icon('arrow-left')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-up",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-up')",
+  "use": "SK.icon('arrow-up')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-down",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-down')",
+  "use": "SK.icon('arrow-down')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-up-right",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-up-right')",
+  "use": "SK.icon('arrow-up-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.arrow-down-right",
+  "kind": "icon",
+  "inline": "SK.icon('arrow-down-right')",
+  "use": "SK.icon('arrow-down-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.move-right",
+  "kind": "icon",
+  "inline": "SK.icon('move-right')",
+  "use": "SK.icon('move-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.redo",
+  "kind": "icon",
+  "inline": "SK.icon('redo')",
+  "use": "SK.icon('redo')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.undo",
+  "kind": "icon",
+  "inline": "SK.icon('undo')",
+  "use": "SK.icon('undo')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.shuffle",
+  "kind": "icon",
+  "inline": "SK.icon('shuffle')",
+  "use": "SK.icon('shuffle')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.split",
+  "kind": "icon",
+  "inline": "SK.icon('split')",
+  "use": "SK.icon('split')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.merge",
+  "kind": "icon",
+  "inline": "SK.icon('merge')",
+  "use": "SK.icon('merge')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.corner-down-right",
+  "kind": "icon",
+  "inline": "SK.icon('corner-down-right')",
+  "use": "SK.icon('corner-down-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.chevrons-right",
+  "kind": "icon",
+  "inline": "SK.icon('chevrons-right')",
+  "use": "SK.icon('chevrons-right')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.refresh-ccw",
+  "kind": "icon",
+  "inline": "SK.icon('refresh-ccw')",
+  "use": "SK.icon('refresh-ccw')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.lightbulb",
+  "kind": "icon",
+  "inline": "SK.icon('lightbulb')",
+  "use": "SK.icon('lightbulb')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.lightbulb-off",
+  "kind": "icon",
+  "inline": "SK.icon('lightbulb-off')",
+  "use": "SK.icon('lightbulb-off')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.puzzle",
+  "kind": "icon",
+  "inline": "SK.icon('puzzle')",
+  "use": "SK.icon('puzzle')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.compass",
+  "kind": "icon",
+  "inline": "SK.icon('compass')",
+  "use": "SK.icon('compass')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.map",
+  "kind": "icon",
+  "inline": "SK.icon('map')",
+  "use": "SK.icon('map')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.map-pin",
+  "kind": "icon",
+  "inline": "SK.icon('map-pin')",
+  "use": "SK.icon('map-pin')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.map-pinned",
+  "kind": "icon",
+  "inline": "SK.icon('map-pinned')",
+  "use": "SK.icon('map-pinned')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.navigation",
+  "kind": "icon",
+  "inline": "SK.icon('navigation')",
+  "use": "SK.icon('navigation')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.route",
+  "kind": "icon",
+  "inline": "SK.icon('route')",
+  "use": "SK.icon('route')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.milestone",
+  "kind": "icon",
+  "inline": "SK.icon('milestone')",
+  "use": "SK.icon('milestone')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.signpost",
+  "kind": "icon",
+  "inline": "SK.icon('signpost')",
+  "use": "SK.icon('signpost')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.globe",
+  "kind": "icon",
+  "inline": "SK.icon('globe')",
+  "use": "SK.icon('globe')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.earth",
+  "kind": "icon",
+  "inline": "SK.icon('earth')",
+  "use": "SK.icon('earth')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.search",
+  "kind": "icon",
+  "inline": "SK.icon('search')",
+  "use": "SK.icon('search')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.zoom-in",
+  "kind": "icon",
+  "inline": "SK.icon('zoom-in')",
+  "use": "SK.icon('zoom-in')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.zoom-out",
+  "kind": "icon",
+  "inline": "SK.icon('zoom-out')",
+  "use": "SK.icon('zoom-out')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.funnel",
+  "kind": "icon",
+  "inline": "SK.icon('funnel')",
+  "use": "SK.icon('funnel')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.list-checks",
+  "kind": "icon",
+  "inline": "SK.icon('list-checks')",
+  "use": "SK.icon('list-checks')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.list-ordered",
+  "kind": "icon",
+  "inline": "SK.icon('list-ordered')",
+  "use": "SK.icon('list-ordered')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.layers",
+  "kind": "icon",
+  "inline": "SK.icon('layers')",
+  "use": "SK.icon('layers')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.layout-dashboard",
+  "kind": "icon",
+  "inline": "SK.icon('layout-dashboard')",
+  "use": "SK.icon('layout-dashboard')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.kanban",
+  "kind": "icon",
+  "inline": "SK.icon('kanban')",
+  "use": "SK.icon('kanban')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.notebook-pen",
+  "kind": "icon",
+  "inline": "SK.icon('notebook-pen')",
+  "use": "SK.icon('notebook-pen')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.book-open",
+  "kind": "icon",
+  "inline": "SK.icon('book-open')",
+  "use": "SK.icon('book-open')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.library",
+  "kind": "icon",
+  "inline": "SK.icon('library')",
+  "use": "SK.icon('library')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.pencil",
+  "kind": "icon",
+  "inline": "SK.icon('pencil')",
+  "use": "SK.icon('pencil')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.pen-line",
+  "kind": "icon",
+  "inline": "SK.icon('pen-line')",
+  "use": "SK.icon('pen-line')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.eraser",
+  "kind": "icon",
+  "inline": "SK.icon('eraser')",
+  "use": "SK.icon('eraser')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.highlighter",
+  "kind": "icon",
+  "inline": "SK.icon('highlighter')",
+  "use": "SK.icon('highlighter')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.scissors",
+  "kind": "icon",
+  "inline": "SK.icon('scissors')",
+  "use": "SK.icon('scissors')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.paperclip",
+  "kind": "icon",
+  "inline": "SK.icon('paperclip')",
+  "use": "SK.icon('paperclip')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.pin",
+  "kind": "icon",
+  "inline": "SK.icon('pin')",
+  "use": "SK.icon('pin')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bookmark",
+  "kind": "icon",
+  "inline": "SK.icon('bookmark')",
+  "use": "SK.icon('bookmark')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.coffee",
+  "kind": "icon",
+  "inline": "SK.icon('coffee')",
+  "use": "SK.icon('coffee')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.utensils-crossed",
+  "kind": "icon",
+  "inline": "SK.icon('utensils-crossed')",
+  "use": "SK.icon('utensils-crossed')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.house",
+  "kind": "icon",
+  "inline": "SK.icon('house')",
+  "use": "SK.icon('house')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bike",
+  "kind": "icon",
+  "inline": "SK.icon('bike')",
+  "use": "SK.icon('bike')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.car",
+  "kind": "icon",
+  "inline": "SK.icon('car')",
+  "use": "SK.icon('car')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bus",
+  "kind": "icon",
+  "inline": "SK.icon('bus')",
+  "use": "SK.icon('bus')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.plane",
+  "kind": "icon",
+  "inline": "SK.icon('plane')",
+  "use": "SK.icon('plane')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.ship",
+  "kind": "icon",
+  "inline": "SK.icon('ship')",
+  "use": "SK.icon('ship')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.train-front",
+  "kind": "icon",
+  "inline": "SK.icon('train-front')",
+  "use": "SK.icon('train-front')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.motorbike",
+  "kind": "icon",
+  "inline": "SK.icon('motorbike')",
+  "use": "SK.icon('motorbike')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.fuel",
+  "kind": "icon",
+  "inline": "SK.icon('fuel')",
+  "use": "SK.icon('fuel')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.sun",
+  "kind": "icon",
+  "inline": "SK.icon('sun')",
+  "use": "SK.icon('sun')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.moon",
+  "kind": "icon",
+  "inline": "SK.icon('moon')",
+  "use": "SK.icon('moon')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.cloud-rain",
+  "kind": "icon",
+  "inline": "SK.icon('cloud-rain')",
+  "use": "SK.icon('cloud-rain')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.flame",
+  "kind": "icon",
+  "inline": "SK.icon('flame')",
+  "use": "SK.icon('flame')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.droplet",
+  "kind": "icon",
+  "inline": "SK.icon('droplet')",
+  "use": "SK.icon('droplet')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.leaf",
+  "kind": "icon",
+  "inline": "SK.icon('leaf')",
+  "use": "SK.icon('leaf')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.sprout",
+  "kind": "icon",
+  "inline": "SK.icon('sprout')",
+  "use": "SK.icon('sprout')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.tree-pine",
+  "kind": "icon",
+  "inline": "SK.icon('tree-pine')",
+  "use": "SK.icon('tree-pine')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.mountain",
+  "kind": "icon",
+  "inline": "SK.icon('mountain')",
+  "use": "SK.icon('mountain')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.play",
+  "kind": "icon",
+  "inline": "SK.icon('play')",
+  "use": "SK.icon('play')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.pause",
+  "kind": "icon",
+  "inline": "SK.icon('pause')",
+  "use": "SK.icon('pause')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.circle-play",
+  "kind": "icon",
+  "inline": "SK.icon('circle-play')",
+  "use": "SK.icon('circle-play')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.film",
+  "kind": "icon",
+  "inline": "SK.icon('film')",
+  "use": "SK.icon('film')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.clapperboard",
+  "kind": "icon",
+  "inline": "SK.icon('clapperboard')",
+  "use": "SK.icon('clapperboard')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.music",
+  "kind": "icon",
+  "inline": "SK.icon('music')",
+  "use": "SK.icon('music')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.volume-2",
+  "kind": "icon",
+  "inline": "SK.icon('volume-2')",
+  "use": "SK.icon('volume-2')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.gift",
+  "kind": "icon",
+  "inline": "SK.icon('gift')",
+  "use": "SK.icon('gift')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.star",
+  "kind": "icon",
+  "inline": "SK.icon('star')",
+  "use": "SK.icon('star')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.heart",
+  "kind": "icon",
+  "inline": "SK.icon('heart')",
+  "use": "SK.icon('heart')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.sparkle",
+  "kind": "icon",
+  "inline": "SK.icon('sparkle')",
+  "use": "SK.icon('sparkle')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.party-popper",
+  "kind": "icon",
+  "inline": "SK.icon('party-popper')",
+  "use": "SK.icon('party-popper')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.medal",
+  "kind": "icon",
+  "inline": "SK.icon('medal')",
+  "use": "SK.icon('medal')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.hammer",
+  "kind": "icon",
+  "inline": "SK.icon('hammer')",
+  "use": "SK.icon('hammer')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.wrench",
+  "kind": "icon",
+  "inline": "SK.icon('wrench')",
+  "use": "SK.icon('wrench')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.construction",
+  "kind": "icon",
+  "inline": "SK.icon('construction')",
+  "use": "SK.icon('construction')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.bug",
+  "kind": "icon",
+  "inline": "SK.icon('bug')",
+  "use": "SK.icon('bug')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.skull",
+  "kind": "icon",
+  "inline": "SK.icon('skull')",
+  "use": "SK.icon('skull')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.ghost",
+  "kind": "icon",
+  "inline": "SK.icon('ghost')",
+  "use": "SK.icon('ghost')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.dice-5",
+  "kind": "icon",
+  "inline": "SK.icon('dice-5')",
+  "use": "SK.icon('dice-5')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.box",
+  "kind": "icon",
+  "inline": "SK.icon('box')",
+  "use": "SK.icon('box')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.boxes",
+  "kind": "icon",
+  "inline": "SK.icon('boxes')",
+  "use": "SK.icon('boxes')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.container",
+  "kind": "icon",
+  "inline": "SK.icon('container')",
+  "use": "SK.icon('container')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.recycle",
+  "kind": "icon",
+  "inline": "SK.icon('recycle')",
+  "use": "SK.icon('recycle')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.trash",
+  "kind": "icon",
+  "inline": "SK.icon('trash')",
+  "use": "SK.icon('trash')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.download",
+  "kind": "icon",
+  "inline": "SK.icon('download')",
+  "use": "SK.icon('download')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.upload",
+  "kind": "icon",
+  "inline": "SK.icon('upload')",
+  "use": "SK.icon('upload')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "icon.external-link",
+  "kind": "icon",
+  "inline": "SK.icon('external-link')",
+  "use": "SK.icon('external-link')",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "lucide-static 1.48.0",
+  "license": "ISC"
+ },
+ {
+  "id": "pict.person",
+  "kind": "pictogram",
+  "inline": "SK.pict('person')",
+  "use": "SK.pict('person')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.users-three",
+  "kind": "pictogram",
+  "inline": "SK.pict('users-three')",
+  "use": "SK.pict('users-three')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.user",
+  "kind": "pictogram",
+  "inline": "SK.pict('user')",
+  "use": "SK.pict('user')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.baby",
+  "kind": "pictogram",
+  "inline": "SK.pict('baby')",
+  "use": "SK.pict('baby')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.student",
+  "kind": "pictogram",
+  "inline": "SK.pict('student')",
+  "use": "SK.pict('student')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.money",
+  "kind": "pictogram",
+  "inline": "SK.pict('money')",
+  "use": "SK.pict('money')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.coins",
+  "kind": "pictogram",
+  "inline": "SK.pict('coins')",
+  "use": "SK.pict('coins')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.coin",
+  "kind": "pictogram",
+  "inline": "SK.pict('coin')",
+  "use": "SK.pict('coin')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.bank",
+  "kind": "pictogram",
+  "inline": "SK.pict('bank')",
+  "use": "SK.pict('bank')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.wallet",
+  "kind": "pictogram",
+  "inline": "SK.pict('wallet')",
+  "use": "SK.pict('wallet')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.credit-card",
+  "kind": "pictogram",
+  "inline": "SK.pict('credit-card')",
+  "use": "SK.pict('credit-card')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.receipt",
+  "kind": "pictogram",
+  "inline": "SK.pict('receipt')",
+  "use": "SK.pict('receipt')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.ticket",
+  "kind": "pictogram",
+  "inline": "SK.pict('ticket')",
+  "use": "SK.pict('ticket')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.storefront",
+  "kind": "pictogram",
+  "inline": "SK.pict('storefront')",
+  "use": "SK.pict('storefront')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "umkm",
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.shopping-cart",
+  "kind": "pictogram",
+  "inline": "SK.pict('shopping-cart')",
+  "use": "SK.pict('shopping-cart')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.buildings",
+  "kind": "pictogram",
+  "inline": "SK.pict('buildings')",
+  "use": "SK.pict('buildings')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.factory",
+  "kind": "pictogram",
+  "inline": "SK.pict('factory')",
+  "use": "SK.pict('factory')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.rocket",
+  "kind": "pictogram",
+  "inline": "SK.pict('rocket')",
+  "use": "SK.pict('rocket')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.target",
+  "kind": "pictogram",
+  "inline": "SK.pict('target')",
+  "use": "SK.pict('target')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.handshake",
+  "kind": "pictogram",
+  "inline": "SK.pict('handshake')",
+  "use": "SK.pict('handshake')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.package",
+  "kind": "pictogram",
+  "inline": "SK.pict('package')",
+  "use": "SK.pict('package')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "logistik"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.truck",
+  "kind": "pictogram",
+  "inline": "SK.pict('truck')",
+  "use": "SK.pict('truck')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "logistik"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.laptop",
+  "kind": "pictogram",
+  "inline": "SK.pict('laptop')",
+  "use": "SK.pict('laptop')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.device-mobile",
+  "kind": "pictogram",
+  "inline": "SK.pict('device-mobile')",
+  "use": "SK.pict('device-mobile')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.desktop",
+  "kind": "pictogram",
+  "inline": "SK.pict('desktop')",
+  "use": "SK.pict('desktop')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "perangkat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.robot",
+  "kind": "pictogram",
+  "inline": "SK.pict('robot')",
+  "use": "SK.pict('robot')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.cpu",
+  "kind": "pictogram",
+  "inline": "SK.pict('cpu')",
+  "use": "SK.pict('cpu')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.lightbulb",
+  "kind": "pictogram",
+  "inline": "SK.pict('lightbulb')",
+  "use": "SK.pict('lightbulb')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.clock",
+  "kind": "pictogram",
+  "inline": "SK.pict('clock')",
+  "use": "SK.pict('clock')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.calendar",
+  "kind": "pictogram",
+  "inline": "SK.pict('calendar')",
+  "use": "SK.pict('calendar')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.hourglass",
+  "kind": "pictogram",
+  "inline": "SK.pict('hourglass')",
+  "use": "SK.pict('hourglass')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "waktu"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.chat-circle",
+  "kind": "pictogram",
+  "inline": "SK.pict('chat-circle')",
+  "use": "SK.pict('chat-circle')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.envelope",
+  "kind": "pictogram",
+  "inline": "SK.pict('envelope')",
+  "use": "SK.pict('envelope')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.phone",
+  "kind": "pictogram",
+  "inline": "SK.pict('phone')",
+  "use": "SK.pict('phone')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.star",
+  "kind": "pictogram",
+  "inline": "SK.pict('star')",
+  "use": "SK.pict('star')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.trophy",
+  "kind": "pictogram",
+  "inline": "SK.pict('trophy')",
+  "use": "SK.pict('trophy')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.flag",
+  "kind": "pictogram",
+  "inline": "SK.pict('flag')",
+  "use": "SK.pict('flag')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.thumbs-up",
+  "kind": "pictogram",
+  "inline": "SK.pict('thumbs-up')",
+  "use": "SK.pict('thumbs-up')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.warning",
+  "kind": "pictogram",
+  "inline": "SK.pict('warning')",
+  "use": "SK.pict('warning')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.check-circle",
+  "kind": "pictogram",
+  "inline": "SK.pict('check-circle')",
+  "use": "SK.pict('check-circle')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.x-circle",
+  "kind": "pictogram",
+  "inline": "SK.pict('x-circle')",
+  "use": "SK.pict('x-circle')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.lock",
+  "kind": "pictogram",
+  "inline": "SK.pict('lock')",
+  "use": "SK.pict('lock')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.shield-check",
+  "kind": "pictogram",
+  "inline": "SK.pict('shield-check')",
+  "use": "SK.pict('shield-check')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.key",
+  "kind": "pictogram",
+  "inline": "SK.pict('key')",
+  "use": "SK.pict('key')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "keamanan"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.globe",
+  "kind": "pictogram",
+  "inline": "SK.pict('globe')",
+  "use": "SK.pict('globe')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "tempat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.map-pin",
+  "kind": "pictogram",
+  "inline": "SK.pict('map-pin')",
+  "use": "SK.pict('map-pin')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "tempat"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.house",
+  "kind": "pictogram",
+  "inline": "SK.pict('house')",
+  "use": "SK.pict('house')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.heart",
+  "kind": "pictogram",
+  "inline": "SK.pict('heart')",
+  "use": "SK.pict('heart')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.car",
+  "kind": "pictogram",
+  "inline": "SK.pict('car')",
+  "use": "SK.pict('car')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.motorcycle",
+  "kind": "pictogram",
+  "inline": "SK.pict('motorcycle')",
+  "use": "SK.pict('motorcycle')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.airplane",
+  "kind": "pictogram",
+  "inline": "SK.pict('airplane')",
+  "use": "SK.pict('airplane')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.bicycle",
+  "kind": "pictogram",
+  "inline": "SK.pict('bicycle')",
+  "use": "SK.pict('bicycle')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.bus",
+  "kind": "pictogram",
+  "inline": "SK.pict('bus')",
+  "use": "SK.pict('bus')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.coffee",
+  "kind": "pictogram",
+  "inline": "SK.pict('coffee')",
+  "use": "SK.pict('coffee')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.fork-knife",
+  "kind": "pictogram",
+  "inline": "SK.pict('fork-knife')",
+  "use": "SK.pict('fork-knife')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.tree",
+  "kind": "pictogram",
+  "inline": "SK.pict('tree')",
+  "use": "SK.pict('tree')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.leaf",
+  "kind": "pictogram",
+  "inline": "SK.pict('leaf')",
+  "use": "SK.pict('leaf')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.drop",
+  "kind": "pictogram",
+  "inline": "SK.pict('drop')",
+  "use": "SK.pict('drop')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.sun",
+  "kind": "pictogram",
+  "inline": "SK.pict('sun')",
+  "use": "SK.pict('sun')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.moon",
+  "kind": "pictogram",
+  "inline": "SK.pict('moon')",
+  "use": "SK.pict('moon')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.cloud",
+  "kind": "pictogram",
+  "inline": "SK.pict('cloud')",
+  "use": "SK.pict('cloud')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.lightning",
+  "kind": "pictogram",
+  "inline": "SK.pict('lightning')",
+  "use": "SK.pict('lightning')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.fire",
+  "kind": "pictogram",
+  "inline": "SK.pict('fire')",
+  "use": "SK.pict('fire')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.gift",
+  "kind": "pictogram",
+  "inline": "SK.pict('gift')",
+  "use": "SK.pict('gift')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "benda"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.chart-bar",
+  "kind": "pictogram",
+  "inline": "SK.pict('chart-bar')",
+  "use": "SK.pict('chart-bar')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "data"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.chart-pie",
+  "kind": "pictogram",
+  "inline": "SK.pict('chart-pie')",
+  "use": "SK.pict('chart-pie')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "data"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.file",
+  "kind": "pictogram",
+  "inline": "SK.pict('file')",
+  "use": "SK.pict('file')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "kerja"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.folder",
+  "kind": "pictogram",
+  "inline": "SK.pict('folder')",
+  "use": "SK.pict('folder')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "kerja"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.briefcase",
+  "kind": "pictogram",
+  "inline": "SK.pict('briefcase')",
+  "use": "SK.pict('briefcase')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "kerja"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ },
+ {
+  "id": "pict.gear",
+  "kind": "pictogram",
+  "inline": "SK.pict('gear')",
+  "use": "SK.pict('gear')",
+  "styles": [
+   "motion-graphic",
+   "stop-motion",
+   "vox"
+  ],
+  "tags": [
+   "kerja"
+  ],
+  "source": "@phosphor-icons/core 2.1.1 (fill)",
+  "license": "MIT"
+ }
+]

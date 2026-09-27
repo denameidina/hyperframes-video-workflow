@@ -1,0 +1,19 @@
+{
+  "source": {"package":"lucide-static","version":"1.48.0","license":"ISC","tarball":"https://registry.npmjs.org/lucide-static/-/lucide-static-1.48.0.tgz"},
+  "categories": {
+    "ai": ["bot","brain","brain-circuit","cpu","sparkles","wand-sparkles","message-square-code","workflow","network","git-branch","code","terminal","database","server","cloud","cloud-upload","cloud-download","webhook","plug","zap","cog","settings","sliders-horizontal","scan-search","scan-text","file-code","binary","braces"],
+    "uang": ["banknote","coins","wallet","credit-card","receipt","piggy-bank","hand-coins","badge-percent","percent","trending-up","trending-down","chart-line","chart-column","chart-pie","chart-bar","calculator","landmark","scale","gem","circle-dollar-sign","tag","tags","ticket"],
+    "bisnis": ["store","shopping-cart","shopping-bag","package","package-check","truck","warehouse","factory","building","building-complex","briefcase","handshake","presentation","target","trophy","award","rocket","flag","megaphone","clipboard-list","clipboard-check","file-text","file-spreadsheet","files","folder","folder-open","archive","stamp","signature"],
+    "chat": ["message-circle","message-square","messages-square","mail","mail-open","send","inbox","phone","phone-call","bell","bell-ring","at-sign","share-2","reply","forward","mic","video","camera","image","link","qr-code"],
+    "orang": ["user","users","user-plus","user-check","user-x","user-round","users-round","contact","baby","graduation-cap","hand","heart-handshake","face-slightly-smiling","face-slightly-frowning","face-neutral","face-grinning","face-angry","thumbs-up","thumbs-down","crown"],
+    "waktu": ["clock","alarm-clock","timer","hourglass","calendar","calendar-check","calendar-clock","refresh-cw","rotate-ccw","repeat"],
+    "perangkat": ["laptop","monitor","smartphone","tablet","keyboard","mouse","printer","wifi","battery-low","battery-full","hard-drive","usb","headphones","watch","tv"],
+    "keamanan": ["lock","lock-open","lock-keyhole-open","shield","shield-check","shield-alert","key","key-round","fingerprint-pattern","eye","eye-off","scan-face"],
+    "status": ["check","check-check","x","circle-check","circle-x","circle-alert","triangle-alert","info","circle-question-mark","ban","octagon-x","loader"],
+    "arah": ["arrow-right","arrow-left","arrow-up","arrow-down","arrow-up-right","arrow-down-right","move-right","redo","undo","shuffle","split","merge","corner-down-right","chevrons-right","refresh-ccw"],
+    "ide": ["lightbulb","lightbulb-off","puzzle","compass","map","map-pin","map-pinned","navigation","route","milestone","signpost","globe","earth","search","zoom-in","zoom-out","funnel","list-checks","list-ordered","layers","layout-dashboard","kanban","notebook-pen","book-open","library","pencil","pen-line","eraser","highlighter","scissors","paperclip","pin","bookmark"],
+    "hidup": ["coffee","utensils-crossed","house","bike","car","bus","plane","ship","train-front","motorbike","fuel","sun","moon","cloud-rain","flame","droplet","leaf","sprout","tree-pine","mountain"],
+    "media": ["play","pause","circle-play","film","clapperboard","music","volume-2"],
+    "benda": ["gift","star","heart","sparkle","party-popper","medal","hammer","wrench","construction","bug","skull","ghost","dice-5","box","boxes","container","recycle","trash","download","upload","external-link"]
+  }
+}

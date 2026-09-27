@@ -80,6 +80,8 @@ npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slu
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
 npm run test:style-kit       # node --test scripts/style-kit.test.mjs scripts/style-docs.test.mjs scripts/paper-pack.test.mjs
+npm run test:asset-lib       # node --test scripts/asset-lib.test.mjs (pustaka aset: build, katalog, lisensi, anggaran, preset, runtime)
+npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (offline)
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
