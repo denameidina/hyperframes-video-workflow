@@ -5,7 +5,7 @@ follows the pen, and finished lines "boil" slightly like hand-drawn animation.
 Loaded by `docs/agents/02-screen-plan.md` (visual step, after
 `styles/README.md`) and `docs/agents/03-build.md` (author step). Engine:
 `vendor/style-kit/` (`window.SK`) on top of `vendor/motion-kit/` (`window.M`).
-Worked examples: `docs/agents/references/style-examples/whiteboard/` (`wb-01` … `wb-04`,
+Worked examples: `docs/agents/references/style-examples/whiteboard/` (`wb-01` … `wb-11`,
 `npm run check:style-examples -- whiteboard`).
 
 ## When To Use
@@ -81,7 +81,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Bubbles and accents | `doodle.speech-round`, `doodle.thought`, `doodle.lightbulb-hand`, `doodle.burst` | `../asset-catalog/sheets/doodle-1.webp` |
 | Any icon as a doodle (`SK.rough` on an `icon.*`) | `icon.rocket`, `icon.target`, `icon.handshake` | `../asset-catalog/sheets/doodle-rough.webp` |
 | Boards | `texture.whiteboard`, `texture.blackboard`, `texture.graph` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
-| Hands | `hand.write`, `hand.point`, `hand.erase`, `hand.hold-card` | `../asset-catalog/sheets/hand.webp` |
+| Hands | `hand.write`, `hand.point`, `hand.erase`, `hand.hold-highlighter`, `hand.hold-card` | `../asset-catalog/sheets/hand.webp` |
 | Lettering | `font.kalam`, `font.patrick-hand`, `font.permanent-marker` | `../asset-catalog/sheets/font.webp` |
 
 ## Timing
@@ -113,6 +113,12 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **zoom-into-detail** | Camera pushes into one part of a finished board | Going deeper on one node ("nah, yang ini") | 0.4–0.6 s push on "nah"/"khususnya" | low swell | Zooming while strokes are drawing | `SK.cam(el, s, fx, fy)` with `M.track(…, M.SLOW)` |
 | **pan-across-board** | A tall board; the camera moves down to the next zone (RSA reuse) | Sequential sections | Pan in the pause between sentences, ≤ 0.5 s | none or a quiet slide | Constant drifting | `SK.cam` focus `y` via `M.track` |
 | **erase-redraw** | Part of the board wipes; the corrected version is redrawn | "dulu gue pikir… sekarang" | Erase 0.2–0.3 s on "tapi"; redraw on the new claim | eraser rub | Erasing everything (loses continuity) | wipe via `clip-path` on a group, then `SK.drawSeq` |
+| **matrix-2x2** | Two drawn axes with labels; items are written into their quadrants | Priorities, "penting vs mendesak", choosing tools | Axes drawn before the first item; each item on its name | marker stroke per item | More than 6 items; quadrants without axis labels | `SK.arrow` axes + `SK.write` per label and item, in `SK.drawSeq` |
+| **timeline-sketch** | A hand-drawn line with stage dots; each stage label is written in turn | "bulan pertama… bulan ketiga…" | The segment and dot land on the stage word, the label right after | marker tick per stage | Uneven stage spacing; stages nobody named | `SK.line` segments + `SK.ellipse` dots + `SK.write` |
+| **split-compare** | The board is split by a vertical line; "then" drawn left, "now" right | Before/after comparisons | Divider first; the right side starts on "sekarang"/"tapi" | marker sweep | Different scales on the two sides; more than one idea per side | divider `SK.line` + one drawing per side in `SK.drawSeq` |
+| **highlight-marker** | A transparent highlighter swipe over a handwritten word already on the board | Marking one term in existing notes | Swipe 0.3–0.5 s from the word onset | highlighter hiss | Highlighting a whole line; more than two swipes | `.sk-hl` + `SK.highlight` + `SK.placeHand(…, { pose: 'hold-highlighter' })` |
+| **arrow-callout** | A curved arrow from a note to one part of the drawing | "nah, yang bikin bocor di sini" | The arrow draws on the pointing word; the note is written after | quick swish | A stiff straight arrow; pointing at empty space | `SK.arcPath` + a head from the end tangent, `SK.draw` + `SK.write` |
+| **table-sketch** | A hand-drawn 2–3 column table; cells fill with ✓/✗ one by one | Comparing options or features | Rules first; each ✓/✗ on its feature word | tick per cell | More than 4 rows; verdicts nobody said | `SK.line` rules + tick/cross paths in `SK.drawSeq` + `SK.write` |
 
 ## References
 
@@ -252,6 +258,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   `SK.placeHand($('hand'), tip, { last: SK.lastTip(t, S, pen) })` so the hand
   hovers after a stroke and glides off at the end; pass `{ pose: 'point' }` with a
   target point to point at something. Worked example: `wb-05-hand`.
+- Library hands work the same way: `{ pose: 'hold-highlighter' }` rides along a
+  `.sk-hl` swipe (`wb-09`), `{ pose: 'erase' }` rubs a mark out while its opacity
+  falls (`wb-10`).
+- A board taller than the frame lives in `.sk-cam` (give it the board height); move
+  the focus with `SK.cam(el, s, 540, y)` from `M.track` for pan-across-board (`wb-07`).
+- Library doodles (`SK.doodle('stand')`, `SK.doodle('speech-round')`) are drawn
+  stroke by stroke: put each `path` of the inserted svg into `SK.drawSeq` (`wb-11`).
 
 ## SFX
 
@@ -261,6 +274,9 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | list-tick, equation | crisp tick / two taps | 0.08–0.12 |
 | cross-out, underline-circle | hard scratch / circular squeak | 0.1–0.14 |
 | zoom-into-detail | low swell | 0.08–0.12 |
+| matrix-2x2, timeline-sketch, table-sketch | marker stroke / tick per item | 0.06–0.1 |
+| highlight-marker | highlighter hiss | 0.06–0.1 |
+| erase-redraw | eraser rub | 0.08–0.12 |
 
 Do not play a squeak for every stroke; one per group of strokes on a word.
 
@@ -273,6 +289,12 @@ Do not play a squeak for every stroke; one per group of strokes on a word.
 | `style-examples/whiteboard/compositions/wb-03-mind-map.html` | mind-map + underline-circle + zoom-into-detail | split |
 | `style-examples/whiteboard/compositions/wb-04-cross-out.html` | stick-figure + cross-out + face swap | cutaway |
 | `style-examples/whiteboard/compositions/wb-05-hand.html` | draw-flow with the paper-pack hand: writes, points, then glides off | cutaway |
+| `style-examples/whiteboard/compositions/wb-06-matrix-callout.html` | matrix-2x2 + arrow-callout + underline-circle | cutaway |
+| `style-examples/whiteboard/compositions/wb-07-timeline-pan.html` | timeline-sketch + pan-across-board on a tall board | cutaway |
+| `style-examples/whiteboard/compositions/wb-08-split-transform.html` | split-compare + transform-reveal (notebook → dashboard) | split |
+| `style-examples/whiteboard/compositions/wb-09-equation-highlight.html` | equation + highlight-marker with the highlighter hand | panel |
+| `style-examples/whiteboard/compositions/wb-10-table-erase.html` | table-sketch + erase-redraw with the eraser hand | cutaway |
+| `style-examples/whiteboard/compositions/wb-11-chart-bubble.html` | sketch-chart + speech-bubble (library figure and bubble) | split |
 
 ## Anti-slop Checklist
 

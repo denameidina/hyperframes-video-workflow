@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the terms are invented to show the mechanism. In a real clip every term comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #board { position: absolute; left: 90px; top: 150px; width: 900px; height: 560px; border-radius: 28px; background: var(--sk-bg); box-shadow: 0 26px 60px -24px rgba(0,0,0,.55); overflow: hidden; }
+        #ink { position: absolute; left: 0; top: 0; }
+        .t { position: absolute; font-size: 88px; font-weight: 700; line-height: 1; color: var(--sk-ink); white-space: nowrap; }
+        #hl { left: 455px; top: 128px; width: 400px; height: 84px; }
+      </style>
+      <div id="root" data-composition-id="wb-09-equation-highlight" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <div id="board">
+            <div class="sk-hl" id="hl"></div>
+            <svg id="ink" viewBox="0 0 900 560" width="900" height="560"></svg>
+            <div class="t" id="e0" style="left:60px;top:120px">stok rapi</div>
+            <div class="t" id="pl" style="left:385px;top:120px">+</div>
+            <div class="t" id="e1" style="left:465px;top:120px">balas cepat</div>
+            <div class="t" id="eq" style="left:60px;top:330px">=</div>
+            <div class="t" id="e2" style="left:175px;top:330px">pelanggan balik</div>
+          </div>
+          <img class="sk-hand-img" id="hand" alt="" />
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-09-equation-highlight';
+          const $ = SK.finder(ID);
+          // equation: A + B = C, the result boxed
+          $('ink').innerHTML = `<path id="bx" class="sk-stroke" d="${SK.rect(150, 305, 600, 140, 101)}" style="stroke:var(--sk-accent);stroke-width:9"/>`;
+          $('board').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('board').querySelector('.sk-marker');
+          const W = [['e0', 0.4, 0.45, 60, 330, 200], ['pl', 0.95, 0.12, 385, 425, 200], ['e1', 1.15, 0.5, 465, 850, 200],
+                     ['eq', 1.9, 0.15, 60, 110, 410], ['e2', 2.15, 0.6, 175, 720, 410]];
+          const S = [{ el: $('bx'), at: 2.9, dur: 0.6 }];
+          const board = M.track(0, [[0.02, 1, [18, 0.8]]]);
+          // highlight-marker: the held highlighter (library hand) swipes over the term, then leaves
+          const HL = [3.9, 0.6], BX = 90, BY = 150, Y = BY + 205;
+          const enter = M.track(0, [[3.45, 1, [16, 0.85]]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const b = board(t);
+            $('board').style.opacity = M.clamp(b * 3).toFixed(4);
+            $('board').style.transform = `translateY(${((1 - b) * -60).toFixed(2)}px)`;
+            let tip = SK.drawSeq(t, S, { boil: 0.9 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+            const u = SK.smooth((t - HL[0]) / HL[1]);
+            SK.highlight($('hl'), u);
+            const x0 = BX + 455, x1 = BX + 855;
+            let hand = null, last = null;
+            if (t < HL[0]) { const k = enter(t); hand = k > 0 ? { x: 1300 + (x0 - 1300) * k, y: 2200 + (Y - 2200) * k } : null; }
+            else if (u < 1) hand = { x: x0 + (x1 - x0) * u, y: Y };
+            else last = { x: x1, y: Y, since: t - HL[0] - HL[1] };
+            SK.placeHand($('hand'), hand, { pose: 'hold-highlighter', scale: 0.5, last, hover: 0.25 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -5,6 +5,12 @@
     {"clip": "wb-02-framework-panel", "duration": 6, "treatment": "panel", "stills": [2.0, 5.7]},
     {"clip": "wb-03-mind-map", "duration": 7, "treatment": "split", "stills": [2.5, 6.7]},
     {"clip": "wb-04-cross-out", "duration": 6, "treatment": "cutaway", "stills": [2.9, 5.7]},
-    {"clip": "wb-05-hand", "duration": 6, "treatment": "cutaway", "stills": [2.0, 5.1, 5.9]}
+    {"clip": "wb-05-hand", "duration": 6, "treatment": "cutaway", "stills": [2.0, 5.1, 5.9]},
+    {"clip": "wb-06-matrix-callout", "duration": 6.5, "treatment": "cutaway", "stills": [4.7, 6.4]},
+    {"clip": "wb-07-timeline-pan", "duration": 7, "treatment": "cutaway", "stills": [1.9, 3.6, 6.6]},
+    {"clip": "wb-08-split-transform", "duration": 6, "treatment": "split", "stills": [2.6, 5.85]},
+    {"clip": "wb-09-equation-highlight", "duration": 6, "treatment": "panel", "stills": [4.2, 5.6]},
+    {"clip": "wb-10-table-erase", "duration": 7, "treatment": "cutaway", "stills": [5.2, 6.8]},
+    {"clip": "wb-11-chart-bubble", "duration": 6, "treatment": "split", "stills": [2.9, 5.2]}
   ]
 }

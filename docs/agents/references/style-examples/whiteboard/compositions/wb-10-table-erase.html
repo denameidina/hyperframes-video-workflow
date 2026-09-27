@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the rows and marks are invented to show the mechanism. In a real clip every row and verdict comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ttl { position: absolute; left: 0; width: 1080px; top: 190px; text-align: center; font-size: 112px; font-weight: 700; line-height: 1; white-space: nowrap; }
+        .hd { position: absolute; top: 440px; width: 280px; text-align: center; font-size: 72px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+        .rw { position: absolute; left: 110px; width: 290px; font-size: 84px; font-weight: 700; line-height: 1; white-space: nowrap; }
+        #note { position: absolute; left: 560px; width: 480px; top: 1110px; text-align: center; font-size: 70px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-10-table-erase" data-width="1080" data-height="1920" data-duration="7">
+        <div class="sk-stage sk-wb">
+          <div class="sk-cam" id="cam">
+          <svg class="sk-full" viewBox="0 0 1080 1920" width="1080" height="1920" id="ink"></svg>
+          <div id="ttl">Manual vs otomatis</div>
+          <div class="hd" id="h0" style="left:420px">manual</div>
+          <div class="hd" id="h1" style="left:700px">otomatis</div>
+          <div class="rw" id="r0" style="top:580px">cepat</div>
+          <div class="rw" id="r1" style="top:740px">rapi</div>
+          <div class="rw" id="r2" style="top:900px">murah</div>
+          <div id="note">jangka panjang</div>
+          <img class="sk-hand-img" id="hand" alt="" />
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-10-table-erase';
+          const $ = SK.finder(ID);
+          const RED = 'style="stroke:var(--sk-accent);stroke-width:10"', BLUE = 'style="stroke:var(--sk-accent-2);stroke-width:10"';
+          const tick = (x, y) => `M${x - 40} ${y} L${x - 12} ${y + 30} L${x + 42} ${y - 40}`;
+          const cross = (x, y, s) => SK.line(x - 36, y - 36, x + 36, y + 36, s, 3) + ' ' + SK.line(x + 36, y - 36, x - 36, y + 36, s + 1, 3);
+          const CX = [560, 840], RY = [620, 780, 940];
+          // table-sketch: rules first, then one verdict per cell on its row's word
+          const MARK = [[0, 0, 'x'], [0, 1, 'v'], [1, 0, 'x'], [1, 1, 'v'], [2, 0, 'v'], [2, 1, 'x']];
+          $('ink').innerHTML =
+            [540, 700, 860, 1020].map((y, i) => `<path id="g${i}" class="sk-stroke" d="${SK.line(90, y, 990, y, 110 + i, 4)}"/>`).join('') +
+            [420, 700].map((x, i) => `<path id="v${i}" class="sk-stroke" d="${SK.line(x, 420, x, 1030, 115 + i, 4)}"/>`).join('') +
+            MARK.map(([r, c, k], i) => `<path id="m${i}" class="sk-stroke" d="${k === 'v' ? tick(CX[c], RY[r]) : cross(CX[c], RY[r], 120 + i)}" ${k === 'v' ? BLUE : RED}/>`).join('') +
+            `<path id="fix" class="sk-stroke" d="${tick(CX[1], RY[2])}" ${BLUE}/>`;
+          $('cam').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('cam').querySelector('.sk-marker');
+          const S = [
+            ...[0, 1, 2, 3].map((i) => ({ el: $('g' + i), at: 0.7 + i * 0.14, dur: 0.14 })),
+            { el: $('v0'), at: 1.26, dur: 0.14 }, { el: $('v1'), at: 1.4, dur: 0.14 },
+            ...MARK.map((m, i) => ({ el: $('m' + i), at: [2.75, 2.95, 3.4, 3.6, 4.05, 4.25][i], dur: 0.18 })),
+            { el: $('fix'), at: 5.75, dur: 0.25 },
+          ];
+          const W = [['ttl', 0.1, 0.5, 170, 910, 290], ['h0', 1.65, 0.3, 470, 650, 505], ['h1', 1.95, 0.35, 740, 950, 505],
+                     ['r0', 2.4, 0.3, 110, 290, 650], ['r1', 3.1, 0.25, 110, 250, 810], ['r2', 3.75, 0.3, 110, 310, 970], ['note', 6.1, 0.5, 600, 1000, 1170]];
+          // erase-redraw: the eraser hand rubs out one verdict, the corrected one is drawn in its place
+          const ER = [4.85, 0.7];
+          SK.clip(ID, { T: 7, update: (t) => {
+            SK.cam($('cam'), 1.05, 540, 690); // centre the table in the frame
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            const e = M.clamp((t - ER[0]) / ER[1]);
+            if (t >= ER[0]) $('m5').style.opacity = (1 - SK.smooth(e)).toFixed(4);
+            SK.placeMarker(marker, t >= ER[0] - 0.2 && t < ER[0] + ER[1] + 0.1 ? null : tip);
+            let hand = null, last = null;
+            if (t >= ER[0] - 0.25 && t < ER[0]) { const k = M.eo((t - ER[0] + 0.25) / 0.25); hand = { x: 1300 + (CX[1] - 1300) * k, y: 2200 + (RY[2] - 2200) * k }; }
+            else if (t >= ER[0] && e < 1) hand = { x: CX[1] + Math.sin(e * Math.PI * 7) * 45, y: RY[2] + Math.cos(e * Math.PI * 5) * 14 };
+            else if (e >= 1) last = { x: CX[1], y: RY[2], since: t - ER[0] - ER[1] };
+            SK.placeHand($('hand'), hand, { pose: 'erase', scale: 0.5, last, hover: 0 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

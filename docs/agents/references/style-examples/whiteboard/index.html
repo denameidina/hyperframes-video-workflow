@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-whiteboard" data-start="0" data-width="1080" data-height="1920" data-duration="33.5">
-      <div id="base-video" class="clip" data-start="0" data-duration="33.5" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-whiteboard" data-start="0" data-width="1080" data-height="1920" data-duration="75">
+      <div id="base-video" class="clip" data-start="0" data-duration="75" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -40,6 +40,18 @@
            data-start="21" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="wb-05-hand-mount" class="broll" data-composition-id="wb-05-hand" data-composition-src="compositions/wb-05-hand.html"
            data-start="27.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-06-matrix-callout-mount" class="broll" data-composition-id="wb-06-matrix-callout" data-composition-src="compositions/wb-06-matrix-callout.html"
+           data-start="34" data-duration="6.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-07-timeline-pan-mount" class="broll" data-composition-id="wb-07-timeline-pan" data-composition-src="compositions/wb-07-timeline-pan.html"
+           data-start="41" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-08-split-transform-mount" class="broll" data-composition-id="wb-08-split-transform" data-composition-src="compositions/wb-08-split-transform.html"
+           data-start="48.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-09-equation-highlight-mount" class="broll" data-composition-id="wb-09-equation-highlight" data-composition-src="compositions/wb-09-equation-highlight.html"
+           data-start="55" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-10-table-erase-mount" class="broll" data-composition-id="wb-10-table-erase" data-composition-src="compositions/wb-10-table-erase.html"
+           data-start="61.5" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-11-chart-bubble-mount" class="broll" data-composition-id="wb-11-chart-bubble" data-composition-src="compositions/wb-11-chart-bubble.html"
+           data-start="69" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -47,6 +59,10 @@
       // Split treatment: slide the base video into the bottom half for the clip, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 13.5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 20.05);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 48.5);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 54.05);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 69);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 74.55);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-whiteboard'] = tl;
     </script>

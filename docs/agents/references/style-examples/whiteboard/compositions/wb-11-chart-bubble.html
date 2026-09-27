@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the chart and the quote are invented to show the mechanism. In a real clip the shape of the chart and the quote come from the transcript (Gate 2 R1); a sketch chart has no values unless they were said. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; background: var(--sk-bg); }
+        #ink { position: absolute; left: 0; top: 0; }
+        .ax { position: absolute; font-size: 60px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+        #fig { position: absolute; left: 745px; top: 450px; color: var(--sk-ink); }
+        #bub { position: absolute; left: 620px; top: 40px; color: var(--sk-ink); transform: scaleX(-1); }
+        #q { position: absolute; left: 650px; top: 170px; width: 300px; text-align: center; font-size: 62px; font-weight: 700; line-height: 1; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-11-chart-bubble" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <div id="half">
+            <svg id="ink" viewBox="0 0 1080 960" width="1080" height="960"></svg>
+            <div class="ax" id="ay" style="left:135px;top:95px">order</div>
+            <div class="ax" id="ax" style="left:380px;top:790px">minggu</div>
+            <div id="fig"></div>
+            <div id="bub"></div>
+            <div id="q">naik terus!</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-11-chart-bubble';
+          const $ = SK.finder(ID);
+          const HOT = 'style="stroke:var(--sk-accent);stroke-width:9"';
+          // sketch-chart: wobbly axes, a rising line, the last point circled
+          const up = SK.arrow(110, 770, 110, 110, 131), right = SK.arrow(100, 760, 600, 760, 132);
+          const P = [[150, 700], [250, 645], [345, 570], [440, 430], [535, 270]];
+          const line = P.slice(1).map(([x, y], i) => SK.line(P[i][0], P[i][1], x, y, 133 + i, 5)).join(' ');
+          $('ink').innerHTML =
+            `<path id="v" class="sk-stroke" d="${up.shaft}"/><path id="vh" class="sk-stroke" d="${up.head}"/>` +
+            `<path id="h" class="sk-stroke" d="${right.shaft}"/><path id="hh" class="sk-stroke" d="${right.head}"/>` +
+            `<path id="ln" class="sk-stroke" d="${line}" style="stroke:var(--sk-accent-2);stroke-width:9"/>` +
+            `<path id="o" class="sk-stroke" d="${SK.ellipse(535, 270, 62, 58, 138, 0.08)}" ${HOT}/>`;
+          // speech-bubble: a library stick figure and bubble, both drawn stroke by stroke
+          $('fig').innerHTML = SK.doodle('stand', { size: 330, sw: 7 });
+          $('bub').innerHTML = SK.doodle('speech-round', { size: 360, sw: 7 });
+          $('half').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('half').querySelector('.sk-marker');
+          const figP = [...$('fig').querySelectorAll('path')], bubP = [...$('bub').querySelectorAll('path')];
+          const S = [
+            { el: $('v'), at: 0.2, dur: 0.3 }, { el: $('vh'), at: 0.5, dur: 0.1 },
+            { el: $('h'), at: 0.6, dur: 0.3 }, { el: $('hh'), at: 0.9, dur: 0.1 },
+            { el: $('ln'), at: 1.5, dur: 0.9 }, { el: $('o'), at: 2.5, dur: 0.4 },
+            ...figP.map((el, i) => ({ el, at: 3.0 + i * 0.1, dur: 0.1 })),
+            ...bubP.map((el, i) => ({ el, at: 3.7 + i * (0.4 / bubP.length), dur: 0.4 / bubP.length })),
+          ];
+          const W = [['ay', 1.0, 0.3, 135, 290, 145], ['ax', 1.25, 0.3, 380, 570, 840], ['q', 4.15, 0.5, 680, 920, 225]];
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            // doodle paths sit in their own svg, so the marker follows only the half-board strokes
+            SK.placeMarker(marker, t >= 3.0 && t < 4.1 ? null : tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

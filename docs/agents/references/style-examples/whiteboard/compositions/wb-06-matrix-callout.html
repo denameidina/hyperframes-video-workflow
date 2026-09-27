@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the items are invented to show the mechanism. In a real clip every item comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .lab { position: absolute; width: 420px; text-align: center; font-size: 78px; font-weight: 700; line-height: 1; white-space: nowrap; }
+        .ax { position: absolute; font-size: 62px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+        #ttl { position: absolute; left: 0; width: 1080px; top: 170px; text-align: center; font-size: 124px; font-weight: 700; line-height: 1; }
+        #note { position: absolute; left: 430px; width: 560px; top: 1600px; text-align: center; font-size: 92px; font-weight: 700; line-height: 1; color: var(--sk-accent); }
+      </style>
+      <div id="root" data-composition-id="wb-06-matrix-callout" data-width="1080" data-height="1920" data-duration="6.5">
+        <div class="sk-stage sk-wb">
+          <svg class="sk-full" viewBox="0 0 1080 1920" width="1080" height="1920" id="ink"></svg>
+          <div id="ttl">Mana dulu?</div>
+          <div class="ax" id="ay" style="left:570px;top:400px">penting</div>
+          <div class="ax" id="ax" style="left:640px;top:950px">mendesak</div>
+          <div class="lab" id="q0" style="left:115px;top:620px">rapikan stok</div>
+          <div class="lab" id="q1" style="left:545px;top:620px">balas chat</div>
+          <div class="lab" id="q2" style="left:545px;top:1150px">cek email</div>
+          <div class="lab" id="q3" style="left:115px;top:1150px">scroll sosmed</div>
+          <div id="note">mulai di sini</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-06-matrix-callout';
+          const $ = SK.finder(ID);
+          const HOT = 'style="stroke:var(--sk-accent);stroke-width:9"';
+          const up = SK.arrow(540, 1420, 540, 420, 61), right = SK.arrow(110, 920, 930, 920, 62);
+          // arrow-callout: a curved arrow from the note to the item it points at; head follows the curve's end tangent
+          const p0 = { x: 960, y: 1560 }, p1 = { x: 960, y: 745 }, bend = -0.12;
+          const cx = (p0.x + p1.x) / 2 + (p1.y - p0.y) * bend, cy = (p0.y + p1.y) / 2 - (p1.x - p0.x) * bend;
+          const a = Math.atan2(p1.y - cy, p1.x - cx);
+          const hd = (k) => `${(p1.x - Math.cos(a + k * 0.5) * 42).toFixed(1)} ${(p1.y - Math.sin(a + k * 0.5) * 42).toFixed(1)}`;
+          $('ink').innerHTML =
+            `<path id="v" class="sk-stroke" d="${up.shaft}"/><path id="vh" class="sk-stroke" d="${up.head}"/>` +
+            `<path id="h" class="sk-stroke" d="${right.shaft}"/><path id="hh" class="sk-stroke" d="${right.head}"/>` +
+            `<path id="c" class="sk-stroke" d="${SK.arcPath(p0, p1, bend)}" ${HOT}/><path id="ch" class="sk-stroke" d="M${hd(1)} L${p1.x} ${p1.y} L${hd(-1)}" ${HOT}/>` +
+            `<path id="o" class="sk-stroke" d="${SK.ellipse(755, 660, 250, 95, 63)}" ${HOT}/>`;
+          const stage = SK.stageOf(ID);
+          stage.insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = stage.querySelector('.sk-marker');
+          const S = [
+            { el: $('v'), at: 0.8, dur: 0.45 }, { el: $('vh'), at: 1.25, dur: 0.12 },
+            { el: $('h'), at: 1.4, dur: 0.45 }, { el: $('hh'), at: 1.85, dur: 0.12 },
+            { el: $('c'), at: 4.75, dur: 0.5 }, { el: $('ch'), at: 5.25, dur: 0.12 },
+            { el: $('o'), at: 5.95, dur: 0.4 },
+          ];
+          const W = [
+            ['ttl', 0.15, 0.5, 300, 780, 270], ['ay', 2.0, 0.35, 570, 790, 450], ['ax', 2.35, 0.4, 640, 900, 1000],
+            ['q0', 2.8, 0.5, 150, 500, 680], ['q1', 3.35, 0.4, 600, 910, 680], ['q2', 3.8, 0.4, 610, 900, 1210], ['q3', 4.25, 0.45, 130, 520, 1210],
+            ['note', 5.35, 0.5, 480, 940, 1680],
+          ];
+          SK.clip(ID, { T: 6.5, update: (t) => {
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

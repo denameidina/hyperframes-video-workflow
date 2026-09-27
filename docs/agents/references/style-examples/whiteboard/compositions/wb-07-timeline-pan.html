@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the stages are invented to show the mechanism. In a real clip every stage comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ttl { position: absolute; left: 0; width: 1080px; top: 170px; text-align: center; font-size: 124px; font-weight: 700; line-height: 1; white-space: nowrap; }
+        .when { position: absolute; left: 270px; font-size: 64px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+        .what { position: absolute; left: 270px; font-size: 96px; font-weight: 700; line-height: 1; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-07-timeline-pan" data-width="1080" data-height="1920" data-duration="7">
+        <div class="sk-stage sk-wb">
+          <div class="sk-cam" id="cam" style="height:2600px">
+            <svg id="ink" viewBox="0 0 1080 2600" width="1080" height="2600" style="position:absolute;left:0;top:0"></svg>
+            <div id="ttl">6 bulan pertama</div>
+            <div class="when" id="w0" style="top:585px">bulan 1</div>
+            <div class="what" id="t0" style="top:680px">catat di buku</div>
+            <div class="when" id="w1" style="top:1235px">bulan 3</div>
+            <div class="what" id="t1" style="top:1330px">pakai spreadsheet</div>
+            <div class="when" id="w2" style="top:1872px">bulan 6</div>
+            <div class="what" id="t2" style="top:1980px">otomatis</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-07-timeline-pan';
+          const $ = SK.finder(ID);
+          const M0 = [700, 1350, 2000]; // milestone y on the tall board
+          const HOT = 'style="stroke:var(--sk-accent);stroke-width:9"';
+          // timeline-sketch: the line grows one segment per stage, a dot marks each stage
+          const seg = [[430, M0[0]], [M0[0], M0[1]], [M0[1], M0[2]]];
+          $('ink').innerHTML =
+            seg.map(([a, b], i) => `<path id="s${i}" class="sk-stroke" d="${SK.line(185, a, 185, b, 70 + i, 5)}"/>`).join('') +
+            M0.map((y, i) => `<path id="d${i}" class="sk-stroke" d="${SK.ellipse(185, y, 24, 24, 74 + i, 0.08)}" ${HOT}/>`).join('') +
+            `<path id="o" class="sk-stroke" d="${SK.ellipse(450, 2040, 235, 72, 78)}" ${HOT}/>`;
+          $('cam').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('cam').querySelector('.sk-marker');
+          const S = [
+            { el: $('s0'), at: 0.7, dur: 0.3 }, { el: $('d0'), at: 1.0, dur: 0.2 },
+            { el: $('s1'), at: 2.2, dur: 0.5 }, { el: $('d1'), at: 2.75, dur: 0.2 },
+            { el: $('s2'), at: 4.1, dur: 0.5 }, { el: $('d2'), at: 4.65, dur: 0.2 },
+            { el: $('o'), at: 5.8, dur: 0.45 },
+          ];
+          const W = [
+            ['ttl', 0.1, 0.5, 250, 830, 270],
+            ['w0', 1.2, 0.3, 270, 460, 635], ['t0', 1.5, 0.55, 270, 790, 760],
+            ['w1', 2.95, 0.3, 270, 460, 1285], ['t1', 3.25, 0.6, 270, 925, 1410],
+            ['w2', 4.85, 0.3, 270, 460, 1922], ['t2', 5.15, 0.45, 270, 620, 2060],
+          ];
+          // pan-across-board: the camera glides down to the next zone while its segment draws
+          const camY = M.track(835, [[2.2, 1150, M.SLOW], [4.1, 1700, M.SLOW]]);
+          SK.clip(ID, { T: 7, update: (t) => {
+            SK.cam($('cam'), 1.15, 540, camY(t));
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
