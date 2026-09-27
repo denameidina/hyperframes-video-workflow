@@ -389,3 +389,34 @@ test('placeHand puts the pen tip on the tip, hovers, then glides off', () => {
   assert.equal(img.src, 'vendor/paper-pack/hand-point.png');
   assert.throws(() => SK.placeHand(img, null, { pose: 'wave' }), /unknown hand pose "wave"/);
 });
+
+// ---- VOX (sub-project 2b) ----
+
+test('highlight wipes in left to right and hides at 0', () => {
+  const { SK } = load();
+  const el = fakeEl('hl');
+  SK.highlight(el, 0);
+  assert.equal(el.style.opacity, '0');
+  assert.equal(el.style.clipPath, 'inset(0 100.00% 0 0)');
+  SK.highlight(el, 0.25);
+  assert.equal(el.style.opacity, '1');
+  assert.equal(el.style.clipPath, 'inset(0 75.00% 0 0)');
+  SK.highlight(el, 3);
+  assert.equal(el.style.clipPath, 'inset(0 0.00% 0 0)');
+  assert.equal(el.style.visibility, undefined);
+});
+
+test('geo projects lat/lon into the map and keeps cities in place', () => {
+  const { SK } = load();
+  assert.deepEqual({ ...SK.geo(7.5, 94) }, { x: 0, y: 0 });
+  assert.deepEqual({ ...SK.geo(-11.5, 142) }, { x: SK.MAP.w, y: SK.MAP.h });
+  const at = (c) => SK.geo(...SK.CITIES[c]);
+  for (const c of Object.keys(SK.CITIES)) {
+    const p = at(c);
+    assert.ok(p.x > 0 && p.x < SK.MAP.w && p.y > 0 && p.y < SK.MAP.h, c);
+  }
+  assert.ok(at('medan').x < at('jakarta').x && at('jakarta').x < at('bandung').x && at('bandung').x < at('surabaya').x
+    && at('surabaya').x < at('denpasar').x && at('denpasar').x < at('makassar').x && at('makassar').x < at('jayapura').x, 'west to east');
+  assert.ok(at('medan').y < at('jakarta').y, 'Medan is north of Jakarta');
+  assert.ok(Math.abs(at('jakarta').x - 643) < 1 && Math.abs(at('jakarta').y - 685) < 1, 'Jakarta at (643, 685)');
+});

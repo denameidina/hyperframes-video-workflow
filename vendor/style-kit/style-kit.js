@@ -1,6 +1,8 @@
-/* style-kit: primitives for style b-roll clips (broll-text, motion-graphic, whiteboard, stop-motion)
+/* style-kit: primitives for style b-roll clips (broll-text, motion-graphic, whiteboard, stop-motion,
+   vox, mix-media)
    as HyperFrames sub-compositions. Specs: docs/superpowers/specs/2026-09-27-style-kit-design.md,
-   docs/superpowers/specs/2026-09-27-paper-pack-stop-motion-design.md.
+   docs/superpowers/specs/2026-09-27-paper-pack-stop-motion-design.md,
+   docs/superpowers/specs/2026-09-27-vox-mix-media-design.md.
    Needs gsap and window.M (vendor/motion-kit/motion-kit.js) loaded first; reuses M.clamp,
    M.eo, M.S and M.track instead of copying them. Every frame is a pure function of
    clip-local time t (seconds): no timers, clocks, or Math.random. */
@@ -263,5 +265,23 @@ SK.placeHand = (el,tip,o={})=>{
   if(!p) p={x:1300, y:2200};
   el.style.width=(H.w*s).toFixed(1)+'px';
   el.style.transform=`translate(${(p.x-H.tx*s).toFixed(2)}px,${(p.y-H.ty*s).toFixed(2)}px)`;
+};
+
+// ---- VOX (sub-project 2b) --------------------------------------------------------------------
+// highlight: a marker (.sk-hl, yellow multiply) or a redaction bar (.sk-redact) wipes in left to right
+SK.highlight = (el,u)=>{
+  u=clamp(u);
+  el.style.clipPath=`inset(0 ${((1-u)*100).toFixed(2)}% 0 0)`;
+  el.style.opacity=u>0?'1':'0';
+};
+/* map: vendor/paper-pack/map-indonesia.svg is Natural Earth 1:50m, equirectangular, 50 px per degree,
+   lon 94..142 and lat 7.5..-11.5 (2400×950). SK.geo gives a lat/lon point in that SVG's pixels, so a
+   pin lands where the place really is. SK.CITIES holds a few city centres (lat, lon). */
+SK.MAP = {src:'vendor/paper-pack/map-indonesia.svg', w:2400, h:950, lon0:94, lat0:7.5, k:50};
+SK.geo = (lat,lon)=>({x:(lon-SK.MAP.lon0)*SK.MAP.k, y:(SK.MAP.lat0-lat)*SK.MAP.k});
+SK.CITIES = {
+  jakarta:[-6.2088,106.8456], bandung:[-6.9175,107.6191], yogyakarta:[-7.7956,110.3695],
+  surabaya:[-7.2575,112.7521], denpasar:[-8.6705,115.2126], medan:[3.5952,98.6722],
+  makassar:[-5.1477,119.4327], jayapura:[-2.5337,140.7181],
 };
 })();

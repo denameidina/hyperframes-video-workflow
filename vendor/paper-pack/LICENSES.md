@@ -23,5 +23,6 @@ ground, and post-processed (crop to the alpha box, resize, 256-colour palette wi
 | `pin.png` | Codex (generated) — "one red plastic push pin seen from above at a slight angle; studio photo; transparent background; no text" | project asset (MIT) | crop, 256 px, palette PNG |
 | `clip.png` | Codex (generated) — "one standard silver metal paper clip lying flat, seen from above; studio photo; transparent background; no text" | project asset (MIT) | crop, 300 px, palette PNG |
 | `sticky.png` | Codex (generated) — "one square yellow sticky note, completely blank, bottom edge slightly curled; studio photo; transparent background; no writing" | project asset (MIT) | crop, 520 px, palette PNG |
+| `map-indonesia.svg` | Natural Earth 1:50m Admin 0 – Countries — https://www.naturalearthdata.com/about/terms-of-use/ ("All versions of Natural Earth raster + vector map data … are in the public domain", checked 2026-09-27) | Public domain | Indonesia + neighbours, equirectangular lon 94..142 / lat 7.5..-11.5 at 50 px/deg, Douglas–Peucker 0.025°, islands < 0.004 deg² dropped |
 | `paper-pack.css` | this project | MIT | — |
 | `LICENSES.md` | this project | MIT | — |
