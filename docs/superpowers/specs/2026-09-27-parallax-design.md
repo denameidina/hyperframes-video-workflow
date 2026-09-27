@@ -58,10 +58,11 @@ memakai segmentasi orang, Codex, atau komposisi manual.
 | `SK.layer(el, z, {P=1200})` | Lapisan full-frame 1080×1920 di kedalaman `z`, skala `(P − z)/P`, poros tengah frame, sehingga komposisi tetap seperti rancangan saat kamera diam. |
 | `SK.camera(world, {x, y, z, rx, ry})` | Transform `#world`: `z` dolly, `x`/`y` pan, `rx`/`ry` orbit kecil (≤ 6°). |
 | `SK.dof(items, focusZ, {k, max})` | Blur tiap lapisan = `min(max, |z_efektif − focusZ| / k)`; `items = [{el, z}]`, `z_efektif` memperhitungkan dolly kamera. |
-| `SK.dollyZoom(u, {P0, z0, z1})` | Menghitung perspektif dan dolly sehingga subjek pada `z0` tetap berukuran sama sementara latar meregang ("vertigo"). |
+| `SK.dollyZoom(u, {P0, z0, d1})` | Menghitung perspektif dan dolly sehingga subjek pada `z0` tetap berukuran sama sementara latar meregang ("vertigo"). |
 
 Semua fungsi murni dari waktu; bisa digabung `SK.onTwos` (multiplane patah-patah
-ala Norstein). Struktur klip: `.sk-stage > #view (perspective) > #world
+ala Norstein). `SK.layer` dan `SK.camera` menerima `ox`/`oy` (pusat view, default
+540/960) untuk view split (540/480) dan panel. Struktur klip: `.sk-stage > #view (perspective) > #world
 (preserve-3d) > .sk-ly` × 2–5.
 
 ## Treatment
@@ -84,7 +85,10 @@ ala Norstein). Struktur klip: `.sk-stage > #view (perspective) > #world
 
 Plate latar: skill `codex-image` dengan `--ref NN-scene-src.png`, resep tetap
 "remove the person, fill the background naturally, keep everything else
-unchanged" → `NN-scene-bg.png` (opaque). Manifest: `provenance: "reconstructed"`;
+unchanged; this is a pixel-aligned plate — keep the exact framing" dengan
+`--size` serasio sumber (kelipatan 16) + `--fit` → `NN-scene-bg.png` (opaque).
+(Spike: ukuran berbeda rasio menggeser komposisi plate; serasio + `--fit`
+selaras, selisih rata-rata di luar subjek ±4/255.) Manifest: `provenance: "reconstructed"`;
 plate tidak pernah bukti. Bila tambalan terlihat palsu: tutup dengan bingkai/DOF
 atau pindah ke kolase.
 
@@ -106,7 +110,7 @@ Paper pack, cutout, capture, peta yang sudah ada, ditata di beberapa kedalaman.
 |---|---|---|
 | `px-01` | kolase multiplane (paper pack + cutout + peta), dolly + DOF | cutaway |
 | `px-02` | adegan Codex berlapis (mis. meja kerja malam), 3–4 lapisan, pan + orbit kecil | split |
-| `px-03` | foto arsip domain publik: orang vs plate ditambal, dolly-zoom (Ken Burns 2.5D) | cutaway |
+| `px-03` | foto arsip domain publik ("Woman typist", ±1900, Library of Congress via Wikimedia Commons): orang vs plate ditambal, dolly-zoom (Ken Burns 2.5D) di kartu panel | panel |
 | `px-04` | `parallax-stage`: latar berlapis di belakang siluet placeholder | parallax-stage |
 
 Foto `px-03` domain publik historis (mis. Library of Congress atau NASA), status
@@ -129,6 +133,17 @@ agar teks terbaca), dijaga `style-docs.test.mjs`:
 - ≥ 8 anti-slop (tepi "karton", bayangan orang tersisa di plate, celah
   antar-lapisan, blur pada teks, lapisan AI tak nyambung transkrip).
 
+## Temuan saat membangun contoh (2026-09-27)
+
+- `.gitignore` (`*.webm`) mengabaikan `style-examples/assets/placeholder-cutout.webm`
+  dari sub-proyek 2b, sehingga contoh mix-media gagal lint di clone baru.
+  Sub-proyek ini menambah pengecualian `.gitignore`, meng-commit file itu, dan
+  test yang memastikan setiap aset yang dirujuk contoh ter-track di git.
+- Segmentasi orang ikut memotong bayangan berbentuk orang: alpha subjek arsip
+  dibatasi ke area orang.
+- Dolly-zoom kuat mengecilkan plate belakang: `d1` kecil (±110), plate lebih dekat
+  (z −800), `fill` 1,35.
+
 ## Pengujian
 
 - `style-kit.test.mjs`: `SK.layer` (skala kompensasi, poros), `SK.camera`,
@@ -136,7 +151,7 @@ agar teks terbaca), dijaga `style-docs.test.mjs`:
 - `video.test.mjs`: `layers` — validasi, urutan perintah, hapus output lama,
   gagal bila tidak tertulis.
 - `style-docs.test.mjs`: `parallax.md`, treatment wajib cutaway, split, panel,
-  parallax-stage.
+  parallax-stage; setiap aset yang dirujuk contoh ter-track di git.
 - `check:style-examples` 4 klip baru + tinjauan visual; contoh lama identik
   piksel; render MP4 host mini `px-04`.
 - Smoke asli `video layers` + `video cutout`; regresi semua suite; smoke template.
