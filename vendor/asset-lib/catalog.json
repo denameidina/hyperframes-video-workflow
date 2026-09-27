@@ -9414,5 +9414,769 @@
   "source": "ambientCG Concrete031, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete031",
   "license": "CC0 1.0",
   "bytes": 44252
+ },
+ {
+  "id": "paper.washi-pink",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/washi-pink.png",
+  "use": ".sk-obj-washi-pink",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of pink washi tape with a tiny white dot pattern, both ends torn with ragged fibres",
+  "bytes": 112762
+ },
+ {
+  "id": "paper.washi-mint",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/washi-mint.png",
+  "use": ".sk-obj-washi-mint",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of mint-green washi tape, plain, both ends torn with ragged fibres",
+  "bytes": 99756
+ },
+ {
+  "id": "paper.washi-grid",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/washi-grid.png",
+  "use": ".sk-obj-washi-grid",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of cream washi tape printed with a thin blue grid, both ends torn",
+  "bytes": 112602
+ },
+ {
+  "id": "paper.tape-clear",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/tape-clear.png",
+  "use": ".sk-obj-tape-clear",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of clear cellophane tape, slightly wrinkled, both ends cut with a zigzag",
+  "bytes": 75748
+ },
+ {
+  "id": "paper.lakban-brown",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/lakban-brown.png",
+  "use": ".sk-obj-lakban-brown",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of brown packing tape, glossy, both ends torn",
+  "bytes": 93170
+ },
+ {
+  "id": "paper.tape-black",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/tape-black.png",
+  "use": ".sk-obj-tape-black",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one short strip of black matte gaffer tape, both ends torn with frayed fibres",
+  "bytes": 109226
+ },
+ {
+  "id": "paper.scrap-torn-white",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/scrap-torn-white.png",
+  "use": ".sk-obj-scrap-torn-white",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of plain white printer paper with rough fibrous edges on all sides",
+  "bytes": 330223
+ },
+ {
+  "id": "paper.scrap-torn-cream",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/scrap-torn-cream.png",
+  "use": ".sk-obj-scrap-torn-cream",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of cream drawing paper with rough fibrous edges on all sides",
+  "bytes": 334958
+ },
+ {
+  "id": "paper.scrap-torn-yellow",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/scrap-torn-yellow.png",
+  "use": ".sk-obj-scrap-torn-yellow",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of yellow construction paper with rough fibrous edges on all sides",
+  "bytes": 361851
+ },
+ {
+  "id": "paper.scrap-torn-blue",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/scrap-torn-blue.png",
+  "use": ".sk-obj-scrap-torn-blue",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of light blue construction paper with rough fibrous edges on all sides",
+  "bytes": 376235
+ },
+ {
+  "id": "paper.notebook-strip",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/notebook-strip.png",
+  "use": ".sk-obj-notebook-strip",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one strip torn from a lined notebook page, blue rules, a red margin line, spiral-torn left edge",
+  "bytes": 240218
+ },
+ {
+  "id": "paper.graph-scrap",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/graph-scrap.png",
+  "use": ".sk-obj-graph-scrap",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of pale graph paper with a fine blue grid",
+  "bytes": 306660
+ },
+ {
+  "id": "paper.newspaper-scrap-blank",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/newspaper-scrap-blank.png",
+  "use": ".sk-obj-newspaper-scrap-blank",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one torn scrap of newsprint showing only blurred grey column blocks, no readable letters",
+  "bytes": 335546
+ },
+ {
+  "id": "paper.envelope",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/envelope.png",
+  "use": ".sk-obj-envelope",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "chat",
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one plain kraft-brown paper envelope, flap closed, blank",
+  "bytes": 297136
+ },
+ {
+  "id": "paper.receipt-blank",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/receipt-blank.png",
+  "use": ".sk-obj-receipt-blank",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "uang",
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one long thermal paper receipt with a torn top edge, completely blank, slightly curled",
+  "bytes": 100774
+ },
+ {
+  "id": "paper.ticket-stub",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/ticket-stub.png",
+  "use": ".sk-obj-ticket-stub",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one blank cream admission ticket stub with a perforated edge",
+  "bytes": 205901
+ },
+ {
+  "id": "paper.postage-stamp-blank",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/postage-stamp-blank.png",
+  "use": ".sk-obj-postage-stamp-blank",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one blank postage stamp with a perforated edge and a plain light blue centre",
+  "bytes": 371438
+ },
+ {
+  "id": "paper.staple",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/staple.png",
+  "use": ".sk-obj-staple",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one single silver office staple, closed",
+  "bytes": 93298
+ },
+ {
+  "id": "paper.binder-clip",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/binder-clip.png",
+  "use": ".sk-obj-binder-clip",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one black binder clip with silver handles, closed",
+  "bytes": 180781
+ },
+ {
+  "id": "paper.rubber-band",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/rubber-band.png",
+  "use": ".sk-obj-rubber-band",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one tan rubber band lying in a loose loop",
+  "bytes": 57887
+ },
+ {
+  "id": "paper.sticky-pink",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/sticky-pink.png",
+  "use": ".sk-obj-sticky-pink",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one square pink sticky note, completely blank, bottom edge slightly curled",
+  "bytes": 403121
+ },
+ {
+  "id": "paper.sticky-blue",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/sticky-blue.png",
+  "use": ".sk-obj-sticky-blue",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "one square light blue sticky note, completely blank, bottom edge slightly curled",
+  "bytes": 372511
+ },
+ {
+  "id": "paper.star-sticker",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/star-sticker.png",
+  "use": ".sk-obj-star-sticker",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a five-point star sticker in golden yellow, made as a flat paper cutout",
+  "bytes": 193478
+ },
+ {
+  "id": "paper.arrow-sticker",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/arrow-sticker.png",
+  "use": ".sk-obj-arrow-sticker",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a fat curved arrow sticker in coral red, made as a flat paper cutout",
+  "bytes": 168237
+ },
+ {
+  "id": "paper.circle-dot-sticker",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/circle-dot-sticker.png",
+  "use": ".sk-obj-circle-dot-sticker",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a round dot sticker in teal, made as a flat paper cutout",
+  "bytes": 354450
+ },
+ {
+  "id": "paper.check-sticker",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/check-sticker.png",
+  "use": ".sk-obj-check-sticker",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a thick check-mark sticker in green, made as a flat paper cutout",
+  "bytes": 187407
+ },
+ {
+  "id": "paper.coin-stack",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/coin-stack.png",
+  "use": ".sk-obj-coin-stack",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a stack of five gold coins with plain faces, made as a flat paper cutout",
+  "bytes": 312596
+ },
+ {
+  "id": "paper.banknote-generic",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/banknote-generic.png",
+  "use": ".sk-obj-banknote-generic",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a generic green paper banknote with a plain oval in the centre and plain borders, no numbers, not a real currency, made as a flat paper cutout",
+  "bytes": 214429
+ },
+ {
+  "id": "paper.chat-bubble",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/chat-bubble.png",
+  "use": ".sk-obj-chat-bubble",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a rounded chat speech bubble in white with three grey dots, made as a flat paper cutout",
+  "bytes": 244568
+ },
+ {
+  "id": "paper.ai-chip",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/ai-chip.png",
+  "use": ".sk-obj-ai-chip",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "ai"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a square computer chip in dark grey with short pins on all sides and a plain glowing blue centre, made as a flat paper cutout",
+  "bytes": 299873
+ },
+ {
+  "id": "paper.warung-front",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/warung-front.png",
+  "use": ".sk-obj-warung-front",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "umkm"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a small Indonesian roadside shop front (warung) with a striped awning and a wooden counter, no signage, made as a flat paper cutout",
+  "bytes": 260304
+ },
+ {
+  "id": "paper.shopping-bag",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/shopping-bag.png",
+  "use": ".sk-obj-shopping-bag",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "bisnis"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a paper shopping bag with twisted handles, plain, made as a flat paper cutout",
+  "bytes": 252701
+ },
+ {
+  "id": "paper.parcel-box",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/parcel-box.png",
+  "use": ".sk-obj-parcel-box",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "logistik"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a closed cardboard parcel box with tape across the top, no labels, made as a flat paper cutout",
+  "bytes": 321115
+ },
+ {
+  "id": "paper.lightbulb",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/lightbulb.png",
+  "use": ".sk-obj-lightbulb",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a lit light bulb in warm yellow, made as a flat paper cutout",
+  "bytes": 172765
+ },
+ {
+  "id": "paper.magnifier",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/magnifier.png",
+  "use": ".sk-obj-magnifier",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a magnifying glass with a black handle, made as a flat paper cutout",
+  "bytes": 156525
+ },
+ {
+  "id": "paper.calculator",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/calculator.png",
+  "use": ".sk-obj-calculator",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "uang",
+   "kerja"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a desk calculator with plain blank keys, made as a flat paper cutout",
+  "bytes": 289440
+ },
+ {
+  "id": "hand.hold-card",
+  "kind": "hand",
+  "file": "vendor/asset-lib/hands/hold-card.png",
+  "use": "SK.placeHand(img, tip, { pose: 'hold-card' })",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "orang",
+   "kertas"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "right hand holding a blank white index card from below, thumb in front, the card's top edge horizontal",
+  "anchor": {
+   "pose": "hold-card",
+   "w": 720,
+   "h": 674,
+   "tx": 212,
+   "ty": 4
+  },
+  "bytes": 112773
+ },
+ {
+  "id": "hand.swipe",
+  "kind": "hand",
+  "file": "vendor/asset-lib/hands/swipe.png",
+  "use": "SK.placeHand(img, tip, { pose: 'swipe' })",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "orang",
+   "arah"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "right hand with the index finger extended, swiping to the left, other fingers curled",
+  "anchor": {
+   "pose": "swipe",
+   "w": 720,
+   "h": 508,
+   "tx": 3,
+   "ty": 34
+  },
+  "bytes": 77343
+ },
+ {
+  "id": "hand.erase",
+  "kind": "hand",
+  "file": "vendor/asset-lib/hands/erase.png",
+  "use": "SK.placeHand(img, tip, { pose: 'erase' })",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "right hand holding a grey whiteboard eraser flat against the board, pressing down-left",
+  "anchor": {
+   "pose": "erase",
+   "w": 720,
+   "h": 672,
+   "tx": 10,
+   "ty": 185
+  },
+  "bytes": 117626
+ },
+ {
+  "id": "hand.hold-highlighter",
+  "kind": "hand",
+  "file": "vendor/asset-lib/hands/hold-highlighter.png",
+  "use": "SK.placeHand(img, tip, { pose: 'hold-highlighter' })",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "orang",
+   "ide"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "right hand holding a yellow highlighter in a writing grip, chisel tip pointing down-left",
+  "anchor": {
+   "pose": "hold-highlighter",
+   "w": 720,
+   "h": 710,
+   "tx": 3,
+   "ty": 324
+  },
+  "bytes": 131777
  }
 ]

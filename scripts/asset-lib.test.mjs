@@ -239,3 +239,12 @@ test('SK.geo keeps the old Indonesia frame, adds the library maps, and keeps the
   assert.ok(SK.CITIES.pontianak && SK.CITIES.bangkok, 'new cities are added');
   assert.throws(() => SK.geo(0, 0, 'mars'), /unknown map "mars"/);
 });
+
+// ---- hands -------------------------------------------------------------------------------------------
+test('new hand anchors match their PNG sizes', () => {
+  for (const e of catalog.filter((x) => x.kind === 'hand' && x.file.startsWith(LIB))) {
+    const sz = pngSize(readFileSync(join(ROOT, e.file)));
+    assert.deepEqual([sz.w, sz.h], [e.anchor.w, e.anchor.h], e.id);
+    assert.ok(e.anchor.tx < sz.w && e.anchor.ty < sz.h, e.id);
+  }
+});

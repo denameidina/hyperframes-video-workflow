@@ -411,7 +411,7 @@ Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `d
 | `doodle.wave` | `SK.doodle('doodle.wave')` | whiteboard, mix-media, stop-motion | orang | project |
 | `doodle.whisper` | `SK.doodle('doodle.whisper')` | whiteboard, mix-media, stop-motion | chat | project |
 
-## paper (5)
+## paper (41)
 
 Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `paper*.webp`
 
@@ -422,8 +422,44 @@ Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `pa
 | `paper.pin` | `.sk-pin` | stop-motion, mix-media, vox, parallax | kertas, tempat | paper pack — vendor/paper-pack/LICENSES.md |
 | `paper.clip` | `.sk-clip` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
 | `paper.sticky` | `.sk-sticky` | stop-motion, mix-media, vox, parallax | kertas, ide | paper pack — vendor/paper-pack/LICENSES.md |
+| `paper.washi-pink` | `.sk-obj-washi-pink` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.washi-mint` | `.sk-obj-washi-mint` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.washi-grid` | `.sk-obj-washi-grid` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.tape-clear` | `.sk-obj-tape-clear` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.lakban-brown` | `.sk-obj-lakban-brown` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.tape-black` | `.sk-obj-tape-black` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.scrap-torn-white` | `.sk-obj-scrap-torn-white` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.scrap-torn-cream` | `.sk-obj-scrap-torn-cream` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.scrap-torn-yellow` | `.sk-obj-scrap-torn-yellow` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.scrap-torn-blue` | `.sk-obj-scrap-torn-blue` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.notebook-strip` | `.sk-obj-notebook-strip` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.graph-scrap` | `.sk-obj-graph-scrap` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.newspaper-scrap-blank` | `.sk-obj-newspaper-scrap-blank` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.envelope` | `.sk-obj-envelope` | stop-motion, mix-media, vox | chat, kertas | Codex (generated) |
+| `paper.receipt-blank` | `.sk-obj-receipt-blank` | stop-motion, mix-media, vox | uang, kertas | Codex (generated) |
+| `paper.ticket-stub` | `.sk-obj-ticket-stub` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.postage-stamp-blank` | `.sk-obj-postage-stamp-blank` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.staple` | `.sk-obj-staple` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.binder-clip` | `.sk-obj-binder-clip` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.rubber-band` | `.sk-obj-rubber-band` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.sticky-pink` | `.sk-obj-sticky-pink` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.sticky-blue` | `.sk-obj-sticky-blue` | stop-motion, mix-media, vox | kertas | Codex (generated) |
+| `paper.star-sticker` | `.sk-obj-star-sticker` | stop-motion, mix-media, vox, parallax | kertas | Codex (generated) |
+| `paper.arrow-sticker` | `.sk-obj-arrow-sticker` | stop-motion, mix-media, vox, parallax | kertas | Codex (generated) |
+| `paper.circle-dot-sticker` | `.sk-obj-circle-dot-sticker` | stop-motion, mix-media, vox, parallax | kertas | Codex (generated) |
+| `paper.check-sticker` | `.sk-obj-check-sticker` | stop-motion, mix-media, vox, parallax | kertas | Codex (generated) |
+| `paper.coin-stack` | `.sk-obj-coin-stack` | stop-motion, mix-media, vox, parallax | uang | Codex (generated) |
+| `paper.banknote-generic` | `.sk-obj-banknote-generic` | stop-motion, mix-media, vox, parallax | uang | Codex (generated) |
+| `paper.chat-bubble` | `.sk-obj-chat-bubble` | stop-motion, mix-media, vox, parallax | chat | Codex (generated) |
+| `paper.ai-chip` | `.sk-obj-ai-chip` | stop-motion, mix-media, vox, parallax | ai | Codex (generated) |
+| `paper.warung-front` | `.sk-obj-warung-front` | stop-motion, mix-media, vox, parallax | umkm | Codex (generated) |
+| `paper.shopping-bag` | `.sk-obj-shopping-bag` | stop-motion, mix-media, vox, parallax | bisnis | Codex (generated) |
+| `paper.parcel-box` | `.sk-obj-parcel-box` | stop-motion, mix-media, vox, parallax | logistik | Codex (generated) |
+| `paper.lightbulb` | `.sk-obj-lightbulb` | stop-motion, mix-media, vox, parallax | ide | Codex (generated) |
+| `paper.magnifier` | `.sk-obj-magnifier` | stop-motion, mix-media, vox, parallax | ide | Codex (generated) |
+| `paper.calculator` | `.sk-obj-calculator` | stop-motion, mix-media, vox, parallax | uang, kerja | Codex (generated) |
 
-## hand (2)
+## hand (6)
 
 Sheet: [hand](../../docs/agents/references/asset-catalog/sheets/) — files `hand*.webp`
 
@@ -431,6 +467,10 @@ Sheet: [hand](../../docs/agents/references/asset-catalog/sheets/) — files `han
 | --- | --- | --- | --- | --- |
 | `hand.write` | `SK.placeHand(img, tip, { pose: 'write' })` | whiteboard | orang | paper pack — vendor/paper-pack/LICENSES.md |
 | `hand.point` | `SK.placeHand(img, tip, { pose: 'point' })` | whiteboard | orang, arah | paper pack — vendor/paper-pack/LICENSES.md |
+| `hand.hold-card` | `SK.placeHand(img, tip, { pose: 'hold-card' })` | whiteboard, mix-media | orang, kertas | Codex (generated) |
+| `hand.swipe` | `SK.placeHand(img, tip, { pose: 'swipe' })` | whiteboard, mix-media | orang, arah | Codex (generated) |
+| `hand.erase` | `SK.placeHand(img, tip, { pose: 'erase' })` | whiteboard, mix-media | orang | Codex (generated) |
+| `hand.hold-highlighter` | `SK.placeHand(img, tip, { pose: 'hold-highlighter' })` | whiteboard, mix-media | orang, ide | Codex (generated) |
 
 ## frame (25)
 

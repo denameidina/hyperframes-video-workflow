@@ -125,6 +125,43 @@
 .sk-type-mm-typewriter { --sk-font-body: 'Special Elite'; }
 .sk-type-px-memory { --sk-font-body: 'Geist'; --sk-font-serif: 'Instrument Serif'; }
 .sk-type-px-label { --sk-font-body: 'Geist'; }
+.sk-obj-washi-pink, .sk-obj-washi-mint, .sk-obj-washi-grid, .sk-obj-tape-clear, .sk-obj-lakban-brown, .sk-obj-tape-black, .sk-obj-scrap-torn-white, .sk-obj-scrap-torn-cream, .sk-obj-scrap-torn-yellow, .sk-obj-scrap-torn-blue, .sk-obj-notebook-strip, .sk-obj-graph-scrap, .sk-obj-newspaper-scrap-blank, .sk-obj-envelope, .sk-obj-receipt-blank, .sk-obj-ticket-stub, .sk-obj-postage-stamp-blank, .sk-obj-staple, .sk-obj-binder-clip, .sk-obj-rubber-band, .sk-obj-sticky-pink, .sk-obj-sticky-blue, .sk-obj-star-sticker, .sk-obj-arrow-sticker, .sk-obj-circle-dot-sticker, .sk-obj-check-sticker, .sk-obj-coin-stack, .sk-obj-banknote-generic, .sk-obj-chat-bubble, .sk-obj-ai-chip, .sk-obj-warung-front, .sk-obj-shopping-bag, .sk-obj-parcel-box, .sk-obj-lightbulb, .sk-obj-magnifier, .sk-obj-calculator { position: absolute; background-repeat: no-repeat; background-size: 100% 100%; }
+.sk-obj-washi-pink { background-image: url(paper/washi-pink.png); aspect-ratio: 720 / 196; }
+.sk-obj-washi-mint { background-image: url(paper/washi-mint.png); aspect-ratio: 720 / 202; }
+.sk-obj-washi-grid { background-image: url(paper/washi-grid.png); aspect-ratio: 720 / 228; }
+.sk-obj-tape-clear { background-image: url(paper/tape-clear.png); aspect-ratio: 720 / 150; }
+.sk-obj-lakban-brown { background-image: url(paper/lakban-brown.png); aspect-ratio: 720 / 190; }
+.sk-obj-tape-black { background-image: url(paper/tape-black.png); aspect-ratio: 720 / 206; }
+.sk-obj-scrap-torn-white { background-image: url(paper/scrap-torn-white.png); aspect-ratio: 720 / 716; }
+.sk-obj-scrap-torn-cream { background-image: url(paper/scrap-torn-cream.png); aspect-ratio: 720 / 664; }
+.sk-obj-scrap-torn-yellow { background-image: url(paper/scrap-torn-yellow.png); aspect-ratio: 720 / 676; }
+.sk-obj-scrap-torn-blue { background-image: url(paper/scrap-torn-blue.png); aspect-ratio: 720 / 682; }
+.sk-obj-notebook-strip { background-image: url(paper/notebook-strip.png); aspect-ratio: 720 / 530; }
+.sk-obj-graph-scrap { background-image: url(paper/graph-scrap.png); aspect-ratio: 720 / 676; }
+.sk-obj-newspaper-scrap-blank { background-image: url(paper/newspaper-scrap-blank.png); aspect-ratio: 712 / 720; }
+.sk-obj-envelope { background-image: url(paper/envelope.png); aspect-ratio: 720 / 520; }
+.sk-obj-receipt-blank { background-image: url(paper/receipt-blank.png); aspect-ratio: 238 / 720; }
+.sk-obj-ticket-stub { background-image: url(paper/ticket-stub.png); aspect-ratio: 720 / 386; }
+.sk-obj-postage-stamp-blank { background-image: url(paper/postage-stamp-blank.png); aspect-ratio: 720 / 686; }
+.sk-obj-staple { background-image: url(paper/staple.png); aspect-ratio: 720 / 530; }
+.sk-obj-binder-clip { background-image: url(paper/binder-clip.png); aspect-ratio: 616 / 720; }
+.sk-obj-rubber-band { background-image: url(paper/rubber-band.png); aspect-ratio: 720 / 680; }
+.sk-obj-sticky-pink { background-image: url(paper/sticky-pink.png); aspect-ratio: 720 / 698; }
+.sk-obj-sticky-blue { background-image: url(paper/sticky-blue.png); aspect-ratio: 720 / 698; }
+.sk-obj-star-sticker { background-image: url(paper/star-sticker.png); aspect-ratio: 720 / 692; }
+.sk-obj-arrow-sticker { background-image: url(paper/arrow-sticker.png); aspect-ratio: 720 / 670; }
+.sk-obj-circle-dot-sticker { background-image: url(paper/circle-dot-sticker.png); aspect-ratio: 720 / 716; }
+.sk-obj-check-sticker { background-image: url(paper/check-sticker.png); aspect-ratio: 720 / 652; }
+.sk-obj-coin-stack { background-image: url(paper/coin-stack.png); aspect-ratio: 628 / 720; }
+.sk-obj-banknote-generic { background-image: url(paper/banknote-generic.png); aspect-ratio: 720 / 380; }
+.sk-obj-chat-bubble { background-image: url(paper/chat-bubble.png); aspect-ratio: 720 / 590; }
+.sk-obj-ai-chip { background-image: url(paper/ai-chip.png); aspect-ratio: 720 / 686; }
+.sk-obj-warung-front { background-image: url(paper/warung-front.png); aspect-ratio: 720 / 652; }
+.sk-obj-shopping-bag { background-image: url(paper/shopping-bag.png); aspect-ratio: 550 / 720; }
+.sk-obj-parcel-box { background-image: url(paper/parcel-box.png); aspect-ratio: 720 / 716; }
+.sk-obj-lightbulb { background-image: url(paper/lightbulb.png); aspect-ratio: 496 / 720; }
+.sk-obj-magnifier { background-image: url(paper/magnifier.png); aspect-ratio: 684 / 720; }
+.sk-obj-calculator { background-image: url(paper/calculator.png); aspect-ratio: 594 / 720; }
 .sk-tex-cork, .sk-tex-cardboard, .sk-tex-paper-tan, .sk-tex-concrete-light, .sk-tex-linen, .sk-tex-wood-desk, .sk-tex-plaster, .sk-tex-blackboard { background-size: 1080px 1920px; background-position: 0 0; }
 .sk-tex-cork { background-image: url(textures/cork.jpg); }
 .sk-tex-cardboard { background-image: url(textures/cardboard.jpg); }

@@ -143,4 +143,6 @@ SK.geo = (lat,lon,map='indonesia')=>{
   return {x:(lon-m.lon0)*m.k, y:(m.lat0-lat)*m.k};
 };
 for(const [k,v] of Object.entries(SK.LIB.cities)) if(!has(SK.CITIES,k)) SK.CITIES[k]=v;
+// ---- hands -------------------------------------------------------------------------------------
+for(const [k,v] of Object.entries(SK.LIB.hands)) if(!has(SK.HAND,k)) SK.HAND[k]=v;
 })();
