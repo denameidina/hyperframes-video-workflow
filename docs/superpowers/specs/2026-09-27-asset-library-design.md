@@ -258,7 +258,7 @@ Dipasang dengan `SK.placeHand`. `SK.HAND` diperluas dengan pose baru.
 Id: `frame.<nama>`.
 
 - **Bingkai (7)**: polaroid, polaroid-tilt, film-strip-3, browser-generic, phone-generic, notebook-page, index-card
-- **Mask sobekan (6)**: torn-top, torn-bottom, torn-left, torn-right, torn-window, torn-circle. `clip-path` dibuat deterministik dari `SK.torn` dengan seed tetap, lalu dibekukan sebagai path.
+- **Mask sobekan (6)**: torn-top, torn-bottom, torn-left, torn-right, torn-all, torn-rough. Preset parameter `SK.torn` (edges, seed, amp, step) yang dipanggil lewat `SK.tornFrame(id, w, h)`, sehingga mask tetap deterministik dan menyesuaikan ukuran.
 - **Stempel dan badge (8)**: stamp-ilustrasi, stamp-contoh, stamp-baru, stamp-hemat, badge-circle, badge-ribbon, badge-starburst, label-tag. Hanya stempel bertulisan yang teksnya tetap; badge diisi teks dari transkrip.
 - **Garis bawah swash (4)**: swash-1..4 untuk `broll-text`
 
@@ -383,34 +383,36 @@ Class: `.sk-pal-<gaya>-<nama>`. Class ini mengisi `--sk-bg`, `--sk-ink`,
 ini persis, supaya still lama tetap identik piksel. Prefix gaya: `text`, `mg`,
 `wb`, `vox`, `stop`, `mm`, `px`.
 
-Aturan kontras (dicek oleh test):
+Aturan kontras (dicek oleh test). Warna bg class tekstur memakai rata-rata
+terukur (ffmpeg `scale=1:1:flags=area`, 2026-09-27): `.sk-paper-white`/`.sk-grid`/`.sk-lined`
+#f5f3f4, `.sk-paper-cream` #f5ebd0, `.sk-paper-grey`/`.sk-newsprint` #c4b9b4,
+`.sk-kraft` #bb8f4d, `.sk-kraft-dark` #a68768 (tidak gelap!), `.sk-tex-paper-tan`
+#caa77a, `.sk-tex-cork` #ab6f3e, `.sk-tex-cardboard` #ba8e4e, `.sk-tex-blackboard`
+#233027. Nilai ini dicatat di `presets.json` sebagai `bg`.
 
-- Semua gaya: ink vs bg ≥ 4.5:1.
-- Peran aksen `text` (broll-text, motion-graphic, whiteboard): kedua aksen vs
-  bg ≥ 3:1.
-- Peran aksen `fill` (stop-motion, mix-media): label hitam `#111111` atau putih
-  di atas aksen ≥ 4.5:1.
-- Peran aksen `hl` (vox): ink `#1b1b1b` di atas kertas `#fbfaf6` yang di-multiply
-  dengan stabilo ≥ 4.5:1, dan pena merah vs bg ≥ 3:1.
-- Untuk bg yang berupa class tekstur, test memakai warna rata-rata tekstur yang
-  dicatat di catalog.
+- Peran `text` (broll-text, motion-graphic, whiteboard): ink vs bg ≥ 4.5:1 dan
+  kedua aksen vs bg ≥ 3:1, karena teks berada langsung di atas latar.
+- Peran `fill` (stop-motion, mix-media): ink vs bg ≥ 3:1 (label di sini selalu
+  besar dan tebal, ≥ 34 px), dan label hitam `#111111` atau putih di atas aksen
+  ≥ 4.5:1.
+- Peran `hl` (vox): ink vs bg ≥ 3:1; ink `#1b1b1b` di atas kertas dokumen
+  `#fbfaf6` yang di-multiply dengan stabilo ≥ 4.5:1; pena merah vs kertas
+  dokumen `#fbfaf6` ≥ 3:1 (pena menandai dokumen, bukan latar).
 
-Pengecualian lama (nilai tetap, tidak ditambah lagi):
+Pengecualian lama (nilainya tetap, tidak boleh bertambah; dicatat di tabel
+preset dokumen gaya masing-masing):
 
 - `text-paper` aksen `#ff4d00` (2.92:1): hanya untuk kata payoff ≥ 180 px.
 - `mg-default` aksen-2 `#f97316` (2.45:1) dan `mg-mint` aksen-2 `#f59e0b`
   (2.04:1): hanya untuk isi bar atau bidang besar, tidak pernah untuk teks atau
   garis tipis.
+- `vox-dark-desk` (ink 2.92:1, pena 2.66:1), `stop-night-desk` dan
+  `mm-night-zine` (ink 2.92:1): `.sk-kraft-dark` rata-rata #a68768, jadi tinta
+  terang hanya dipakai di atas potongan kertas gelap, tidak langsung di atas
+  latar. Tiga ini ditemukan saat pengukuran 2026-09-27 dan dipertahankan dengan
+  keputusan yang sama seperti tiga pengecualian pertama.
 
-Pengecualian dicatat di tabel preset dokumen gaya masing-masing.
-
-Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
-
-- **bg class tekstur**: warnanya ditentukan tekstur. Nilai † hanya
-  perkiraan; test memakai warna rata-rata tekstur yang terukur (lihat aturan
-  kontras di atas).
-- **bg default `mm`**: hex tebakan. Nilai aslinya dibaca dari `paper-pack.css`
-  saat build.
+Nilai bertanda † adalah rata-rata terukur untuk bg class tekstur.
 
 ### broll-text (`text`)
 
@@ -447,7 +449,7 @@ Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
 | blackboard | #1f2a24 | #f1f5f0 | #fde047 | #93c5fd | #6b7f72 | lama |
 | blueprint | #123a6b | #eaf2ff | #fbbf24 | #f472b6 | #7ea3d4 | lama |
 | graph-paper | #f7f9fc + `.sk-tex-graph` | #1f2937 | #e11d48 | #0284c7 | #cbd5e1 | baru |
-| chalk-green | `.sk-tex-blackboard` (#23332b†) | #f4f1e8 | #ffd166 | #8ecae6 | #5f7a6b | baru |
+| chalk-green | `.sk-tex-blackboard` (#233027†) | #f4f1e8 | #ffd166 | #8ecae6 | #5f7a6b | baru |
 | napkin | #fbf6ee | #3b2f2f | #2563eb | #dc2626 | #cbbfae | baru |
 | neon-marker | #111111 | #f5f5f5 | #ff3ea5 | #3ef0ff | #555555 | baru |
 
@@ -459,9 +461,9 @@ Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
 | newsprint | `.sk-newsprint` | #1b1b1b | #ffe14d | #d7263d | #6b665c | lama |
 | dark-desk | `.sk-kraft-dark` | #f5efe6 | #ffe14d | #ff6b6b | #a8a29e | lama |
 | blueprint | `.sk-grid` | #1e3a5f | #ffe14d | #d7263d | #7ea3d4 | lama |
-| archive-sepia | `.sk-tex-paper-tan` (#e9dcc3†) | #2a1f14 | #f2c14e | #9b2226 | #8a7a5c | baru |
-| cork-board | `.sk-tex-cork` (#b98a57†) | #1b1b1b | #ffe14d | #6e0d10 | #6b4f33 | baru |
-| evidence | #1d1f22 | #f1ede4 | #ffe14d | #ff5a5f | #6b6f76 | baru |
+| archive-sepia | `.sk-tex-paper-tan` (#caa77a†) | #2a1f14 | #f2c14e | #9b2226 | #8a7a5c | baru |
+| cork-board | `.sk-tex-cork` (#ab6f3e†) | #1b1b1b | #ffe14d | #6e0d10 | #6b4f33 | baru |
+| evidence | #1d1f22 | #f1ede4 | #ffe14d | #e5383b | #6b6f76 | baru |
 | pastel-brief | #eef2f7 | #1e293b | #a7f3d0 | #e11d48 | #94a3b8 | baru |
 
 ### stop-motion (`stop`)
@@ -474,14 +476,14 @@ Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
 | blueprint-paper | `.sk-grid` | #1e3a5f | #b5452b | #2f6f8f | #7ea3d4 | lama |
 | warung | `.sk-tex-cardboard` | #2b2118 | #d62828 | #2a9d8f | #8a7355 | baru |
 | school-craft | `.sk-paper-white` | #1f2937 | #f4a261 | #3a86ff | #adb5bd | baru |
-| midnight-kraft | `.sk-kraft-dark` | #f5efe6 | #e9c46a | #7dd3fc | #a8a29e | baru |
+| midnight-desk | #2a1f17 + `.sk-tex-film` | #f5efe6 | #e9c46a | #7dd3fc | #a8a29e | baru |
 | pastel-cut | `.sk-paper-cream` | #2b2d42 | #ffafcc | #a2d2ff | #bdb2a0 | baru |
 
 ### mix-media (`mm`)
 
 | nama | backdrop | ink | accent | accent-2 | status |
 | --- | --- | --- | --- | --- | --- |
-| default | `.sk-grid` (#f4f1ea†) | #2b2118 | #b5452b | #2f6f8f | lama |
+| default | `.sk-grid` (#f5f3f4†) | #2b2118 | #b5452b | #2f6f8f | lama |
 | notebook | `.sk-lined` | #1f2937 | #dc2626 | #2563eb | lama |
 | kraft-desk | `.sk-kraft` | #2b2118 | #b5452b | #2f6f8f | lama |
 | night-zine | `.sk-kraft-dark` | #f5efe6 | #f59e0b | #7dd3fc | lama |
@@ -540,9 +542,12 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 | --- | --- |
 | `SK.icon(id, {size, color, sw=2.2})` | String `<svg>` ikon Lucide dari `SK.LIB.icons`, lebar stroke dinormalisasi seperti `M.icon`. Id tidak dikenal akan throw error dengan saran id terdekat. |
 | `SK.pict(id, {size, color})` | String `<svg>` pictogram Phosphor fill. |
-| `SK.doodle(id, {size, color, sw=7})` | String `<svg>` berisi `<path class="sk-stroke">` per goresan, siap untuk `SK.draw` / `SK.drawSeq`. |
+| `SK.doodle(id, {size, color, sw=7})` | String `<svg>` berisi `<path class="sk-dpath">` per goresan, siap untuk `SK.draw` / `SK.drawSeq`. Bukan `.sk-stroke`, karena `.sk-wb .sk-stroke` di style-kit memaksa `stroke-width` 7 satuan viewBox. |
+| `SK.frame(id, {w, h, content, caption})` | String HTML bingkai CSS (polaroid, film strip, browser, HP, halaman buku, kartu indeks). |
+| `SK.stamp(id, {text, color, size})` | String HTML stempel/badge SVG; stempel bertulisan memakai teks tetapnya, badge memakai `text` dari transkrip. |
+| `SK.tornFrame(id, w, h)` | `clip-path` sobekan dari preset `SK.torn`. |
 | `SK.rough(svgEl, {seed=1, amp=1.2, step=6})` | Mengganti setiap `<path>` di dalam `svgEl` dengan versi goresan tangan. Path disampel tiap `step` px dengan `getPointAtLength`, diberi jitter memakai `SK.rng(seed)`, lalu dihaluskan (Catmull-Rom). Hasilnya deterministik untuk seed yang sama, dan di-cache per elemen. |
-| `SK.doc(kind, fields, {w})` | Elemen `.sk-doc` untuk template VOX; stempel "ILUSTRASI" selalu ada. |
+| `SK.doc(kind, fields, {w})` | String HTML `.sk-doc` untuk template VOX; stempel "ILUSTRASI" selalu ada. |
 | `SK.mark(id, {color})` | String `<svg>` tanda pena merah (`mark.*`). |
 | `SK.geo(lat, lon, map='indonesia')` | Koordinat piksel pada peta `SK.MAPS[map]`. |
 | `SK.HAND` | Ditambah pose `hold-card`, `swipe`, `erase`, `hold-highlighter`. |
