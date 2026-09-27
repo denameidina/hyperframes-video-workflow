@@ -66,7 +66,8 @@ export function sheetPages(root) {
     ...torn.map((e) => cell(`<div class="sk-paper-cream" style="width:200px;height:200px;clip-path:${SK.tornFrame(e.id, 200, 200)}"></div>`, short(e.id), { dark: true })),
     ...stamps.map((e) => cell(`<div style="position:relative;width:220px;height:110px">${SK.stamp(e.id, { size: 220, text: SK.LIB.strokes[e.id].text ?? 'Badge' })}</div>`, short(e.id))),
     ...swashes.map((e) => cell(SK.doodle(e.id, { size: 220, sw: 7 }), short(e.id))),
-    ...marks.map((e) => cell(SK.mark(e.id, { size: 200 }), short(e.id))),
+    // tall marks (bracket, exclaim) are sized by height so every cell stays ~200 px high
+    ...marks.map((e) => { const [vw, vh] = SK.LIB.strokes[e.id].vb; return cell(SK.mark(e.id, { size: Math.min(200, (200 * vw) / vh) }), short(e.id)); }),
   ], 24);
   grid('doc', 'doc — SK.doc (always tagged Ilustrasi; sample text)', 2, of('doc').filter((e) => e.id.startsWith('doc.')).map((e) => cell(`<div style="position:relative;width:440px;height:520px"><div style="transform:scale(.52);transform-origin:0 0;position:absolute;left:0;top:14px">${SK.doc(short(e.id), DOC_SAMPLE[short(e.id)] ?? {}, { w: 820 })}</div></div>`, short(e.id))), 6);
   grid('map', 'map — SK.geo(lat, lon, map)', 1, of('map').map((e) => cell(`<img src="${e.file}" style="width:960px;max-height:300px;object-fit:contain" alt="" />`, short(e.id))), 5);

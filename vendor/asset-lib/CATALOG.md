@@ -354,6 +354,63 @@ Sheet: [pictogram](../../docs/agents/references/asset-catalog/sheets/) — files
 | `pict.briefcase` | `SK.pict('briefcase')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 | `pict.gear` | `SK.pict('gear')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 
+## doodle (50)
+
+Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `doodle*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `doodle.arrow-bounce` | `SK.doodle('doodle.arrow-bounce')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.arrow-curve` | `SK.doodle('doodle.arrow-curve')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.arrow-double` | `SK.doodle('doodle.arrow-double')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.arrow-down-curl` | `SK.doodle('doodle.arrow-down-curl')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.arrow-loop` | `SK.doodle('doodle.arrow-loop')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.arrow-zigzag` | `SK.doodle('doodle.arrow-zigzag')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.box-hand` | `SK.doodle('doodle.box-hand')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.bracket-curly` | `SK.doodle('doodle.bracket-curly')` | whiteboard, mix-media, broll-text | arah, ide | project |
+| `doodle.bracket-square` | `SK.doodle('doodle.bracket-square')` | whiteboard, mix-media, broll-text | arah, ide | project |
+| `doodle.burst` | `SK.doodle('doodle.burst')` | whiteboard, mix-media, broll-text | ide, status | project |
+| `doodle.carry-box` | `SK.doodle('doodle.carry-box')` | whiteboard, mix-media, stop-motion | orang, logistik | project |
+| `doodle.celebrate` | `SK.doodle('doodle.celebrate')` | whiteboard, mix-media, stop-motion | orang, status | project |
+| `doodle.chart-hand` | `SK.doodle('doodle.chart-hand')` | whiteboard, mix-media, stop-motion | data | project |
+| `doodle.circle-double` | `SK.doodle('doodle.circle-double')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.circle-loose` | `SK.doodle('doodle.circle-loose')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.cloud-thought` | `SK.doodle('doodle.cloud-thought')` | whiteboard, broll-text, mix-media | ide | project |
+| `doodle.connector-dashed` | `SK.doodle('doodle.connector-dashed')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.connector-elbow` | `SK.doodle('doodle.connector-elbow')` | whiteboard, mix-media, broll-text | arah | project |
+| `doodle.cross-hand` | `SK.doodle('doodle.cross-hand')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.cycle-arrows` | `SK.doodle('doodle.cycle-arrows')` | whiteboard, mix-media, broll-text | arah, waktu | project |
+| `doodle.double-bubble` | `SK.doodle('doodle.double-bubble')` | whiteboard, mix-media, stop-motion | chat | project |
+| `doodle.exclaim` | `SK.doodle('doodle.exclaim')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.facepalm` | `SK.doodle('doodle.facepalm')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.fork-split` | `SK.doodle('doodle.fork-split')` | whiteboard, mix-media, broll-text | arah, ide | project |
+| `doodle.heart-hand` | `SK.doodle('doodle.heart-hand')` | whiteboard, broll-text, mix-media | hidup | project |
+| `doodle.laptop-hand` | `SK.doodle('doodle.laptop-hand')` | whiteboard, mix-media, stop-motion | perangkat, kerja | project |
+| `doodle.lightbulb-hand` | `SK.doodle('doodle.lightbulb-hand')` | whiteboard, broll-text, mix-media | ide | project |
+| `doodle.lightning-hand` | `SK.doodle('doodle.lightning-hand')` | whiteboard, broll-text, mix-media | benda, ai | project |
+| `doodle.money-hand` | `SK.doodle('doodle.money-hand')` | whiteboard, mix-media, stop-motion | uang | project |
+| `doodle.phone-hand` | `SK.doodle('doodle.phone-hand')` | whiteboard, mix-media, stop-motion | perangkat, chat | project |
+| `doodle.point` | `SK.doodle('doodle.point')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.question` | `SK.doodle('doodle.question')` | whiteboard, broll-text, mix-media | status, ide | project |
+| `doodle.shrug` | `SK.doodle('doodle.shrug')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.sit-laptop` | `SK.doodle('doodle.sit-laptop')` | whiteboard, mix-media, stop-motion | orang, kerja, perangkat | project |
+| `doodle.sparkle-hand` | `SK.doodle('doodle.sparkle-hand')` | whiteboard, broll-text, mix-media | ide | project |
+| `doodle.speech-rect` | `SK.doodle('doodle.speech-rect')` | whiteboard, mix-media, stop-motion | chat | project |
+| `doodle.speech-round` | `SK.doodle('doodle.speech-round')` | whiteboard, mix-media, stop-motion | chat | project |
+| `doodle.speech-shout` | `SK.doodle('doodle.speech-shout')` | whiteboard, mix-media, stop-motion | chat | project |
+| `doodle.spiral` | `SK.doodle('doodle.spiral')` | whiteboard, broll-text, mix-media | ide | project |
+| `doodle.stand` | `SK.doodle('doodle.stand')` | whiteboard, mix-media | orang | project |
+| `doodle.star-hand` | `SK.doodle('doodle.star-hand')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.strike-scribble` | `SK.doodle('doodle.strike-scribble')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.think` | `SK.doodle('doodle.think')` | whiteboard, mix-media, stop-motion | orang, ide | project |
+| `doodle.thought` | `SK.doodle('doodle.thought')` | whiteboard, mix-media, stop-motion | chat, ide | project |
+| `doodle.tick-hand` | `SK.doodle('doodle.tick-hand')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.underline-double` | `SK.doodle('doodle.underline-double')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.underline-wave` | `SK.doodle('doodle.underline-wave')` | whiteboard, broll-text, mix-media | status | project |
+| `doodle.walk` | `SK.doodle('doodle.walk')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.wave` | `SK.doodle('doodle.wave')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.whisper` | `SK.doodle('doodle.whisper')` | whiteboard, mix-media, stop-motion | chat | project |
+
 ## paper (5)
 
 Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `paper*.webp`
@@ -375,14 +432,24 @@ Sheet: [hand](../../docs/agents/references/asset-catalog/sheets/) — files `han
 | `hand.write` | `SK.placeHand(img, tip, { pose: 'write' })` | whiteboard | orang | paper pack — vendor/paper-pack/LICENSES.md |
 | `hand.point` | `SK.placeHand(img, tip, { pose: 'point' })` | whiteboard | orang, arah | paper pack — vendor/paper-pack/LICENSES.md |
 
-## frame (15)
+## frame (25)
 
 Sheet: [frame](../../docs/agents/references/asset-catalog/sheets/) — files `frame*.webp`
 
 | id | use | styles | tags | source |
 | --- | --- | --- | --- | --- |
+| `frame.badge-circle` | `SK.stamp('frame.badge-circle')` | motion-graphic, mix-media, broll-text, vox | status | project |
+| `frame.badge-ribbon` | `SK.stamp('frame.badge-ribbon')` | motion-graphic, mix-media, broll-text | status | project |
+| `frame.badge-starburst` | `SK.stamp('frame.badge-starburst')` | motion-graphic, mix-media, broll-text, stop-motion | status, uang | project |
+| `frame.label-tag` | `SK.stamp('frame.label-tag')` | stop-motion, mix-media, vox | bisnis, umkm | project |
+| `frame.stamp-baru` | `SK.stamp('frame.stamp-baru')` | vox, mix-media, broll-text, stop-motion | status, media | project |
+| `frame.stamp-contoh` | `SK.stamp('frame.stamp-contoh')` | vox, mix-media, broll-text | status, media | project |
+| `frame.stamp-hemat` | `SK.stamp('frame.stamp-hemat')` | vox, mix-media, broll-text, stop-motion | uang, status | project |
 | `frame.stamp-ilustrasi` | `SK.stamp('frame.stamp-ilustrasi')` | vox, mix-media | status, media | project |
 | `frame.swash-1` | `SK.doodle('frame.swash-1')` | broll-text, whiteboard, mix-media | arah | project |
+| `frame.swash-2` | `SK.doodle('frame.swash-2')` | broll-text, whiteboard, mix-media | arah | project |
+| `frame.swash-3` | `SK.doodle('frame.swash-3')` | broll-text, whiteboard, mix-media | arah | project |
+| `frame.swash-4` | `SK.doodle('frame.swash-4')` | broll-text, whiteboard, mix-media | arah | project |
 | `frame.polaroid` | `SK.frame('polaroid', …)` | mix-media, parallax, stop-motion | media, hidup | project (CSS) |
 | `frame.polaroid-tilt` | `SK.frame('polaroid-tilt', …)` | mix-media, parallax, stop-motion | media, hidup | project (CSS) |
 | `frame.film-strip-3` | `SK.frame('film-strip-3', …)` | mix-media, parallax | media | project (CSS) |
@@ -397,13 +464,20 @@ Sheet: [frame](../../docs/agents/references/asset-catalog/sheets/) — files `fr
 | `frame.torn-all` | `SK.tornFrame('torn-all', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
 | `frame.torn-rough` | `SK.tornFrame('torn-rough', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
 
-## doc (11)
+## doc (18)
 
 Sheet: [doc](../../docs/agents/references/asset-catalog/sheets/) — files `doc*.webp`
 
 | id | use | styles | tags | source |
 | --- | --- | --- | --- | --- |
+| `mark.red-arrow` | `SK.mark('mark.red-arrow')` | vox, whiteboard | status | project |
+| `mark.red-bracket` | `SK.mark('mark.red-bracket')` | vox, whiteboard | status | project |
+| `mark.red-check` | `SK.mark('mark.red-check')` | vox, whiteboard | status | project |
 | `mark.red-circle` | `SK.mark('mark.red-circle')` | vox, whiteboard | status | project |
+| `mark.red-cross` | `SK.mark('mark.red-cross')` | vox, whiteboard | status | project |
+| `mark.red-exclaim` | `SK.mark('mark.red-exclaim')` | vox, whiteboard | status | project |
+| `mark.red-question` | `SK.mark('mark.red-question')` | vox, whiteboard | status | project |
+| `mark.red-underline` | `SK.mark('mark.red-underline')` | vox, whiteboard | status | project |
 | `doc.article` | `SK.doc('article', …)` | vox, mix-media | media | project |
 | `doc.report-page` | `SK.doc('report-page', …)` | vox, mix-media | data, kerja | project |
 | `doc.spreadsheet` | `SK.doc('spreadsheet', …)` | vox, mix-media | data, kerja | project |

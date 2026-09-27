@@ -5909,6 +5909,865 @@
   "license": "MIT"
  },
  {
+  "id": "doodle.arrow-bounce",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-bounce')",
+  "use": "SK.doodle('doodle.arrow-bounce')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.arrow-curve",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-curve')",
+  "use": "SK.doodle('doodle.arrow-curve')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.arrow-double",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-double')",
+  "use": "SK.doodle('doodle.arrow-double')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.arrow-down-curl",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-down-curl')",
+  "use": "SK.doodle('doodle.arrow-down-curl')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.arrow-loop",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-loop')",
+  "use": "SK.doodle('doodle.arrow-loop')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.arrow-zigzag",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.arrow-zigzag')",
+  "use": "SK.doodle('doodle.arrow-zigzag')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.box-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.box-hand')",
+  "use": "SK.doodle('doodle.box-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.bracket-curly",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.bracket-curly')",
+  "use": "SK.doodle('doodle.bracket-curly')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.bracket-square",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.bracket-square')",
+  "use": "SK.doodle('doodle.bracket-square')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.burst",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.burst')",
+  "use": "SK.doodle('doodle.burst')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "ide",
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.carry-box",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.carry-box')",
+  "use": "SK.doodle('doodle.carry-box')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang",
+   "logistik"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.celebrate",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.celebrate')",
+  "use": "SK.doodle('doodle.celebrate')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang",
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.chart-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.chart-hand')",
+  "use": "SK.doodle('doodle.chart-hand')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "data"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.circle-double",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.circle-double')",
+  "use": "SK.doodle('doodle.circle-double')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.circle-loose",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.circle-loose')",
+  "use": "SK.doodle('doodle.circle-loose')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.cloud-thought",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.cloud-thought')",
+  "use": "SK.doodle('doodle.cloud-thought')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.connector-dashed",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.connector-dashed')",
+  "use": "SK.doodle('doodle.connector-dashed')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.connector-elbow",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.connector-elbow')",
+  "use": "SK.doodle('doodle.connector-elbow')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.cross-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.cross-hand')",
+  "use": "SK.doodle('doodle.cross-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.cycle-arrows",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.cycle-arrows')",
+  "use": "SK.doodle('doodle.cycle-arrows')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah",
+   "waktu"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.double-bubble",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.double-bubble')",
+  "use": "SK.doodle('doodle.double-bubble')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.exclaim",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.exclaim')",
+  "use": "SK.doodle('doodle.exclaim')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.facepalm",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.facepalm')",
+  "use": "SK.doodle('doodle.facepalm')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.fork-split",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.fork-split')",
+  "use": "SK.doodle('doodle.fork-split')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "arah",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.heart-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.heart-hand')",
+  "use": "SK.doodle('doodle.heart-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "hidup"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.laptop-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.laptop-hand')",
+  "use": "SK.doodle('doodle.laptop-hand')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "perangkat",
+   "kerja"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.lightbulb-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.lightbulb-hand')",
+  "use": "SK.doodle('doodle.lightbulb-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.lightning-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.lightning-hand')",
+  "use": "SK.doodle('doodle.lightning-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "benda",
+   "ai"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.money-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.money-hand')",
+  "use": "SK.doodle('doodle.money-hand')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "uang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.phone-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.phone-hand')",
+  "use": "SK.doodle('doodle.phone-hand')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "perangkat",
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.point",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.point')",
+  "use": "SK.doodle('doodle.point')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.question",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.question')",
+  "use": "SK.doodle('doodle.question')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.shrug",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.shrug')",
+  "use": "SK.doodle('doodle.shrug')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.sit-laptop",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.sit-laptop')",
+  "use": "SK.doodle('doodle.sit-laptop')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang",
+   "kerja",
+   "perangkat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.sparkle-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.sparkle-hand')",
+  "use": "SK.doodle('doodle.sparkle-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.speech-rect",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.speech-rect')",
+  "use": "SK.doodle('doodle.speech-rect')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.speech-round",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.speech-round')",
+  "use": "SK.doodle('doodle.speech-round')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.speech-shout",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.speech-shout')",
+  "use": "SK.doodle('doodle.speech-shout')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.spiral",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.spiral')",
+  "use": "SK.doodle('doodle.spiral')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.stand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.stand')",
+  "use": "SK.doodle('doodle.stand')",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.star-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.star-hand')",
+  "use": "SK.doodle('doodle.star-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.strike-scribble",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.strike-scribble')",
+  "use": "SK.doodle('doodle.strike-scribble')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.think",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.think')",
+  "use": "SK.doodle('doodle.think')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.thought",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.thought')",
+  "use": "SK.doodle('doodle.thought')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat",
+   "ide"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.tick-hand",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.tick-hand')",
+  "use": "SK.doodle('doodle.tick-hand')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.underline-double",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.underline-double')",
+  "use": "SK.doodle('doodle.underline-double')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.underline-wave",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.underline-wave')",
+  "use": "SK.doodle('doodle.underline-wave')",
+  "styles": [
+   "whiteboard",
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.walk",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.walk')",
+  "use": "SK.doodle('doodle.walk')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.wave",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.wave')",
+  "use": "SK.doodle('doodle.wave')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doodle.whisper",
+  "kind": "doodle",
+  "inline": "SK.doodle('doodle.whisper')",
+  "use": "SK.doodle('doodle.whisper')",
+  "styles": [
+   "whiteboard",
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-arrow",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-arrow')",
+  "use": "SK.mark('mark.red-arrow')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-bracket",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-bracket')",
+  "use": "SK.mark('mark.red-bracket')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-check",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-check')",
+  "use": "SK.mark('mark.red-check')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
   "id": "mark.red-circle",
   "kind": "doc",
   "inline": "SK.mark('mark.red-circle')",
@@ -5918,6 +6777,187 @@
    "whiteboard"
   ],
   "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-cross",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-cross')",
+  "use": "SK.mark('mark.red-cross')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-exclaim",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-exclaim')",
+  "use": "SK.mark('mark.red-exclaim')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-question",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-question')",
+  "use": "SK.mark('mark.red-question')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "mark.red-underline",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-underline')",
+  "use": "SK.mark('mark.red-underline')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.badge-circle",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.badge-circle')",
+  "use": "SK.stamp('frame.badge-circle')",
+  "styles": [
+   "motion-graphic",
+   "mix-media",
+   "broll-text",
+   "vox"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.badge-ribbon",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.badge-ribbon')",
+  "use": "SK.stamp('frame.badge-ribbon')",
+  "styles": [
+   "motion-graphic",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.badge-starburst",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.badge-starburst')",
+  "use": "SK.stamp('frame.badge-starburst')",
+  "styles": [
+   "motion-graphic",
+   "mix-media",
+   "broll-text",
+   "stop-motion"
+  ],
+  "tags": [
+   "status",
+   "uang"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.label-tag",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.label-tag')",
+  "use": "SK.stamp('frame.label-tag')",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "bisnis",
+   "umkm"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.stamp-baru",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.stamp-baru')",
+  "use": "SK.stamp('frame.stamp-baru')",
+  "styles": [
+   "vox",
+   "mix-media",
+   "broll-text",
+   "stop-motion"
+  ],
+  "tags": [
+   "status",
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.stamp-contoh",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.stamp-contoh')",
+  "use": "SK.stamp('frame.stamp-contoh')",
+  "styles": [
+   "vox",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "status",
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.stamp-hemat",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.stamp-hemat')",
+  "use": "SK.stamp('frame.stamp-hemat')",
+  "styles": [
+   "vox",
+   "mix-media",
+   "broll-text",
+   "stop-motion"
+  ],
+  "tags": [
+   "uang",
    "status"
   ],
   "source": "project",
@@ -5944,6 +6984,54 @@
   "kind": "frame",
   "inline": "SK.doodle('frame.swash-1')",
   "use": "SK.doodle('frame.swash-1')",
+  "styles": [
+   "broll-text",
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.swash-2",
+  "kind": "frame",
+  "inline": "SK.doodle('frame.swash-2')",
+  "use": "SK.doodle('frame.swash-2')",
+  "styles": [
+   "broll-text",
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.swash-3",
+  "kind": "frame",
+  "inline": "SK.doodle('frame.swash-3')",
+  "use": "SK.doodle('frame.swash-3')",
+  "styles": [
+   "broll-text",
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.swash-4",
+  "kind": "frame",
+  "inline": "SK.doodle('frame.swash-4')",
+  "use": "SK.doodle('frame.swash-4')",
   "styles": [
    "broll-text",
    "whiteboard",

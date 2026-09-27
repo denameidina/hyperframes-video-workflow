@@ -1509,7 +1509,8 @@ export function sheetPages(root) {
     ...torn.map((e) => cell(`<div class="sk-paper-cream" style="width:200px;height:200px;clip-path:${SK.tornFrame(e.id, 200, 200)}"></div>`, short(e.id), { dark: true })),
     ...stamps.map((e) => cell(`<div style="position:relative;width:220px;height:110px">${SK.stamp(e.id, { size: 220, text: SK.LIB.strokes[e.id].text ?? 'Badge' })}</div>`, short(e.id))),
     ...swashes.map((e) => cell(SK.doodle(e.id, { size: 220, sw: 7 }), short(e.id))),
-    ...marks.map((e) => cell(SK.mark(e.id, { size: 200 }), short(e.id))),
+    // tall marks (bracket, exclaim) are sized by height so every cell stays ~200 px high
+    ...marks.map((e) => { const [vw, vh] = SK.LIB.strokes[e.id].vb; return cell(SK.mark(e.id, { size: Math.min(200, (200 * vw) / vh) }), short(e.id)); }),
   ], 24);
   grid('doc', 'doc — SK.doc (always tagged Ilustrasi; sample text)', 2, of('doc').filter((e) => e.id.startsWith('doc.')).map((e) => cell(`<div style="position:relative;width:440px;height:520px"><div style="transform:scale(.52);transform-origin:0 0;position:absolute;left:0;top:14px">${SK.doc(short(e.id), DOC_SAMPLE[short(e.id)] ?? {}, { w: 820 })}</div></div>`, short(e.id))), 6);
   grid('map', 'map — SK.geo(lat, lon, map)', 1, of('map').map((e) => cell(`<img src="${e.file}" style="width:960px;max-height:300px;object-fit:contain" alt="" />`, short(e.id))), 5);
@@ -2072,7 +2073,9 @@ SK.stamp = (id,o={})=>{
   const key=full(id,'frame'), s=pick(SK.LIB.strokes,'stamp',key), text=o.text??s.text;
   if(!text) throw new Error(`asset-lib: ${key} needs o.text (a word from the transcript)`);
   const w=o.size??320, h=w*s.vb[1]/s.vb[0];
-  return `<div class="sk-stamp" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;color:${o.color??'var(--sk-accent-2, #d7263d)'}">${strokeSvg(key,{size:w,sw:o.sw??5,color:'currentColor'},'sk-stamp-border')}<span class="sk-stamp-text" style="font-size:${(o.fontSize??h*0.3).toFixed(1)}px">${esc(text)}</span></div>`;
+  // default text size fits both the height and the width (≈ 0.62 em per uppercase letter + tracking)
+  const fs=o.fontSize??Math.min(h*0.3, w*0.62/(String(text).length*0.72));
+  return `<div class="sk-stamp" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;color:${o.color??'var(--sk-accent-2, #d7263d)'}">${strokeSvg(key,{size:w,sw:o.sw??5,color:'currentColor'},'sk-stamp-border')}<span class="sk-stamp-text" style="font-size:${fs.toFixed(1)}px">${esc(text)}</span></div>`;
 };
 // torn-paper clip-path from a named SK.torn preset, sized to the piece
 SK.tornFrame = (id,w,h)=>{

@@ -88,7 +88,9 @@ SK.stamp = (id,o={})=>{
   const key=full(id,'frame'), s=pick(SK.LIB.strokes,'stamp',key), text=o.text??s.text;
   if(!text) throw new Error(`asset-lib: ${key} needs o.text (a word from the transcript)`);
   const w=o.size??320, h=w*s.vb[1]/s.vb[0];
-  return `<div class="sk-stamp" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;color:${o.color??'var(--sk-accent-2, #d7263d)'}">${strokeSvg(key,{size:w,sw:o.sw??5,color:'currentColor'},'sk-stamp-border')}<span class="sk-stamp-text" style="font-size:${(o.fontSize??h*0.3).toFixed(1)}px">${esc(text)}</span></div>`;
+  // default text size fits both the height and the width (≈ 0.62 em per uppercase letter + tracking)
+  const fs=o.fontSize??Math.min(h*0.3, w*0.62/(String(text).length*0.72));
+  return `<div class="sk-stamp" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;color:${o.color??'var(--sk-accent-2, #d7263d)'}">${strokeSvg(key,{size:w,sw:o.sw??5,color:'currentColor'},'sk-stamp-border')}<span class="sk-stamp-text" style="font-size:${fs.toFixed(1)}px">${esc(text)}</span></div>`;
 };
 // torn-paper clip-path from a named SK.torn preset, sized to the piece
 SK.tornFrame = (id,w,h)=>{
