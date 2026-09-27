@@ -138,11 +138,12 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 ## Style b-roll
 
 - **RD-03-35** (Ubiquitous) — Fase Screen Plan shall memilih tipe motion visual
-  (`motion-broll`, `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`) per baris lewat
+  (`motion-broll`, `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`,
+  `vox`, `mix-media`) per baris lewat
   tabel "Choosing A Style" di `docs/agents/references/styles/README.md` dan
   mencatat alasannya di Visual Decision Log.
 - **RD-03-36** (Ubiquitous) — Setiap baris `broll-text`, `motion-graphic`,
-  `whiteboard`, atau `stop-motion` di `visual-plan.md` shall punya Style B-roll
+  `whiteboard`, `stop-motion`, `vox`, atau `mix-media` di `visual-plan.md` shall punya Style B-roll
   Brief dengan treatment, pola, palet (hex), font, beat per kata, dan daftar
   `Assets:`.
 - **RD-03-37** (Unwanted) — If teks atau angka yang tampil di clip style b-roll
@@ -159,6 +160,18 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-41** (Unwanted) — If cutout hasil generate berisi teks, atau
   menggambarkan orang/brand nyata, then fase Build shall menolaknya dan
   meng-generate ulang (teks) atau menandainya Gate 2 R6 (orang/brand nyata).
+- **RD-03-42** (Ubiquitous) — Setiap dokumen `capture` di clip `vox` shall
+  menampilkan baris sumber (media/domain dan tanggal) ≥ 28 px selama ≥ 1,5 detik,
+  dengan data privat diredaksi.
+- **RD-03-43** (Ubiquitous) — Setiap dokumen `illustrative` di clip `vox` shall
+  menampilkan tag "Ilustrasi" dan tidak meniru masthead, layout, atau logo media
+  nyata.
+- **RD-03-44** (Unwanted) — If highlight di clip `vox` menandai kata yang tidak
+  diucapkan, atau frasa yang maknanya berubah di luar kalimat utuhnya, then fase
+  Screen Plan shall memindahkannya sebelum Gate 2.
+- **RD-03-45** (Event-driven) — When sebuah baris `mix-media` direncanakan, fase
+  Build shall membuat cutout Dena dengan `npm run video -- cutout` untuk jendela
+  klip itu, bukan dengan meng-generate kemiripannya.
 
 ## Referensi
 

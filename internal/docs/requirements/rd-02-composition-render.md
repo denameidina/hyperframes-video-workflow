@@ -105,6 +105,18 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
   kertas pada grid `SK.STOP_FPS` (15 langkah per detik, tiap pose tertahan dua
   frame pada render 30 fps) lewat `SK.onTwos`/`SK.piece`, tanpa motion blur atau
   crossfade.
+- **RD-02-32** (Ubiquitous) — Clip `mix-media` shall terdiri dari mount kolase
+  opaque full-frame di track 4, `<video>` cutout ber-alpha milik host di track 6
+  (z 24, `muted`, waktu sama dengan jendela klip), dan mount depan opsional di
+  track 7 (z 26); opacity `#base-video` shall tidak di-tween.
+- **RD-02-33** (Event-driven) — When `npm run video -- cutout <slug> --from <s>
+  --dur <s> --name NN-name` dijalankan, the system shall memvalidasi argumen
+  (`--dur` ≤ 15 s, segmen di dalam durasi `processed.mp4`), menghapus output lama,
+  memotong segmen dengan ffmpeg, menjalankan `remove-background`, dan menulis
+  `assets/cutouts/<name>.webm`.
+- **RD-02-34** (Unwanted) — If `remove-background` tidak menulis output atau
+  outputnya kosong, then `video cutout` shall gagal dengan pesan yang menyebut
+  file tersebut.
 
 ## Verifikasi
 
