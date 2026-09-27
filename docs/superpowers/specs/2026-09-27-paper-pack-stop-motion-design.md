@@ -74,19 +74,25 @@ Semua fungsi murni dari `t`, ber-seed, tanpa `Math.random`.
 
 | API | Perilaku |
 |---|---|
-| `SK.stepTime(t, 12)` (sudah ada) | Waktu stop-motion; kurva `M.track`/spring dievaluasi pada `ts` agar gerak "on twos". |
-| `SK.piece(el, pose, seed, t, {fps=12, amp=2})` | Transform cutout ke `pose = {x, y, r, s}` + replacement jitter per frame yang ditahan (±`amp` px, ±0.3·`amp`°). |
-| `SK.cycle(ts, n, fps=12)` | Indeks gambar untuk replacement animation (0..n-1, berulang). |
+| `SK.STOP_FPS` = 15, `SK.onTwos(f)` | Waktu stop-motion: kurva `M.track`/spring dievaluasi pada grid 15 langkah/detik. Render HyperFrames 30 fps, jadi tiap pose tertahan tepat dua frame ("on twos"); 12 fps akan tertahan tidak rata (3:2). |
+| `SK.piece(el, pose, seed, t, {fps=15, amp=1.5})` | Transform cutout ke `pose = {x, y, r, s, o}` + replacement jitter per langkah (±`amp` px, ±0.35·`amp`°). |
+| `SK.cycle(t, n, fps=15)` | Indeks gambar untuk replacement animation (0..n-1, berulang). |
 | `SK.torn(w, h, seed, {edges='trbl', amp=8, step=14})` | String `polygon(...)` untuk `clip-path`: tepi sobek deterministik pada sisi yang dipilih. |
-| `SK.grain(el, t, seed, {fps=12})` | Menggeser `background-position` overlay grain per frame, deterministik. |
-| `SK.placeHand(el, tip, {pose='write'})` | Menaruh PNG tangan dengan ujung pena tepat di `tip`; bila `tip` null, tangan bergeser keluar frame (bukan hilang mendadak). |
+| `SK.grain(el, t, seed, {fps=15})` | Menggeser `background-position` overlay grain per langkah, deterministik. |
+| `SK.placeHand(el, tip, {pose='write', scale=.55, last, hover=.5})` | Menaruh PNG tangan dengan ujung pena tepat di `tip`; bila `tip` null, tangan diam di `last` selama `hover` detik lalu meluncur keluar frame (bukan hilang mendadak). |
+| `SK.lastTip(t, items, {speed})` | Titik akhir goresan yang terakhir selesai + detik sejak selesai (untuk `last`). |
 | `SK.HAND` | Konstanta file dan titik ujung pena per pose. |
 
-CSS baru di `style-kit.css`:
+CSS baru:
 
-- `.sk-paper-cream`, `.sk-paper-white`, `.sk-kraft`, `.sk-newsprint`,
-  `.sk-lined`, `.sk-grid`: latar tekstur `url(../paper-pack/...)` + garis CSS.
-- `.sk-cut` (bayangan kertas terangkat), `.sk-tape`, `.sk-grain`.
+- `vendor/paper-pack/paper-pack.css` (dimuat setelah `style-kit.css`; url di
+  folder sendiri karena lint menolak `../`): latar `.sk-paper-white`,
+  `.sk-paper-cream`, `.sk-paper-grey`, `.sk-paper-crumpled`, `.sk-kraft`,
+  `.sk-kraft-ribbed`, `.sk-kraft-dark`, `.sk-lined`, `.sk-grid`, `.sk-newsprint`;
+  objek `.sk-sticky`, `.sk-pin`, `.sk-clip`, `.sk-tape-a`, `.sk-tape-b` sebagai
+  div (lint menandai `<img>` bersumber sama yang berulang).
+- `style-kit.css`: `.sk-cut` (bayangan keras satu arah; letakkan di pembungkus,
+  `clip-path` di elemen dalam), `.sk-grain`, `.sk-hand-img`.
 - Tema `.sk-stop`: latar kraft/krem, tinta hitam hangat, aksen merah bata; font
   tetap lewat `.sk-display`, `.sk-sans`, `.sk-hand`.
 
@@ -104,6 +110,10 @@ Buktikan di proyek contoh dan di `videos/<slug>/` (symlink `vendor`):
 
 Bila path relatif host gagal, spec direvisi sebelum lanjut (mis. inline aset
 atau path lain), bukan diakali diam-diam.
+
+Hasil spike 2026-09-27: (1) dan (3) lolos, termasuk lewat symlink `vendor`;
+(2) `url(../paper-pack/...)` ditolak lint (`invalid_parent_traversal_in_asset_path`),
+maka kelas tekstur pindah ke `vendor/paper-pack/paper-pack.css`.
 
 ## Pipeline aset per video
 
@@ -140,7 +150,7 @@ sub-proyek 1 dan dijaga `style-docs.test.mjs`:
 - ≥ 6 referensi terverifikasi lewat riset web (arah awal: Terry Gilliam /
   Monty Python, Lotte Reiniger, awal South Park, Yuri Norstein); judul tidak
   dikarang.
-- ≥ 8 butir anti-slop; Look (palet default + alternatif), Timing (12 fps,
+- ≥ 8 butir anti-slop; Look (palet default + alternatif), Timing (15 langkah/detik,
   hold, jitter), Build Recipe, SFX (paper rustle, tap, tape rip).
 - 4 contoh `sm-01..04` di `docs/agents/references/style-examples/` meliputi
   cutaway, split, panel; mencampur potongan kertas kode (SVG + tekstur +
