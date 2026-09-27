@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { HYPERFRAMES, checkSlug, commandsFor, cutoutPlan, fillTemplate, main, resolveDuration, scaffold } from './video.mjs';
+import { HYPERFRAMES, checkSlug, commandsFor, cutoutPlan, fillTemplate, layersPlan, main, resolveDuration, scaffold } from './video.mjs';
 
 function tempRoot() {
   const root = mkdtempSync(join(tmpdir(), 'video-test-'));
@@ -156,5 +156,55 @@ test('main cutout fails when remove-background writes nothing', () => {
   const run = (c) => (c === 'ffprobe' ? { status: 0, stdout: '20\n' } : { status: 0 });
   assert.throws(() => main(['cutout', 'demo', '--from', '0', '--dur', '2', '--name', '05-dena'], { root, env: {}, run }), /did not write .*05-dena\.webm/);
   assert.throws(() => main(['cutout', 'demo', '--from', '0', '--dur', '2', '--name', '05-dena'], { root, env: {}, run: (c) => (c === 'ffprobe' ? { status: 0, stdout: '20' } : { status: 1 }) }), /exited with 1/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+// ---- layers (sub-project 3) ----
+
+test('layersPlan takes a frame or an image and builds ffmpeg + remove-background calls', () => {
+  const root = cutoutRoot();
+  const dir = join(root, 'videos/demo');
+  const probe = () => 20;
+  const p = layersPlan('demo', { at: '7.25', name: '05-scene', root, probe });
+  assert.equal(p.src, join(dir, 'assets/layers/05-scene-src.png'));
+  assert.equal(p.fg, join(dir, 'assets/layers/05-scene-fg.png'));
+  assert.deepEqual(p.cmds[0], ['ffmpeg', ['-y', '-loglevel', 'error', '-ss', '7.25', '-i', join(dir, 'processed.mp4'), '-frames:v', '1', p.src]]);
+  assert.deepEqual(p.cmds[1], ['npx', ['--yes', HYPERFRAMES, 'remove-background', p.src, '-o', p.fg]]);
+  const img = join(root, 'photo.JPG');
+  writeFileSync(img, 'x');
+  assert.deepEqual(layersPlan('demo', { image: img, name: '06-photo', root, probe }).cmds[0], ['ffmpeg', ['-y', '-loglevel', 'error', '-i', img, '-frames:v', '1', join(dir, 'assets/layers/06-photo-src.png')]]);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('layersPlan rejects bad input', () => {
+  const root = cutoutRoot();
+  const probe = () => 20;
+  assert.throws(() => layersPlan('demo', { name: '05-scene', root, probe }), /exactly one of --at/);
+  assert.throws(() => layersPlan('demo', { at: '1', image: 'a.png', name: '05-scene', root, probe }), /exactly one of --at/);
+  assert.throws(() => layersPlan('demo', { at: '1', name: 'scene', root, probe }), /--name/);
+  assert.throws(() => layersPlan('demo', { at: '-1', name: '05-scene', root, probe }), /--at must be/);
+  assert.throws(() => layersPlan('demo', { at: '20', name: '05-scene', root, probe }), /past the end/);
+  assert.throws(() => layersPlan('demo', { image: 'a.gif', name: '05-scene', root, probe }), /--image must be/);
+  assert.throws(() => layersPlan('demo', { image: join(root, 'missing.png'), name: '05-scene', root, probe }), /not found/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('main layers removes old files, runs both steps, and checks both outputs', () => {
+  const root = cutoutRoot();
+  const L = join(root, 'videos/demo/assets/layers');
+  mkdirSync(L, { recursive: true });
+  writeFileSync(join(L, '05-scene-fg.png'), 'stale');
+  const calls = [];
+  const run = (c, a) => {
+    calls.push(c === 'npx' ? a[2] : c);
+    if (c === 'ffprobe') return { status: 0, stdout: '20\n' };
+    if (c === 'ffmpeg') writeFileSync(a[a.length - 1], 'png');
+    if (c === 'npx') { assert.equal(existsSync(join(L, '05-scene-fg.png')), false, 'old subject removed first'); writeFileSync(a[a.length - 1], 'png'); }
+    return { status: 0 };
+  };
+  main(['layers', 'demo', '--at', '3', '--name', '05-scene'], { root, env: {}, run });
+  assert.deepEqual(calls, ['ffprobe', 'ffmpeg', 'remove-background']);
+  const silent = (c) => (c === 'ffprobe' ? { status: 0, stdout: '20' } : { status: 0 });
+  assert.throws(() => main(['layers', 'demo', '--at', '3', '--name', '06-scene'], { root, env: {}, run: silent }), /layers did not write .*06-scene-src\.png/);
   rmSync(root, { recursive: true, force: true });
 });

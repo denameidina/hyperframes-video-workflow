@@ -67,3 +67,13 @@ Rough.js code is included.
   CC BY-SA 4.0; captured 2026-09-27, credited on screen in the examples.
 - `docs/agents/references/style-examples/assets/placeholder-cutout.webm`: this
   project's own render of `docs/agents/references/mix-media-placeholder/`.
+- `docs/agents/references/style-examples/assets/px-archive-subject.png` and
+  `px-archive-plate.jpg`: from "Woman typist" (c. 1900), Library of Congress
+  Prints and Photographs, via Wikimedia Commons
+  (https://commons.wikimedia.org/wiki/File:Woman_typist_LCCN2013647253.jpg),
+  public domain in the United States (published before January 1, 1931) and
+  marked Public Domain Mark 1.0; the subject was matted with
+  `remove-background` and the plate reconstructed with Codex image editing
+  (not a record of the original room).
+- `docs/agents/references/style-examples/assets/px-desk-*`: generated for this
+  project with Codex image generation and editing.

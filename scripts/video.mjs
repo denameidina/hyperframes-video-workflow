@@ -3,7 +3,9 @@
 // Spec: docs/superpowers/specs/2026-09-26-per-video-projects-design.md
 // Usage: npm run video -- <new|check|dev|snapshot|render> <slug> [--duration s] [--at t,...] [--blur]
 //        npm run video -- cutout <slug> --from <s> --dur <s> --name NN-name   (matted mix-media cut-out)
+//        npm run video -- layers <slug> (--at <s> | --image <file>) --name NN-name   (parallax source + subject)
 // Cut-out spec: docs/superpowers/specs/2026-09-27-vox-mix-media-design.md
+// Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
@@ -77,7 +79,7 @@ export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
         ? [['node', [join(root, 'scripts', 'render-blur.mjs'), '--slug', slug, '--project', dir]]]
         : [hf('render', '--quality', 'high', '-o', join(dir, 'renders', `${slug}.mp4`), dir)];
     default:
-      throw new Error(`unknown command "${cmd}" (use new, check, dev, snapshot, render, cutout)`);
+      throw new Error(`unknown command "${cmd}" (use new, check, dev, snapshot, render, cutout, layers)`);
   }
 }
 
@@ -108,6 +110,39 @@ export function cutoutPlan(slug, { from, dur, name, root = '.', probe = probeDur
   };
 }
 
+/* layers: the source of a parallax photo scene and its matted subject. The source is a frame of
+   processed.mp4 (--at) or the user's image (--image); remove-background cuts the person out. The
+   background plate (the hole filled) is a separate Codex step, see asset-production.md. */
+export function layersPlan(slug, { at, image, name, root = '.', probe = probeDuration }) {
+  const dir = projectDir(slug, root);
+  if ((at === undefined) === (image === undefined)) throw new Error('give exactly one of --at <seconds> or --image <file>');
+  if (typeof name !== 'string' || !CUTOUT_NAME_RE.test(name)) throw new Error('--name must look like NN-name (for example 05-scene)');
+  let input, seek = [];
+  if (at !== undefined) {
+    const t = Number(at);
+    if (!Number.isFinite(t) || t < 0) throw new Error('--at must be a number of seconds >= 0');
+    input = join(dir, 'processed.mp4');
+    if (!existsSync(input)) throw new Error(`${input} not found; --at takes a frame from the processed video`);
+    const total = probe(input);
+    if (t >= total) throw new Error(`--at ${t} s is past the end of processed.mp4 (${total} s)`);
+    seek = ['-ss', String(t)];
+  } else {
+    if (!/\.(png|jpe?g|webp)$/i.test(image)) throw new Error('--image must be a .png, .jpg, .jpeg, or .webp file');
+    if (!existsSync(image)) throw new Error(`${image} not found`);
+    input = image;
+  }
+  const src = join(dir, 'assets', 'layers', `${name}-src.png`);
+  const fg = join(dir, 'assets', 'layers', `${name}-fg.png`);
+  return {
+    src,
+    fg,
+    cmds: [
+      ['ffmpeg', ['-y', '-loglevel', 'error', ...seek, '-i', input, '-frames:v', '1', src]],
+      hf('remove-background', src, '-o', fg),
+    ],
+  };
+}
+
 export function main(argv, { run = spawnSync, env = process.env, root = '.' } = {}) {
   const { values, positionals } = parseArgs({
     args: argv,
@@ -115,6 +150,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
     options: {
       at: { type: 'string' }, blur: { type: 'boolean', default: false }, duration: { type: 'string' },
       from: { type: 'string' }, dur: { type: 'string' }, name: { type: 'string' },
+      image: { type: 'string' },
     },
   });
   const [cmd, slug] = positionals;
@@ -136,6 +172,20 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
     }
     if (!existsSync(out) || statSync(out).size === 0) throw new Error(`remove-background did not write ${out}`);
     console.log(`cut-out ${out}`);
+    return;
+  }
+  if (cmd === 'layers') {
+    const { src, fg, cmds } = layersPlan(slug, { ...values, root, probe: (f) => probeDuration(f, run) });
+    mkdirSync(join(projectDir(slug, root), 'assets', 'layers'), { recursive: true });
+    // never reuse old files: a failed step must not leave a stale source or subject behind
+    rmSync(src, { force: true });
+    rmSync(fg, { force: true });
+    for (const [c, a] of cmds) {
+      const r = run(c, a, { stdio: 'inherit', env });
+      if (r.status !== 0) throw new Error(`${c} ${a.slice(0, 3).join(' ')} exited with ${r.status}`);
+    }
+    for (const f of [src, fg]) if (!existsSync(f) || statSync(f).size === 0) throw new Error(`layers did not write ${f}`);
+    console.log(`layers ${src} + ${fg}`);
     return;
   }
   const cmds = commandsFor(cmd, slug, { at: values.at, blur: values.blur, root });
