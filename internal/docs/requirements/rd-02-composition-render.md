@@ -95,6 +95,16 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-28** (Ubiquitous) — Clip style b-roll shall memilih font lewat kelas
   `.sk-display`, `.sk-sans`, atau `.sk-hand` dan tidak menyebut `font-family`
   di `<style>` clip; font berasal dari file lokal di `vendor/`.
+- **RD-02-29** (Ubiquitous) — Setiap file di `vendor/paper-pack/` shall tercatat
+  di `vendor/paper-pack/LICENSES.md` dengan sumber dan lisensinya, setiap PNG-nya
+  shall punya kanal alpha, dan total paket shall ≤ 5 MB.
+- **RD-02-30** (Ubiquitous) — Starter shall memuat
+  `vendor/paper-pack/paper-pack.css` setelah `style-kit.css`, dan url di
+  stylesheet kit shall tidak memakai `../`.
+- **RD-02-31** (Ubiquitous) — Clip `stop-motion` shall menggerakkan potongan
+  kertas pada grid `SK.STOP_FPS` (15 langkah per detik, tiap pose tertahan dua
+  frame pada render 30 fps) lewat `SK.onTwos`/`SK.piece`, tanpa motion blur atau
+  crossfade.
 
 ## Verifikasi
 
