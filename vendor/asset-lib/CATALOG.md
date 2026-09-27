@@ -394,6 +394,18 @@ Sheet: [doc](../../docs/agents/references/asset-catalog/sheets/) — files `doc*
 | `doc.search-results` | `SK.doc('search-results', …)` | vox, mix-media | ide, media | project |
 | `doc.terminal` | `SK.doc('terminal', …)` | vox, mix-media | ai, kerja | project |
 
+## map (5)
+
+Sheet: [map](../../docs/agents/references/asset-catalog/sheets/) — files `map*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `map.indonesia` | `SK.geo(lat, lon, 'indonesia')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:50m Admin 0 (paper pack) |
+| `map.world` | `SK.geo(lat, lon, 'world')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:110m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ |
+| `map.sea` | `SK.geo(lat, lon, 'sea')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:50m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ |
+| `map.id-provinces` | `SK.geo(lat, lon, 'id-provinces')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:10m Admin 1 v5.1.2 (33 provinces, before the Kalimantan Utara and Papua splits) + 1:50m Admin 0 — https://www.naturalearthdata.com/about/terms-of-use/ |
+| `map.java` | `SK.geo(lat, lon, 'java')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:10m Admin 1 v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ |
+
 ## font (17)
 
 Sheet: [font](../../docs/agents/references/asset-catalog/sheets/) — files `font*.webp`

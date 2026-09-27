@@ -1,0 +1,21 @@
+[
+  {"id": "indonesia", "file": "vendor/paper-pack/map-indonesia.svg", "source": "Natural Earth 1:50m Admin 0 (paper pack)",
+   "box": {"lon0": 94, "lon1": 142, "lat0": 7.5, "lat1": -11.5, "k": 50}},
+  {"id": "world", "source": "Natural Earth 1:110m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+   "changes": "equirectangular, 6 px/deg, Douglas–Peucker 0.15°, rings < 0.5 deg² dropped, one <path id> per country",
+   "box": {"lon0": -180, "lon1": 180, "lat0": 84, "lat1": -60, "k": 6, "tol": 0.15, "minArea": 0.5},
+   "layers": [{"id": "countries", "dataset": "ne_110m_admin_0_countries", "each": true, "fill": "#d8d2c4", "stroke": "#f4efe6", "strokeWidth": 1}]},
+  {"id": "sea", "source": "Natural Earth 1:50m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+   "changes": "Southeast Asia, equirectangular, 36 px/deg, Douglas–Peucker 0.03°, rings < 0.01 deg² dropped, one <path id> per country",
+   "box": {"lon0": 90, "lon1": 145, "lat0": 25, "lat1": -12, "k": 36, "tol": 0.03, "minArea": 0.01},
+   "layers": [{"id": "countries", "dataset": "ne_50m_admin_0_countries", "each": true, "fill": "#d8d2c4", "stroke": "#f4efe6", "strokeWidth": 2}]},
+  {"id": "id-provinces", "source": "Natural Earth 1:10m Admin 1 v5.1.2 (33 provinces, before the Kalimantan Utara and Papua splits) + 1:50m Admin 0 — https://www.naturalearthdata.com/about/terms-of-use/",
+   "changes": "same frame as map.indonesia (50 px/deg), Douglas–Peucker 0.025°, rings < 0.004 deg² dropped, one <path id> per province",
+   "box": {"lon0": 94, "lon1": 142, "lat0": 7.5, "lat1": -11.5, "k": 50, "tol": 0.025, "minArea": 0.004},
+   "layers": [{"id": "neighbors", "dataset": "ne_50m_admin_0_countries", "exclude": ["Indonesia"], "fill": "#d8d2c4"},
+              {"id": "provinces", "dataset": "ne_10m_admin_1_states_provinces", "admin": "Indonesia", "each": true, "fill": "#b9ad96", "stroke": "#efe9dc", "strokeWidth": 2}]},
+  {"id": "java", "source": "Natural Earth 1:10m Admin 1 v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+   "changes": "Java + Bali, equirectangular, 180 px/deg, Douglas–Peucker 0.006°, rings < 0.0005 deg² dropped, one <path id> per province",
+   "box": {"lon0": 105, "lon1": 116, "lat0": -5.5, "lat1": -9, "k": 180, "tol": 0.006, "minArea": 0.0005},
+   "layers": [{"id": "provinces", "dataset": "ne_10m_admin_1_states_provinces", "admin": "Indonesia", "each": true, "fill": "#b9ad96", "stroke": "#efe9dc", "strokeWidth": 3}]}
+]

@@ -65,6 +65,10 @@ templates are this project's own work (MIT). Per-file sources are listed in
   Sans, Instrument Serif, DM Serif Display, JetBrains Mono, Kalam, Patrick Hand —
   SIL Open Font License 1.1; Permanent Marker and Special Elite — Apache License
   2.0. License texts are next to the fonts (`OFL-*.txt`, `LICENSE-*.txt`).
+- Maps and cities (`vendor/asset-lib/maps/`): derived from Natural Earth
+  v5.1.2 (https://www.naturalearthdata.com) 1:110m/1:50m Admin 0, 1:10m Admin 1,
+  and 1:10m populated places — public domain. The Admin 1 data has 33
+  Indonesian provinces (before the Kalimantan Utara and Papua splits).
 
 
 ## paper-pack (`vendor/paper-pack`)

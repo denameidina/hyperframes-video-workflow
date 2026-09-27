@@ -229,3 +229,13 @@ test('SK.doc renders every template with the Ilustrasi tag and escapes transcrip
   assert.match(SK.doc('chat-thread', { messages: [{ from: 'Klien', side: 'l', text: 'harga <final>?' }] }), /harga &lt;final&gt;\?/);
   assert.match(SK.doc('article', { headline: 'Judul' }), /<div class="sk-doc-line"/);
 });
+
+// ---- maps --------------------------------------------------------------------------------------------
+test('SK.geo keeps the old Indonesia frame, adds the library maps, and keeps the old cities', () => {
+  const SK = load();
+  assert.deepEqual({ ...SK.geo(-6.2088, 106.8456) }, { x: (106.8456 - 94) * 50, y: (7.5 + 6.2088) * 50 });
+  assert.deepEqual({ ...SK.geo(0, 0, 'world') }, { x: 180 * 6, y: 84 * 6 });
+  assert.deepEqual([...SK.CITIES.jakarta], [-6.2088, 106.8456]);
+  assert.ok(SK.CITIES.pontianak && SK.CITIES.bangkok, 'new cities are added');
+  assert.throws(() => SK.geo(0, 0, 'mars'), /unknown map "mars"/);
+});

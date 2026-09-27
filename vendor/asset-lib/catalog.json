@@ -6114,6 +6114,96 @@
   "license": "MIT"
  },
  {
+  "id": "map.indonesia",
+  "kind": "map",
+  "file": "vendor/paper-pack/map-indonesia.svg",
+  "use": "SK.geo(lat, lon, 'indonesia')",
+  "styles": [
+   "vox",
+   "motion-graphic",
+   "parallax"
+  ],
+  "tags": [
+   "peta",
+   "tempat"
+  ],
+  "source": "Natural Earth 1:50m Admin 0 (paper pack)",
+  "license": "Public domain",
+  "bytes": 34136
+ },
+ {
+  "id": "map.world",
+  "kind": "map",
+  "file": "vendor/asset-lib/maps/world.svg",
+  "use": "SK.geo(lat, lon, 'world')",
+  "styles": [
+   "vox",
+   "motion-graphic",
+   "parallax"
+  ],
+  "tags": [
+   "peta",
+   "tempat"
+  ],
+  "source": "Natural Earth 1:110m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+  "license": "Public domain",
+  "bytes": 63172
+ },
+ {
+  "id": "map.sea",
+  "kind": "map",
+  "file": "vendor/asset-lib/maps/sea.svg",
+  "use": "SK.geo(lat, lon, 'sea')",
+  "styles": [
+   "vox",
+   "motion-graphic",
+   "parallax"
+  ],
+  "tags": [
+   "peta",
+   "tempat"
+  ],
+  "source": "Natural Earth 1:50m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+  "license": "Public domain",
+  "bytes": 56003
+ },
+ {
+  "id": "map.id-provinces",
+  "kind": "map",
+  "file": "vendor/asset-lib/maps/id-provinces.svg",
+  "use": "SK.geo(lat, lon, 'id-provinces')",
+  "styles": [
+   "vox",
+   "motion-graphic",
+   "parallax"
+  ],
+  "tags": [
+   "peta",
+   "tempat"
+  ],
+  "source": "Natural Earth 1:10m Admin 1 v5.1.2 (33 provinces, before the Kalimantan Utara and Papua splits) + 1:50m Admin 0 — https://www.naturalearthdata.com/about/terms-of-use/",
+  "license": "Public domain",
+  "bytes": 53860
+ },
+ {
+  "id": "map.java",
+  "kind": "map",
+  "file": "vendor/asset-lib/maps/java.svg",
+  "use": "SK.geo(lat, lon, 'java')",
+  "styles": [
+   "vox",
+   "motion-graphic",
+   "parallax"
+  ],
+  "tags": [
+   "peta",
+   "tempat"
+  ],
+  "source": "Natural Earth 1:10m Admin 1 v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/",
+  "license": "Public domain",
+  "bytes": 19696
+ },
+ {
   "id": "font.anton",
   "kind": "font",
   "inline": ".sk-f-anton",

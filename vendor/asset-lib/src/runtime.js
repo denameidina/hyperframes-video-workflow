@@ -131,4 +131,14 @@ SK.doc = (kind,f={},o={})=>{
   return `<div class="sk-doc sk-docx sk-doc-${kind}" style="width:${w}px">${body}<div class="sk-tag sk-doc-tag">Ilustrasi</div></div>`;
 };
 SK.DOC_KINDS = Object.keys(DOCS);
+// ---- maps and places ---------------------------------------------------------------------------
+/* SK.MAPS: every library map ({src, w, h, lon0, lat0, k}, equirectangular). SK.geo(lat, lon, map)
+   keeps its old two-argument form for the Indonesia map. New cities are added to SK.CITIES without
+   touching the eight old ones. */
+SK.MAPS = SK.LIB.maps;
+SK.geo = (lat,lon,map='indonesia')=>{
+  const m=pick(SK.MAPS,'map',bare(map,'map'));
+  return {x:(lon-m.lon0)*m.k, y:(m.lat0-lat)*m.k};
+};
+for(const [k,v] of Object.entries(SK.LIB.cities)) if(!has(SK.CITIES,k)) SK.CITIES[k]=v;
 })();
