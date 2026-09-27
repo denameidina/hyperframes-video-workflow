@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Source of style-examples/assets/placeholder-cutout.webm: a grey stand-in for a matted speaker, so the
+         mix-media examples show no real face. Render it with the commands in README.md (they copy vendor/ in). -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      body { margin: 0; background: transparent; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #figure { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1920px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="placeholder-cutout" data-start="0" data-width="1080" data-height="1920" data-duration="6">
+      <svg id="figure" class="clip" data-start="0" data-duration="6" data-track-index="1" viewBox="0 0 1080 1920" width="1080" height="1920">
+        <path d="M150 1920 C150 1560 290 1400 540 1400 C790 1400 930 1560 930 1920 Z" fill="#6b6b73" />
+        <rect x="470" y="1250" width="140" height="190" rx="50" fill="#6b6b73" />
+        <g id="head"><ellipse cx="540" cy="1060" rx="215" ry="255" fill="#7a7a82" /><text x="540" y="1075" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="700" fill="#d4d4d8">placeholder</text></g>
+      </svg>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      // slow breathing and small head nods, the way a speaker moves while talking
+      tl.to('#figure', { y: -10, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 0);
+      tl.to('#head', { rotation: 3, transformOrigin: '540px 1300px', duration: 0.75, ease: 'sine.inOut', yoyo: true, repeat: 7 }, 0);
+      window.__timelines['placeholder-cutout'] = tl;
+    </script>
+  </body>
+</html>

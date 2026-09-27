@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an illustrative document (tagged "Ilustrasi", no real outlet) whose words are invented to show the mechanism. In a real clip the headline and the highlighted sentence are verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+        #sheet { position: absolute; left: 110px; top: 330px; width: 860px; height: 1120px; }
+        #paper { position: absolute; inset: 0; padding: 70px 70px; box-sizing: border-box; }
+        #kicker { font-size: 28px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--sk-muted); }
+        #head { margin-top: 26px; font-size: 76px; font-weight: 700; line-height: 1.04; }
+        #lede { position: relative; margin-top: 44px; font-size: 44px; line-height: 1.32; }
+        .hlw { position: relative; }
+        #hl { left: -8px; right: -8px; top: 14%; bottom: 2%; }
+        #tag { right: 30px; top: 30px; }
+      </style>
+      <div id="root" data-composition-id="vx-01-illustrative" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-vox sk-newsprint">
+          <div id="cam">
+            <div id="sheet" class="sk-cut">
+              <div id="paper" class="sk-paper-white">
+                <div id="kicker">Catatan kerja</div>
+                <div id="head" class="sk-serif">Yang bikin capek bukan kerjanya</div>
+                <div id="lede" class="sk-serif">tapi setiap hari harus <span class="hlw"><span class="sk-hl" id="hl"></span>nyari datanya</span> lagi dari chat dan kertas.</div>
+                <div class="sk-doc-line" style="width:96%;margin-top:46px"></div>
+                <div class="sk-doc-line" style="width:88%"></div>
+                <div class="sk-doc-line" style="width:92%"></div>
+                <div class="sk-doc-line" style="width:64%"></div>
+                <div class="sk-doc-line" style="width:90%;margin-top:40px"></div>
+                <div class="sk-doc-line" style="width:84%"></div>
+                <div class="sk-doc-line" style="width:72%"></div>
+              </div>
+              <div class="sk-tag" id="tag">Ilustrasi</div>
+            </div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-01-illustrative';
+          const $ = SK.finder(ID);
+          $('paper').style.clipPath = SK.torn(860, 1120, 11, { edges: 'b', amp: 12 });
+          const inY = SK.onTwos(M.track(1, [[0.1, 0, [16, 0.8]]]));
+          const push = SK.onTwos(M.track(1, [[1.7, 1.28, M.SLOW]]));
+          const fy = SK.onTwos(M.track(960, [[1.7, 790, M.SLOW]]));
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.cam($('cam'), push(t), 540, fy(t));
+            SK.piece($('sheet'), { x: 0, y: 1500 * inY(t), r: -1.5 }, 1, t, { amp: 1 });
+            SK.highlight($('hl'), SK.smooth((t - 2.3) / 0.45));
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

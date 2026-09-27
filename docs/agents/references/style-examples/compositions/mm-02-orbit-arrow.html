@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Collage behind the speaker (track 4): real screenshots and cut-outs orbit above the face, one per spoken name. The capture is Wikipedia's "Ken Burns effect" (CC BY-SA 4.0); in a real clip each card is the tool or page Dena names. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        #cap { width: 400px; }
+        #lap { width: 330px; }
+        #pho { width: 170px; }
+        #src { left: 60px; top: 90px; font-size: 26px; }
+      </style>
+      <div id="root" data-composition-id="mm-02-orbit-arrow" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft">
+          <img class="p sk-cut" id="cap" src="assets/cap-ken-burns.png" alt="" />
+          <img class="p sk-cut" id="lap" src="assets/cut-laptop.png" alt="" />
+          <img class="p sk-cut" id="pho" src="assets/cut-phone.png" alt="" />
+          <div class="sk-source" id="src">Sumber: Wikipedia (CC BY-SA 4.0)</div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-02-orbit-arrow';
+          const $ = SK.finder(ID);
+          // screenshot-orbit: each card drops in on its word, then drifts in a slow stepped orbit
+          const CARDS = [['cap', 0.5, 60, 170, -5], ['lap', 1.2, 700, 300, 6], ['pho', 1.9, 470, 90, -3]];
+          const fall = CARDS.map(([, at]) => SK.onTwos(M.track(1, [[at, 0, [22, 0.65]]])));
+          const drift = SK.onTwos((t) => t);
+          SK.clip(ID, { T: 6, update: (t) => {
+            const u = drift(t);
+            CARDS.forEach(([id, at, x, y, r], i) => {
+              const k = fall[i](t);
+              SK.piece($(id), { x: x + 10 * Math.sin(u * 1.3 + i * 2), y: y - 500 * k + 8 * Math.cos(u * 1.1 + i), r: r + 12 * k, o: t >= at ? 1 : 0 }, 20 + i, t);
+            });
+            $('src').style.opacity = t >= 0.6 ? '1' : '0';
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

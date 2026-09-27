@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Front layer of mm-02 (track 7, above the speaker): a note and an arrow that points at the speaker on the pronoun ("gue"). Never cross the eyes or mouth. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #note { position: absolute; left: 0; top: 0; width: 230px; transform-origin: 50% 50%; }
+        #note span { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font-size: 76px; font-weight: 700; color: #2b2118; }
+        #ink { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="mm-02-orbit-arrow-front" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop">
+          <div class="sk-cut" id="note"><div class="sk-sticky" style="width:230px"></div><span class="sk-hand">gue</span></div>
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-02-orbit-arrow-front';
+          const $ = SK.finder(ID);
+          const a = SK.arrow(230, 1270, 330, 1120, 30, 10, 40);
+          $('ink').innerHTML = `<path id="as" class="sk-stroke" d="${a.shaft}" style="stroke:var(--sk-accent-2);stroke-width:9"/><path id="ah" class="sk-stroke" d="${a.head}" style="stroke:var(--sk-accent-2);stroke-width:9"/>`;
+          const pop = SK.onTwos(M.track(0, [[2.6, 1, [24, 0.55]]]));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            SK.piece($('note'), { x: 30, y: 1260, r: -6, s: Math.max(0.01, pop(t)), o: t >= 2.6 ? 1 : 0 }, 31, t);
+            SK.drawSeq(t, [{ el: $('as'), at: 3.0, dur: 0.3 }, { el: $('ah'), at: 3.3, dur: 0.12 }], { boil: 1 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

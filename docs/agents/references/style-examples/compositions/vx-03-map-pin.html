@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the title is invented to show the mechanism. The map is Natural Earth (public domain) and the pin sits at Jakarta's real latitude/longitude via SK.geo. In a real clip the place is the one Dena names. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 2400px; height: 950px; transform-origin: 0 0; }
+        #map { position: absolute; left: 0; top: 0; width: 2400px; height: 950px; }
+        #pinwrap { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+        #pin { left: -18px; top: -52px; width: 36px; }
+        #lab { position: absolute; left: 30px; top: -30px; padding: 4px 12px; background: #fbfaf6; font-size: 40px; font-weight: 700; white-space: nowrap; }
+        #title { position: absolute; left: 70px; top: 230px; padding: 18px 30px; font-size: 92px; font-weight: 700; line-height: 1; color: var(--sk-ink); }
+        #src { left: 80px; top: 1480px; font-size: 28px; }
+      </style>
+      <div id="root" data-composition-id="vx-03-map-pin" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-vox sk-paper-cream">
+          <div id="cam">
+            <img id="map" src="vendor/paper-pack/map-indonesia.svg" alt="" />
+            <div id="pinwrap"><div class="sk-pin" id="pin"></div><div class="sk-sans" id="lab">Jakarta</div></div>
+          </div>
+          <div class="sk-serif sk-paper-white sk-cut" id="title">Mulai dari sini</div>
+          <div class="sk-source" id="src">Peta: Natural Earth (domain publik)</div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-03-map-pin';
+          const $ = SK.finder(ID);
+          const J = SK.geo(...SK.CITIES.jakarta);
+          $('pinwrap').style.transform = `translate(${J.x}px,${J.y}px)`;
+          // map-zoom: whole country (width fits the frame), then a stepped push onto Jakarta
+          const s = SK.onTwos(M.track(1080 / 2400, [[1.2, 1.4, [7, 1]]]));
+          const fx = SK.onTwos(M.track(1200, [[1.2, J.x, [7, 1]]]));
+          const fy = SK.onTwos(M.track(475, [[1.2, J.y, [7, 1]]]));
+          const drop = SK.onTwos(M.track(1, [[2.6, 0, [24, 0.6]]]));
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.cam($('cam'), s(t), fx(t), fy(t));
+            SK.enter($('title'), t - 0.2, 'rise');
+            const d = drop(t);
+            SK.piece($('pin'), { x: 0, y: -160 * d, o: t >= 2.6 ? 1 : 0 }, 9, t, { amp: 0.6 });
+            SK.enter($('lab'), t - 2.9, 'pop');
+            SK.grain($('grain'), t, 8);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

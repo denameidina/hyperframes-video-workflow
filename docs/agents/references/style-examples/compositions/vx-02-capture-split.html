@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a real capture of Wikipedia's "Ken Burns effect" article (text CC BY-SA 4.0), shown with its source line. In a real clip the capture is the page Dena or the user named, and the highlighted phrase is the one being spoken. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; }
+        #cam { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform-origin: 0 0; }
+        #card { position: absolute; left: 70px; top: 150px; width: 940px; height: 548px; }
+        #card img.cap { position: absolute; left: 0; top: 0; width: 940px; }
+        #hl { left: 254px; top: 118px; width: 268px; height: 28px; }
+        #ring { position: absolute; left: 0; top: 0; }
+        #tape { left: 360px; top: -30px; width: 220px; transform: rotate(-4deg); }
+        #src { left: 70px; top: 870px; }
+      </style>
+      <div id="root" data-composition-id="vx-02-capture-split" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-vox">
+          <div id="half" class="sk-paper-cream">
+            <div id="cam">
+              <div id="card" class="sk-cut">
+                <img class="cap" src="assets/cap-ken-burns.png" alt="" />
+                <span class="sk-hl" id="hl"></span>
+                <svg id="ring" viewBox="0 0 940 548" width="940" height="548"></svg>
+                <div class="sk-tape-a" id="tape"></div>
+              </div>
+            </div>
+            <div class="sk-source" id="src">Sumber: Wikipedia, "Ken Burns effect" (CC BY-SA 4.0)</div>
+            <div class="sk-grain" id="grain"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-02-capture-split';
+          const $ = SK.finder(ID);
+          $('ring').innerHTML = `<path id="circ" class="sk-stroke" d="${SK.ellipse(150, 44, 150, 42, 5)}" style="stroke:var(--sk-accent-2);stroke-width:7"/>`;
+          const inY = SK.onTwos(M.track(1, [[0.15, 0, [16, 0.8]]]));
+          const push = SK.onTwos(M.track(1, [[2.4, 1.35, M.SLOW]]));
+          const fx = SK.onTwos(M.track(540, [[2.4, 420, M.SLOW]]));
+          const fy = SK.onTwos(M.track(480, [[2.4, 360, M.SLOW]]));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('half').style.transform = `translateY(${(-(1 - M.eo(t / 0.3)) * 960).toFixed(2)}px)`;
+            SK.cam($('cam'), push(t), fx(t), fy(t), 1080, 960);
+            SK.piece($('card'), { x: 0, y: 900 * inY(t), r: 1 }, 3, t, { amp: 1 });
+            SK.drawSeq(t, [{ el: $('circ'), at: 1.2, dur: 0.45 }]);
+            SK.highlight($('hl'), SK.smooth((t - 3.2) / 0.6));
+            $('src').style.opacity = t >= 0.4 ? '1' : '0';
+            SK.grain($('grain'), t, 6);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

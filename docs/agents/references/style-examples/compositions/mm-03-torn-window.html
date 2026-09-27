@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Collage behind the speaker (track 4) for mm-03: newsprint seen through the torn window of the front layer. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+      </style>
+      <div id="root" data-composition-id="mm-03-torn-window" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-newsprint">
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-03-torn-window';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 6, update: (t) => SK.grain($('grain'), t, 7) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

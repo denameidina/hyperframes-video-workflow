@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the note is invented. The speaker is the host's matted <video> (placeholder here) on track 6; this clip is the collage behind it. Keep the face zone (x 300–780, y 780–1320) clear. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        #strip { width: 520px; height: 130px; }
+        #news { width: 420px; height: 520px; }
+        #note { width: 280px; }
+        #note span { position: absolute; left: 0; right: 0; top: 86px; text-align: center; font-size: 56px; font-weight: 700; line-height: 1; color: #2b2118; }
+        #pin { left: 116px; top: -36px; width: 48px; }
+        #ink { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="mm-01-collage-doodle" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop sk-grid">
+          <div class="p sk-cut" id="stripW"><div class="p sk-kraft" id="strip"></div></div>
+          <div class="p sk-cut" id="newsW"><div class="p sk-newsprint" id="news"></div></div>
+          <div class="p sk-cut" id="note"><div class="sk-sticky" style="width:280px"></div><span class="sk-hand">ide jam 2 pagi</span><div class="sk-pin" id="pin"></div></div>
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-01-collage-doodle';
+          const $ = SK.finder(ID);
+          $('strip').style.clipPath = SK.torn(520, 130, 71, { edges: 'lr', amp: 14 });
+          $('news').style.clipPath = SK.torn(420, 520, 72, { amp: 12 });
+          // doodle-halo: short bursts above the head and two stars beside it, drawn on the key word
+          const star = (x, y, r, s) => SK.line(x - r, y, x + r, y, s, 2) + ' ' + SK.line(x, y - r, x, y + r, s + 1, 2) + ' ' + SK.line(x - r * .7, y - r * .7, x + r * .7, y + r * .7, s + 2, 2);
+          const rays = [[-60, 745, -95, 660], [0, 730, 0, 640], [60, 745, 95, 660]].map(([x1, y1, x2, y2], i) => SK.line(540 + x1, y1, 540 + x2, y2, 80 + i, 4));
+          $('ink').innerHTML = rays.map((d, i) => `<path id="r${i}" class="sk-stroke" d="${d}" style="stroke:var(--sk-accent);stroke-width:9"/>`).join('') +
+            `<path id="s0" class="sk-stroke" d="${star(230, 900, 38, 90)}" style="stroke:var(--sk-accent-2);stroke-width:7"/>` +
+            `<path id="s1" class="sk-stroke" d="${star(870, 1000, 30, 93)}" style="stroke:var(--sk-accent-2);stroke-width:7"/>`;
+          const S = [0, 1, 2].map((i) => ({ el: $('r' + i), at: 1.3 + i * 0.1, dur: 0.18 })).concat([{ el: $('s0'), at: 1.7, dur: 0.3 }, { el: $('s1'), at: 1.9, dur: 0.3 }]);
+          const inS = SK.onTwos(M.track(1, [[0.1, 0, [18, 0.75]]]));
+          SK.clip(ID, { T: 5, update: (t) => {
+            const k = inS(t);
+            SK.piece($('stripW'), { x: -60 - 400 * k, y: 230, r: -8 }, 1, t);
+            SK.piece($('newsW'), { x: -110 - 400 * k, y: 1330, r: 7 }, 2, t);
+            SK.piece($('note'), { x: 740 + 400 * k, y: 330, r: 5 }, 3, t);
+            SK.drawSeq(t, S, { boil: 1.2 });
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

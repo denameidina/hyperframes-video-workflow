@@ -17,11 +17,14 @@
       #face { position: absolute; left: 290px; top: 700px; width: 500px; height: 560px; border-radius: 240px; background: #52525b; }
       #face-label { position: absolute; left: 0; right: 0; top: 1300px; text-align: center; font: 600 32px Arial, sans-serif; color: #d4d4d8; }
       .broll { position: absolute; inset: 0; z-index: 22; }
+      /* mix-media: matted speaker (track 6) above the collage, front layer (track 7) above the speaker */
+      .cutout { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 24; object-fit: cover; }
+      .broll-front { position: absolute; inset: 0; z-index: 26; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="106">
-      <div id="base-video" class="clip" data-start="0" data-duration="106" data-track-index="1">
+    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="153.5">
+      <div id="base-video" class="clip" data-start="0" data-duration="153.5" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -59,11 +62,41 @@
            data-start="93" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="wb-05-hand-mount" class="broll" data-composition-id="wb-05-hand" data-composition-src="compositions/wb-05-hand.html"
            data-start="99.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-01-illustrative-mount" class="broll" data-composition-id="vx-01-illustrative" data-composition-src="compositions/vx-01-illustrative.html"
+           data-start="106.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-02-capture-split-mount" class="broll" data-composition-id="vx-02-capture-split" data-composition-src="compositions/vx-02-capture-split.html"
+           data-start="112" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-03-map-pin-mount" class="broll" data-composition-id="vx-03-map-pin" data-composition-src="compositions/vx-03-map-pin.html"
+           data-start="118.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-04-clipping-panel-mount" class="broll" data-composition-id="vx-04-clipping-panel" data-composition-src="compositions/vx-04-clipping-panel.html"
+           data-start="124" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="mm-01-collage-doodle-mount" class="broll" data-composition-id="mm-01-collage-doodle" data-composition-src="compositions/mm-01-collage-doodle.html"
+           data-start="129.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-01-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="129.5" data-duration="5" data-track-index="6"></video>
+      <div id="mm-02-orbit-arrow-mount" class="broll" data-composition-id="mm-02-orbit-arrow" data-composition-src="compositions/mm-02-orbit-arrow.html"
+           data-start="135" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-02-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="135" data-duration="6" data-track-index="6"></video>
+      <div id="mm-02-orbit-arrow-front-mount" class="broll-front" data-composition-id="mm-02-orbit-arrow-front" data-composition-src="compositions/mm-02-orbit-arrow-front.html"
+           data-start="135" data-duration="6" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="mm-03-torn-window-mount" class="broll" data-composition-id="mm-03-torn-window" data-composition-src="compositions/mm-03-torn-window.html"
+           data-start="141.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-03-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="141.5" data-duration="6" data-track-index="6"></video>
+      <div id="mm-03-torn-window-front-mount" class="broll-front" data-composition-id="mm-03-torn-window-front" data-composition-src="compositions/mm-03-torn-window-front.html"
+           data-start="141.5" data-duration="6" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="mm-04-polaroid-caption-mount" class="broll" data-composition-id="mm-04-polaroid-caption" data-composition-src="compositions/mm-04-polaroid-caption.html"
+           data-start="148" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-04-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="148" data-duration="5" data-track-index="6"></video>
+      <div id="mm-04-polaroid-caption-front-mount" class="broll-front" data-composition-id="mm-04-polaroid-caption-front" data-composition-src="compositions/mm-04-polaroid-caption-front.html"
+           data-start="148" data-duration="5" data-track-index="7" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // Split treatment (tx-02, mg-02, wb-03, sm-02): slide the base video into the bottom half, then back.
+      // Split treatment (tx-02, mg-02, wb-03, sm-02, vx-02): slide the base video into the bottom half, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 10.55);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 28);
@@ -72,6 +105,10 @@
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 67.05);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 81);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 86.55);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 112);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 117.55);
+      // Collage treatment (mm-01..04): the collage clip is an opaque full-frame backdrop, so it already covers the
+      // base video; never tween #base-video opacity (the linter treats it as a full-frame overlay).
       window.__timelines['style-examples'] = tl;
     </script>
   </body>

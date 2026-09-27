@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the caption words are invented. Front layer of mm-04 (track 7): a polaroid frame drops around the speaker (its bottom band hides the matte's cut-off body), then a torn paper strip caption is taped on. In a real clip the words are verbatim from the transcript. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #pol { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1160px; }
+        #frame { position: absolute; left: 0; top: 0; }
+        #pcap { position: absolute; left: 0; right: 0; top: 1600px; text-align: center; font-size: 84px; font-weight: 700; color: #2b2118; }
+        .tp { top: 548px; width: 230px; }
+        #strip { position: absolute; left: 0; top: 0; width: 760px; height: 150px; transform-origin: 50% 50%; }
+        #stripP { position: absolute; inset: 0; }
+        #stripP span { position: absolute; left: 0; right: 0; top: 24px; text-align: center; font-size: 100px; color: var(--sk-accent); }
+      </style>
+      <div id="root" data-composition-id="mm-04-polaroid-caption-front" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop">
+          <div id="pol">
+            <svg class="sk-full sk-cut" id="frame" viewBox="0 0 1080 1920" width="1080" height="1920">
+              <path fill="#f7f5f0" fill-rule="evenodd" d="M90 560H990V1780H90Z M140 610V1540H940V610Z" />
+            </svg>
+            <div class="sk-hand" id="pcap">tim kecil, sistem rapi</div>
+            <div class="tp sk-tape-a" style="left:40px;transform:rotate(-32deg)"></div>
+            <div class="tp sk-tape-b" style="left:810px;transform:rotate(30deg)"></div>
+          </div>
+          <div class="sk-cut" id="strip"><div class="sk-paper-cream" id="stripP"><span class="sk-display">SEKARANG BEDA</span></div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-04-polaroid-caption-front';
+          const $ = SK.finder(ID);
+          $('stripP').style.clipPath = SK.torn(760, 150, 44, { edges: 'lr', amp: 12 });
+          const fall = SK.onTwos(M.track(1, [[0.2, 0, [16, 0.7]]]));
+          const lab = SK.onTwos(M.track(1, [[1.6, 0, [22, 0.7]]]));
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            const k = fall(t);
+            SK.piece($('pol'), { x: 0, y: 0, r: -2 + 8 * k, s: 1 + 0.18 * k, o: t >= 0.2 ? 1 : 0 }, 50, t, { amp: 1 });
+            const s = lab(t);
+            SK.piece($('strip'), { x: 160, y: 300 + 200 * s, r: -3 + 6 * s, o: t >= 1.6 ? 1 : 0 }, 51, t);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

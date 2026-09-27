@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Front layer of mm-03 (track 7): a kraft sheet over everything tears open around the speaker (the torn edge also hides matte edges), then a paper phone cut-out lands beside them. The phone is a Codex paper cut-out. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #sheet { position: absolute; left: 0; top: 0; }
+        #pho { position: absolute; left: 0; top: 0; width: 230px; transform-origin: 50% 50%; }
+      </style>
+      <div id="root" data-composition-id="mm-03-torn-window-front" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop">
+          <svg class="sk-full sk-cut" id="sheet" viewBox="0 0 1080 1920" width="1080" height="1920">
+            <defs><pattern id="kraftTex" patternUnits="userSpaceOnUse" width="1080" height="1920"><image href="vendor/paper-pack/kraft.jpg" width="1080" height="1920" /></pattern></defs>
+            <path id="hole" fill="url(#kraftTex)" fill-rule="evenodd" d="M0 0H1080V1920H0Z" />
+          </svg>
+          <img class="sk-cut" id="pho" src="assets/cut-phone.png" alt="" />
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-03-torn-window-front';
+          const $ = SK.finder(ID);
+          // the window: a seeded ragged outline around the speaker, scaled about its centre as it tears open
+          const r = SK.rng(303), CX = 540, CY = 1320, W = 430, H = 720, N = 56, ring = [];
+          for (let i = 0; i < N; i++) {
+            const a = (i / N) * Math.PI * 2, j = 1 + (r() - 0.5) * 0.09;
+            ring.push([Math.cos(a) * W * j, Math.sin(a) * H * j]);
+          }
+          const open = SK.onTwos(M.track(0.02, [[0.3, 1, [9, 0.95]]]));
+          const drop = SK.onTwos(M.track(1, [[2.6, 0, [22, 0.62]]]));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const k = open(t);
+            const pts = ring.map(([x, y]) => `${(CX + x * k).toFixed(1)} ${(CY + y * k).toFixed(1)}`);
+            $('hole').setAttribute('d', `M0 0H1080V1920H0Z M${pts.join('L')}Z`);
+            const d = drop(t);
+            SK.piece($('pho'), { x: 800, y: 1330 - 700 * d, r: 9 + 14 * d, o: t >= 2.6 ? 1 : 0 }, 32, t);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

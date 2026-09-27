@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Collage behind the speaker (track 4) for mm-04: dark kraft with torn notebook scraps in the corners. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        .scrap { width: 380px; height: 240px; }
+      </style>
+      <div id="root" data-composition-id="mm-04-polaroid-caption" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop sk-kraft-dark">
+          <div class="p sk-cut" id="a"><div class="p scrap sk-lined" id="ap"></div></div>
+          <div class="p sk-cut" id="b"><div class="p scrap sk-paper-grey" id="bp"></div></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-04-polaroid-caption';
+          const $ = SK.finder(ID);
+          $('ap').style.clipPath = SK.torn(380, 240, 41, { amp: 10 });
+          $('bp').style.clipPath = SK.torn(380, 240, 42, { amp: 10 });
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.piece($('a'), { x: -90, y: 120, r: -12 }, 1, t);
+            SK.piece($('b'), { x: 800, y: 60, r: 14 }, 2, t);
+            SK.grain($('grain'), t, 9);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
