@@ -62,7 +62,7 @@ memverifikasi output baru (lihat CLI), dan agen menjalankan `rtk proxy npx …`.
 | Jenis | Sumber | Wajib di layar |
 |---|---|---|
 | `capture` | Screenshot asli dari riset Screen Plan (artikel, dokumen, website, tool yang disebut), `assets/captures/NN-name.png` via aturan capture di `asset-production.md` | baris sumber (media/domain, tanggal) ≥ 28 px, terlihat ≥ 1,5 s; data privat diredaksi (R2) |
-| `illustrative` | Lembar generik di dalam klip: judul dari transkrip, badan teks berupa baris abu-abu (bukan teks palsu) | tag **"Ilustrasi"**; tanpa masthead/layout media nyata; tanpa angka karangan |
+| `illustrative` | Lembar generik di dalam klip: judul dari transkrip, badan teks berupa baris abu-abu (bukan teks palsu) | tag **"Ilustrasi"** (`.sk-tag`: teks gelap di atas kuning — lolos cek kontras di atas kertas apa pun); tanpa masthead/layout media nyata; tanpa angka karangan |
 
 Highlight hanya pada frasa yang diucapkan dan maknanya sama dalam kalimat
 utuhnya; crop tidak boleh membuang kualifikasi ("perkiraan", tanggal).
@@ -107,9 +107,10 @@ clipping-stack (`SK.piece`, `SK.torn`).
 - **Kolase belakang** = mount style-kit di track 4.
 - **Lapisan depan** (opsional) = mount kedua di track 7, z 26: panah, doodle,
   stiker yang menimpa Dena.
-- **Base video** disembunyikan lewat timeline host:
-  `tl.set('#base-video', {opacity: 0}, start)` dan dikembalikan di akhir; audio
-  tetap `#base-audio`.
+- **Base video** tidak di-tween: mount kolase adalah backdrop kertas **opaque
+  full-frame** yang menutupinya; audio tetap `#base-audio`. (Spike 2026-09-27:
+  lint menolak tween opacity `#base-video` dengan
+  `gsap_fullscreen_overlay_starts_visible`, bahkan dengan `tl.set` di 0.)
 - **Look cutout**: `.sk-sticker-cut` — outline #F6F2E9 8–14 px (drop-shadow
   berlapis) + bayangan keras satu arah; outline menyamarkan tepi matte (rambut,
   tangan, kursi). Kolase bergerak on twos; Dena tetap 30 fps.
@@ -171,7 +172,7 @@ Anti-slop Checklist) dan dijaga `style-docs.test.mjs`:
   capture|illustrative` + `Source line:` (vox) dan `Cutout: from, dur, name`
   (mix-media); Build Contract mendapat resep host collage.
 - `02-screen-plan.md`, `03-build.md` (4a: jalankan `video cutout`, pasang video
-  host + mount, sembunyikan base video), `visual-planning.md`,
+  host + mount kolase opaque), `visual-planning.md`,
   `asset-production.md` (capture untuk VOX, cutout Dena lewat CLI), QA,
   quality gates, template starter (komentar resep collage).
 - Gate 2 R6 diperluas: dokumen ilustratif yang meniru media/brand nyata.
@@ -185,14 +186,16 @@ Anti-slop Checklist) dan dijaga `style-docs.test.mjs`:
 - `paper-pack.test.mjs`: peta SVG tercatat; `style-docs.test.mjs`: `vox.md`,
   `mix-media.md`, treatment wajib per gaya (mix-media: `collage`).
 - `check:style-examples` untuk 8 klip baru + tinjauan visual; contoh lama tetap
-  identik piksel; render MP4 host contoh (alpha ter-render).
+  identik piksel; render MP4 host mini berisi `mm-02` (kolase + placeholder +
+  lapisan depan) membuktikan alpha ter-render (`render` tidak punya opsi rentang
+  waktu, jadi host contoh penuh 153 s tidak dirender).
 - Smoke pipeline asli (scratch, tidak di-commit); regresi semua suite; smoke
   template.
 
 ## Governance dan dokumen
 
 - ADR-0014 "VOX dan mix-media" (accepted).
-- EARS `rd-02`: cutout track 6 + base video disembunyikan + output CLI
+- EARS `rd-02`: cutout track 6 + kolase opaque menutupi base video + output CLI
   terverifikasi; `rd-03`: capture wajib baris sumber, ilustrasi wajib tag
   "Ilustrasi", highlight sesuai konteks, kemiripan Dena hanya dari footage,
   R6 diperluas.
