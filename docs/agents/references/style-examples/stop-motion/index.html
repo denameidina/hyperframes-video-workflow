@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-stop-motion" data-start="0" data-width="1080" data-height="1920" data-duration="25">
-      <div id="base-video" class="clip" data-start="0" data-duration="25" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-stop-motion" data-start="0" data-width="1080" data-height="1920" data-duration="63.5">
+      <div id="base-video" class="clip" data-start="0" data-duration="63.5" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -38,6 +38,18 @@
            data-start="13.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="sm-04-stack-crumple-mount" class="broll" data-composition-id="sm-04-stack-crumple" data-composition-src="compositions/sm-04-stack-crumple.html"
            data-start="19" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-05-string-flip-mount" class="broll" data-composition-id="sm-05-string-flip" data-composition-src="compositions/sm-05-string-flip.html"
+           data-start="25.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-06-receipt-scroll-mount" class="broll" data-composition-id="sm-06-receipt-scroll" data-composition-src="compositions/sm-06-receipt-scroll.html"
+           data-start="32" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-07-flipbook-fold-mount" class="broll" data-composition-id="sm-07-flipbook-fold" data-composition-src="compositions/sm-07-flipbook-fold.html"
+           data-start="38.5" data-duration="6.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-08-walk-hinge-mount" class="broll" data-composition-id="sm-08-walk-hinge" data-composition-src="compositions/sm-08-walk-hinge.html"
+           data-start="45.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-09-cut-along-mount" class="broll" data-composition-id="sm-09-cut-along" data-composition-src="compositions/sm-09-cut-along.html"
+           data-start="52" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-10-envelope-depth-mount" class="broll" data-composition-id="sm-10-envelope-depth" data-composition-src="compositions/sm-10-envelope-depth.html"
+           data-start="57.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -45,6 +57,8 @@
       // Split treatment: slide the base video into the bottom half for the clip, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 7);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 12.55);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 52);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 56.55);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-stop-motion'] = tl;
     </script>

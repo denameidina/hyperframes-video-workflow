@@ -7,7 +7,7 @@ frames, with hard paper shadows, torn edges, tape, and pins. Loaded by
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`) on top of `vendor/motion-kit/` (`window.M`); paper textures and
 objects: `vendor/paper-pack/` (`paper-pack.css`, licenses in `LICENSES.md`).
-Worked examples: `docs/agents/references/style-examples/stop-motion/` (`sm-01` … `sm-04`,
+Worked examples: `docs/agents/references/style-examples/stop-motion/` (`sm-01` … `sm-10`,
 `npm run check:style-examples -- stop-motion`).
 
 ## When To Use
@@ -87,6 +87,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | --- | --- | --- |
 | Topic cut-outs | `paper.coin-stack`, `paper.banknote-generic`, `paper.chat-bubble`, `paper.ai-chip`, `paper.warung-front`, `paper.shopping-bag`, `paper.parcel-box`, `paper.lightbulb`, `paper.calculator` | `../asset-catalog/sheets/paper-2.webp` |
 | Stationery | `paper.scrap-torn-yellow`, `paper.sticky-pink`, `paper.receipt-blank`, `paper.ticket-stub`, `paper.washi-pink` | `../asset-catalog/sheets/paper-1.webp` |
+| Props | `paper.scissors`, `paper.envelope`, `paper.receipt-blank`, `paper.notebook-strip` | `../asset-catalog/sheets/paper-1.webp`, `../asset-catalog/sheets/paper-2.webp` |
 | Grounds | `texture.cardboard`, `texture.wood-desk`, `texture.kraft` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
 | Torn edges | `frame.torn-all`, `frame.torn-rough` | `../asset-catalog/sheets/frame-1.webp` |
 | Labels | `pict.coins`, `font.patrick-hand`, `font.archivo-black` | `../asset-catalog/sheets/pictogram.webp`, `../asset-catalog/sheets/font.webp` |
@@ -124,6 +125,12 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **crumple-away** | A piece swaps to a crumpled state, then a ball that leaves | Rejecting an idea, "jangan" | Two replacement states, exit in 3–6 steps | paper crumple | Morph or blur instead of replacement drawings | hide the card, show `.sk-paper-crumpled` ball, exit via `SK.onTwos` |
 | **hinge-limb** | A jointed arm or pointer pivots from a pin | Pointing, cause → effect | Rotate across 3–4 steps, reach the target on the word | faint pin creak | Too many joints (a puppet ballet) | limb with `transform-origin` at the joint, `r` via `SK.onTwos` |
 | **multiplane-depth** | 3–4 paper layers drift at different rates, a tissue veil lifts | Mood, "bayangin…" | Layers offset one step from each other; 1–2 s total | room tone | Layers moving in sync (kills the depth) | layers with different `M.track` rates, each through `SK.onTwos` |
+| **string-connect** | Red string pulled between pinned cards (a detective board) | Linking causes | Each string is pulled across on its linking word, 3–6 steps | string pluck | Straight stiff strings; more than 4 strings | `SK.sagPath` + `SK.draw` via `SK.onTwos` + `.sk-pin` |
+| **receipt-print** | A receipt feeds out of a printer line by line | Sales, UMKM transactions | One line per item said; the total on "total" | printer chirp per line | Amounts nobody said; a smooth receipt without steps | `.sk-obj-receipt-blank` + `.sk-mono` lines; strip `y` via `SK.onTwos` |
+| **flip-book** | A notebook corner flips 3–5 pages; the drawing changes | Gradual change over time | One page per stage, 2–3 steps per flip | paper flick | More than 5 pages; drawings without a clear change | stacked pages, each `scaleY` 1 → .06 on twos, then hidden |
+| **cutout-walk** | A paper figure walks across, legs swapping pose every step | A customer journey, "si owner datang ke…" | Walks over the phrase; stops at the destination | paper tap per step | Gliding without leg poses; walking longer than 2 s | paper-piece figure + `SK.cycle(t, 4)` poses + `SK.onTwos` x + `SK.piece` |
+| **cut-along** | Scissors cut a dashed line; the piece comes loose and drops | Cutting a cost or a step | The scissors travel over the verb; the piece drops at its end | scissor snip | Cutting without a dashed line; smooth scissors without steps | `.sk-obj-scissors` along the line via `SK.onTwos`, ±7° per step (`SK.cycle`) |
+| **envelope-open** | The envelope flap opens and a card rises out | Messages, notifications, "ada order masuk" | Flap opens on the lead-in word; the card rises on its content | paper slide | An empty card; an opened envelope with nothing said | `.sk-obj-envelope` twice (body without the flap, flap `scaleY` 1 → −1 on twos) + card between |
 
 ## References
 
@@ -256,6 +263,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Per-video cut-outs live in `assets/cutouts/`; paper-pack objects are classes.
 - The host must load `vendor/paper-pack/paper-pack.css` after `style-kit.css`
   (the Dena starter does).
+- Step-indexed moves (flip-card, flip-book, fold/unfold, envelope-open) read the
+  step since a word as `Math.round(SK.stepTime(t - at, SK.STOP_FPS) * SK.STOP_FPS)`
+  and look the pose up in a short array; never tween between the poses.
+- A figure is plain paper pieces (divs) with `transform-origin` at each joint and
+  a brad (a small gold circle) on the joint; `SK.cycle(t, 4)` picks the leg pose
+  (`sm-08`). Library cut-outs are `.sk-obj-*` divs (`.sk-obj-scissors`,
+  `.sk-obj-envelope`, `.sk-obj-warung-front`).
 
 ## SFX
 
@@ -266,6 +280,9 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | sticky-wall, pin-and-swap | sticky slap + pin click | 0.1–0.14 |
 | tear-reveal, tape-on | paper rip / tape rip-and-press | 0.12–0.16 |
 | crumple-away | paper crumple | 0.12–0.16 |
+| string-connect, cut-along | string pluck / scissor snip | 0.08–0.12 |
+| receipt-print, flip-book, envelope-open | printer chirp / paper flick / paper slide | 0.08–0.12 |
+| cutout-walk | paper tap per step | 0.06–0.1 |
 
 Prefer recorded paper sounds over synthetic whooshes (Smallfilms).
 
@@ -277,6 +294,12 @@ Prefer recorded paper sounds over synthetic whooshes (Smallfilms).
 | `style-examples/stop-motion/compositions/sm-02-tear-split.html` | tear-reveal + pop-up (Codex phone) | split |
 | `style-examples/stop-motion/compositions/sm-03-replace-panel.html` | replacement-face + pin-and-swap on a taped card | panel |
 | `style-examples/stop-motion/compositions/sm-04-stack-crumple.html` | stack-pile + crumple-away + slide-on-twos + tape-on | cutaway |
+| `style-examples/stop-motion/compositions/sm-05-string-flip.html` | string-connect + flip-card on a pinned board | cutaway |
+| `style-examples/stop-motion/compositions/sm-06-receipt-scroll.html` | receipt-print + paper-scroll from a till printer | panel |
+| `style-examples/stop-motion/compositions/sm-07-flipbook-fold.html` | flip-book + fold/unfold (1 → 2 → 4 panels) | cutaway |
+| `style-examples/stop-motion/compositions/sm-08-walk-hinge.html` | cutout-walk + hinge-limb at the library warung | cutaway |
+| `style-examples/stop-motion/compositions/sm-09-cut-along.html` | cut-along with the library scissors | split |
+| `style-examples/stop-motion/compositions/sm-10-envelope-depth.html` | envelope-open + multiplane-depth with a tissue veil | cutaway |
 
 ## Anti-slop Checklist
 

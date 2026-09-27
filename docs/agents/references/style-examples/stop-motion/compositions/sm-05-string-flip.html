@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the causes and the answer are invented to show the mechanism. In a real clip every card comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        .card { width: 460px; height: 250px; }
+        .card .cp { position: absolute; inset: 0; }
+        .card span { position: absolute; left: 0; right: 0; top: 78px; text-align: center; font-size: 84px; font-weight: 700; color: #2b2118; white-space: nowrap; }
+        #str { position: absolute; left: 0; top: 0; z-index: 3; }
+        .pin { width: 46px; z-index: 4; }
+        #c3 { width: 520px; height: 270px; }
+        #c3 .face { position: absolute; inset: 0; }
+        #c3 span { top: 84px; font-size: 88px; }
+        #fb span { color: var(--sk-accent); }
+      </style>
+      <div id="root" data-composition-id="sm-05-string-flip" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft">
+          <div class="p card sk-cut" id="c0"><div class="cp sk-paper-cream" id="cp0"></div><span class="sk-hand">stok kosong</span></div>
+          <div class="p card sk-cut" id="c1"><div class="cp sk-paper-cream" id="cp1"></div><span class="sk-hand">pembeli kabur</span></div>
+          <div class="p card sk-cut" id="c2"><div class="cp sk-paper-cream" id="cp2"></div><span class="sk-hand">omzet turun</span></div>
+          <div class="p card sk-cut" id="c3">
+            <div class="face" id="fa"><div class="cp sk-paper-white" id="cpa"></div><span class="sk-hand">solusinya?</span></div>
+            <div class="face" id="fb"><div class="cp sk-paper-white" id="cpb"></div><span class="sk-hand">stok otomatis</span></div>
+          </div>
+          <svg id="str" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="p pin sk-pin" id="n0"></div>
+          <div class="p pin sk-pin" id="n1"></div>
+          <div class="p pin sk-pin" id="n2"></div>
+          <div class="p pin sk-pin" id="n3"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-05-string-flip';
+          const $ = SK.finder(ID);
+          ['cp0', 'cp1', 'cp2'].forEach((id, i) => ($(id).style.clipPath = SK.torn(460, 250, 150 + i, { edges: 'trbl', amp: 8 })));
+          ['cpa', 'cpb'].forEach((id, i) => ($(id).style.clipPath = SK.torn(520, 270, 155 + i, { edges: 'trbl', amp: 8 })));
+          // card: [x, y, r, pinned at, pin x]; pins sit near a corner so the strings run through the gaps;
+          // the flip card is pinned at its centre, the axis it turns on
+          const C = [[70, 300, -4, 0.2, 400], [540, 640, 3, 0.45, 60], [90, 1010, -2, 0.7, 400], [280, 1400, 2, 2.9, 260]];
+          const head = C.map(([x, y, , , px]) => ({ x: x + px, y: y - 10 }));
+          // string-connect: red string sags between pins and is pulled across on twos
+          const LINKS = [[0, 1, 1.0], [1, 2, 1.9], [2, 3, 3.2]];
+          $('str').innerHTML = LINKS.map(([a, b], i) => `<path id="s${i}" d="${SK.sagPath(head[a], head[b], 0.1)}" fill="none" stroke="#b3141f" stroke-width="6" stroke-linecap="round"/>`).join('');
+          const pull = LINKS.map(([, , at]) => SK.onTwos((t) => SK.smooth((t - at) / 0.5)));
+          const drop = C.map(([, , , at]) => SK.onTwos(M.track(1, [[at, 0, [26, 0.7]]])));
+          // flip-card: a 2-step squash to edge-on, the face swaps, 2 steps back (not 3D)
+          const FLIP = 4.0, SQ = [0.55, 0.12, 0.12, 0.55];
+          SK.clip(ID, { T: 6, update: (t) => {
+            C.forEach(([x, y, r, at], i) => {
+              const k = drop[i](t), on = t >= at ? 1 : 0;
+              const el = $('c' + i);
+              SK.piece(el, { x, y: y - 60 * k, r, o: on }, 160 + i, t);
+              if (i === 3) {
+                const s = Math.round(SK.stepTime(t - FLIP, SK.STOP_FPS) * SK.STOP_FPS);
+                const sx = s < 0 || s >= SQ.length ? 1 : SQ[s];
+                el.style.transform += ` scaleX(${sx})`;
+                $('fa').style.opacity = s >= 2 ? '0' : '1';
+                $('fb').style.opacity = s >= 2 ? '1' : '0';
+              }
+              SK.piece($('n' + i), { x: head[i].x - 23, y: head[i].y - 28 - 60 * k, o: on }, 170 + i, t, { amp: 0.6 });
+            });
+            LINKS.forEach((l, i) => SK.draw($('s' + i), pull[i](t)));
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

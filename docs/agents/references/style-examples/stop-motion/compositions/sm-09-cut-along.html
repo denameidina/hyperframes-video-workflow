@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the cost items are invented to show the mechanism. In a real clip every item comes from the transcript (Gate 2 R1). The scissors are the library cut-out paper.scissors. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; }
+        .pc { position: absolute; left: 190px; width: 700px; }
+        #top { top: 70px; height: 530px; }
+        #bot { top: 600px; height: 190px; border-top: 5px dashed #6b5a44; }
+        .pc .tt { position: absolute; left: 60px; top: 50px; font-size: 70px; font-weight: 700; color: var(--sk-accent-2); white-space: nowrap; }
+        .pc .it { position: absolute; left: 60px; font-size: 74px; font-weight: 700; color: #2b2118; white-space: nowrap; }
+        #bot .it { top: 70px; color: var(--sk-accent); }
+        #sc { position: absolute; left: 0; top: 0; width: 240px; z-index: 5; }
+      </style>
+      <div id="root" data-composition-id="sm-09-cut-along" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop">
+          <div id="half" class="sk-kraft">
+            <div class="pc sk-cut sk-paper-white" id="top">
+              <div class="tt sk-hand">biaya bulanan</div>
+              <div class="it sk-hand" style="top:170px">sewa</div>
+              <div class="it sk-hand" style="top:260px">gaji</div>
+              <div class="it sk-hand" style="top:350px">listrik</div>
+            </div>
+            <div class="pc sk-cut sk-paper-white" id="bot"><div class="it sk-hand">iklan boros</div></div>
+            <div class="sk-cut sk-obj-scissors" id="sc"></div>
+            <div class="sk-grain" id="grain"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-09-cut-along';
+          const $ = SK.finder(ID);
+          $('top').style.clipPath = SK.torn(700, 530, 210, { edges: 'trl', amp: 7 });
+          // cut-along: the scissors travel the dashed line on twos, snipping (±7°) every step
+          const ein = (u) => u * u; // ease-in: leaves and falls speed up
+          const CUT = [1.1, 2.8], LINE = 600;
+          const tipX = SK.onTwos((t) => 120 + 820 * M.clamp((t - CUT[0]) / (CUT[1] - CUT[0])) + 700 * ein(M.clamp((t - 3.0) / 0.5)));
+          const enter = SK.onTwos(M.track(1, [[0.5, 0, [22, 0.75]]]));
+          // the cut piece drops away in steps once the blades reach the far edge
+          const fall = SK.onTwos((t) => ein(M.clamp((t - CUT[1] - 0.1) / 0.6)));
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            const cutting = t >= CUT[0] && t < CUT[1];
+            const snip = cutting ? (SK.cycle(t, 2) ? 7 : -7) : 0;
+            SK.piece($('sc'), { x: tipX(t) - 240 - 520 * enter(t), y: LINE - 80, r: snip, o: t >= 0.5 ? 1 : 0 }, 211, t);
+            const f = fall(t);
+            SK.piece($('bot'), { x: 40 * f, y: 520 * f, r: 14 * f }, 212, t);
+            SK.piece($('top'), { x: 0, y: 0, r: -1 }, 213, t, { amp: 0.8 });
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

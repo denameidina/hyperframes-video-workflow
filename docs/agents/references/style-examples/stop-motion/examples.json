@@ -4,6 +4,12 @@
     {"clip": "sm-01-slide-pin", "duration": 6, "treatment": "cutaway", "stills": [2.8, 5.7]},
     {"clip": "sm-02-tear-split", "duration": 6, "treatment": "split", "stills": [1.5, 5.7]},
     {"clip": "sm-03-replace-panel", "duration": 5, "treatment": "panel", "stills": [1.8, 4.7]},
-    {"clip": "sm-04-stack-crumple", "duration": 6, "treatment": "cutaway", "stills": [2.2, 5.7]}
+    {"clip": "sm-04-stack-crumple", "duration": 6, "treatment": "cutaway", "stills": [2.2, 5.7]},
+    {"clip": "sm-05-string-flip", "duration": 6, "treatment": "cutaway", "stills": [3.4, 4.1, 5.2]},
+    {"clip": "sm-06-receipt-scroll", "duration": 6, "treatment": "panel", "stills": [3.3, 5.6]},
+    {"clip": "sm-07-flipbook-fold", "duration": 6.5, "treatment": "cutaway", "stills": [1.7, 6.2]},
+    {"clip": "sm-08-walk-hinge", "duration": 6, "treatment": "cutaway", "stills": [2.0, 4.8]},
+    {"clip": "sm-09-cut-along", "duration": 5, "treatment": "split", "stills": [1.9, 3.3]},
+    {"clip": "sm-10-envelope-depth", "duration": 6, "treatment": "cutaway", "stills": [1.1, 4.2]}
   ]
 }

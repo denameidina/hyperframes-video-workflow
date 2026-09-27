@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the card text is invented to show the mechanism. In a real clip the words come from the transcript (Gate 2 R1). The envelope is the library cut-out paper.envelope; its flap is the same image clipped to the flap triangle. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .ly { position: absolute; left: -120px; top: 0; width: 1320px; height: 1920px; }
+        #far { left: 0; top: 1180px; height: 740px; }
+        #near { left: 0; top: 1560px; height: 360px; }
+        #scrap { position: absolute; left: 60px; top: 140px; width: 300px; }
+        #scrap2 { position: absolute; left: 820px; top: 260px; width: 240px; }
+        #env { position: absolute; left: 0; top: 0; width: 720px; height: 520px; }
+        #env > div { position: absolute; left: 0; top: 0; width: 720px; height: 520px; }
+        #inside { background: #6f5134; clip-path: polygon(0 0, 100% 0, 50% 64%); }
+        #flap { clip-path: polygon(0 0, 100% 0, 50% 64%); transform-origin: 50% 0; }
+        #body { clip-path: polygon(0 0, 50% 64%, 100% 0, 100% 100%, 0 100%); }
+        #env > #card { left: 90px; width: 540px; height: 330px; }
+        #card .cp { position: absolute; inset: 0; }
+        #card b { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font-size: 88px; color: #2b2118; white-space: nowrap; }
+        #card span { position: absolute; left: 0; right: 0; top: 190px; text-align: center; font-size: 66px; font-weight: 700; color: var(--sk-accent); white-space: nowrap; }
+        #veil { position: absolute; left: -60px; top: -40px; width: 1200px; height: 2000px; opacity: .82; }
+      </style>
+      <div id="root" data-composition-id="sm-10-envelope-depth" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft-dark">
+          <div class="ly sk-cut" id="lyFar"><div class="ly sk-paper-grey" id="far"></div></div>
+          <div class="ly" id="lyMid">
+            <div class="sk-cut" id="env" style="left:300px;top:720px">
+              <div id="inside"></div>
+              <div id="flap" class="sk-obj-envelope"></div>
+              <div id="card"><div class="cp sk-paper-cream" id="cp"></div><b class="sk-hand">order baru</b><span class="sk-hand">3 pesanan</span></div>
+              <div id="body" class="sk-obj-envelope"></div>
+            </div>
+          </div>
+          <div class="ly sk-cut" id="lyNear">
+            <div class="ly sk-kraft-ribbed" id="near"></div>
+            <div class="sk-obj-scrap-torn-yellow" id="scrap"></div>
+            <div class="sk-obj-scrap-torn-blue" id="scrap2"></div>
+          </div>
+          <div class="sk-paper-white" id="veil"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-10-envelope-depth';
+          const $ = SK.finder(ID);
+          $('far').style.clipPath = SK.torn(1320, 740, 220, { edges: 't', amp: 16, step: 40 });
+          $('near').style.clipPath = SK.torn(1320, 360, 221, { edges: 't', amp: 12, step: 26 });
+          $('veil').style.clipPath = SK.torn(1200, 2000, 222, { edges: 'b', amp: 22, step: 30 });
+          $('cp').style.clipPath = SK.torn(540, 330, 223, { edges: 'trbl', amp: 7 });
+          // multiplane-depth: layers drift at different rates (far slow, near fast) on twos; the tissue veil lifts first
+          const drift = SK.onTwos((t) => t - 3);
+          const veil = SK.onTwos((t) => M.eo(M.clamp((t - 0.25) / 0.9)));
+          // envelope-open: the flap turns up over its fold in 6 steps, then the card rises out in steps
+          const FLAP = 1.5, FS = [0.62, 0.22, -0.2, -0.58, -0.86, -1];
+          const rise = SK.onTwos((t) => M.eo(M.clamp((t - 2.4) / 0.6)));
+          SK.clip(ID, { T: 6, update: (t) => {
+            const d = drift(t);
+            SK.piece($('lyFar'), { x: -5 * d, y: 0 }, 224, t, { amp: 0.5 });
+            SK.piece($('lyMid'), { x: -12 * d, y: 0 }, 225, t, { amp: 0.7 });
+            SK.piece($('lyNear'), { x: -28 * d, y: 0 }, 226, t, { amp: 1 });
+            SK.piece($('veil'), { x: 0, y: -2100 * veil(t), r: -3 * veil(t), o: veil(t) < 1 ? 1 : 0 }, 227, t);
+            const s = Math.round(SK.stepTime(t - FLAP, SK.STOP_FPS) * SK.STOP_FPS);
+            const fy = s < 0 ? 1 : FS[Math.min(s, FS.length - 1)];
+            $('flap').style.transform = `scaleY(${fy})`;
+            $('flap').style.filter = fy < 0 ? 'brightness(.82)' : 'none';
+            // the card lives inside the pocket: show only the part above the envelope's bottom edge
+            const top = 340 - 560 * rise(t);
+            $('card').style.top = `${top.toFixed(1)}px`;
+            $('card').style.opacity = t >= 2.3 ? '1' : '0';
+            $('card').style.clipPath = `inset(0 0 ${Math.max(0, top + 330 - 500).toFixed(1)}px 0)`;
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

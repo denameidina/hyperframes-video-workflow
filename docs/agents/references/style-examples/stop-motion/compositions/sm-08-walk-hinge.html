@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the card text is invented to show the mechanism. In a real clip the words come from the transcript (Gate 2 R1). The figure is built from paper pieces in this clip; the shop is the library cut-out paper.warung-front. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #floor { position: absolute; left: 0; top: 1300px; width: 1080px; height: 620px; }
+        #shop { position: absolute; left: 0; top: 0; width: 640px; }
+        #fig { position: absolute; left: 0; top: 0; width: 130px; height: 380px; transform-origin: 50% 100%; }
+        #fig .pc { position: absolute; }
+        #head { left: 20px; top: 0; width: 92px; height: 92px; border-radius: 50%; }
+        #head i { position: absolute; top: 38px; width: 10px; height: 12px; border-radius: 5px; background: #2b2118; }
+        #torso { left: 18px; top: 86px; width: 96px; height: 160px; border-radius: 34px 34px 16px 16px; background: #2f6f8f; }
+        .leg { top: 236px; width: 36px; height: 144px; border-radius: 12px; background: #2b2118; transform-origin: 50% 8px; }
+        .arm { top: 98px; width: 30px; height: 124px; border-radius: 14px; background: #285f7b; transform-origin: 50% 12px; }
+        #armF { z-index: 3; }
+        .brad { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #c8a24a; box-shadow: inset -2px -2px 0 #8a6d2a; z-index: 4; }
+        #card { position: absolute; left: 0; top: 0; width: 540px; height: 190px; }
+        #card .cp { position: absolute; inset: 0; }
+        #card span { position: absolute; left: 0; right: 0; top: 56px; text-align: center; font-size: 74px; font-weight: 700; color: #2b2118; white-space: nowrap; }
+        #cpin { width: 40px; }
+      </style>
+      <div id="root" data-composition-id="sm-08-walk-hinge" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft">
+          <div id="floor" class="sk-kraft-dark"></div>
+          <div class="sk-cut sk-obj-warung-front" id="shop"></div>
+          <div class="sk-cut" id="card"><div class="cp sk-paper-cream" id="cp"></div><span class="sk-hand">pesan lewat chat</span></div>
+          <div class="sk-pin" id="cpin"></div>
+          <div class="sk-cut" id="fig">
+            <div class="pc arm" id="armB" style="left:14px"></div>
+            <div class="pc leg" id="legB" style="left:30px"></div>
+            <div class="pc leg" id="legF" style="left:66px"></div>
+            <div class="pc" id="torso"></div>
+            <div class="pc sk-paper-cream" id="head"><i style="left:34px"></i><i style="left:58px"></i></div>
+            <div class="pc arm" id="armF" style="left:88px"></div>
+            <div class="brad" style="left:95px;top:102px"></div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-08-walk-hinge';
+          const $ = SK.finder(ID);
+          $('floor').style.clipPath = SK.torn(1080, 620, 200, { edges: 't', amp: 10 });
+          $('cp').style.clipPath = SK.torn(540, 190, 201, { edges: 'trbl', amp: 8 });
+          // cutout-walk: the figure crosses on twos; legs and arms swap between 4 replacement poses per step
+          const walkX = SK.onTwos((t) => -220 + 430 * M.clamp((t - 0.3) / 2.6)); // steady pace: one stride per 4 steps
+          const POSE = [[24, -24, -18], [8, -8, -6], [-24, 24, 18], [-8, 8, 6]];
+          const STOP = 2.9;
+          // hinge-limb: the front arm turns on its brad to point at the card, with a one-step overshoot
+          const ARM = [[3.7, 10], [3.77, -40], [3.83, -95], [3.9, -142], [3.97, -132]];
+          const cardIn = SK.onTwos(M.track(1, [[3.2, 0, [24, 0.7]]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            const walking = t >= 0.3 && t < STOP;
+            const p = walking ? POSE[SK.cycle(t, 4)] : [0, 0, 0];
+            const bob = walking && SK.cycle(t, 2) === 1 ? -6 : 0;
+            SK.piece($('fig'), { x: walkX(t), y: 1335 - 380 + bob, s: 1.9 }, 202, t, { amp: 1 });
+            $('legB').style.transform = `rotate(${p[0]}deg)`;
+            $('legF').style.transform = `rotate(${p[1]}deg)`;
+            $('armB').style.transform = `rotate(${-p[2]}deg)`;
+            let a = walking ? p[2] : 4;
+            for (const [at, deg] of ARM) if (t >= at) a = deg;
+            $('armF').style.transform = `rotate(${a}deg)`;
+            SK.piece($('shop'), { x: 420, y: 750, r: 0 }, 203, t, { amp: 0.6 });
+            const k = cardIn(t), on = t >= 3.2 ? 1 : 0;
+            SK.piece($('card'), { x: 500, y: 380 - 700 * k, r: 3, o: on }, 204, t);
+            SK.piece($('cpin'), { x: 750, y: 348 - 700 * k, o: on }, 205, t, { amp: 0.6 });
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

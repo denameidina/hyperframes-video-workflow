@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the items and prices are invented to show the mechanism. In a real clip every item and amount comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #win { position: absolute; left: 90px; top: 130px; width: 900px; height: 760px; border-radius: 28px; overflow: hidden; box-shadow: 0 26px 60px -24px rgba(0,0,0,.55); }
+        #rc { position: absolute; left: 230px; top: 0; width: 440px; height: 1331px; }
+        #paper { position: absolute; inset: 0; }
+        .ln { position: absolute; left: 30px; right: 30px; font-size: 29px; line-height: 1; color: #2b2118; white-space: pre; opacity: 0; }
+        .ln.c { text-align: center; }
+        .ln.b { font-weight: 700; font-size: 33px; }
+        #prn { position: absolute; left: 150px; top: 640px; width: 600px; height: 150px; border-radius: 22px 22px 0 0; background: #2b2118; z-index: 5; }
+        #slot { position: absolute; left: 60px; right: 60px; top: 16px; height: 10px; border-radius: 5px; background: #0f0b08; }
+      </style>
+      <div id="root" data-composition-id="sm-06-receipt-scroll" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop">
+          <div id="win" class="sk-kraft-dark">
+            <div class="sk-cut" id="rc">
+              <div id="paper" class="sk-obj-receipt-blank" style="width:440px"></div>
+              <div class="ln c b sk-mono" id="l0">WARUNG DENA</div>
+              <div class="ln sk-mono" id="l1">kopi susu x2   36.000</div>
+              <div class="ln sk-mono" id="l2">roti bakar     18.000</div>
+              <div class="ln sk-mono" id="l3">es teh x3      15.000</div>
+              <div class="ln sk-mono" id="l4">---------------------</div>
+              <div class="ln b sk-mono" id="l5">TOTAL        69.000</div>
+              <div class="ln c sk-mono" id="l6">terima kasih</div>
+            </div>
+            <div id="prn"><div id="slot"></div></div>
+            <div class="sk-grain" id="grain"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-06-receipt-scroll';
+          const $ = SK.finder(ID);
+          const SLOT = 656, LH = 56;
+          // receipt-print: the printer sits at the bottom like a till; each printed line pushes the strip up one line, in 3 steps
+          const AT = [0.5, 1.05, 1.55, 2.05, 2.5, 2.85, 3.45];
+          AT.forEach((at, i) => ($('l' + i).style.top = `${70 + i * LH}px`));
+          // paper-scroll: once printed, the strip keeps moving through the window in visible steps
+          const feed = SK.onTwos((t) => 60 + AT.reduce((s, at) => s + LH * M.clamp((t - at) / 0.2), 0) + 150 * M.eo((t - 4.0) / 1.2));
+          const win = M.track(0, [[0.02, 1, [18, 0.8]]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const w = win(t);
+            $('win').style.opacity = M.clamp(w * 3).toFixed(4);
+            $('win').style.transform = `translateY(${((1 - w) * -60).toFixed(2)}px)`;
+            SK.piece($('rc'), { x: 0, y: SLOT - feed(t) }, 180, t, { amp: 0.8 });
+            AT.forEach((at, i) => ($('l' + i).style.opacity = t >= at ? '1' : '0'));
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
