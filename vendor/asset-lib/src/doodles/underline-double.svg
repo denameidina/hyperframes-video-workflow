@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="status" data-styles="whiteboard,broll-text,mix-media">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="status" data-styles="whiteboard,broll-text,mix-media">
   <path d="M16 132Q100 124 186 130"/>
   <path d="M30 152Q100 146 172 150"/>
 </svg>

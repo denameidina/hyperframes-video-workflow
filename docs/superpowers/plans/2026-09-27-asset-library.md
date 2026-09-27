@@ -2235,7 +2235,7 @@ Replace the contents of `vendor/asset-lib/src/items.json` with:
 `vendor/asset-lib/src/frames/stamp-ilustrasi.svg`:
 
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" data-tags="status,media" data-styles="vox,mix-media" data-text="ILUSTRASI">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#d7263d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 320 120" data-tags="status,media" data-styles="vox,mix-media" data-text="ILUSTRASI">
   <path d="M18 14Q160 8 302 14Q308 60 302 106Q160 112 18 106Q12 60 18 14Z"/>
   <path d="M30 26Q160 21 290 26Q295 60 290 94Q160 99 30 94Q25 60 30 26Z"/>
 </svg>
@@ -2244,7 +2244,7 @@ Replace the contents of `vendor/asset-lib/src/items.json` with:
 `vendor/asset-lib/src/frames/swash-1.svg`:
 
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" data-tags="arah" data-styles="broll-text,whiteboard,mix-media">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 400 80" data-tags="arah" data-styles="broll-text,whiteboard,mix-media">
   <path d="M14 54C90 34 200 30 300 38C340 42 372 46 388 30"/>
 </svg>
 ```
@@ -2252,7 +2252,7 @@ Replace the contents of `vendor/asset-lib/src/items.json` with:
 `vendor/asset-lib/src/marks/red-circle.svg`:
 
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 140" data-tags="status" data-styles="vox,whiteboard">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#d7263d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 300 140" data-tags="status" data-styles="vox,whiteboard">
   <path d="M58 28C112 8 226 12 270 44C300 72 262 118 180 126C98 134 26 116 18 80C12 52 46 34 96 26"/>
 </svg>
 ```
@@ -2518,6 +2518,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 The drawing contract (every file):
 
 - `viewBox="0 0 200 200"` for doodles; marks and stamps use the viewBox given below.
+- The root `<svg>` carries `fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"` (marks and stamps `#d7263d`), so the source previews as strokes in Finder, a browser, or an editor; the build reads only the path data, and `SK.doodle` sets the real colour and width.
 - One `<path d="…">` per pen stroke, in the order a hand would draw them; 1–8 strokes; no fills, no `<circle>`/`<rect>` (paths only), no transforms.
 - Hand-drawn, not ruler-straight: long lines bow 2–4 units (`Q`/`C`), closed shapes overshoot their start by 8–15° instead of closing exactly, ends stop a little past the target.
 - Rendered at 240 px with a 7 px pen (≈ 5.8 viewBox units): keep ≥ 12 units between parallel strokes so they do not merge; nothing smaller than 16 units.
@@ -2529,7 +2530,7 @@ Four worked doodles (copy these exactly):
 
 `vendor/asset-lib/src/doodles/stand.svg`:
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="orang" data-styles="whiteboard,mix-media">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="orang" data-styles="whiteboard,mix-media">
   <path d="M113 31C106 20 88 20 82 32C76 45 84 59 99 60C113 60 121 48 117 35"/>
   <path d="M100 62Q97 95 100 128"/>
   <path d="M71 93Q86 83 100 84Q115 85 130 94"/>
@@ -2540,7 +2541,7 @@ Four worked doodles (copy these exactly):
 
 `vendor/asset-lib/src/doodles/arrow-curve.svg`:
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="arah" data-styles="whiteboard,mix-media,broll-text">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="arah" data-styles="whiteboard,mix-media,broll-text">
   <path d="M24 152C40 90 100 52 166 60"/>
   <path d="M141 40Q156 50 168 60Q155 70 141 82"/>
 </svg>
@@ -2548,7 +2549,7 @@ Four worked doodles (copy these exactly):
 
 `vendor/asset-lib/src/doodles/burst.svg`:
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="ide,status" data-styles="whiteboard,mix-media,broll-text">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="ide,status" data-styles="whiteboard,mix-media,broll-text">
   <path d="M100 30Q102 46 100 62"/>
   <path d="M146 50Q138 62 128 73"/>
   <path d="M170 100Q154 102 138 100"/>
@@ -2562,7 +2563,7 @@ Four worked doodles (copy these exactly):
 
 `vendor/asset-lib/src/doodles/speech-round.svg`:
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="chat" data-styles="whiteboard,mix-media,stop-motion">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="chat" data-styles="whiteboard,mix-media,stop-motion">
   <path d="M62 146C28 132 20 92 38 64C58 34 120 26 156 48C186 68 184 112 152 132C132 144 104 148 82 144L50 172L62 146"/>
 </svg>
 ```

@@ -205,6 +205,17 @@ test('style-kit roles read the type variables and fall back to the old fonts', (
 });
 
 // ---- strokes, frames, documents ----------------------------------------------------------------------
+test('every source stroke SVG previews as strokes in any viewer (fill none + a stroke on the root)', () => {
+  for (const dir of ['doodles', 'marks', 'frames']) {
+    for (const f of readdirSync(join(ROOT, LIB, 'src', dir)).filter((x) => x.endsWith('.svg'))) {
+      const root = read(`${LIB}/src/${dir}/${f}`).match(/<svg\b[^>]*>/)[0];
+      assert.match(root, /fill="none"/, `${dir}/${f}: the root <svg> needs fill="none"`);
+      assert.match(root, /stroke="#[0-9a-f]{6}"/i, `${dir}/${f}: the root <svg> needs a stroke colour`);
+      assert.match(root, /stroke-linecap="round"/, `${dir}/${f}: the root <svg> needs stroke-linecap="round"`);
+    }
+  }
+});
+
 test('parseStrokeSvg reads viewBox, strokes, tags, styles, and fixed text', () => {
   const s = parseStrokeSvg('<svg viewBox="0 0 320 120" data-tags="status" data-styles="vox" data-text="ILUSTRASI"><path d="M10 10h300"/><path d="m10 20 5 5"/></svg>', 'x.svg');
   assert.deepEqual(s, { vb: [320, 120], d: ['M10 10L310 10', 'M10 20L15 25'], tags: ['status'], styles: ['vox'], text: 'ILUSTRASI' });

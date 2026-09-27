@@ -1,3 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="ide" data-styles="whiteboard,broll-text,mix-media">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="ide" data-styles="whiteboard,broll-text,mix-media">
   <path d="M100 100C100 90 114 90 116 100C118 116 96 122 86 108C74 90 92 70 112 72C138 74 146 104 134 124C118 150 78 150 62 124C44 94 62 50 104 46C150 42 176 80 170 120"/>
 </svg>

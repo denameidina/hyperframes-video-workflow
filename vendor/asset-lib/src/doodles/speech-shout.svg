@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" data-tags="chat" data-styles="whiteboard,mix-media,stop-motion">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="chat" data-styles="whiteboard,mix-media,stop-motion">
   <path d="M100 22L121 43L154 37L152 63L183 75L159 94L173 118L139 121L129 146L100 132L71 146L61 121L27 118L41 94L17 75L48 63L46 37L79 43L105 27"/>
   <path d="M76 128L56 176L100 136"/>
 </svg>
