@@ -77,7 +77,7 @@ npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slu
 ```bash
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
-npm run test:style-kit       # node --test scripts/style-kit.test.mjs scripts/style-docs.test.mjs
+npm run test:style-kit       # node --test scripts/style-kit.test.mjs scripts/style-docs.test.mjs scripts/paper-pack.test.mjs
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/

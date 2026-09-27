@@ -1,0 +1,37 @@
+/* paper-pack: paper backgrounds for style b-roll clips. Loaded by the host after style-kit.css.
+   Urls stay inside this folder (the linter rejects ../ paths). Sources: LICENSES.md. */
+.sk-paper-white, .sk-paper-cream, .sk-paper-grey, .sk-paper-crumpled, .sk-kraft, .sk-kraft-ribbed, .sk-kraft-dark,
+.sk-lined, .sk-grid, .sk-newsprint { background-size: 1080px 1920px; background-position: 0 0; }
+.sk-paper-white { background-image: url(paper-white.jpg); }
+.sk-paper-cream { background-image: url(paper-cream.jpg); }
+.sk-paper-grey { background-image: url(paper-grey.jpg); }
+.sk-paper-crumpled { background-image: url(paper-crumpled.jpg); }
+.sk-kraft { background-image: url(kraft.jpg); }
+.sk-kraft-ribbed { background-image: url(kraft-ribbed.jpg); }
+.sk-kraft-dark { background-image: url(kraft-dark.jpg); }
+/* notebook: blue rules every 64px, red margin at 120px */
+.sk-lined {
+  background-image: linear-gradient(to right, transparent 118px, rgba(220,38,38,.45) 118px 121px, transparent 121px),
+    repeating-linear-gradient(to bottom, transparent 0 62px, rgba(37,99,235,.26) 62px 64px), url(paper-white.jpg);
+  background-size: auto, auto, 1080px 1920px;
+}
+/* squared paper: 48px grid */
+.sk-grid {
+  background-image: repeating-linear-gradient(to right, transparent 0 46px, rgba(37,99,235,.18) 46px 48px),
+    repeating-linear-gradient(to bottom, transparent 0 46px, rgba(37,99,235,.18) 46px 48px), url(paper-white.jpg);
+  background-size: auto, auto, 1080px 1920px;
+}
+/* newsprint: grey stock with blurred text rows in three columns (not real text) */
+.sk-newsprint {
+  background-image: repeating-linear-gradient(to right, transparent 0 318px, rgba(214,210,203,.95) 318px 360px),
+    repeating-linear-gradient(to bottom, rgba(60,60,60,.16) 0 7px, transparent 7px 17px), url(paper-grey.jpg);
+  background-size: auto, auto, 1080px 1920px;
+}
+/* paper objects: size with width (aspect-ratio keeps the PNG shape); a div, not an <img>, so one
+   clip can repeat an object without tripping the linter's duplicate-media rule */
+.sk-sticky, .sk-pin, .sk-clip, .sk-tape-a, .sk-tape-b { position: absolute; background-repeat: no-repeat; background-size: 100% 100%; }
+.sk-sticky { background-image: url(sticky.png); aspect-ratio: 520 / 515; }
+.sk-pin { background-image: url(pin.png); aspect-ratio: 164 / 256; }
+.sk-clip { background-image: url(clip.png); aspect-ratio: 91 / 300; }
+.sk-tape-a { background-image: url(tape-a.png); aspect-ratio: 720 / 147; opacity: .93; }
+.sk-tape-b { background-image: url(tape-b.png); aspect-ratio: 720 / 170; opacity: .93; }

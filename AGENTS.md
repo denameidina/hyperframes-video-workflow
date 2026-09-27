@@ -165,7 +165,7 @@ npm run render       # render to MP4
 npm run publish      # publish and get a shareable link
 npm run test:repliz  # unit test R2/Repliz CLI without real network
 npm run test:motion-kit        # unit test motion b-roll engine
-npm run test:style-kit         # unit test style-kit engine + style reference richness
+npm run test:style-kit         # unit test style-kit engine + style reference richness + paper pack licenses
 npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
 npm run check:style-examples   # lint + validate + snapshot style b-roll examples
