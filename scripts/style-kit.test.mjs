@@ -512,3 +512,13 @@ test('arcPath bends the control point perpendicular to the route', () => {
   assert.equal(SK.arcPath({ x: 0, y: 0 }, { x: 100, y: 0 }, -0.5), 'M0.0 0.0 Q50.0 50.0 100.0 0.0');
   assert.equal(SK.arcPath({ x: 0, y: 0 }, { x: 0, y: 100 }, 0), 'M0.0 0.0 Q0.0 50.0 0.0 100.0');
 });
+
+test('sagPath hangs below the chord in either direction and is straight at sag 0', () => {
+  const { SK } = load();
+  const q = (d) => d.match(/Q(-?[\d.]+) (-?[\d.]+)/).slice(1).map(Number);
+  assert.equal(SK.sagPath({ x: 0, y: 0 }, { x: 100, y: 0 }), 'M0.0 0.0 Q50.0 24.0 100.0 0.0');
+  assert.deepEqual(q(SK.sagPath({ x: 100, y: 0 }, { x: 0, y: 0 })), [50, 24], 'right to left still hangs down');
+  assert.deepEqual(q(SK.sagPath({ x: 0, y: 0 }, { x: 0, y: 100 }, 0.1)), [0, 70], 'a vertical string bows downward too');
+  assert.equal(SK.sagPath({ x: 0, y: 0 }, { x: 100, y: 0 }, 0), 'M0.0 0.0 Q50.0 0.0 100.0 0.0');
+  assert.equal(SK.sagPath({ x: 3, y: 4 }, { x: 90, y: 20 }), SK.sagPath({ x: 3, y: 4 }, { x: 90, y: 20 }));
+});

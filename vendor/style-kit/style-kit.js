@@ -349,4 +349,10 @@ SK.arcPath = (p0,p1,bend=0.25)=>{
   const cx=(p0.x+p1.x)/2+(p1.y-p0.y)*bend, cy=(p0.y+p1.y)/2-(p1.x-p0.x)*bend;
   return `M${f2(p0.x)} ${f2(p0.y)} Q${f2(cx)} ${f2(cy)} ${f2(p1.x)} ${f2(p1.y)}`;
 };
+/* sagPath: a hanging string from p0 to p1; the curve's middle hangs sag × distance straight down the
+   screen (y grows) whatever the direction, so the control point drops twice that. sag 0 is straight. */
+SK.sagPath = (p0,p1,sag=0.12)=>{
+  const cx=(p0.x+p1.x)/2, cy=(p0.y+p1.y)/2+Math.hypot(p1.x-p0.x,p1.y-p0.y)*sag*2;
+  return `M${f2(p0.x)} ${f2(p0.y)} Q${f2(cx)} ${f2(cy)} ${f2(p1.x)} ${f2(p1.y)}`;
+};
 })();
