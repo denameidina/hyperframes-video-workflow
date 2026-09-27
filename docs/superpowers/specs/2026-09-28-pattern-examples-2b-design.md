@@ -59,17 +59,17 @@ bahasa Inggris.
 | Pola | Looks like | Use when | Timing vs word | SFX | Common misuse | Build with |
 | --- | --- | --- | --- | --- | --- | --- |
 | **string-connect** | Benang merah ditarik antar kartu yang dipin (papan detektif) | Menghubungkan sebab-sebab | Setiap benang tertarik di kata penghubung, 3–6 langkah | petikan benang | Benang lurus kaku; lebih dari 4 benang | `SK.sagPath` + `SK.draw` di `SK.onTwos` + `.sk-pin` |
-| **receipt-print** | Struk keluar dari bawah bingkai baris demi baris | Penjualan, transaksi UMKM | Satu baris per item yang disebut; total di kata "total" | derit printer per baris | Nominal yang tidak diucapkan; struk mulus tanpa langkah | `paper.receipt-blank` + `SK.onTwos` + teks `.sk-mono` |
+| **receipt-print** | Struk keluar dari printer kasir (di bawah) ke atas, baris demi baris | Penjualan, transaksi UMKM | Satu baris per item yang disebut; total di kata "total" | derit printer per baris | Nominal yang tidak diucapkan; struk mulus tanpa langkah | `paper.receipt-blank` + `SK.onTwos` + teks `.sk-mono` |
 | **flip-book** | Pojok buku tulis membalik 3–5 halaman, gambarnya berubah | Perubahan bertahap dari waktu ke waktu | Satu halaman per tahap, 2–3 langkah per balikan | kibas kertas | Lebih dari 5 halaman; gambar tanpa perubahan jelas | `paper.notebook-strip` + `SK.cycle` + scaleY bertahap |
 | **cutout-walk** | Tokoh kertas berjalan melintas, pose kaki berganti tiap langkah | Perjalanan pelanggan, "si owner datang ke…" | Berjalan sepanjang frasa; berhenti di tujuan | tap kertas per langkah | Meluncur tanpa pose kaki; berjalan lebih dari 2 s | Potongan kertas di clip + `SK.cycle` + `SK.onTwos` + `SK.piece` |
 | **cut-along** | Gunting memotong garis putus-putus; potongan terlepas dan jatuh | Memangkas biaya/langkah | Gunting jalan sepanjang kata kerja; potongan jatuh di akhir kata | snip gunting | Memotong tanpa garis putus-putus; gunting mulus tanpa langkah | `paper.scissors` + `SK.onTwos` + `SK.piece` |
-| **envelope-open** | Tutup amplop terbuka, kartu naik keluar | Pesan, notifikasi, "ada order masuk" | Tutup terbuka di kata pengantar; kartu naik di kata isinya | kertas bergeser | Kartu kosong; amplop terbuka tanpa isi yang diucapkan | `paper.envelope` + flap scaleY bertahap + `'rise'` |
+| **envelope-open** | Tutup amplop terbuka, kartu naik keluar | Pesan, notifikasi, "ada order masuk" | Tutup terbuka di kata pengantar; kartu naik di kata isinya | kertas bergeser | Kartu kosong; amplop terbuka tanpa isi yang diucapkan | `paper.envelope` dua kali: badan tanpa segitiga tutup, tutup (gambar yang sama di-clip ke segitiga) `scaleY` 1 → −1 on twos; kartu di antaranya, terpotong di tepi kantong |
 
 ## Helper engine
 
 | API | Tempat | Perilaku |
 | --- | --- | --- |
-| `SK.sagPath(p0, p1, sag = 0.12)` | style-kit | Path `M p0 Q c p1` (angka 1 desimal) dengan titik kontrol di tengah, turun sebesar `sag × jarak` ke arah **bawah layar** (y bertambah), apa pun arah p0 → p1; `sag = 0` = garis lurus. Beda dengan `SK.arcPath`, yang membengkok tegak lurus arah jalan. |
+| `SK.sagPath(p0, p1, sag = 0.12)` | style-kit | Path `M p0 Q c p1` (angka 1 desimal). Bagian tengah lengkungan melorot `sag × jarak` ke arah **bawah layar** (y bertambah), apa pun arah p0 → p1, sehingga titik kontrolnya turun dua kali itu; `sag = 0` = garis lurus. Beda dengan `SK.arcPath`, yang membengkok tegak lurus arah jalan. |
 
 ## Aset baru
 
@@ -122,7 +122,7 @@ bergerak on twos (`SK.STOP_FPS`); SFX tidak dirender (dicatat di baris pola).
   0 error; setiap still baru dilihat dan diperbaiki sebelum commit.
 - Still lama: 11 still whiteboard dan 8 still stop-motion identik dengan
   baseline dari `main` (toleransi 2a: selisih ≤ 1 per kanal pada ≤ 0,001%
-  nilai).
+  nilai). Hasil pembangunan di salinan scratch: 19 dari 19 identik byte.
 
 ## Dokumen
 
