@@ -10083,6 +10083,24 @@
   "bytes": 289440
  },
  {
+  "id": "paper.scissors",
+  "kind": "paper",
+  "file": "vendor/asset-lib/paper/scissors.png",
+  "use": ".sk-obj-scissors",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "benda",
+   "kerja"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "prompt": "a pair of open scissors seen from above, blades apart at about 35 degrees, with orange plastic handles and silver blades, made as a flat paper cutout",
+  "bytes": 109515
+ },
+ {
   "id": "hand.hold-card",
   "kind": "hand",
   "file": "vendor/asset-lib/hands/hold-card.png",

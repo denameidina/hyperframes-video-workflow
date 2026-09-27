@@ -125,7 +125,7 @@
 .sk-type-mm-typewriter { --sk-font-body: 'Special Elite'; }
 .sk-type-px-memory { --sk-font-body: 'Geist'; --sk-font-serif: 'Instrument Serif'; }
 .sk-type-px-label { --sk-font-body: 'Geist'; }
-.sk-obj-washi-pink, .sk-obj-washi-mint, .sk-obj-washi-grid, .sk-obj-tape-clear, .sk-obj-lakban-brown, .sk-obj-tape-black, .sk-obj-scrap-torn-white, .sk-obj-scrap-torn-cream, .sk-obj-scrap-torn-yellow, .sk-obj-scrap-torn-blue, .sk-obj-notebook-strip, .sk-obj-graph-scrap, .sk-obj-newspaper-scrap-blank, .sk-obj-envelope, .sk-obj-receipt-blank, .sk-obj-ticket-stub, .sk-obj-postage-stamp-blank, .sk-obj-staple, .sk-obj-binder-clip, .sk-obj-rubber-band, .sk-obj-sticky-pink, .sk-obj-sticky-blue, .sk-obj-star-sticker, .sk-obj-arrow-sticker, .sk-obj-circle-dot-sticker, .sk-obj-check-sticker, .sk-obj-coin-stack, .sk-obj-banknote-generic, .sk-obj-chat-bubble, .sk-obj-ai-chip, .sk-obj-warung-front, .sk-obj-shopping-bag, .sk-obj-parcel-box, .sk-obj-lightbulb, .sk-obj-magnifier, .sk-obj-calculator { position: absolute; background-repeat: no-repeat; background-size: 100% 100%; }
+.sk-obj-washi-pink, .sk-obj-washi-mint, .sk-obj-washi-grid, .sk-obj-tape-clear, .sk-obj-lakban-brown, .sk-obj-tape-black, .sk-obj-scrap-torn-white, .sk-obj-scrap-torn-cream, .sk-obj-scrap-torn-yellow, .sk-obj-scrap-torn-blue, .sk-obj-notebook-strip, .sk-obj-graph-scrap, .sk-obj-newspaper-scrap-blank, .sk-obj-envelope, .sk-obj-receipt-blank, .sk-obj-ticket-stub, .sk-obj-postage-stamp-blank, .sk-obj-staple, .sk-obj-binder-clip, .sk-obj-rubber-band, .sk-obj-sticky-pink, .sk-obj-sticky-blue, .sk-obj-star-sticker, .sk-obj-arrow-sticker, .sk-obj-circle-dot-sticker, .sk-obj-check-sticker, .sk-obj-coin-stack, .sk-obj-banknote-generic, .sk-obj-chat-bubble, .sk-obj-ai-chip, .sk-obj-warung-front, .sk-obj-shopping-bag, .sk-obj-parcel-box, .sk-obj-lightbulb, .sk-obj-magnifier, .sk-obj-calculator, .sk-obj-scissors { position: absolute; background-repeat: no-repeat; background-size: 100% 100%; }
 .sk-obj-washi-pink { background-image: url(paper/washi-pink.png); aspect-ratio: 720 / 196; }
 .sk-obj-washi-mint { background-image: url(paper/washi-mint.png); aspect-ratio: 720 / 202; }
 .sk-obj-washi-grid { background-image: url(paper/washi-grid.png); aspect-ratio: 720 / 228; }
@@ -162,6 +162,7 @@
 .sk-obj-lightbulb { background-image: url(paper/lightbulb.png); aspect-ratio: 496 / 720; }
 .sk-obj-magnifier { background-image: url(paper/magnifier.png); aspect-ratio: 684 / 720; }
 .sk-obj-calculator { background-image: url(paper/calculator.png); aspect-ratio: 594 / 720; }
+.sk-obj-scissors { background-image: url(paper/scissors.png); aspect-ratio: 720 / 496; }
 .sk-tex-cork, .sk-tex-cardboard, .sk-tex-paper-tan, .sk-tex-concrete-light, .sk-tex-linen, .sk-tex-wood-desk, .sk-tex-plaster, .sk-tex-blackboard { background-size: 1080px 1920px; background-position: 0 0; }
 .sk-tex-cork { background-image: url(textures/cork.jpg); }
 .sk-tex-cardboard { background-image: url(textures/cardboard.jpg); }

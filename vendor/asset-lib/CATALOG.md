@@ -411,7 +411,7 @@ Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `d
 | `doodle.wave` | `SK.doodle('doodle.wave')` | whiteboard, mix-media, stop-motion | orang | project |
 | `doodle.whisper` | `SK.doodle('doodle.whisper')` | whiteboard, mix-media, stop-motion | chat | project |
 
-## paper (41)
+## paper (42)
 
 Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `paper*.webp`
 
@@ -458,6 +458,7 @@ Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `pa
 | `paper.lightbulb` | `.sk-obj-lightbulb` | stop-motion, mix-media, vox, parallax | ide | Codex (generated) |
 | `paper.magnifier` | `.sk-obj-magnifier` | stop-motion, mix-media, vox, parallax | ide | Codex (generated) |
 | `paper.calculator` | `.sk-obj-calculator` | stop-motion, mix-media, vox, parallax | uang, kerja | Codex (generated) |
+| `paper.scissors` | `.sk-obj-scissors` | stop-motion, mix-media | benda, kerja | Codex (generated) |
 
 ## hand (6)
 
