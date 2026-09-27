@@ -22,7 +22,7 @@
 - Existing examples stay pixel-identical: never restyle `.sk-doc`, `.sk-stroke`, `.sk-grain`, or any paper-pack class; `style-kit.css` changes are `var(--sk-font-*, <old font>)` fallbacks only; the eight old `SK.CITIES` and `SK.HAND.write/point` keep their values.
 - Clip rules unchanged: never set `visibility` in a clip; never name a `font-family` in a clip `<style>` (use `.sk-f-*`, `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`, `.sk-mono`); never write `../` in a url; repeated paper objects are divs (`.sk-obj-*`), not repeated `<img>`.
 - Asset content: no text, logos, serial numbers, or real brands in generated art; no real banknote designs; no people except stick figures and Dena's own footage; every `SK.doc` document shows the Ilustrasi tag.
-- Legacy palette contrast exceptions are exactly: `text.paper:accent`, `mg.default:accent2`, `mg.mint:accent2`, `vox.dark-desk:ink+accent2`, `stop.night-desk:ink`, `mm.night-zine:ink` (approved by Dena 2026-09-27); no new palette may be an exception.
+- Legacy palette contrast exceptions are exactly: `text.paper:accent`, `mg.default:accent2`, `mg.mint:accent2`, `vox.dark-desk:ink+accent2`, `stop.night-desk:ink`, `mm.night-zine:ink` — Dena approved keeping the first three on 2026-09-27; the three `.sk-kraft-dark` ones were found later by measuring the texture and are kept under the same decision (confirm with Dena before Task 5 if she has not yet). No new palette may be an exception.
 - Docs language: `docs/agents/**` English; `internal/docs/**` Indonesian.
 - Every commit message ends with:
   `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`
@@ -163,7 +163,8 @@ kontras.
 - Preset: 8 palet per gaya (4 lama sebagai class + 4 baru), 8 grade parallax,
   23 preset tipografi; peran font di style-kit membaca `--sk-font-*` dengan font
   lama sebagai fallback. Enam pengecualian kontras palet lama dipertahankan
-  (keputusan Dena) dan dikunci oleh test.
+  (tiga disetujui Dena; tiga `.sk-kraft-dark` ditemukan lewat pengukuran dan
+  diperlakukan sama) dan dikunci oleh test.
 - Contact sheet dirender dengan HyperFrames supaya agen bisa melihat pilihan.
 - `paper-pack` tidak dipindah; katalog mendaftarkannya.
 
