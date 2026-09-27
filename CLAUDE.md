@@ -175,6 +175,7 @@ npm run test:asset-lib         # asset library: build up to date, catalog/licens
 npm run asset-lib -- build     # rebuild vendor/asset-lib outputs from vendor/asset-lib/src (offline)
 npm run asset-lib -- fetch <icons|pictograms|fonts|maps|textures>  # refresh pinned third-party data (network)
 npm run asset-lib -- process <in.png> <out.png|.webp> [--max 720]   # crop to alpha, resize, compress a bitmap
+npm run asset-lib -- sheets    # render the contact sheets agents look at (docs/agents/references/asset-catalog/sheets/)
 npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
 npm run check:style-examples   # lint + validate + snapshot style b-roll examples

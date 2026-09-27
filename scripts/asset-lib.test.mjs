@@ -145,3 +145,13 @@ test('SK.rough is deterministic per seed, redraws each path once, and resets the
   assert.equal(a.p._skLen, null);
   const once = a.p.d; SK.rough(a.svg, { seed: 9 }); assert.equal(a.p.d, once);
 });
+
+// ---- contact sheets ----------------------------------------------------------------------------------
+test('the contact-sheet project matches the catalog and every page has a rendered sheet (run: npm run asset-lib -- sheets)', async () => {
+  const { sheetProject, CATALOG_DIR } = await import('./lib/asset-lib-sheets.mjs');
+  const { pages, files } = sheetProject(ROOT);
+  for (const [p, c] of Object.entries(files)) assert.equal(read(p), c, `${p} is stale`);
+  const onDisk = readdirSync(join(ROOT, CATALOG_DIR, 'compositions')).sort();
+  assert.deepEqual(onDisk, pages.map((p) => `${p.name}.html`).sort());
+  for (const p of pages) assert.ok(existsSync(join(ROOT, CATALOG_DIR, 'sheets', `${p.name}.webp`)), `sheets/${p.name}.webp is missing`);
+});
