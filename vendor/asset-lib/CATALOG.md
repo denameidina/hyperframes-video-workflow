@@ -369,7 +369,7 @@ Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `d
 | `doodle.box-hand` | `SK.doodle('doodle.box-hand')` | whiteboard, broll-text, mix-media | status | project |
 | `doodle.bracket-curly` | `SK.doodle('doodle.bracket-curly')` | whiteboard, mix-media, broll-text | arah, ide | project |
 | `doodle.bracket-square` | `SK.doodle('doodle.bracket-square')` | whiteboard, mix-media, broll-text | arah, ide | project |
-| `doodle.burst` | `SK.doodle('doodle.burst')` | whiteboard, mix-media, broll-text | ide, status | project |
+| `doodle.burst` | `SK.doodle('doodle.burst')` | whiteboard, broll-text, mix-media | ide, status | project |
 | `doodle.carry-box` | `SK.doodle('doodle.carry-box')` | whiteboard, mix-media, stop-motion | orang, logistik | project |
 | `doodle.celebrate` | `SK.doodle('doodle.celebrate')` | whiteboard, mix-media, stop-motion | orang, status | project |
 | `doodle.chart-hand` | `SK.doodle('doodle.chart-hand')` | whiteboard, mix-media, stop-motion | data | project |
@@ -390,7 +390,7 @@ Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `d
 | `doodle.lightning-hand` | `SK.doodle('doodle.lightning-hand')` | whiteboard, broll-text, mix-media | benda, ai | project |
 | `doodle.money-hand` | `SK.doodle('doodle.money-hand')` | whiteboard, mix-media, stop-motion | uang | project |
 | `doodle.phone-hand` | `SK.doodle('doodle.phone-hand')` | whiteboard, mix-media, stop-motion | perangkat, chat | project |
-| `doodle.point` | `SK.doodle('doodle.point')` | whiteboard, mix-media, stop-motion | orang | project |
+| `doodle.point` | `SK.doodle('doodle.point')` | whiteboard, mix-media, stop-motion | orang, arah | project |
 | `doodle.question` | `SK.doodle('doodle.question')` | whiteboard, broll-text, mix-media | status, ide | project |
 | `doodle.shrug` | `SK.doodle('doodle.shrug')` | whiteboard, mix-media, stop-motion | orang | project |
 | `doodle.sit-laptop` | `SK.doodle('doodle.sit-laptop')` | whiteboard, mix-media, stop-motion | orang, kerja, perangkat | project |
@@ -399,7 +399,7 @@ Sheet: [doodle](../../docs/agents/references/asset-catalog/sheets/) — files `d
 | `doodle.speech-round` | `SK.doodle('doodle.speech-round')` | whiteboard, mix-media, stop-motion | chat | project |
 | `doodle.speech-shout` | `SK.doodle('doodle.speech-shout')` | whiteboard, mix-media, stop-motion | chat | project |
 | `doodle.spiral` | `SK.doodle('doodle.spiral')` | whiteboard, broll-text, mix-media | ide | project |
-| `doodle.stand` | `SK.doodle('doodle.stand')` | whiteboard, mix-media | orang | project |
+| `doodle.stand` | `SK.doodle('doodle.stand')` | whiteboard, mix-media, stop-motion | orang | project |
 | `doodle.star-hand` | `SK.doodle('doodle.star-hand')` | whiteboard, broll-text, mix-media | status | project |
 | `doodle.strike-scribble` | `SK.doodle('doodle.strike-scribble')` | whiteboard, broll-text, mix-media | status | project |
 | `doodle.think` | `SK.doodle('doodle.think')` | whiteboard, mix-media, stop-motion | orang, ide | project |

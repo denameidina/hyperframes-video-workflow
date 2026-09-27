@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="arah" data-styles="whiteboard,mix-media,broll-text">
-  <path d="M20 99Q27 101 34 100"/>
-  <path d="M42 101Q49 99 56 100"/>
-  <path d="M64 99Q71 101 78 100"/>
-  <path d="M86 101Q93 99 100 100"/>
-  <path d="M108 99Q115 101 122 100"/>
-  <path d="M130 101Q137 99 144 100"/>
-  <path d="M158 84Q170 92 181 100Q170 108 158 118"/>
+  <path d="M16.1 100.4Q23.8 100.2 31.6 100.7"/>
+  <path d="M42 99.7Q49.3 99.8 56.5 100.6"/>
+  <path d="M66.9 99.6Q74.1 99.8 81.2 100.6"/>
+  <path d="M92.1 100.8Q100.2 101.2 108.3 100.5"/>
+  <path d="M118.8 100.5Q125.5 100.3 132.2 100"/>
+  <path d="M143.7 100.1Q151.5 100.4 159.3 100.1"/>
+  <path d="M165.2 109.9Q174 105 183.1 100.6Q174.2 95 165.1 89.8"/>
 </svg>

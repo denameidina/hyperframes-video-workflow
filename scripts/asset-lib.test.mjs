@@ -205,6 +205,13 @@ test('style-kit roles read the type variables and fall back to the old fonts', (
 });
 
 // ---- strokes, frames, documents ----------------------------------------------------------------------
+test('every doodle is 1–8 pen strokes, so it draws on in a readable order', () => {
+  for (const f of readdirSync(join(ROOT, LIB, 'src', 'doodles')).filter((x) => x.endsWith('.svg'))) {
+    const n = (read(`${LIB}/src/doodles/${f}`).match(/<path\b/g) || []).length;
+    assert.ok(n >= 1 && n <= 8, `doodles/${f} has ${n} strokes`);
+  }
+});
+
 test('every source stroke SVG previews as strokes in any viewer (fill none + a stroke on the root)', () => {
   for (const dir of ['doodles', 'marks', 'frames']) {
     for (const f of readdirSync(join(ROOT, LIB, 'src', dir)).filter((x) => x.endsWith('.svg'))) {

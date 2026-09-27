@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 200 200" data-tags="arah" data-styles="whiteboard,mix-media,broll-text">
-  <path d="M28 100Q100 92 172 100"/>
-  <path d="M50 80Q38 90 27 100Q38 110 50 122"/>
-  <path d="M150 80Q162 90 173 100Q162 110 150 122"/>
+  <path d="M16.2 100C30.2 99.2 72.2 95.4 100.2 95.4C128.1 95.5 169.9 99.3 183.8 100.1"/>
+  <path d="M34.9 88.3Q25.8 93.9 16.6 99.3Q26 105.6 35.5 111.6"/>
+  <path d="M164.3 111.6Q174.3 106.5 183.4 99.8Q173.6 94.8 163.9 89.5"/>
 </svg>

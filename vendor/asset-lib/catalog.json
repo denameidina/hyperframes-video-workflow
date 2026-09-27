@@ -6061,8 +6061,8 @@
   "use": "SK.doodle('doodle.burst')",
   "styles": [
    "whiteboard",
-   "mix-media",
-   "broll-text"
+   "broll-text",
+   "mix-media"
   ],
   "tags": [
    "ide",
@@ -6409,7 +6409,8 @@
    "stop-motion"
   ],
   "tags": [
-   "orang"
+   "orang",
+   "arah"
   ],
   "source": "project",
   "license": "MIT"
@@ -6552,7 +6553,8 @@
   "use": "SK.doodle('doodle.stand')",
   "styles": [
    "whiteboard",
-   "mix-media"
+   "mix-media",
+   "stop-motion"
   ],
   "tags": [
    "orang"
