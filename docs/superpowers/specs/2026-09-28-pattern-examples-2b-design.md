@@ -1,6 +1,6 @@
 # Pola + Contoh Whiteboard dan Stop-motion (Style Enrichment, Sub-proyek 2b) — Design
 
-Status: approved (brainstorming 2026-09-28), belum diimplementasi
+Status: implemented 2026-09-28 (plan `docs/superpowers/plans/2026-09-28-pattern-examples-2b.md`)
 Date: 2026-09-28
 Branch: `feat/examples-2b`
 Sub-proyek: 2 dari rangkaian "Style Enrichment", putaran kedua dari tiga
