@@ -31,7 +31,7 @@ tiga putaran; contoh disusun **satu host per gaya**.
 
 - `docs/agents/references/style-examples/<gaya>/` untuk ketujuh gaya, dengan
   `index.html` dan `snapshots.json` dihasilkan dari `examples.json`.
-- 60 still lama identik byte setelah migrasi.
+- 60 still lama identik setelah migrasi (toleransi derau float, lihat Migrasi).
 - broll-text dan motion-graphic masing-masing 20 pola, semuanya punya contoh.
 - `SK.typeOn`, `SK.shake`, `SK.arcPath` (style-kit), `SK.mapSvg` (asset-lib).
 - Test cakupan pola aktif untuk broll-text dan motion-graphic.
@@ -99,9 +99,13 @@ Migrasi: ke-32 file komposisi lama (29 clip + 3 front mix-media) dipindah ke hos
 gayanya dengan `git mv`; host lama (`style-examples/index.html`,
 `snapshots.json`, `compositions/`, `hyperframes.json`) dihapus. Bukti: untuk
 setiap still lama pada waktu host `T` di clip yang mulai `S`, still baru pada
-`S' + (T − S)` di host gayanya harus identik byte dengan baseline yang
-dirender dari `main`. `stills` di manifest diisi dari waktu lokal lama itu,
-sehingga pemetaannya satu-satu.
+`S' + (T − S)` di host gayanya harus identik dengan baseline yang dirender
+dari `main`, atau berselisih ≤ 1 per kanal pada ≤ 0,001% nilai. `stills` di
+manifest diisi dari waktu lokal lama itu, sehingga pemetaannya satu-satu.
+
+Hasil spike: 59 identik byte, 1 dalam toleransi (sm-01 pada lokal 5,7 s: dua
+nilai kanal berselisih 1). Penyebabnya derau float waktu lokal
+(`80,2 − 74,5` ≠ `6,2 − 0,5` di bit terakhir), bukan perubahan perilaku.
 
 ## Pola baru
 
@@ -132,7 +136,7 @@ SFX | Common misuse | Build with).
 | --- | --- | --- |
 | `SK.typeOn(el, text, u, { caret = true })` | style-kit | Menulis `text` sampai `ceil(u × panjang)` karakter; `u` 0..1; caret `<span class="sk-caret">` berkedip setiap 0,5 s dengan `SK.stepTime`; tanpa DOM baru setiap frame (teks ditulis hanya saat berubah). |
 | `SK.shake(t, t0, { amp = 10, dur = 0.3, freq = 30 })` | style-kit | `{x, y, r}` getar teredam: nol sebelum `t0` dan setelah `t0 + dur`; amplitudo meluruh linear; deterministik. |
-| `SK.arcPath(p0, p1, bend = 0.25)` | style-kit | Path `M p0 Q c p1` dengan titik kontrol di tengah, digeser tegak lurus sebesar `bend × jarak` (positif = ke kiri arah jalan). |
+| `SK.arcPath(p0, p1, bend = 0.25)` | style-kit | Path `M p0 Q c p1` (angka 1 desimal) dengan titik kontrol di tengah, digeser tegak lurus sebesar `bend × jarak` (positif = ke kiri arah jalan). |
 | `SK.mapSvg(map, { fill, stroke, strokeWidth, regions = {} })` | asset-lib | String `<svg>` peta inline: setiap region sebagai `<path data-region="<id>">` dengan warna dari `regions[id]` atau `fill`. Data dari `SK.LIB.regions[map]` yang diekstrak build dari `maps/<map>.svg` (`world`, `sea`, `id-provinces`, `java`). Id tidak dikenal → error dengan saran. |
 
 `SK.mapSvg` menambah ±170 KB ke `asset-lib.js` (peta sebagai `<img>` tidak bisa
@@ -149,7 +153,7 @@ diwarnai per region, dan clip tidak boleh memuat file saat render).
 | `tx-09-stamp-swash` | stamp-slam + swash-underline | split | `frame.stamp-hemat`, `frame.swash-2` |
 | `tx-10-font-riso` | font-swap + riso-poster | cutaway | `sk-pal-text-risograph`, `.sk-tex-riso`, 4 font |
 | `mg-05-race-timeline` | bar-race + timeline | cutaway | `sk-pal-mg-fintech` |
-| `mg-06-before-venn` | before-after + venn | split | `sk-pal-mg-sunrise` |
+| `mg-06-before-venn` | before-after (dua baris, "sebelum" grayscale) + venn | split | `sk-pal-mg-sunrise` |
 | `mg-07-funnel-stack` | funnel + stack-up | panel | `sk-type-mg-jakarta`, `pict.*` |
 | `mg-08-dots-bubbles` | dot-matrix + bubble-move | cutaway | `sk-pal-mg-ai-violet` |
 | `mg-09-province-pin` | map-pin + province-glow | cutaway | `map.id-provinces`, `SK.mapSvg` |
@@ -160,6 +164,9 @@ Aturan setiap contoh (sama dengan contoh lama): komentar "Example only" (kata
 dan angka karangan), satu `SK.clip`, fungsi murni waktu, tanpa `visibility`,
 tanpa `font-family` di `<style>` clip, tanpa `../` di url; minimal dua still
 pada kata kunci; SFX tidak dirender di contoh (dicatat di baris pola).
+Selector template-literal (`` querySelector(`[data-region="${id}"]`) ``) ditolak
+linter (`template_literal_selector`); cari region dengan
+`querySelectorAll('[data-region]')` lalu `getAttribute`.
 
 ## Pengujian
 
@@ -177,8 +184,8 @@ pada kata kunci; SFX tidak dirender di contoh (dicatat di baris pola).
 - `scripts/style-kit.test.mjs`: `SK.typeOn`, `SK.shake`, `SK.arcPath`.
 - `scripts/asset-lib.test.mjs`: `SK.mapSvg` (region, warna, id tak dikenal),
   `SK.LIB.regions` sama dengan path di file peta.
-- Migrasi: 60 still lama identik byte dengan baseline (skrip sekali pakai di
-  scratchpad, dicatat di plan).
+- Migrasi: 60 still lama identik dengan baseline dalam toleransi (skrip sekali
+  pakai di scratchpad, dicatat di plan).
 - Visual: setiap still contoh baru dilihat; contoh yang tidak terbaca
   diperbaiki sebelum commit.
 
@@ -209,7 +216,7 @@ pada kata kunci; SFX tidak dirender di contoh (dicatat di baris pola).
 
 ## Definisi selesai
 
-- Tujuh host per gaya; host lama dihapus; 60 still lama identik byte.
+- Tujuh host per gaya; host lama dihapus; 60 still lama identik (dalam toleransi).
 - broll-text 20/20 dan motion-graphic 20/20 pola tercakup; 13 contoh baru
   lolos lint/validate dan sudah dilihat.
 - Semua suite hijau; dokumen dan ADR/EARS di commit yang sama dengan kodenya.
