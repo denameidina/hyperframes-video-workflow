@@ -354,6 +354,27 @@ Sheet: [pictogram](../../docs/agents/references/asset-catalog/sheets/) — files
 | `pict.briefcase` | `SK.pict('briefcase')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 | `pict.gear` | `SK.pict('gear')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 
+## paper (5)
+
+Sheet: [paper](../../docs/agents/references/asset-catalog/sheets/) — files `paper*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `paper.tape-a` | `.sk-tape-a` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `paper.tape-b` | `.sk-tape-b` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `paper.pin` | `.sk-pin` | stop-motion, mix-media, vox, parallax | kertas, tempat | paper pack — vendor/paper-pack/LICENSES.md |
+| `paper.clip` | `.sk-clip` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `paper.sticky` | `.sk-sticky` | stop-motion, mix-media, vox, parallax | kertas, ide | paper pack — vendor/paper-pack/LICENSES.md |
+
+## hand (2)
+
+Sheet: [hand](../../docs/agents/references/asset-catalog/sheets/) — files `hand*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `hand.write` | `SK.placeHand(img, tip, { pose: 'write' })` | whiteboard | orang | paper pack — vendor/paper-pack/LICENSES.md |
+| `hand.point` | `SK.placeHand(img, tip, { pose: 'point' })` | whiteboard | orang, arah | paper pack — vendor/paper-pack/LICENSES.md |
+
 ## frame (15)
 
 Sheet: [frame](../../docs/agents/references/asset-catalog/sheets/) — files `frame*.webp`
@@ -405,6 +426,37 @@ Sheet: [map](../../docs/agents/references/asset-catalog/sheets/) — files `map*
 | `map.sea` | `SK.geo(lat, lon, 'sea')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:50m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ |
 | `map.id-provinces` | `SK.geo(lat, lon, 'id-provinces')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:10m Admin 1 v5.1.2 (33 provinces, before the Kalimantan Utara and Papua splits) + 1:50m Admin 0 — https://www.naturalearthdata.com/about/terms-of-use/ |
 | `map.java` | `SK.geo(lat, lon, 'java')` | vox, motion-graphic, parallax | peta, tempat | Natural Earth 1:10m Admin 1 v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ |
+
+## texture (24)
+
+Sheet: [texture](../../docs/agents/references/asset-catalog/sheets/) — files `texture*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `texture.paper-white` | `.sk-paper-white` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.paper-cream` | `.sk-paper-cream` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.paper-grey` | `.sk-paper-grey` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.paper-crumpled` | `.sk-paper-crumpled` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.kraft` | `.sk-kraft` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.kraft-ribbed` | `.sk-kraft-ribbed` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.kraft-dark` | `.sk-kraft-dark` | stop-motion, mix-media, vox, parallax | kertas | paper pack — vendor/paper-pack/LICENSES.md |
+| `texture.lined` | `.sk-lined` | stop-motion, mix-media, vox, parallax | kertas | paper pack (CSS over paper-white/paper-grey) |
+| `texture.grid` | `.sk-grid` | stop-motion, mix-media, vox, parallax | kertas | paper pack (CSS over paper-white/paper-grey) |
+| `texture.newsprint` | `.sk-newsprint` | stop-motion, mix-media, vox, parallax | kertas | paper pack (CSS over paper-white/paper-grey) |
+| `texture.graph` | `.sk-tex-graph` | whiteboard, vox, stop-motion | kertas | project (procedural CSS/SVG) |
+| `texture.dots` | `.sk-tex-dots` | whiteboard, motion-graphic | kertas | project (procedural CSS/SVG) |
+| `texture.whiteboard` | `.sk-tex-whiteboard` | whiteboard | kertas | project (procedural CSS/SVG) |
+| `texture.halftone` | `.sk-tex-halftone` | mix-media, broll-text | kertas | project (procedural CSS/SVG) |
+| `texture.riso` | `.sk-tex-riso` | mix-media, broll-text | kertas | project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs) |
+| `texture.film` | `.sk-tex-film` | parallax, stop-motion, mix-media | kertas | project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs) |
+| `texture.cork` | `.sk-tex-cork` | vox, stop-motion, mix-media | kertas | ambientCG Cork004, 2K-JPG Color map — https://ambientcg.com/view?id=Cork004 |
+| `texture.cardboard` | `.sk-tex-cardboard` | stop-motion, mix-media | kertas | ambientCG Cardboard004, 2K-JPG Color map — https://ambientcg.com/view?id=Cardboard004 |
+| `texture.paper-tan` | `.sk-tex-paper-tan` | vox, stop-motion, mix-media | kertas | ambientCG Paper005, 2K-JPG Color map — https://ambientcg.com/view?id=Paper005 |
+| `texture.concrete-light` | `.sk-tex-concrete-light` | parallax, mix-media, broll-text | kertas | ambientCG Concrete034, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete034 |
+| `texture.linen` | `.sk-tex-linen` | mix-media, vox, parallax | kertas | ambientCG Fabric036, 2K-JPG Color map — https://ambientcg.com/view?id=Fabric036 |
+| `texture.wood-desk` | `.sk-tex-wood-desk` | stop-motion, mix-media, parallax, vox | kertas | ambientCG Wood049, 2K-JPG Color map — https://ambientcg.com/view?id=Wood049 |
+| `texture.plaster` | `.sk-tex-plaster` | parallax, mix-media, broll-text | kertas | ambientCG Plaster002, 2K-JPG Color map — https://ambientcg.com/view?id=Plaster002 |
+| `texture.blackboard` | `.sk-tex-blackboard` | whiteboard | kertas | ambientCG Concrete031, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete031 |
 
 ## font (17)
 

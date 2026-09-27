@@ -38,3 +38,13 @@ Paper-pack files keep their rows in `vendor/paper-pack/LICENSES.md`.
 | `maps/sea.svg` | Natural Earth 1:50m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ | Public domain | Southeast Asia, equirectangular, 36 px/deg, Douglas–Peucker 0.03°, rings < 0.01 deg² dropped, one <path id> per country |
 | `maps/world.svg` | Natural Earth 1:110m Admin 0 – Countries v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/ | Public domain | equirectangular, 6 px/deg, Douglas–Peucker 0.15°, rings < 0.5 deg² dropped, one <path id> per country |
 | `pictograms/phosphor.json` | @phosphor-icons/core 2.1.1 (fill) — https://registry.npmjs.org/@phosphor-icons/core/-/core-2.1.1.tgz | MIT | 70 icons, 256 grid, path data only |
+| `textures/blackboard.jpg` | ambientCG Concrete031, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete031 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB, slate tint (`colorchannelmixer=rr=.35:gg=.5:bb=.42`) |
+| `textures/cardboard.jpg` | ambientCG Cardboard004, 2K-JPG Color map — https://ambientcg.com/view?id=Cardboard004 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/concrete-light.jpg` | ambientCG Concrete034, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete034 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/cork.jpg` | ambientCG Cork004, 2K-JPG Color map — https://ambientcg.com/view?id=Cork004 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/film-tile.png` | project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs) | MIT | 256×256 tile, grey grain |
+| `textures/linen.jpg` | ambientCG Fabric036, 2K-JPG Color map — https://ambientcg.com/view?id=Fabric036 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/paper-tan.jpg` | ambientCG Paper005, 2K-JPG Color map — https://ambientcg.com/view?id=Paper005 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/plaster.jpg` | ambientCG Plaster002, 2K-JPG Color map — https://ambientcg.com/view?id=Plaster002 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |
+| `textures/riso-tile.png` | project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs) | MIT | 256×256 tile, pink speckles on alpha |
+| `textures/wood-desk.jpg` | ambientCG Wood049, 2K-JPG Color map — https://ambientcg.com/view?id=Wood049 | CC0 1.0 | centre crop 9:16, 1080×1920, JPEG ≤ 400 KB |

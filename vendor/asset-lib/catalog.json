@@ -7574,6 +7574,413 @@
   "license": "MIT"
  },
  {
+  "id": "texture.paper-white",
+  "kind": "texture",
+  "file": "vendor/paper-pack/paper-white.jpg",
+  "use": ".sk-paper-white",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 65547
+ },
+ {
+  "id": "texture.paper-cream",
+  "kind": "texture",
+  "file": "vendor/paper-pack/paper-cream.jpg",
+  "use": ".sk-paper-cream",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 61084
+ },
+ {
+  "id": "texture.paper-grey",
+  "kind": "texture",
+  "file": "vendor/paper-pack/paper-grey.jpg",
+  "use": ".sk-paper-grey",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 123454
+ },
+ {
+  "id": "texture.paper-crumpled",
+  "kind": "texture",
+  "file": "vendor/paper-pack/paper-crumpled.jpg",
+  "use": ".sk-paper-crumpled",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 29518
+ },
+ {
+  "id": "texture.kraft",
+  "kind": "texture",
+  "file": "vendor/paper-pack/kraft.jpg",
+  "use": ".sk-kraft",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 77010
+ },
+ {
+  "id": "texture.kraft-ribbed",
+  "kind": "texture",
+  "file": "vendor/paper-pack/kraft-ribbed.jpg",
+  "use": ".sk-kraft-ribbed",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 227565
+ },
+ {
+  "id": "texture.kraft-dark",
+  "kind": "texture",
+  "file": "vendor/paper-pack/kraft-dark.jpg",
+  "use": ".sk-kraft-dark",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "CC0 1.0",
+  "bytes": 96491
+ },
+ {
+  "id": "paper.tape-a",
+  "kind": "paper",
+  "file": "vendor/paper-pack/tape-a.png",
+  "use": ".sk-tape-a",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "bytes": 24340
+ },
+ {
+  "id": "paper.tape-b",
+  "kind": "paper",
+  "file": "vendor/paper-pack/tape-b.png",
+  "use": ".sk-tape-b",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "bytes": 29384
+ },
+ {
+  "id": "paper.pin",
+  "kind": "paper",
+  "file": "vendor/paper-pack/pin.png",
+  "use": ".sk-pin",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas",
+   "tempat"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "bytes": 9916
+ },
+ {
+  "id": "paper.clip",
+  "kind": "paper",
+  "file": "vendor/paper-pack/clip.png",
+  "use": ".sk-clip",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "bytes": 8503
+ },
+ {
+  "id": "paper.sticky",
+  "kind": "paper",
+  "file": "vendor/paper-pack/sticky.png",
+  "use": ".sk-sticky",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas",
+   "ide"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "bytes": 24506
+ },
+ {
+  "id": "hand.write",
+  "kind": "hand",
+  "file": "vendor/paper-pack/hand-write.png",
+  "use": "SK.placeHand(img, tip, { pose: 'write' })",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "orang"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "anchor": {
+   "pose": "write",
+   "w": 664,
+   "h": 720,
+   "tx": 8,
+   "ty": 711
+  },
+  "bytes": 31263
+ },
+ {
+  "id": "hand.point",
+  "kind": "hand",
+  "file": "vendor/paper-pack/hand-point.png",
+  "use": "SK.placeHand(img, tip, { pose: 'point' })",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "orang",
+   "arah"
+  ],
+  "source": "paper pack — vendor/paper-pack/LICENSES.md",
+  "license": "project asset (MIT)",
+  "anchor": {
+   "pose": "point",
+   "w": 697,
+   "h": 720,
+   "tx": 10,
+   "ty": 705
+  },
+  "bytes": 26407
+ },
+ {
+  "id": "texture.lined",
+  "kind": "texture",
+  "inline": ".sk-lined",
+  "use": ".sk-lined",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack (CSS over paper-white/paper-grey)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.grid",
+  "kind": "texture",
+  "inline": ".sk-grid",
+  "use": ".sk-grid",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack (CSS over paper-white/paper-grey)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.newsprint",
+  "kind": "texture",
+  "inline": ".sk-newsprint",
+  "use": ".sk-newsprint",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "paper pack (CSS over paper-white/paper-grey)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.graph",
+  "kind": "texture",
+  "inline": ".sk-tex-graph",
+  "use": ".sk-tex-graph",
+  "styles": [
+   "whiteboard",
+   "vox",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (procedural CSS/SVG)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.dots",
+  "kind": "texture",
+  "inline": ".sk-tex-dots",
+  "use": ".sk-tex-dots",
+  "styles": [
+   "whiteboard",
+   "motion-graphic"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (procedural CSS/SVG)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.whiteboard",
+  "kind": "texture",
+  "inline": ".sk-tex-whiteboard",
+  "use": ".sk-tex-whiteboard",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (procedural CSS/SVG)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.halftone",
+  "kind": "texture",
+  "inline": ".sk-tex-halftone",
+  "use": ".sk-tex-halftone",
+  "styles": [
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (procedural CSS/SVG)",
+  "license": "MIT"
+ },
+ {
+  "id": "texture.riso",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/riso-tile.png",
+  "use": ".sk-tex-riso",
+  "styles": [
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs)",
+  "license": "MIT",
+  "bytes": 13150
+ },
+ {
+  "id": "texture.film",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/film-tile.png",
+  "use": ".sk-tex-film",
+  "styles": [
+   "parallax",
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (ffmpeg `noise` filter, fixed seed — `makeGrainTiles` in scripts/lib/asset-lib-fetch.mjs)",
+  "license": "MIT",
+  "bytes": 69777
+ },
+ {
   "id": "frame.polaroid",
   "kind": "frame",
   "inline": "SK.frame('polaroid', …)",
@@ -7785,5 +8192,139 @@
   ],
   "source": "project (SK.torn preset)",
   "license": "MIT"
+ },
+ {
+  "id": "texture.cork",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/cork.jpg",
+  "use": ".sk-tex-cork",
+  "styles": [
+   "vox",
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Cork004, 2K-JPG Color map — https://ambientcg.com/view?id=Cork004",
+  "license": "CC0 1.0",
+  "bytes": 362423
+ },
+ {
+  "id": "texture.cardboard",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/cardboard.jpg",
+  "use": ".sk-tex-cardboard",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Cardboard004, 2K-JPG Color map — https://ambientcg.com/view?id=Cardboard004",
+  "license": "CC0 1.0",
+  "bytes": 101215
+ },
+ {
+  "id": "texture.paper-tan",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/paper-tan.jpg",
+  "use": ".sk-tex-paper-tan",
+  "styles": [
+   "vox",
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Paper005, 2K-JPG Color map — https://ambientcg.com/view?id=Paper005",
+  "license": "CC0 1.0",
+  "bytes": 45621
+ },
+ {
+  "id": "texture.concrete-light",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/concrete-light.jpg",
+  "use": ".sk-tex-concrete-light",
+  "styles": [
+   "parallax",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Concrete034, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete034",
+  "license": "CC0 1.0",
+  "bytes": 92026
+ },
+ {
+  "id": "texture.linen",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/linen.jpg",
+  "use": ".sk-tex-linen",
+  "styles": [
+   "mix-media",
+   "vox",
+   "parallax"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Fabric036, 2K-JPG Color map — https://ambientcg.com/view?id=Fabric036",
+  "license": "CC0 1.0",
+  "bytes": 176625
+ },
+ {
+  "id": "texture.wood-desk",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/wood-desk.jpg",
+  "use": ".sk-tex-wood-desk",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "parallax",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Wood049, 2K-JPG Color map — https://ambientcg.com/view?id=Wood049",
+  "license": "CC0 1.0",
+  "bytes": 168617
+ },
+ {
+  "id": "texture.plaster",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/plaster.jpg",
+  "use": ".sk-tex-plaster",
+  "styles": [
+   "parallax",
+   "mix-media",
+   "broll-text"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Plaster002, 2K-JPG Color map — https://ambientcg.com/view?id=Plaster002",
+  "license": "CC0 1.0",
+  "bytes": 212682
+ },
+ {
+  "id": "texture.blackboard",
+  "kind": "texture",
+  "file": "vendor/asset-lib/textures/blackboard.jpg",
+  "use": ".sk-tex-blackboard",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "ambientCG Concrete031, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete031",
+  "license": "CC0 1.0",
+  "bytes": 44252
  }
 ]

@@ -1518,7 +1518,7 @@ export function sheetPages(root) {
   const tile = (e) => OVERLAY.includes(e.use)
     ? `<div class="${e.use === '.sk-tex-film' ? '' : 'sk-paper-white'}" style="position:relative;width:220px;height:300px;background-size:cover;overflow:hidden${e.use === '.sk-tex-film' ? ';background:#8a7355' : ''}"><div class="${e.use.slice(1)}" style="width:220px;height:300px"></div></div>`
     : `<div class="${e.use.slice(1)}" style="position:relative;width:220px;height:300px;background-color:#f5f3f4;overflow:hidden${e.file ? ';background-size:cover' : ''}"></div>`;
-  grid('texture', 'texture — classes (overlays on paper-white; film on kraft brown)', 4, of('texture').map((e) => cell(tile(e), short(e.id))), 20);
+  grid('texture', 'texture — classes (overlays on paper; film on kraft)', 4, of('texture').map((e) => cell(tile(e), short(e.id))), 20);
   const papers = of('paper');
   if (papers.length) grid('paper', 'paper — .sk-obj-* (cut-outs, tape, scraps)', 5, papers.map((e) => cell(`<div class="${e.use.slice(1)}" style="position:relative;width:160px;max-height:200px"></div>`, short(e.id), { dark: true })), 30);
   const hands = of('hand');

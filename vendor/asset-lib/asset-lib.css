@@ -125,10 +125,42 @@
 .sk-type-mm-typewriter { --sk-font-body: 'Special Elite'; }
 .sk-type-px-memory { --sk-font-body: 'Geist'; --sk-font-serif: 'Instrument Serif'; }
 .sk-type-px-label { --sk-font-body: 'Geist'; }
+.sk-tex-cork, .sk-tex-cardboard, .sk-tex-paper-tan, .sk-tex-concrete-light, .sk-tex-linen, .sk-tex-wood-desk, .sk-tex-plaster, .sk-tex-blackboard { background-size: 1080px 1920px; background-position: 0 0; }
+.sk-tex-cork { background-image: url(textures/cork.jpg); }
+.sk-tex-cardboard { background-image: url(textures/cardboard.jpg); }
+.sk-tex-paper-tan { background-image: url(textures/paper-tan.jpg); }
+.sk-tex-concrete-light { background-image: url(textures/concrete-light.jpg); }
+.sk-tex-linen { background-image: url(textures/linen.jpg); }
+.sk-tex-wood-desk { background-image: url(textures/wood-desk.jpg); }
+.sk-tex-plaster { background-image: url(textures/plaster.jpg); }
+.sk-tex-blackboard { background-image: url(textures/blackboard.jpg); }
 /* ---- base (vendor/asset-lib/src/base.css): hand-written rules appended to the generated sheet ---- */
 /* mono role; the other roles live in style-kit.css with the same var() fallback pattern */
 .sk-mono { font-family: var(--sk-font-mono, 'Geist Mono'), ui-monospace, monospace; text-transform: none; }
 .sk-icon, .sk-pict, .sk-doodle, .sk-mark { display: block; overflow: visible; }
+
+/* procedural backgrounds (add to the stage or a piece) */
+.sk-tex-graph {
+  background-image: repeating-linear-gradient(to right, rgba(37,99,235,.28) 0 2px, transparent 2px 96px),
+    repeating-linear-gradient(to bottom, rgba(37,99,235,.28) 0 2px, transparent 2px 96px),
+    repeating-linear-gradient(to right, rgba(37,99,235,.12) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(to bottom, rgba(37,99,235,.12) 0 1px, transparent 1px 24px);
+}
+.sk-tex-dots { background-image: radial-gradient(circle, rgba(28,25,23,.22) 2.2px, transparent 2.6px); background-size: 40px 40px; }
+/* whiteboard with faint ghosts of erased marker */
+.sk-tex-whiteboard {
+  background-image: radial-gradient(ellipse 420px 90px at 300px 520px, rgba(120,130,150,.07), transparent 70%),
+    radial-gradient(ellipse 360px 70px at 760px 1180px, rgba(120,130,150,.06), transparent 70%),
+    radial-gradient(ellipse 500px 110px at 520px 1560px, rgba(120,130,150,.05), transparent 70%),
+    linear-gradient(160deg, #fdfdfb, #f1f2ef);
+}
+/* overlays: a full-frame div over the stage (like .sk-grain); move .sk-tex-film with SK.grain. Riso and film
+   are baked PNG tiles — SVG noise filters in data-URI backgrounds render blank in HyperFrames' Chrome */
+.sk-tex-halftone, .sk-tex-riso, .sk-tex-film, .sk-haze { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+.sk-tex-halftone { background-image: radial-gradient(circle, rgba(0,0,0,.16) 1.6px, transparent 2px); background-size: 9px 9px; mix-blend-mode: multiply; }
+.sk-tex-riso { mix-blend-mode: multiply; opacity: .55; background-image: url(textures/riso-tile.png); background-size: 256px 256px; }
+.sk-tex-film { mix-blend-mode: overlay; opacity: .45; background-image: url(textures/film-tile.png); background-size: 256px 256px; }
+.sk-haze { opacity: 0; }
 
 /* stamps and badges (SK.stamp) */
 .sk-stamp { position: absolute; display: flex; align-items: center; justify-content: center; }
