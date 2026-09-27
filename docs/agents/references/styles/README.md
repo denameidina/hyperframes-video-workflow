@@ -16,9 +16,9 @@ Worked examples: `docs/agents/references/style-examples/`
 | `broll-text` | Full-frame kinetic typography of the spoken words | `broll-text.md` | available |
 | `motion-graphic` | Flat infographic: numbers, bars, rings, icons, arrows | `motion-graphic.md` | available |
 | `whiteboard` | Hand-drawn lines and handwriting on a board, marker follows | `whiteboard.md` | available |
-| `vox` | Paper texture, document clippings, highlighter, map zooms | — | planned (sub-project 2) |
-| `stop-motion` | Paper cut-outs moving on twos (12 fps) | — | planned (sub-project 2) |
-| `mix-media` | Dena cut-out + real screenshots + scribbles in one frame | — | planned (sub-project 2) |
+| `vox` | Paper texture, document clippings, highlighter, map zooms | — | planned (sub-project 2b) |
+| `stop-motion` | Paper cut-outs moving in steps (on twos), torn edges, tape, pins | `stop-motion.md` | available |
+| `mix-media` | Dena keeps talking on a paper collage (alpha cut-out of her footage) | — | planned (sub-project 2b) |
 | `parallax` | 2.5D: a photo split into depth layers, camera moves through | — | planned (sub-project 3) |
 
 Only `available` types may appear in a `visual-plan.md` decision.
@@ -37,6 +37,9 @@ Match the line, not the topic:
 | lists steps, a framework, or a flow | `whiteboard` (draw-flow, list-tick) or `motion-graphic` (arrow-flow) | whiteboard feels thought-out-loud; arrow-flow feels product-clean |
 | maps facets of one idea | `whiteboard` (mind-map) | the board grows around a named centre |
 | is about a person or a relation between people | `whiteboard` (stick-figure, speech-bubble) | simple figures carry roles without fake likeness |
+| describes manual work, a pile of tasks, or concrete objects | `stop-motion` (stack-pile, sticky-wall, slide-on-twos) | handmade paper objects make the manual feel tangible |
+| swaps, tears away, or throws out an old way ("dulu… sekarang", "jangan") | `stop-motion` (pin-and-swap, tear-reveal, crumple-away) | a physical swap reads instantly |
+| quotes what someone said | `stop-motion` (replacement-face + speech bubble) or `whiteboard` (speech-bubble) | a paper figure carries the role without a fake likeness |
 | needs proof | capture (`use-real`) | no style replaces real evidence |
 | is personal, emotional, or an opinion | none (`skip`) | keep Dena's face |
 
@@ -61,7 +64,7 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 ```md
 ### <ov-NNN>
 
-- Type: <broll-text | motion-graphic | whiteboard>
+- Type: <broll-text | motion-graphic | whiteboard | stop-motion>
 - Purpose:
 - Required: <yes | no>
 - Privacy notes:
@@ -72,6 +75,9 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Pattern: <pattern names from the style's Patterns table>
 - Palette: <--sk-bg, --sk-ink, --sk-accent, --sk-accent-2, --sk-muted as hex>
 - Font: <display | sans | hand>, sizes in px
+- Pen (whiteboard only): <marker | hand>
+- Assets: <each bitmap the clip needs, or "none">
+  - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript>
 - In–out (host time): <start>–<end> s
 - Beats on words:
   - "<word>" @ <host time> → <what appears or changes>
@@ -85,19 +91,24 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 Naming and timeline entry follow the motion b-roll rules: `NN` is the Timeline ID
 number padded to two digits, the clip id is `broll-NN-name`, the mount id
 `broll-NN-name-mount`; in `overlay-timeline.json` the row has `type` equal to the
-style (`"broll-text"`, `"motion-graphic"`, or `"whiteboard"`), `track: 4`,
-`assetRef: "compositions/broll/NN-name.html"`, and the treatment in `placement`.
-A style clip is not an asset: it gets no `asset-manifest.json` entry.
+style (`"broll-text"`, `"motion-graphic"`, `"whiteboard"`, or `"stop-motion"`),
+`track: 4`, `assetRef: "compositions/broll/NN-name.html"`, and the treatment in
+`placement`. A style clip is not an asset: it gets no `asset-manifest.json` entry,
+but every file in its `Assets:` list does (Style Assets in `asset-production.md`).
 
 ## Build Contract (all styles)
 
 - Host setup: the Dena starter already loads `vendor/style-kit/style-kit.js` and
-  `style-kit.css` after motion-kit. Mounts are the same as motion b-roll (class
+  `style-kit.css` after motion-kit, then `vendor/paper-pack/paper-pack.css`. Mounts are the same as motion b-roll (class
   `broll`, track 4, `id` = `broll-NN-name-mount`, `data-duration` = clip `T`).
 - One clip = one sub-composition that calls `SK.clip(id, { T, update })`
   synchronously; `update(t)` is a pure function of clip-local time.
-- The stage is `<div class="sk-stage sk-text|sk-mg|sk-wb">`; override the palette
-  on it with `style="--sk-bg:…"`. Use `bg: null` for split and panel.
+- The stage is `<div class="sk-stage sk-text|sk-mg|sk-wb|sk-stop">`; override the
+  palette on it with `style="--sk-bg:…"` or add a paper class (`sk-kraft`, …).
+  Use `bg: null` for split and panel.
+- Paper-pack files are referenced as `vendor/paper-pack/…` (host-relative); never
+  write `../` in a url (the linter rejects it). Repeated paper objects are divs
+  with a class (`.sk-sticky`, `.sk-pin`, …), not repeated `<img>` tags.
 - Fonts: switch with `.sk-display`, `.sk-sans`, `.sk-hand`; never name a font
   family in a clip's `<style>`.
 - Never set `visibility` on elements inside a clip (it would survive the mount

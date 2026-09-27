@@ -59,6 +59,43 @@ Every asset must say where it came from:
 
 If generated, include the prompt or short prompt summary.
 
+## Style Assets
+
+Bitmaps a style b-roll clip lists under `Assets:` in its Style B-roll Brief
+(stop-motion cut-outs, a whiteboard prop, a collage piece). Produce them in Build
+step 2, before the clip is written. Paper textures, tape, pins, sticky notes, and
+the whiteboard hand already live in `vendor/paper-pack/` — use those instead of
+generating new ones.
+
+| Source in the brief | How | File | Manifest |
+| --- | --- | --- | --- |
+| `codex` | skill `codex-image` with `--transparent`, using the Cut-out Recipe below | `assets/cutouts/NN-name.png` | `type: "cutout"`, `provenance: "generated"`, `promptSummary` |
+| `cc0` | download from ambientCG, Poly Haven, or a Wikimedia Commons file marked CC0 or Public Domain; confirm the license on the asset's own page | `assets/cc0/<source>-<id>.<ext>` | `provenance: "cc0"`, `source` = asset URL + id, `license`, `downloaded` (date) |
+| `dena-footage` | `ffmpeg -ss <processed time> -i processed.mp4 -frames:v 1 assets/frames/NN.png`, then `npx --yes hyperframes@0.7.24 remove-background assets/frames/NN.png -o assets/cutouts/NN-dena.png` | `assets/cutouts/NN-dena.png` | `provenance: "dena-footage"`, `source` = processed time |
+| `user` | the user's file; remove the background the same way when needed | `assets/cutouts/NN-name.png` | `provenance: "user"`, `source` = what the user gave |
+
+Cut-out Recipe (`codex`), filled per object:
+
+```text
+Use case: illustration-story
+Asset type: paper cut-out object for a stop-motion b-roll clip
+Primary request: <the object, specific to the transcript line>, made as a flat paper cutout
+Style/medium: flat paper cutout, visible paper fibre, construction-paper colours, thin white paper border around the whole silhouette, soft paper shadow inside the cut edges
+Composition/framing: whole object centered, about 80% of the canvas
+Constraints: plain transparent background; no text, no letters, no logos, no UI
+Avoid: glossy 3D render, photorealism, checkerboard, fake transparency grid
+```
+
+Rules:
+
+- Never generate Dena's likeness; a Dena cut-out comes only from her footage.
+- A generated cut-out never shows a real person or brand (Gate 2 R6).
+- No text inside generated images; words are live text in the clip.
+- Check every cut-out over a grey and a kraft ground. Reject blurry edges, a
+  painted checkerboard, extra fingers, plastic-looking paper, or anything generic
+  to the transcript, and regenerate with the whole spec (not just the fix).
+- Crop to the object and keep the long edge ≤ 800 px.
+
 ## Generated Image Prompt Rules
 
 When creating generated stills, prompts must be specific and grounded.

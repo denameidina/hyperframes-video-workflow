@@ -3,13 +3,14 @@
 // and examples that exist on disk.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const REF = new URL('../docs/agents/references/', import.meta.url);
 const STYLES = [
   { file: 'broll-text.md', patterns: 12, refs: 6, prefix: 'tx-' },
   { file: 'motion-graphic.md', patterns: 12, refs: 6, prefix: 'mg-' },
   { file: 'whiteboard.md', patterns: 10, refs: 6, prefix: 'wb-' },
+  { file: 'stop-motion.md', patterns: 12, refs: 6, prefix: 'sm-' },
 ];
 
 const section = (md, title) => {
@@ -52,9 +53,9 @@ for (const s of STYLES) {
     assert.ok(items.length >= 8, `${items.length} items`);
   });
 
-  test(`${s.file}: 4 examples that exist and cover cutaway, split, and panel`, () => {
+  test(`${s.file}: at least 4 examples that exist and cover cutaway, split, and panel`, () => {
     const rows = section(md, 'Examples').split('\n').filter((l) => l.startsWith('| `style-examples/'));
-    assert.equal(rows.length, 4);
+    assert.ok(rows.length >= 4, `${rows.length} examples`);
     const treatments = new Set();
     for (const r of rows) {
       const path = r.match(/`(style-examples\/compositions\/[^`]+)`/)[1];
@@ -74,9 +75,10 @@ test('styles/README.md lists every available style and its reference file', () =
   for (const h of ['Menu', 'Choosing A Style', 'Variety Rules', 'Style B-roll Brief', 'Build Contract (all styles)']) section(md, h);
 });
 
-test('every example clip is mounted in the example host', () => {
+test('every example clip on disk is mounted in the example host, and every mount exists', () => {
   const host = readFileSync(new URL('style-examples/index.html', REF), 'utf8');
   const clips = [...host.matchAll(/data-composition-src="compositions\/([^"]+)"/g)].map((m) => m[1]);
-  assert.equal(clips.length, 12);
-  for (const c of clips) assert.ok(existsSync(new URL('style-examples/compositions/' + c, REF)), c);
+  const onDisk = readdirSync(new URL('style-examples/compositions/', REF)).filter((f) => f.endsWith('.html'));
+  assert.deepEqual([...clips].sort(), [...onDisk].sort());
+  assert.equal(clips.length, 17);
 });

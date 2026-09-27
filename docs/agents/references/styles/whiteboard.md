@@ -47,8 +47,10 @@ map; when → timeline; how → flow; why → cause diagram.
   strikes. Round caps and joins.
 - Shapes come from the hand-drawn builders so nothing is ruler-straight:
   `SK.line`, `SK.rect`, `SK.ellipse`, `SK.arrow` (seeded, deterministic).
-- Marker: `SK.MARKER_SVG`, placed with `SK.placeMarker`. A realistic hand is not
-  used (it clashes with flat line art); a drawn hand asset may come in sub-project 2.
+- Pen (brief `Pen:`): `marker` (default) — `SK.MARKER_SVG` placed with
+  `SK.placeMarker`; or `hand` — the flat illustrated hand from the paper pack
+  (`<img class="sk-hand-img">` placed with `SK.placeHand`, poses `write` and
+  `point`). Only this flat hand; a realistic stock hand clashes with line art.
 
 ## Timing
 
@@ -213,6 +215,11 @@ map; when → timeline; how → flow; why → cause diagram.
 - `SK.writeTip(x0, x1, y, u)` needs the label's left/right edge and baseline;
   read them off the first Still Check and adjust.
 - Never set `visibility` on clip elements; hide with `opacity` (the kit does).
+- `Pen: hand`: put `<img class="sk-hand-img" id="hand" alt="">` last in the stage
+  (no `src`; `SK.placeHand` sets it). Each frame call
+  `SK.placeHand($('hand'), tip, { last: SK.lastTip(t, S, pen) })` so the hand
+  hovers after a stroke and glides off at the end; pass `{ pose: 'point' }` with a
+  target point to point at something. Worked example: `wb-05-hand`.
 
 ## SFX
 
@@ -233,6 +240,7 @@ Do not play a squeak for every stroke; one per group of strokes on a word.
 | `style-examples/compositions/wb-02-framework-panel.html` | list-tick on a small board card | panel |
 | `style-examples/compositions/wb-03-mind-map.html` | mind-map + underline-circle + zoom-into-detail | split |
 | `style-examples/compositions/wb-04-cross-out.html` | stick-figure + cross-out + face swap | cutaway |
+| `style-examples/compositions/wb-05-hand.html` | draw-flow with the paper-pack hand: writes, points, then glides off | cutaway |
 
 ## Anti-slop Checklist
 
@@ -243,5 +251,6 @@ Do not play a squeak for every stroke; one per group of strokes on a word.
 - [ ] Boil is ≤ 1.5 px at 8 fps and only on finished strokes.
 - [ ] No generic icon soup (lightbulbs, gears, rockets) unrelated to the line.
 - [ ] At most ~6 elements and ~12 words on screen at once.
-- [ ] No realistic stock hand; one or two accent colours only.
+- [ ] No realistic stock hand (only the paper-pack hand); one or two accent colours only.
+- [ ] With `Pen: hand`, the pen tip sits on the stroke, the hand hovers between strokes and glides off at the end.
 - [ ] Every label is verbatim from the transcript or given by the user.
