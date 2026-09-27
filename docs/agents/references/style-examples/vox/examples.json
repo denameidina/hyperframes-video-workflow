@@ -1,0 +1,9 @@
+{
+  "style": "vox",
+  "examples": [
+    {"clip": "vx-01-illustrative", "duration": 5, "treatment": "cutaway", "stills": [2.4, 4.7]},
+    {"clip": "vx-02-capture-split", "duration": 6, "treatment": "split", "stills": [2.4, 5.7]},
+    {"clip": "vx-03-map-pin", "duration": 5, "treatment": "cutaway", "stills": [1.7, 4.7]},
+    {"clip": "vx-04-clipping-panel", "duration": 5, "treatment": "panel", "stills": [1.9, 4.7]}
+  ]
+}

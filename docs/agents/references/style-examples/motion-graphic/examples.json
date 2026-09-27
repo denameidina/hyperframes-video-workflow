@@ -1,0 +1,9 @@
+{
+  "style": "motion-graphic",
+  "examples": [
+    {"clip": "mg-01-count", "duration": 5.5, "treatment": "cutaway", "stills": [1.2, 5.2]},
+    {"clip": "mg-02-compare-bars", "duration": 6, "treatment": "split", "stills": [1.5, 5.7]},
+    {"clip": "mg-03-icon-grid", "duration": 6, "treatment": "cutaway", "stills": [1.0, 5.7]},
+    {"clip": "mg-04-arrow-flow", "duration": 6, "treatment": "panel", "stills": [2.0, 5.7]}
+  ]
+}

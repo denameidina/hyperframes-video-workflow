@@ -6,8 +6,8 @@ Loaded by `docs/agents/02-screen-plan.md` (visual step, after
 `styles/README.md`) and `docs/agents/03-build.md` (author step). Cut-out:
 `npm run video -- cutout` (matte of `processed.mp4`). Engine: `vendor/style-kit/`
 on top of `vendor/motion-kit/`; paper and objects: `vendor/paper-pack/`. Worked
-examples: `docs/agents/references/style-examples/` (`mm-01` … `mm-04`, with a
-placeholder silhouette instead of a real person; `npm run check:style-examples`).
+examples: `docs/agents/references/style-examples/mix-media/` (`mm-01` … `mm-04`, with a
+placeholder silhouette instead of a real person; `npm run check:style-examples -- mix-media`).
 
 ## When To Use
 
@@ -295,10 +295,10 @@ Collage clip (back): an opaque paper stage, pieces in the corners and top third:
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/mm-01-collage-doodle.html` | collage-backdrop + sticker-outline + doodle-halo | collage |
-| `style-examples/compositions/mm-02-orbit-arrow.html` | screenshot-orbit (+ front: arrow-to-speaker) | collage |
-| `style-examples/compositions/mm-03-torn-window.html` | torn-window (front) + cut-in-object | collage |
-| `style-examples/compositions/mm-04-polaroid-caption.html` | polaroid-frame + paper-strip-caption (front) | collage |
+| `style-examples/mix-media/compositions/mm-01-collage-doodle.html` | collage-backdrop + sticker-outline + doodle-halo | collage |
+| `style-examples/mix-media/compositions/mm-02-orbit-arrow.html` | screenshot-orbit (+ front: arrow-to-speaker) | collage |
+| `style-examples/mix-media/compositions/mm-03-torn-window.html` | torn-window (front) + cut-in-object | collage |
+| `style-examples/mix-media/compositions/mm-04-polaroid-caption.html` | polaroid-frame + paper-strip-caption (front) | collage |
 
 ## Anti-slop Checklist
 

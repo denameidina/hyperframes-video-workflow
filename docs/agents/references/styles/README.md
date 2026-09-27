@@ -5,8 +5,8 @@ The menu of motion visuals a clip can use. Loaded by
 `motion-broll-planning.md`) and by `docs/agents/03-build.md` in the author step.
 Each style has its own reference in this folder; the engine is
 `vendor/style-kit/` (`window.SK`) on top of `vendor/motion-kit/` (`window.M`).
-Worked examples: `docs/agents/references/style-examples/`
-(`npm run check:style-examples`). Decision record: ADR-0012.
+Worked examples: one host per style in `docs/agents/references/style-examples/<style>/`
+(`npm run check:style-examples [-- <style>]`). Decision records: ADR-0012, ADR-0017.
 
 ## Menu
 
@@ -141,6 +141,13 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
   position content inside them), placed with `SK.layer`, moved with `SK.camera`,
   blurred with `SK.dof`; `parallax-stage` is the collage recipe with a parallax
   backdrop. Details and the Depth Budget: `parallax.md`.
+- Examples: each style has a host in `style-examples/<style>/`. Its `index.html` and
+  `snapshots.json` are GENERATED from `examples.json` (one line per example: `clip`,
+  `duration`, `treatment`, clip-local `stills`, optional `cutout` / `front`); never
+  edit them by hand. To add an example: write `compositions/<xx-NN-name>.html`, add
+  its line to `examples.json`, run `npm run style-examples -- build`, then
+  `npm run check:style-examples -- <style>` and look at the stills. Shared example
+  media stays in `style-examples/assets/`.
 - Every file an example references must be tracked in git (`.gitignore` ignores
   media; `style-examples/assets/*.webm` is excepted).
 - Never set `visibility` on elements inside a clip (it would survive the mount

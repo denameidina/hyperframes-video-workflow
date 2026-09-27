@@ -4,8 +4,8 @@ Full-frame kinetic typography: the words Dena says appear, slam, stack, or swap
 on screen exactly on the spoken word. Loaded by `docs/agents/02-screen-plan.md`
 (visual step, after `styles/README.md`) and `docs/agents/03-build.md` (author
 step). Engine: `vendor/style-kit/` (`window.SK`) on top of `vendor/motion-kit/`
-(`window.M`). Worked examples: `docs/agents/references/style-examples/`
-(`tx-01` … `tx-04`, `npm run check:style-examples`).
+(`window.M`). Worked examples: `docs/agents/references/style-examples/broll-text/`
+(`tx-01` … `tx-04`, `npm run check:style-examples -- broll-text`).
 
 ## When To Use
 
@@ -254,10 +254,10 @@ All cues stay under speech (Motion And SFX Gate in `quality-gates.md`).
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/tx-01-slam.html` | slam + stack + scale-punch, dims the setup words | cutaway |
-| `style-examples/compositions/tx-02-quote-split.html` | quote-card + highlight-swipe | split |
-| `style-examples/compositions/tx-03-word-swap.html` | word-swap + strike-through + mask-reveal | panel |
-| `style-examples/compositions/tx-04-stack.html` | stack + mask-reveal, paper palette, step counter | cutaway |
+| `style-examples/broll-text/compositions/tx-01-slam.html` | slam + stack + scale-punch, dims the setup words | cutaway |
+| `style-examples/broll-text/compositions/tx-02-quote-split.html` | quote-card + highlight-swipe | split |
+| `style-examples/broll-text/compositions/tx-03-word-swap.html` | word-swap + strike-through + mask-reveal | panel |
+| `style-examples/broll-text/compositions/tx-04-stack.html` | stack + mask-reveal, paper palette, step counter | cutaway |
 
 ## Anti-slop Checklist
 

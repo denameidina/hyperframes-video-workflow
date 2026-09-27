@@ -1,0 +1,10 @@
+{
+  "style": "whiteboard",
+  "examples": [
+    {"clip": "wb-01-flow", "duration": 6, "treatment": "cutaway", "stills": [2.0, 5.7]},
+    {"clip": "wb-02-framework-panel", "duration": 6, "treatment": "panel", "stills": [2.0, 5.7]},
+    {"clip": "wb-03-mind-map", "duration": 7, "treatment": "split", "stills": [2.5, 6.7]},
+    {"clip": "wb-04-cross-out", "duration": 6, "treatment": "cutaway", "stills": [2.9, 5.7]},
+    {"clip": "wb-05-hand", "duration": 6, "treatment": "cutaway", "stills": [2.0, 5.1, 5.9]}
+  ]
+}

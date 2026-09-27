@@ -81,7 +81,8 @@ for (const s of STYLES) {
     assert.ok(rows.length >= 4, `${rows.length} examples`);
     const treatments = new Set();
     for (const r of rows) {
-      const path = r.match(/`(style-examples\/compositions\/[^`]+)`/)[1];
+      const path = r.match(/`(style-examples\/[a-z-]+\/compositions\/[^`]+)`/)[1];
+      assert.ok(path.startsWith(`style-examples/${s.file.replace('.md', '')}/compositions/`), `${path} is not in the ${s.file.replace('.md', '')} host`);
       assert.ok(path.includes('/' + s.prefix), path);
       assert.ok(existsSync(new URL(path, REF)), `${path} is missing`);
       treatments.add(r.split('|').slice(-2, -1)[0].trim());
@@ -96,23 +97,4 @@ test('styles/README.md lists every available style and its reference file', () =
     assert.match(md, new RegExp('\\| `' + s.file.replace('.md', '') + '` \\|.*\\| `' + s.file + '` \\| available \\|'));
   }
   for (const h of ['Menu', 'Choosing A Style', 'Variety Rules', 'Style B-roll Brief', 'Build Contract (all styles)']) section(md, h);
-});
-
-test('every example clip on disk is mounted in the example host, and every mount exists', () => {
-  const host = readFileSync(new URL('style-examples/index.html', REF), 'utf8');
-  const clips = [...host.matchAll(/data-composition-src="compositions\/([^"]+)"/g)].map((m) => m[1]);
-  const onDisk = readdirSync(new URL('style-examples/compositions/', REF)).filter((f) => f.endsWith('.html'));
-  assert.deepEqual([...clips].sort(), [...onDisk].sort());
-  assert.equal(clips.length, 32);
-});
-
-test('every asset the examples reference is tracked in git', () => {
-  const root = fileURLToPath(new URL('../', import.meta.url));
-  const base = 'docs/agents/references/style-examples/';
-  const tracked = new Set(execFileSync('git', ['ls-files', base], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean));
-  const pages = ['index.html', ...readdirSync(new URL('style-examples/compositions/', REF)).map((f) => 'compositions/' + f)];
-  for (const page of pages) {
-    const html = readFileSync(new URL('style-examples/' + page, REF), 'utf8');
-    for (const [, ref] of html.matchAll(/(?:src|href)="(assets\/[^"]+)"/g)) assert.ok(tracked.has(base + ref), `${ref} (in ${page}) is not tracked in git`);
-  }
 });

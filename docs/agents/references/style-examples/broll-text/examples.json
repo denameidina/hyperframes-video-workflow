@@ -1,0 +1,9 @@
+{
+  "style": "broll-text",
+  "examples": [
+    {"clip": "tx-01-slam", "duration": 4, "treatment": "cutaway", "stills": [0.7, 3.7]},
+    {"clip": "tx-02-quote-split", "duration": 6, "treatment": "split", "stills": [2.0, 5.7]},
+    {"clip": "tx-03-word-swap", "duration": 4.5, "treatment": "panel", "stills": [2.0, 4.1]},
+    {"clip": "tx-04-stack", "duration": 5, "treatment": "cutaway", "stills": [1.5, 4.7]}
+  ]
+}

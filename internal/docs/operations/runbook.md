@@ -86,7 +86,8 @@ npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/a
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
-npm run check:style-examples # lint + validate + snapshot contoh style b-roll → renders/style-examples/
+npm run check:style-examples # lint + validate + snapshot contoh style b-roll, satu host per gaya → renders/style-examples/<gaya>/ (-- <gaya> untuk satu)
+npm run style-examples -- build # hasilkan ulang index.html + snapshots.json tiap host dari examples.json
 ```
 
 ## Troubleshooting cepat

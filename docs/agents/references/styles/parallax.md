@@ -9,8 +9,8 @@ matted cut-out while she keeps talking. Loaded by `docs/agents/02-screen-plan.md
 step). Engine: `vendor/style-kit/` (`SK.layer`, `SK.camera`, `SK.dof`,
 `SK.dollyZoom`) on top of `vendor/motion-kit/`. Sources: `npm run video -- layers`
 (photo/frame + matted subject), Codex (plates and layered scenes), the paper
-pack. Worked examples: `docs/agents/references/style-examples/` (`px-01` …
-`px-04`, `npm run check:style-examples`).
+pack. Worked examples: `docs/agents/references/style-examples/parallax/` (`px-01` …
+`px-04`, `npm run check:style-examples -- parallax`).
 
 ## When To Use
 
@@ -288,10 +288,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/px-01-collage-dolly.html` | multiplane collage (paper pack + cut-outs + map) + dolly-in + rack-focus | cutaway |
-| `style-examples/compositions/px-02-night-desk.html` | Codex layered scene (plate, keyed desk, chair) + pan-reveal + orbit-drift | split |
-| `style-examples/compositions/px-03-archive-zoom.html` | public-domain archival photo, subject vs reconstructed plate + dolly-zoom | panel |
-| `style-examples/compositions/px-04-stage.html` | stage-behind-speaker (Codex plate behind the placeholder cut-out) | parallax-stage |
+| `style-examples/parallax/compositions/px-01-collage-dolly.html` | multiplane collage (paper pack + cut-outs + map) + dolly-in + rack-focus | cutaway |
+| `style-examples/parallax/compositions/px-02-night-desk.html` | Codex layered scene (plate, keyed desk, chair) + pan-reveal + orbit-drift | split |
+| `style-examples/parallax/compositions/px-03-archive-zoom.html` | public-domain archival photo, subject vs reconstructed plate + dolly-zoom | panel |
+| `style-examples/parallax/compositions/px-04-stage.html` | stage-behind-speaker (Codex plate behind the placeholder cut-out) | parallax-stage |
 
 ## Anti-slop Checklist
 

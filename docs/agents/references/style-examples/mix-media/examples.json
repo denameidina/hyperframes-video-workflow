@@ -1,0 +1,9 @@
+{
+  "style": "mix-media",
+  "examples": [
+    {"clip": "mm-01-collage-doodle", "duration": 5, "treatment": "collage", "stills": [2.1, 4.7], "cutout": true},
+    {"clip": "mm-02-orbit-arrow", "duration": 6, "treatment": "collage", "stills": [3.6, 5.7], "cutout": true, "front": true},
+    {"clip": "mm-03-torn-window", "duration": 6, "treatment": "collage", "stills": [0.8, 5.7], "cutout": true, "front": true},
+    {"clip": "mm-04-polaroid-caption", "duration": 5, "treatment": "collage", "stills": [1.8, 4.7], "cutout": true, "front": true}
+  ]
+}

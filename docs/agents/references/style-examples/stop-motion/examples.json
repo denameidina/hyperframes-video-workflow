@@ -1,0 +1,9 @@
+{
+  "style": "stop-motion",
+  "examples": [
+    {"clip": "sm-01-slide-pin", "duration": 6, "treatment": "cutaway", "stills": [2.8, 5.7]},
+    {"clip": "sm-02-tear-split", "duration": 6, "treatment": "split", "stills": [1.5, 5.7]},
+    {"clip": "sm-03-replace-panel", "duration": 5, "treatment": "panel", "stills": [1.8, 4.7]},
+    {"clip": "sm-04-stack-crumple", "duration": 6, "treatment": "cutaway", "stills": [2.2, 5.7]}
+  ]
+}

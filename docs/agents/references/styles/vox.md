@@ -8,8 +8,8 @@ map zooms with pins, grain, and a source line on screen. Loaded by
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`, including `SK.highlight`, `SK.geo`) on top of `vendor/motion-kit/`;
 paper, pins, tape, and the Indonesia map: `vendor/paper-pack/`. Worked examples:
-`docs/agents/references/style-examples/` (`vx-01` … `vx-04`,
-`npm run check:style-examples`).
+`docs/agents/references/style-examples/vox/` (`vx-01` … `vx-04`,
+`npm run check:style-examples -- vox`).
 
 ## When To Use
 
@@ -288,10 +288,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/vx-01-illustrative.html` | illustrative document + highlight-sweep + doc-push, "Ilustrasi" tag | cutaway |
-| `style-examples/compositions/vx-02-capture-split.html` | real capture (Wikipedia, CC BY-SA 4.0) + circle-annotate + highlight-sweep + doc-push + source-line | split |
-| `style-examples/compositions/vx-03-map-pin.html` | map-zoom onto Jakarta via `SK.geo` + source-line | cutaway |
-| `style-examples/compositions/vx-04-clipping-panel.html` | clipping-stack + stamp, "Ilustrasi" tag | panel |
+| `style-examples/vox/compositions/vx-01-illustrative.html` | illustrative document + highlight-sweep + doc-push, "Ilustrasi" tag | cutaway |
+| `style-examples/vox/compositions/vx-02-capture-split.html` | real capture (Wikipedia, CC BY-SA 4.0) + circle-annotate + highlight-sweep + doc-push + source-line | split |
+| `style-examples/vox/compositions/vx-03-map-pin.html` | map-zoom onto Jakarta via `SK.geo` + source-line | cutaway |
+| `style-examples/vox/compositions/vx-04-clipping-panel.html` | clipping-stack + stamp, "Ilustrasi" tag | panel |
 
 ## Anti-slop Checklist
 

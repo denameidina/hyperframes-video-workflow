@@ -7,8 +7,8 @@ frames, with hard paper shadows, torn edges, tape, and pins. Loaded by
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`) on top of `vendor/motion-kit/` (`window.M`); paper textures and
 objects: `vendor/paper-pack/` (`paper-pack.css`, licenses in `LICENSES.md`).
-Worked examples: `docs/agents/references/style-examples/` (`sm-01` … `sm-04`,
-`npm run check:style-examples`).
+Worked examples: `docs/agents/references/style-examples/stop-motion/` (`sm-01` … `sm-04`,
+`npm run check:style-examples -- stop-motion`).
 
 ## When To Use
 
@@ -273,10 +273,10 @@ Prefer recorded paper sounds over synthetic whooshes (Smallfilms).
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/sm-01-slide-pin.html` | slide-on-twos (Codex laptop) + sticky-wall + tape-on | cutaway |
-| `style-examples/compositions/sm-02-tear-split.html` | tear-reveal + pop-up (Codex phone) | split |
-| `style-examples/compositions/sm-03-replace-panel.html` | replacement-face + pin-and-swap on a taped card | panel |
-| `style-examples/compositions/sm-04-stack-crumple.html` | stack-pile + crumple-away + slide-on-twos + tape-on | cutaway |
+| `style-examples/stop-motion/compositions/sm-01-slide-pin.html` | slide-on-twos (Codex laptop) + sticky-wall + tape-on | cutaway |
+| `style-examples/stop-motion/compositions/sm-02-tear-split.html` | tear-reveal + pop-up (Codex phone) | split |
+| `style-examples/stop-motion/compositions/sm-03-replace-panel.html` | replacement-face + pin-and-swap on a taped card | panel |
+| `style-examples/stop-motion/compositions/sm-04-stack-crumple.html` | stack-pile + crumple-away + slide-on-twos + tape-on | cutaway |
 
 ## Anti-slop Checklist
 

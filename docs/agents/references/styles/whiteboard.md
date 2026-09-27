@@ -5,8 +5,8 @@ follows the pen, and finished lines "boil" slightly like hand-drawn animation.
 Loaded by `docs/agents/02-screen-plan.md` (visual step, after
 `styles/README.md`) and `docs/agents/03-build.md` (author step). Engine:
 `vendor/style-kit/` (`window.SK`) on top of `vendor/motion-kit/` (`window.M`).
-Worked examples: `docs/agents/references/style-examples/` (`wb-01` … `wb-04`,
-`npm run check:style-examples`).
+Worked examples: `docs/agents/references/style-examples/whiteboard/` (`wb-01` … `wb-04`,
+`npm run check:style-examples -- whiteboard`).
 
 ## When To Use
 
@@ -268,11 +268,11 @@ Do not play a squeak for every stroke; one per group of strokes on a word.
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/wb-01-flow.html` | draw-flow + box-and-arrow + underline-circle, camera follows | cutaway |
-| `style-examples/compositions/wb-02-framework-panel.html` | list-tick on a small board card | panel |
-| `style-examples/compositions/wb-03-mind-map.html` | mind-map + underline-circle + zoom-into-detail | split |
-| `style-examples/compositions/wb-04-cross-out.html` | stick-figure + cross-out + face swap | cutaway |
-| `style-examples/compositions/wb-05-hand.html` | draw-flow with the paper-pack hand: writes, points, then glides off | cutaway |
+| `style-examples/whiteboard/compositions/wb-01-flow.html` | draw-flow + box-and-arrow + underline-circle, camera follows | cutaway |
+| `style-examples/whiteboard/compositions/wb-02-framework-panel.html` | list-tick on a small board card | panel |
+| `style-examples/whiteboard/compositions/wb-03-mind-map.html` | mind-map + underline-circle + zoom-into-detail | split |
+| `style-examples/whiteboard/compositions/wb-04-cross-out.html` | stick-figure + cross-out + face swap | cutaway |
+| `style-examples/whiteboard/compositions/wb-05-hand.html` | draw-flow with the paper-pack hand: writes, points, then glides off | cutaway |
 
 ## Anti-slop Checklist
 

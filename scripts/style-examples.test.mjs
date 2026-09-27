@@ -41,3 +41,30 @@ test('checkManifest rejects a wrong prefix, an unknown treatment, and stills out
   assert.throws(() => checkManifest({ style: 'broll-text', examples: [{ ...ok, stills: [4] }] }), /inside the clip/);
   assert.equal(PREFIX['broll-text'], 'tx');
 });
+
+test('every style has an example host, and the generated files match (run: npm run style-examples -- build)', () => {
+  for (const style of STYLES) assert.ok(readManifest(ROOT, style), `${style}/examples.json is missing`);
+  for (const [p, c] of Object.entries(buildHosts(ROOT))) assert.equal(read(p), c, `${p} is stale`);
+  assert.ok(!existsSync(join(ROOT, EXAMPLES, 'index.html')), 'the old single host must be gone');
+});
+
+test('every composition on disk is in its manifest (clip or -front) and every listed one exists', () => {
+  for (const style of STYLES) {
+    const m = readManifest(ROOT, style);
+    const want = m.examples.flatMap((e) => [e.clip, ...(e.front ? [e.clip + '-front'] : [])]).map((c) => c + '.html').sort();
+    const have = readdirSync(join(ROOT, EXAMPLES, style, 'compositions')).filter((f) => f.endsWith('.html')).sort();
+    assert.deepEqual(have, want, style);
+  }
+});
+
+test('every asset an example references exists and is tracked in git', () => {
+  const tracked = new Set(execFileSync('git', ['ls-files', EXAMPLES], { cwd: ROOT, encoding: 'utf8' }).split('\n').filter(Boolean));
+  for (const style of STYLES) {
+    const dir = `${EXAMPLES}/${style}`;
+    for (const page of ['index.html', ...readdirSync(join(ROOT, dir, 'compositions')).map((f) => 'compositions/' + f)]) {
+      for (const [, ref] of read(`${dir}/${page}`).matchAll(/(?:src|href)="(assets\/[^"]+)"/g)) {
+        assert.ok(tracked.has(`${EXAMPLES}/${ref}`), `${ref} (in ${style}/${page}) is not tracked in git`);
+      }
+    }
+  }
+});

@@ -5,8 +5,8 @@ and relationships, with no cursor and no UI chrome. Loaded by
 `docs/agents/02-screen-plan.md` (visual step, after `styles/README.md`) and
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`) on top of `vendor/motion-kit/` (`window.M`, including `M.icon`).
-Worked examples: `docs/agents/references/style-examples/` (`mg-01` … `mg-04`,
-`npm run check:style-examples`).
+Worked examples: `docs/agents/references/style-examples/motion-graphic/` (`mg-01` … `mg-04`,
+`npm run check:style-examples -- motion-graphic`).
 
 ## When To Use
 
@@ -252,10 +252,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 
 | Clip | Patterns | Treatment |
 | --- | --- | --- |
-| `style-examples/compositions/mg-01-count.html` | count-up + donut, label words rise | cutaway |
-| `style-examples/compositions/mg-02-compare-bars.html` | bar-compare + scale-compare bracket, night palette, relative (no values) | split |
-| `style-examples/compositions/mg-03-icon-grid.html` | icon-grid (Isotype legend) + one tinted unit | cutaway |
-| `style-examples/compositions/mg-04-arrow-flow.html` | arrow-flow + cycle-loop on a panel card | panel |
+| `style-examples/motion-graphic/compositions/mg-01-count.html` | count-up + donut, label words rise | cutaway |
+| `style-examples/motion-graphic/compositions/mg-02-compare-bars.html` | bar-compare + scale-compare bracket, night palette, relative (no values) | split |
+| `style-examples/motion-graphic/compositions/mg-03-icon-grid.html` | icon-grid (Isotype legend) + one tinted unit | cutaway |
+| `style-examples/motion-graphic/compositions/mg-04-arrow-flow.html` | arrow-flow + cycle-loop on a panel card | panel |
 
 ## Anti-slop Checklist
 
