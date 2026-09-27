@@ -1,6 +1,12 @@
 # ADR-0006 Idempotensi Publish via Receipt + Publish Key
-Status: accepted (reverse-engineered)
+Status: accepted (reverse-engineered); amended oleh [ADR-0011](0011-per-target-publish-idempotency.md)
 Date: 2026-07-20
+
+**Catatan 2026-09-26:** `publishKey` global di sini masih dihitung dan disimpan
+di receipt, tapi `runPublish` tidak lagi memakainya untuk memutuskan skip.
+Keputusan skip/publish sekarang per target account (lihat ADR-0011) supaya
+menambah satu platform baru (mis. Threads) tidak memicu re-publish ke platform
+yang sudah sukses.
 
 ## Context
 

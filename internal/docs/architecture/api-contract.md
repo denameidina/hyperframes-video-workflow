@@ -88,6 +88,12 @@ account. Payload dibangun `buildSchedulePayload` (`repliz-publish.mjs:228`):
 }
 ```
 
+- **Threads (`platform === "threads"`)**: `description` = `post.threads.post`
+  (bukan `post.description`), dan `replies` = `post.threads.replies.map(text
+  => ({ title: "", description: text, topic: post.topic, type: "text", medias:
+  [] }))`. Setiap bubble (post + replies) divalidasi ≤150 karakter oleh
+  `validateThreadsThread` sebelum dikirim; lebih dari itu → throw yang
+  menyebut bubble mana. Platform lain selalu mengirim `replies: []`.
 - **`description` wajib non-empty** — `requireDescription` throw
   `Missing <platform> post description` jika kosong/whitespace.
 - **`scheduleAt`** (`scheduleAtIso`, `repliz-publish.mjs:202`): `"now"` (atau
@@ -128,16 +134,19 @@ testable.
 | Fungsi | Peran |
 | --- | --- |
 | `parseArgs(argv)` | Parse `--slug`, `--file`, `--approved`, `--force`, `--help`; wajib slug+file |
-| `buildTargetAccounts(env)` | Map 4 env ID → `{platform, accountId}`, skip kosong |
+| `buildTargetAccounts(env)` | Map 5 env ID (termasuk Threads) → `{platform, accountId}`, skip kosong |
 | `buildR2Key({prefix,slug,file})` | Susun object key R2 |
 | `buildPublicUrl(baseUrl,key)` | Susun public URL (encode segmen) |
 | `sha256(value)` | `"sha256:" + hex` |
-| `makePublishKey({r2Key,targetAccounts,description})` | Hash idempotensi (targets di-sort) |
-| `shouldSkipPublish(receipt,publishKey,force)` | Skip bila key sama & ada schedules & !force |
-| `readJsonIfExists(path)` / `readPostMetadata(slugDir)` | Baca metadata + fallback caption |
+| `makePublishKey({r2Key,targetAccounts,description})` | Hash ringkasan seluruh run (disimpan di receipt, tidak lagi dipakai untuk skip — lihat `makeTargetKey`) |
+| `makeTargetKey({r2Key,platform,accountId,description,title,replies})` | Hash idempotensi per target account (ADR-0011) |
+| `shouldSkipPublish(receipt,publishKey,force)` | Fungsi murni lama (masih diuji langsung); tidak lagi dipanggil `runPublish` |
+| `wrapIntoChunks(text,maxLength)` | Word-wrap greedy ke potongan ≤`maxLength`, tanpa memotong kata (kecuali satu kata sendiri >`maxLength`) |
+| `validateThreadsThread({post,replies})` | Throw bila post/reply Threads mana pun >150 karakter |
+| `readJsonIfExists(path)` / `readPostMetadata(slugDir)` | Baca metadata + fallback caption + `post.threads` |
 | `scheduleAtIso(scheduleAt, now)` | Normalisasi waktu jadwal |
 | `sanitizeDescriptionForPlatform(desc, platform)` | Sanitasi khusus YouTube |
-| `buildSchedulePayload({...})` | Bentuk payload POST /public/schedule |
+| `buildSchedulePayload({...})` | Bentuk payload POST /public/schedule (Threads: post+replies, bukan description panjang) |
 | `uploadToR2({...})` | Upload via Wrangler |
 | `verifyPublicUrl(url, fetchImpl)` | Cek 200/206 |
 | `basicAuthHeader({...})` | Header Basic Auth |
@@ -148,13 +157,18 @@ testable.
 | `runPublish({...})` | Orkestrasi end-to-end (entry testable) |
 
 Alur `runPublish` (`repliz-publish.mjs:458`): parseArgs → cek `--approved` →
-loadConfig → buildTargetAccounts → readPostMetadata (+ cek description) →
-buildR2Key/videoUrl/publishKey → shouldSkipPublish → uploadToR2 →
-verifyPublicUrl → validateAccounts → createSchedules → pollSchedules →
-writeReceipt.
+loadConfig → buildTargetAccounts → readPostMetadata (+ cek description/title/
+Threads bubble length) → buildR2Key/videoUrl/publishKey → **per target**:
+hitung `targetKey` lewat `buildSchedulePayload`, bandingkan dengan entry
+`platform:accountId` di receipt lama → partisi ke `toSchedule` / `reused` /
+`blocked` (ADR-0011) → bila `toSchedule` kosong, return skip tanpa network →
+uploadToR2 → verifyPublicUrl → validateAccounts (hanya `toSchedule`) →
+createSchedules (hanya `toSchedule`) → pollSchedules → stamp `targetKey` ke
+schedule baru → gabung dengan `reused` → writeReceipt (+ `blocked` bila ada).
 
 ## Referensi
 
 - EARS lengkap: [rd-01-publish-pipeline](../requirements/rd-01-publish-pipeline.md).
 - Data receipt/metadata: [data-model](data-model.md).
 - Operasi publish: [operations/publish-runbook](../operations/publish-runbook.md).
+- Keputusan idempotensi per target: [ADR-0011](../adr/0011-per-target-publish-idempotency.md).

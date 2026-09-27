@@ -15,6 +15,7 @@ import {
   deriveTitleFromDescription,
   loadConfig,
   makePublishKey,
+  makeTargetKey,
   parseArgs,
   pollSchedules,
   readPostMetadata,
@@ -23,7 +24,9 @@ import {
   shouldSkipPublish,
   uploadToR2,
   validateAccounts,
+  validateThreadsThread,
   verifyPublicUrl,
+  wrapIntoChunks,
 } from "./repliz-publish.mjs";
 
 test("parseArgs requires slug and file", () => {
@@ -849,6 +852,320 @@ test("runPublish uploads to R2, creates schedules, writes receipt, and skips dup
   assert.equal(receipt.r2Key, "final-renders/0702-2/final.mp4");
   assert.equal(receipt.post.description, "Caption final");
   assert.equal(receipt.schedules[0].status, "success");
+});
+
+test("buildTargetAccounts includes Threads when configured", () => {
+  assert.deepEqual(
+    buildTargetAccounts({ REPLIZ_THREADS_ACCOUNT_ID: "th_1", REPLIZ_TIKTOK_ACCOUNT_ID: "tk_1" }),
+    [
+      { platform: "tiktok", accountId: "tk_1" },
+      { platform: "threads", accountId: "th_1" },
+    ],
+  );
+});
+
+test("wrapIntoChunks packs words into <=maxLength chunks without splitting words", () => {
+  const chunks = wrapIntoChunks("Awalnya cuma iseng liat ide di Threads, nyobain ChatGPT buat ngerender buku cerita 3D.", 30);
+  assert.ok(chunks.every((chunk) => chunk.length <= 30), `chunks exceed 30 chars: ${JSON.stringify(chunks)}`);
+  assert.equal(chunks.join(" "), "Awalnya cuma iseng liat ide di Threads, nyobain ChatGPT buat ngerender buku cerita 3D.");
+  assert.deepEqual(wrapIntoChunks("   ", 150), []);
+});
+
+test("validateThreadsThread rejects a post or reply over 150 characters", () => {
+  assert.throws(() => validateThreadsThread({ post: "a".repeat(151), replies: [] }), /Threads post exceeds 150 characters/);
+  assert.throws(() => validateThreadsThread({ post: "ok", replies: ["fine", "b".repeat(151)] }), /Threads reply 2 exceeds 150 characters/);
+  assert.doesNotThrow(() => validateThreadsThread({ post: "a".repeat(150), replies: ["b".repeat(150)] }));
+});
+
+test("readPostMetadata reads a manually authored Threads thread from publish-captions.md", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-threads-manual-"));
+  await writeFile(
+    path.join(dir, "publish-captions.md"),
+    `## Instagram
+
+\`\`\`text
+Long-form Instagram caption that would never fit in a single Threads post on its own.
+\`\`\`
+
+## Threads
+
+\`\`\`text
+Awalnya cuma iseng nyobain ChatGPT buat bikin buku cerita 3D anak.
+\`\`\`
+
+\`\`\`text
+Ternyata anak-anak saya suka banget. Ceritanya dibacakan biar mereka fokus dengerin.
+\`\`\`
+
+\`\`\`text
+#ceritaanak #buildinpublic
+\`\`\`
+`,
+  );
+
+  const post = await readPostMetadata(dir);
+
+  assert.equal(post.threads.post, "Awalnya cuma iseng nyobain ChatGPT buat bikin buku cerita 3D anak.");
+  assert.deepEqual(post.threads.replies, [
+    "Ternyata anak-anak saya suka banget. Ceritanya dibacakan biar mereka fokus dengerin.",
+    "#ceritaanak #buildinpublic",
+  ]);
+});
+
+test("readPostMetadata falls back to word-wrapping the description when no Threads thread is authored", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-threads-fallback-"));
+  const description = `${"kata ".repeat(60)}akhir`;
+  await writeFile(path.join(dir, "repliz-publish.json"), JSON.stringify({ post: { description } }));
+
+  const post = await readPostMetadata(dir);
+
+  assert.ok(post.threads.post.length <= 150);
+  assert.ok(post.threads.replies.every((reply) => reply.length <= 150));
+  assert.equal([post.threads.post, ...post.threads.replies].join(" "), description.trim());
+});
+
+test("wrapIntoChunks hard-splits a single token longer than maxLength instead of dropping the tail", () => {
+  const chunks = wrapIntoChunks("a".repeat(160), 150);
+  assert.deepEqual(chunks, ["a".repeat(150), "a".repeat(10)]);
+});
+
+test("buildSchedulePayload sends the Threads post as description and the rest as a reply chain", () => {
+  const post = {
+    title: "",
+    description: "Ignored on Threads: this long-form caption never becomes the post body.",
+    topic: "",
+    type: "video",
+    tags: [],
+    mentions: [],
+    targetCountries: ["ID"],
+    scheduleAt: "2026-07-03T01:40:08.119Z",
+    threads: { post: "Hook post under 150 chars.", replies: ["Second bubble.", "Third bubble with the link."] },
+  };
+  const videoUrl = "https://media.example.com/final-renders/0702-2/final.mp4";
+
+  const payload = buildSchedulePayload({ accountId: "th_1", platform: "threads", post, videoUrl });
+
+  assert.equal(payload.description, "Hook post under 150 chars.");
+  assert.deepEqual(payload.replies, [
+    { title: "", description: "Second bubble.", topic: "", type: "text", medias: [] },
+    { title: "", description: "Third bubble with the link.", topic: "", type: "text", medias: [] },
+  ]);
+});
+
+test("buildSchedulePayload rejects a Threads post or reply over 150 characters", () => {
+  const post = {
+    title: "",
+    description: "fallback",
+    topic: "",
+    type: "video",
+    tags: [],
+    mentions: [],
+    targetCountries: ["ID"],
+    scheduleAt: "2026-07-03T01:40:08.119Z",
+    threads: { post: "a".repeat(151), replies: [] },
+  };
+
+  assert.throws(
+    () => buildSchedulePayload({ accountId: "th_1", platform: "threads", post, videoUrl: "https://media.example.com/x.mp4" }),
+    /Threads post exceeds 150 characters/,
+  );
+});
+
+test("makeTargetKey changes when description, title, or replies change", () => {
+  const base = { r2Key: "final-renders/0702-2/final.mp4", platform: "threads", accountId: "th_1", description: "post", title: "" };
+  assert.notEqual(makeTargetKey({ ...base, replies: [] }), makeTargetKey({ ...base, replies: ["reply"] }));
+  assert.notEqual(makeTargetKey({ ...base, replies: [] }), makeTargetKey({ ...base, description: "different", replies: [] }));
+});
+
+test("runPublish adds a newly configured platform without re-scheduling already-successful targets", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-add-platform-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  await writeFile(
+    path.join(slugDir, "repliz-publish.json"),
+    JSON.stringify({ post: { description: "Caption final", threads: { post: "Hook post.", replies: [] } } }),
+  );
+
+  const scheduleCalls = [];
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/tk_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "tk_1", type: "tiktok", isConnected: true }) };
+    }
+    if (url.endsWith("/public/account/th_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "th_1", type: "threads", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      scheduleCalls.push(JSON.parse(options.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${scheduleCalls.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success", postId: "post_1" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+  const runCommand = async () => ({ stdout: "ok", stderr: "" });
+
+  const first = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture({ REPLIZ_INSTAGRAM_ACCOUNT_ID: "" }),
+    runCommand,
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+  assert.equal(first.receipt.schedules.length, 1);
+  assert.equal(first.receipt.schedules[0].platform, "tiktok");
+  assert.equal(scheduleCalls.length, 1);
+
+  const second = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture({ REPLIZ_INSTAGRAM_ACCOUNT_ID: "", REPLIZ_THREADS_ACCOUNT_ID: "th_1" }),
+    runCommand,
+    fetchImpl,
+    now: new Date("2026-07-03T01:45:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(second.skipped, false);
+  // Only Threads gets a new schedule call; TikTok's earlier success is reused untouched.
+  assert.equal(scheduleCalls.length, 2);
+  assert.equal(scheduleCalls[1].description, "Hook post.");
+  const platforms = second.receipt.schedules.map((schedule) => schedule.platform).sort();
+  assert.deepEqual(platforms, ["threads", "tiktok"]);
+  const tiktokEntry = second.receipt.schedules.find((schedule) => schedule.platform === "tiktok");
+  assert.equal(tiktokEntry.scheduleId, "schedule_1");
+});
+
+test("runPublish blocks (does not resend) a platform whose content changed since its last success, without --force", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-blocked-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+
+  const scheduleCalls = [];
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/tk_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "tk_1", type: "tiktok", isConnected: true }) };
+    }
+    if (url.endsWith("/public/account/ig_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "ig_1", type: "instagram", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      scheduleCalls.push(JSON.parse(options.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${scheduleCalls.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+  const runCommand = async () => ({ stdout: "ok", stderr: "" });
+
+  await writeFile(path.join(slugDir, "repliz-publish.json"), JSON.stringify({ post: { description: "Caption v1" } }));
+  await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture(),
+    runCommand,
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+  assert.equal(scheduleCalls.length, 2);
+
+  // Edit only the caption, the way a real rerun would (e.g. via publish-captions.md);
+  // the receipt's `schedules` from the first run must survive for per-target dedup to see them.
+  const priorReceipt = JSON.parse(await readFile(path.join(slugDir, "repliz-publish.json"), "utf8"));
+  await writeFile(
+    path.join(slugDir, "repliz-publish.json"),
+    JSON.stringify({ ...priorReceipt, post: { ...priorReceipt.post, description: "Caption v2 - edited" } }),
+  );
+  const second = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture(),
+    runCommand,
+    fetchImpl,
+    now: new Date("2026-07-03T01:45:08.119Z"),
+    sleep: async () => {},
+  });
+
+  assert.equal(scheduleCalls.length, 2, "no new schedule call for content that changed on already-succeeded platforms");
+  assert.equal(second.skipped, true);
+  assert.equal(second.blocked.length, 2);
+  assert.ok(second.blocked.every((item) => /rerun with --force/.test(item.reason)));
+});
+
+test("runPublish treats a legacy receipt entry with no targetKey as reused, not blocked", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-run-legacy-receipt-"));
+  const slugDir = path.join(dir, "videos", "0702-2");
+  const renderFile = path.join(dir, "renders", "final.mp4");
+  await mkdir(slugDir, { recursive: true });
+  await mkdir(path.dirname(renderFile), { recursive: true });
+  await writeFile(renderFile, "fake mp4 bytes");
+  // A receipt written before targetKey existed: schedules have no targetKey field.
+  await writeFile(
+    path.join(slugDir, "repliz-publish.json"),
+    JSON.stringify({
+      post: { description: "Caption final" },
+      r2Bucket: "bucket",
+      r2Key: "final-renders/0702-2/final.mp4",
+      videoUrl: "https://media.example.com/final-renders/0702-2/final.mp4",
+      schedules: [
+        { accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_old_1", status: "success", postId: "post_1" },
+        { accountId: "ig_1", platform: "instagram", scheduleId: "schedule_old_2", status: "pending" },
+      ],
+    }),
+  );
+
+  const scheduleCalls = [];
+  const pollCalls = [];
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    if (url.endsWith("/public/account/th_1")) {
+      return { ok: true, status: 200, json: async () => ({ id: "th_1", type: "threads", isConnected: true }) };
+    }
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      scheduleCalls.push(JSON.parse(options.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_new_${scheduleCalls.length}` }) };
+    }
+    if (url.includes("/public/schedule/schedule_old_2")) {
+      pollCalls.push(url);
+      return { ok: true, status: 200, json: async () => ({ status: "success", postId: "post_2" }) };
+    }
+    if (url.includes("/public/schedule/schedule_new_")) {
+      return { ok: true, status: 200, json: async () => ({ status: "success" }) };
+    }
+    throw new Error(`Unexpected fetch URL: ${url}`);
+  };
+
+  const result = await runPublish({
+    argv: ["--slug", slugDir, "--file", renderFile, "--approved"],
+    env: envFixture({ REPLIZ_THREADS_ACCOUNT_ID: "th_1", REPLIZ_TIKTOK_ACCOUNT_ID: "tk_1", REPLIZ_INSTAGRAM_ACCOUNT_ID: "ig_1" }),
+    runCommand: async () => ({ stdout: "ok", stderr: "" }),
+    fetchImpl,
+    now: new Date("2026-07-03T01:39:08.119Z"),
+    sleep: async () => {},
+  });
+
+  // Only Threads (the genuinely new target) gets a new schedule call.
+  assert.equal(scheduleCalls.length, 1);
+  assert.equal(result.blocked.length, 0);
+  // The legacy pending TikTok/Instagram entries are not rescheduled...
+  assert.ok(!scheduleCalls.some((body) => body.accountId === "tk_1" || body.accountId === "ig_1"));
+  // ...but the still-pending Instagram entry gets its status refreshed.
+  assert.ok(pollCalls.length > 0);
+  const tiktokEntry = result.receipt.schedules.find((schedule) => schedule.platform === "tiktok");
+  const instagramEntry = result.receipt.schedules.find((schedule) => schedule.platform === "instagram");
+  assert.equal(tiktokEntry.scheduleId, "schedule_old_1");
+  assert.equal(instagramEntry.scheduleId, "schedule_old_2");
+  assert.equal(instagramEntry.status, "success");
+  assert.ok(tiktokEntry.targetKey, "legacy entry should be stamped with a targetKey for future runs");
 });
 
 test("CLI help prints usage", () => {

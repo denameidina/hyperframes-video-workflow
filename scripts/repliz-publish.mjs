@@ -15,9 +15,11 @@ const TARGET_ENV = [
   ["youtube", "REPLIZ_YOUTUBE_ACCOUNT_ID"],
   ["tiktok", "REPLIZ_TIKTOK_ACCOUNT_ID"],
   ["instagram", "REPLIZ_INSTAGRAM_ACCOUNT_ID"],
+  ["threads", "REPLIZ_THREADS_ACCOUNT_ID"],
 ];
 
 const YOUTUBE_TITLE_MAX_LENGTH = 100;
+const THREADS_POST_MAX_LENGTH = 150;
 
 const DEFAULT_POST = {
   title: "",
@@ -111,16 +113,21 @@ async function readTextIfExists(filePath) {
   }
 }
 
-function extractPublishCaption(markdown, heading) {
+function extractAllPublishBlocks(markdown, heading) {
   const headingMatch = markdown.match(new RegExp(`^##\\s+${heading}\\s*$`, "im"));
-  if (!headingMatch) return "";
+  if (!headingMatch) return [];
 
   const afterHeading = markdown.slice(headingMatch.index + headingMatch[0].length);
   const nextHeadingIndex = afterHeading.search(/^##\s+/m);
   const section = nextHeadingIndex === -1 ? afterHeading : afterHeading.slice(0, nextHeadingIndex);
-  const fencedText = section.match(/```(?:text)?\s*\n([\s\S]*?)\n```/i)?.[1] || "";
 
-  return fencedText.trim();
+  return [...section.matchAll(/```(?:text)?\s*\n([\s\S]*?)\n```/gi)]
+    .map((match) => match[1].trim())
+    .filter(Boolean);
+}
+
+function extractPublishCaption(markdown, heading) {
+  return extractAllPublishBlocks(markdown, heading)[0] || "";
 }
 
 async function readPublishDescription(slugDir) {
@@ -133,6 +140,65 @@ async function readPublishTitle(slugDir) {
   const markdown = await readTextIfExists(path.join(slugDir, "publish-captions.md"));
   if (!markdown.trim()) return "";
   return extractPublishCaption(markdown, "YouTube Title");
+}
+
+// Word-wrap fallback for Threads when publish-captions.md has no manually authored
+// "## Threads" thread: greedily packs words into <=maxLength chunks (never splits a word
+// mid-character except a single word longer than maxLength on its own).
+export function wrapIntoChunks(text, maxLength) {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  if (!clean) return [];
+
+  const words = clean.split(" ");
+  const chunks = [];
+  let current = "";
+  const flush = () => {
+    if (current) {
+      chunks.push(current);
+      current = "";
+    }
+  };
+  for (const word of words) {
+    let rest = word;
+    // An unsplittable token longer than maxLength on its own (e.g. a long URL) becomes
+    // its own maxLength-sized chunks rather than being silently truncated.
+    while (rest.length > maxLength) {
+      flush();
+      chunks.push(rest.slice(0, maxLength));
+      rest = rest.slice(maxLength);
+    }
+    const candidate = current ? `${current} ${rest}` : rest;
+    if (candidate.length > maxLength) {
+      flush();
+      current = rest;
+    } else {
+      current = candidate;
+    }
+  }
+  flush();
+  return chunks;
+}
+
+// Threads thread: `## Threads` in publish-captions.md holds one fenced block per bubble
+// (first = the post, the rest = reply chain, each <=150 chars). Falls back to
+// word-wrapping `description` when the section is absent, so Threads never blocks on
+// a caption file that predates Threads support.
+async function readThreadsThread(slugDir, fallbackDescription) {
+  const markdown = await readTextIfExists(path.join(slugDir, "publish-captions.md"));
+  const blocks = markdown.trim() ? extractAllPublishBlocks(markdown, "Threads") : [];
+  if (blocks.length) return { post: blocks[0], replies: blocks.slice(1) };
+
+  const chunks = wrapIntoChunks(fallbackDescription, THREADS_POST_MAX_LENGTH);
+  return { post: chunks[0] || "", replies: chunks.slice(1) };
+}
+
+export function validateThreadsThread(threads) {
+  const bubbles = [threads?.post ?? "", ...(threads?.replies ?? [])];
+  bubbles.forEach((text, index) => {
+    if (text.length <= THREADS_POST_MAX_LENGTH) return;
+    const label = index === 0 ? "Threads post" : `Threads reply ${index}`;
+    throw new Error(`${label} exceeds ${THREADS_POST_MAX_LENGTH} characters (${text.length}): "${text}"`);
+  });
 }
 
 export function deriveTitleFromDescription(description, maxLength = YOUTUBE_TITLE_MAX_LENGTH) {
@@ -173,12 +239,20 @@ export async function readPostMetadata(slugDir) {
     String(data?.title || "").trim() ||
     (await readPublishTitle(slugDir)) ||
     deriveTitleFromDescription(description);
+  const explicitThreads = source.threads && typeof source.threads === "object" ? source.threads : null;
+  const threads = explicitThreads && String(explicitThreads.post || "").trim()
+    ? {
+        post: String(explicitThreads.post).trim(),
+        replies: Array.isArray(explicitThreads.replies) ? explicitThreads.replies.map((reply) => String(reply).trim()) : [],
+      }
+    : await readThreadsThread(slugDir, description);
 
   return {
     ...DEFAULT_POST,
     ...source,
     title,
     description,
+    threads,
     tags: Array.isArray(source.tags) ? source.tags : DEFAULT_POST.tags,
     mentions: Array.isArray(source.mentions) ? source.mentions : DEFAULT_POST.mentions,
     targetCountries: Array.isArray(source.targetCountries)
@@ -226,9 +300,19 @@ export function sanitizeDescriptionForPlatform(description, platform) {
 }
 
 export function buildSchedulePayload({ accountId, platform, post, videoUrl, now = new Date() }) {
-  const description = requireDescription(sanitizeDescriptionForPlatform(post.description, platform), `${platform} post`);
+  const isThreads = platform === "threads";
+  // Threads is a 150-char-per-bubble platform: the main post carries `post.threads.post`
+  // (not the long-form `post.description`) and the rest of the caption becomes a reply
+  // chain instead of being sent as one oversized description.
+  if (isThreads) validateThreadsThread(post.threads);
+  const description = isThreads
+    ? requireDescription(post.threads?.post, `${platform} post`)
+    : requireDescription(sanitizeDescriptionForPlatform(post.description, platform), `${platform} post`);
   const title = sanitizeTitleForPlatform(post.title, platform);
   if (platform === "youtube") requireTitle(title, `${platform} post`);
+  const replies = isThreads
+    ? (post.threads?.replies ?? []).map((text) => ({ title: "", description: text, topic: post.topic || "", type: "text", medias: [] }))
+    : [];
 
   return {
     title,
@@ -265,10 +349,17 @@ export function buildSchedulePayload({ accountId, platform, post, videoUrl, now 
       link: "",
       targetCountries: post.targetCountries,
     },
-    replies: [],
+    replies,
     accountId,
     scheduleAt: scheduleAtIso(post.scheduleAt, now),
   };
+}
+
+// Per-target dedup key: lets `runPublish` add a brand-new platform (e.g. Threads) to an
+// already-published video without re-scheduling platforms whose content hasn't changed.
+// Deliberately excludes `scheduleAt` (recomputed every run) and raw `medias` (implied by r2Key).
+export function makeTargetKey({ r2Key, platform, accountId, description, title, replies }) {
+  return sha256(JSON.stringify({ r2Key, platform, accountId, description, title, replies: replies || [] }));
 }
 
 export async function uploadToR2({ bucket, key, file, force, accountId, runCommand = execFileAsync }) {
@@ -482,6 +573,14 @@ export async function runPublish({
   if (targetAccounts.some((target) => target.platform === "youtube") && !sanitizeTitleForPlatform(post.title, "youtube")) {
     throw new Error(`Missing YouTube post title. Add ${path.join(args.slug, "repliz-publish.json")} with post.title or a "## YouTube Title" block in ${path.join(args.slug, "publish-captions.md")} before publishing.`);
   }
+  if (targetAccounts.some((target) => target.platform === "threads")) {
+    try {
+      validateThreadsThread(post.threads);
+    } catch (error) {
+      throw new Error(`${error.message}. Fix "## Threads" in ${path.join(args.slug, "publish-captions.md")} (or post.threads in repliz-publish.json) before publishing.`);
+    }
+  }
+
   const existingReceipt = await readJsonIfExists(path.join(args.slug, "repliz-publish.json"));
   const r2Key = buildR2Key({ prefix: config.r2Prefix, slug: args.slug, file: args.file });
   const videoUrl = buildPublicUrl(config.r2PublicBaseUrl, r2Key);
@@ -492,8 +591,45 @@ export async function runPublish({
     title: post.title,
   });
 
-  if (shouldSkipPublish(existingReceipt, publishKey, args.force)) {
-    return { skipped: true, receipt: existingReceipt };
+  // Partition per target account instead of one global skip/publish-all gate: adding a
+  // brand-new platform (e.g. Threads) to a slug that already published successfully must
+  // never re-send already-scheduled platforms. A target is only re-scheduled when it is
+  // new, previously errored, or `--force` is set; content that changed for an
+  // already-succeeded target is left alone (`blocked`) unless the caller passes `--force`.
+  const priorByTarget = new Map((existingReceipt?.schedules || []).map((schedule) => [`${schedule.platform}:${schedule.accountId}`, schedule]));
+  const toSchedule = [];
+  const reused = [];
+  const blocked = [];
+  for (const target of targetAccounts) {
+    const payload = buildSchedulePayload({ accountId: target.accountId, platform: target.platform, post, videoUrl, now });
+    const targetKey = makeTargetKey({ r2Key, platform: target.platform, accountId: target.accountId, description: payload.description, title: payload.title, replies: payload.replies });
+    const prior = priorByTarget.get(`${target.platform}:${target.accountId}`);
+
+    if (args.force || !prior || prior.status === "error") {
+      toSchedule.push(target);
+    } else if (!prior.targetKey || prior.targetKey === targetKey) {
+      // Missing `targetKey` means the receipt predates this field (an older publish run):
+      // there is no prior content to compare against, so treat it as unchanged rather than
+      // guessing it was edited. Stamp the now-known targetKey below so future runs can compare.
+      reused.push({ ...prior, targetKey });
+    } else {
+      blocked.push({ platform: target.platform, accountId: target.accountId, reason: "content changed since the last successful publish; rerun with --force to repost" });
+    }
+  }
+
+  // A reused entry that never reached a terminal status (still `pending`/`process` from an
+  // earlier run) is worth refreshing even when nothing new needs scheduling.
+  const nonTerminalReused = reused.filter((schedule) => schedule.status !== "success" && schedule.status !== "error" && schedule.scheduleId);
+  const refreshedReused = nonTerminalReused.length
+    ? await pollSchedules({ config, schedules: nonTerminalReused, fetchImpl, sleep })
+    : [];
+  const reusedFinal = reused.map((schedule) => refreshedReused.find((updated) => updated.scheduleId === schedule.scheduleId) || schedule);
+
+  if (!toSchedule.length) {
+    const { blocked: _oldBlocked, ...receiptWithoutBlocked } = existingReceipt || {};
+    const receipt = { ...receiptWithoutBlocked, schedules: reusedFinal, ...(blocked.length ? { blocked } : {}) };
+    if (refreshedReused.length) await writeReceipt(args.slug, receipt);
+    return { skipped: true, receipt, blocked };
   }
 
   await uploadToR2({
@@ -505,21 +641,26 @@ export async function runPublish({
     runCommand,
   });
   await verifyPublicUrl(videoUrl, fetchImpl);
-  await validateAccounts({ config, targetAccounts, fetchImpl });
+  await validateAccounts({ config, targetAccounts: toSchedule, fetchImpl });
 
-  const schedules = await createSchedules({
+  const newSchedules = await createSchedules({
     config,
-    targetAccounts,
+    targetAccounts: toSchedule,
     post,
     videoUrl,
     now,
     fetchImpl,
   });
-  const polledSchedules = await pollSchedules({
+  const polledNew = await pollSchedules({
     config,
-    schedules,
+    schedules: newSchedules,
     fetchImpl,
     sleep,
+  });
+  const stampedNew = polledNew.map((schedule) => {
+    const payload = buildSchedulePayload({ accountId: schedule.accountId, platform: schedule.platform, post, videoUrl, now });
+    const targetKey = makeTargetKey({ r2Key, platform: schedule.platform, accountId: schedule.accountId, description: payload.description, title: payload.title, replies: payload.replies });
+    return { ...schedule, targetKey };
   });
 
   const receipt = {
@@ -531,11 +672,12 @@ export async function runPublish({
     titleHash: sha256(post.title),
     publishKey,
     createdAt: now.toISOString(),
-    schedules: polledSchedules,
+    schedules: [...reusedFinal, ...stampedNew],
+    ...(blocked.length ? { blocked } : {}),
   };
 
   await writeReceipt(args.slug, receipt);
-  return { skipped: false, receipt };
+  return { skipped: false, receipt, blocked };
 }
 
 function printHelp() {
@@ -575,6 +717,7 @@ async function main() {
 
   if (result.skipped) {
     console.log(`Skipped duplicate publish. Receipt: ${path.join(args.slug, "repliz-publish.json")}`);
+    for (const item of result.blocked || []) console.log(`${item.platform}: blocked — ${item.reason}`);
     return;
   }
 
@@ -583,6 +726,7 @@ async function main() {
     const id = schedule.scheduleId || "no-schedule-id";
     console.log(`${schedule.platform}: ${schedule.status} ${id}`);
   }
+  for (const item of result.blocked || []) console.log(`${item.platform}: blocked — ${item.reason}`);
 }
 
 const isCli = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);

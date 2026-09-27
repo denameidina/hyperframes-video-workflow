@@ -26,7 +26,8 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 - **RD-01-05** (Optional) — Where `R2_PREFIX` kosong, the system shall memakai
   prefix `final-renders`.
 - **RD-01-06** (Ubiquitous) — The system shall membangun target account hanya
-  dari env `REPLIZ_{FACEBOOK,YOUTUBE,TIKTOK,INSTAGRAM}_ACCOUNT_ID` yang terisi.
+  dari env `REPLIZ_{FACEBOOK,YOUTUBE,TIKTOK,INSTAGRAM,THREADS}_ACCOUNT_ID` yang
+  terisi.
 - **RD-01-07** (Unwanted) — If tidak ada satu pun target account ID terkonfigurasi,
   then the system shall throw `No target account IDs configured`.
 
@@ -57,6 +58,26 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
   `Missing YouTube post title` yang menyebut `repliz-publish.json` dan blok
   `## YouTube Title` di `publish-captions.md`, sebelum upload atau scheduling.
 
+## Metadata & Threads thread
+
+- **RD-01-36** (Ubiquitous) — The system shall menentukan `post.threads =
+  { post, replies[] }` dengan prioritas: `repliz-publish.json` `post.threads`
+  (eksplisit, non-empty `post`) → `publish-captions.md` heading eksak
+  `## Threads` (setiap blok berpagar ` ```text ` di section itu satu bubble,
+  berurutan; blok pertama `post`, sisanya `replies`) → word-wrap `description`
+  ke potongan ≤150 karakter pada batas kata (kata tunggal >150 karakter
+  dipotong jadi beberapa chunk 150-karakter, tidak pernah menghilangkan
+  karakter).
+- **RD-01-37** (Unwanted) — If ada target account `threads` dan `post.threads.post`
+  atau salah satu `post.threads.replies[i]` melebihi 150 karakter, then the
+  system shall throw pesan yang menyebut bubble mana (`Threads post` atau
+  `Threads reply <n>`) dan panjangnya, sebelum upload atau scheduling.
+- **RD-01-38** (State-driven) — While platform target `threads`, the system
+  shall mengirim `post.threads.post` sebagai `description` payload (bukan
+  `post.description`), dan `post.threads.replies` sebagai `replies[]`
+  (`{title: "", description: <bubble>, topic: post.topic, type: "text",
+  medias: []}` per elemen); platform lain tetap mengirim `replies: []`.
+
 ## Object key & URL
 
 - **RD-01-11** (Ubiquitous) — The system shall menyusun object key R2 sebagai
@@ -66,13 +87,51 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 
 ## Idempotensi
 
-- **RD-01-13** (State-driven) — While receipt lama memiliki `publishKey` sama dan
-  `schedules.length > 0` dan flag `--force` tidak ada, the system shall skip
-  publish dan mengembalikan receipt lama tanpa upload/scheduling.
-- **RD-01-14** (Ubiquitous) — The system shall menghitung `publishKey` =
-  `sha256(JSON({ r2Key, targetAccounts terurut per "platform:accountId", description, title }))`.
+Diamandemen oleh [ADR-0011](../adr/0011-per-target-publish-idempotency.md):
+keputusan skip/publish sekarang **per target account**, bukan per seluruh
+target set, supaya menambah satu platform baru (mis. mengisi
+`REPLIZ_THREADS_ACCOUNT_ID` setelah platform lain sukses) tidak memicu
+re-publish ke platform yang sudah sukses.
+
+- **RD-01-14** (Ubiquitous) — The system shall tetap menghitung dan menyimpan
+  `publishKey` = `sha256(JSON({ r2Key, targetAccounts terurut per
+  "platform:accountId", description, title }))` di receipt sebagai ringkasan
+  seluruh run, tapi tidak lagi memakainya untuk keputusan skip per target.
+- **RD-01-13a** (Ubiquitous) — The system shall menghitung `targetKey` per
+  target account = `sha256(JSON({ r2Key, platform, accountId, description,
+  title, replies }))`, dengan `description`/`title`/`replies` diambil dari
+  payload `buildSchedulePayload` platform itu (jadi untuk `threads`,
+  `description` = `post.threads.post` dan `replies` = `post.threads.replies`).
+- **RD-01-13b** (State-driven) — While target account tidak punya entry
+  `platform:accountId` di `schedules[]` receipt lama, atau entry lama
+  berstatus `error`, or flag `--force` diberikan, the system shall
+  menjadwalkan target itu (buat schedule baru).
+- **RD-01-13c** (State-driven) — While target account punya entry
+  `platform:accountId` di receipt lama dengan `targetKey` sama dan status
+  bukan `error`, and flag `--force` tidak ada, the system shall reuse entry
+  lama apa adanya (tanpa call Repliz baru untuk target itu).
+- **RD-01-13d** (Unwanted) — If target account punya entry `platform:accountId`
+  di receipt lama dengan `targetKey` berbeda (konten berubah sejak sukses
+  terakhir) dan flag `--force` tidak ada, then the system shall **tidak**
+  menjadwalkan ulang target itu; the system shall mencatatnya di
+  `receipt.blocked[]` (`{platform, accountId, reason}`) dan mencetaknya di CLI
+  dengan pesan yang menyebut `--force`, sambil tetap memproses target lain
+  yang perlu dijadwalkan.
+- **RD-01-13e** (State-driven) — While tidak ada satu pun target yang perlu
+  dijadwalkan (semua reuse dan/atau blocked), the system shall mengembalikan
+  `{ skipped: true, receipt: <receipt lama>, blocked }` tanpa upload R2,
+  `verifyPublicUrl`, atau validasi akun Repliz.
+- **RD-01-13f** (Unwanted) — If entry `platform:accountId` di receipt lama
+  tidak punya field `targetKey` (receipt ditulis sebelum ADR-0011), then the
+  system shall memperlakukannya sebagai reused (bukan `blocked`, bukan
+  dijadwalkan ulang) dan menyimpan `targetKey` yang baru dihitung ke entry itu.
+- **RD-01-13g** (State-driven) — While sebuah entry reused berstatus bukan
+  `success`/`error` (`pending`/`process`), the system shall memanggil
+  `pollSchedules` untuk entry itu dan memperbarui statusnya di receipt, sekali
+  per run, terlepas dari apakah ada target lain yang dijadwalkan.
 - **RD-01-15** (Optional) — Where `--force` diberikan, the system shall selalu
-  re-upload R2 dan membuat schedule baru meski receipt cocok.
+  menjadwalkan ulang **setiap** target (bukan hanya yang berubah) dan
+  re-upload R2 bila ada minimal satu target yang dijadwalkan.
 
 ## Upload R2
 
@@ -98,8 +157,9 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 ## Scheduling
 
 - **RD-01-22** (Event-driven) — When membuat schedule, the system shall
-  memanggil `POST /public/schedule` satu kali per target account dengan payload
-  Repliz (`medias[0].url = videoUrl`, `type` default `video`).
+  memanggil `POST /public/schedule` satu kali per target account yang perlu
+  dijadwalkan (RD-01-13b), bukan untuk target yang di-reuse atau `blocked`,
+  dengan payload Repliz (`medias[0].url = videoUrl`, `type` default `video`).
 - **RD-01-23** (Unwanted) — If `description` payload kosong/whitespace, then the
   system shall throw `Missing <platform> post description`.
 - **RD-01-24** (State-driven) — While platform target `youtube`, the system shall
@@ -131,7 +191,8 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 - **RD-01-29** (Event-driven) — When publish berhasil, the system shall menulis
   `videos/<slug>/repliz-publish.json` berisi `post`, `r2Bucket`, `r2Key`,
   `videoUrl`, `descriptionHash` (`sha256:...`), `titleHash` (`sha256:...`),
-  `publishKey`, `createdAt`, `schedules[]`.
+  `publishKey`, `createdAt`, `schedules[]` (tiap entry termasuk `targetKey`),
+  dan `blocked[]` bila ada.
 - **RD-01-30** (Ubiquitous) — The system shall tidak menyimpan access/secret key,
   Cloudflare API token, header Basic Auth penuh, atau signed URL di receipt.
 
@@ -142,4 +203,5 @@ Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 - Operasi: [operations/publish-runbook](../operations/publish-runbook.md)
 - Keputusan: [ADR-0002](../adr/0002-repliz-r2-publish-via-wrangler.md),
   [ADR-0003](../adr/0003-approval-gated-publish.md),
-  [ADR-0006](../adr/0006-idempotent-publish-receipts.md)
+  [ADR-0006](../adr/0006-idempotent-publish-receipts.md),
+  [ADR-0011](../adr/0011-per-target-publish-idempotency.md)

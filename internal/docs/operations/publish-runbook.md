@@ -19,6 +19,12 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
   atau root `title`) **atau** `publish-captions.md` (`## YouTube Title`, fenced
   ` ```text ` block). Tanpa keduanya, title diturunkan dari baris pertama
   description (max 100 karakter).
+- Bila target Threads aktif (`REPLIZ_THREADS_ACCOUNT_ID`): tulis `## Threads`
+  di `publish-captions.md` sebagai rantai bubble ≤150 karakter (blok pertama =
+  post, sisanya reply chain) — lihat Threads Character Limits di
+  [integration-spec](../../docs/repliz/integration-spec.md). Tanpa itu, script
+  otomatis word-wrap `description` jadi rantai ≤150 karakter, tapi hasilnya
+  kurang natural sebagai thread.
 - **Approval user** atas render final.
 
 ## Langkah
@@ -44,7 +50,15 @@ Repliz → buat schedule per akun → poll status → tulis receipt.
 ## Output
 
 - `Uploaded: <videoUrl>` lalu per platform: `<platform>: <status> <scheduleId>`.
-- Duplikat: `Skipped duplicate publish. Receipt: videos/<slug>/repliz-publish.json`.
+- Duplikat penuh (tidak ada yang berubah sama sekali): `Skipped duplicate publish. Receipt: videos/<slug>/repliz-publish.json`.
+- Platform yang sudah pernah sukses tapi kontennya berubah, tanpa `--force`:
+  `<platform>: blocked — content changed since the last successful publish; rerun with --force to repost`.
+  Platform lain yang memang perlu dijadwalkan tetap berjalan pada run yang
+  sama (lihat [ADR-0011](../adr/0011-per-target-publish-idempotency.md)).
+- Menambah platform baru (mis. mengisi `REPLIZ_THREADS_ACCOUNT_ID`) ke slug
+  yang sudah publish sukses ke platform lain: rerun `repliz:publish` biasa
+  hanya menjadwalkan platform baru itu; platform yang sudah sukses tidak
+  disentuh ulang.
 - Receipt tersimpan di `videos/<slug>/repliz-publish.json`.
 
 ## Kegagalan umum (semua berhenti sebelum efek keluar)
@@ -56,6 +70,7 @@ Repliz → buat schedule per akun → poll status → tulis receipt.
 | `No target account IDs configured` | Semua `REPLIZ_*_ACCOUNT_ID` kosong | Isi minimal satu |
 | `Missing post description...` | Description kosong di semua sumber | Isi `repliz-publish.json`/`publish-captions.md` |
 | `Missing YouTube post title...` | Target YouTube aktif tapi title kosong & tidak bisa diturunkan dari description | Isi `post.title` atau blok `## YouTube Title` |
+| `Threads post/reply exceeds 150 characters...` | Target Threads aktif dan salah satu bubble > 150 karakter | Pendekkan bubble di `## Threads` (`publish-captions.md`) atau `post.threads` |
 | `R2 public URL is not reachable: <status>` | Domain publik salah / objek belum ada | Cek `R2_PUBLIC_BASE_URL`, ulangi |
 | `Repliz account <id> is not connected` | Akun belum connect | Hubungkan akun di Repliz |
 | `... expected <platform>, got <type>` | ID akun salah platform | Perbaiki env ID |

@@ -55,6 +55,7 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
   - `REPLIZ_YOUTUBE_ACCOUNT_ID` → platform `youtube`
   - `REPLIZ_TIKTOK_ACCOUNT_ID` → platform `tiktok`
   - `REPLIZ_INSTAGRAM_ACCOUNT_ID` → platform `instagram`
+  - `REPLIZ_THREADS_ACCOUNT_ID` → platform `threads`
 
 Secret tidak boleh masuk git (`.gitignore` mengabaikan `.env` + `.env.*` kecuali
 `.env.example`). Lihat [security-standard](../security/security-standard.md).
@@ -83,6 +84,19 @@ Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs:22`):
 | `mentions` | string[] | `[]` | Masuk `additionalInfo.mentions` |
 | `targetCountries` | string[] | `["ID"]` | Masuk `additionalInfo.targetCountries` |
 | `scheduleAt` | string | `"now"` | `"now"` → sekarang + 60 detik ISO; ISO lain dikirim apa adanya |
+| `threads` | `{post, replies[]}` | diturunkan | Dipakai hanya untuk platform `threads`; lihat sumber di bawah |
+
+**Prioritas sumber `threads`** (`readPostMetadata` + `readThreadsThread`):
+
+1. `repliz-publish.json` → `post.threads = { post, replies }` (eksplisit, wajib `post` non-empty).
+2. `publish-captions.md` → heading eksak `## Threads`, tiap blok berpagar
+   ` ```text ``` ` di section itu satu bubble berurutan (blok pertama `post`,
+   sisanya `replies`).
+3. Fallback: word-wrap `description` ke potongan ≤150 karakter pada batas kata.
+
+Setiap bubble (`post` + tiap `replies[i]`) divalidasi ≤150 karakter
+(`validateThreadsThread`) sebelum publish ke Threads; melebihi itu menghentikan
+publish sebelum network call, menyebut bubble mana yang kelebihan.
 
 **Prioritas sumber `description`** (`readPostMetadata` + `readPublishDescription`):
 
@@ -123,30 +137,45 @@ Ditulis setelah publish sukses (`repliz-publish.mjs:452`):
   "schedules": [
     {
       "accountId": "<id>",
-      "platform": "tiktok|instagram|youtube|facebook",
+      "platform": "tiktok|instagram|youtube|facebook|threads",
       "scheduleId": "<id>",
       "status": "pending|process|success|error",
       "postId": "<id, jika ada>",
-      "error": "<pesan, jika status error>"
+      "error": "<pesan, jika status error>",
+      "targetKey": "sha256:<hex>"
     }
+  ],
+  "blocked": [
+    { "platform": "instagram", "accountId": "<id>", "reason": "content changed since the last successful publish; rerun with --force to repost" }
   ]
 }
 ```
+
+`targetKey` (ADR-0011) = `sha256({r2Key, platform, accountId, description,
+title, replies})` untuk entry itu — dipakai untuk memutuskan reuse/reschedule/
+blocked pada run berikutnya, per `platform:accountId`, bukan lewat
+`publishKey` global. `blocked` hanya muncul bila ada target yang sudah pernah
+sukses tapi kontennya berubah dan run ini tidak `--force`.
 
 Receipt **tidak boleh** menyimpan access/secret key, Cloudflare API token,
 header Basic Auth penuh, atau signed URL (lihat integration spec).
 
 ## `publish-captions.md` — kontrak heading eksak
 
-Dibaca `extractPublishCaption` (`repliz-publish.mjs:114`). Regex mencari heading
-`^## <Heading>$` (case-insensitive, multiline), lalu mengambil isi blok berpagar
-` ```text ... ``` ` (atau ` ``` ... ``` `) pertama di section itu, di-`trim`.
+Dibaca `extractAllPublishBlocks`/`extractPublishCaption` (`repliz-publish.mjs`).
+Regex mencari heading `^## <Heading>$` (case-insensitive, multiline), lalu
+mengambil **semua** blok berpagar ` ```text ... ``` ` (atau ` ``` ... ``` `) di
+section itu, masing-masing di-`trim`. `description`/`title` memakai blok
+pertama; `## Threads` memakai **semua** blok (satu bubble per blok).
 
 Heading yang dibaca untuk `description`, berurutan: **`## Instagram`** lalu
-**`## TikTok`**. Heading yang dibaca untuk `title`: **`## YouTube Title`**. Teks
-di luar fenced block (mis. baris "Character count: N") diabaikan. Batas panjang
+**`## TikTok`**. Heading yang dibaca untuk `title`: **`## YouTube Title`**.
+Heading yang dibaca untuk `threads`: **`## Threads`** (blok pertama = post
+utama, blok berikutnya = reply chain, masing-masing ≤150 karakter). Teks di
+luar fenced block (mis. baris "Character count: N") diabaikan. Batas panjang
 (dari style guide / integration spec): IG max **1200** karakter, TikTok max
-**4000** karakter, judul YouTube max **100** karakter.
+**4000** karakter, judul YouTube max **100** karakter, tiap bubble Threads max
+**150** karakter.
 
 Contoh minimal valid:
 

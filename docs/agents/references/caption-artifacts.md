@@ -165,6 +165,15 @@ Rules:
 - Use one clear CTA.
 - Use only relevant hashtags; avoid hashtag stuffing.
 - Include character counts for the YouTube title and both captions before handoff.
+- When Threads is a publish target, add a `## Threads` section: one fenced
+  ` ```text ` block per bubble, in order — the first block is the main post,
+  every later block is one reply in the chain. Each bubble (post and every
+  reply) must be `150` characters or fewer; the publish CLI rejects any bubble
+  over that limit before uploading anything. Write it as its own thread —
+  short, standalone beats — not the Instagram caption reflowed into 150-char
+  slices. Skip the section only when Threads is not a target for this video;
+  the CLI then falls back to auto word-wrapping `description`, which reads
+  more mechanically than an authored thread.
 
 Expected shape (fenced `text` block under each heading):
 
@@ -186,6 +195,20 @@ Expected shape (fenced `text` block under each heading):
     <caption>
     ```
 
+    ## Threads
+
+    ```text
+    <post, <=150 chars>
+    ```
+
+    ```text
+    <reply 1, <=150 chars>
+    ```
+
+    ```text
+    <reply 2, <=150 chars>
+    ```
+
 ## QA Checklist
 
 Before handing off:
@@ -203,4 +226,7 @@ Before handing off:
 - Placement avoids obvious face/mouth/UI conflicts.
 - Caption plan matches Story phase visual grammar.
 - Captions still sound like Dena.
+- When Threads is a target, every `## Threads` bubble (post and each reply) is
+  150 characters or fewer, and reads as a standalone thread beat rather than a
+  chopped-up paragraph.
 

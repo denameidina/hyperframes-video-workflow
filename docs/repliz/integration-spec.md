@@ -41,6 +41,7 @@ REPLIZ_FACEBOOK_ACCOUNT_ID=...
 REPLIZ_YOUTUBE_ACCOUNT_ID=...
 REPLIZ_TIKTOK_ACCOUNT_ID=...
 REPLIZ_INSTAGRAM_ACCOUNT_ID=...
+REPLIZ_THREADS_ACCOUNT_ID=...
 ```
 
 `REPLIZ_API_BASE_URL` wajib configurable karena OpenAPI tidak mendefinisikan `servers`.
@@ -67,7 +68,8 @@ Target publish default dibaca dari `.env`:
   "facebook": "REPLIZ_FACEBOOK_ACCOUNT_ID",
   "youtube": "REPLIZ_YOUTUBE_ACCOUNT_ID",
   "tiktok": "REPLIZ_TIKTOK_ACCOUNT_ID",
-  "instagram": "REPLIZ_INSTAGRAM_ACCOUNT_ID"
+  "instagram": "REPLIZ_INSTAGRAM_ACCOUNT_ID",
+  "threads": "REPLIZ_THREADS_ACCOUNT_ID"
 }
 ```
 
@@ -108,6 +110,69 @@ yang sama dikirim ke semua platform; hanya YouTube yang divalidasi non-empty.
 ```
 
 Default `type` adalah `video`, karena Repliz mendukung video untuk Facebook, Instagram, Threads, TikTok, YouTube, dan LinkedIn. `reel` tidak dipakai sebagai default karena dokumentasi menyebut Reels hanya untuk Facebook.
+
+## Threads Character Limits
+
+Threads adalah platform 150-karakter-per-bubble: satu post utama, lalu rantai
+reply, masing-masing maksimal **150 karakter**. Ini berbeda dari platform lain
+di atas (yang memakai `description` panjang penuh), jadi Threads tidak
+mengirim `post.description` apa adanya — ia mengirim `post.threads.post`
+sebagai body utama dan `post.threads.replies[]` sebagai rantai balasan.
+
+Sumber `post.threads` (prioritas, dibaca `readPostMetadata`):
+
+1. `repliz-publish.json` `post.threads = { "post": "...", "replies": ["...", ...] }` (eksplisit).
+2. `publish-captions.md` heading eksak `## Threads`: setiap blok berpagar
+   ` ```text ` di section itu adalah satu bubble, berurutan. Blok pertama =
+   post utama, blok berikutnya = reply chain.
+3. Fallback otomatis: word-wrap `description` (sumber yang sama dipakai
+   Instagram/TikTok) ke potongan ≤150 karakter pada batas kata, tanpa memotong
+   kata di tengah kecuali satu kata tunggal memang lebih panjang dari 150
+   karakter.
+
+Setiap bubble (post + tiap reply) divalidasi ≤150 karakter **sebelum** upload
+R2 atau network call apa pun; bubble yang kelewat panjang membuat publish
+berhenti dengan pesan yang menyebut bubble mana dan berapa karakter
+kelebihannya.
+
+Karena kontennya rantai balasan bukan satu caption panjang, tulis Threads
+sebagai thread asli — beat-beat pendek berdiri sendiri — bukan caption
+Instagram yang di-word-wrap begitu saja. Fallback word-wrap tetap ada supaya
+Threads tidak pernah memblokir publish pada video yang caption-nya ditulis
+sebelum Threads didukung, tapi opsi 2 (ditulis manual) adalah default yang
+disarankan untuk kualitas.
+
+Payload reply Repliz (`ScheduleReply`, lihat `docs/repliz/openapi.json`):
+
+```json
+{ "title": "", "description": "<bubble text>", "topic": "<post.topic>", "type": "text", "medias": [] }
+```
+
+## Per-Target Publish Idempotency
+
+Menambah satu platform target baru ke slug yang sudah pernah publish (misalnya
+mengisi `REPLIZ_THREADS_ACCOUNT_ID` setelah Facebook/YouTube sudah sukses)
+**tidak** boleh mengirim ulang platform yang sudah sukses. Idempotensi
+dievaluasi per `platform:accountId`, bukan per seluruh target set — detail
+lengkap: [ADR-0011](../../internal/docs/adr/0011-per-target-publish-idempotency.md)
+dan [requirements/rd-01-publish-pipeline](../../internal/docs/requirements/rd-01-publish-pipeline.md).
+
+Ringkas: setiap target dibandingkan lewat `targetKey` = `sha256({r2Key,
+platform, accountId, description, title, replies})` terhadap entry
+`platform:accountId` yang sama di `schedules[]` receipt sebelumnya.
+
+- Tidak ada entry sebelumnya, entry berstatus `error`, atau `--force` → jadwalkan.
+- Entry ada, `targetKey` sama, status bukan `error` → reuse entry lama apa
+  adanya, tidak ada call baru.
+- Entry ada, `targetKey` beda (caption/judul/Threads-reply berubah untuk
+  platform yang sudah sukses), tanpa `--force` → `blocked`: platform itu
+  **tidak** dijadwalkan ulang, dicatat di `receipt.blocked[]` dan dicetak di
+  CLI dengan pesan yang mengarahkan ke `--force`.
+
+Upload R2 + validasi akun hanya dijalankan bila ada minimal satu target yang
+akan dijadwalkan. Bila semua target ter-reuse dan tidak ada yang `blocked`,
+publish berhenti tanpa network call sama sekali (identik dengan perilaku skip
+lama untuk kasus rerun yang benar-benar tidak berubah).
 
 ## Cloudflare R2 Upload Requirement
 
@@ -285,15 +350,14 @@ Minimal script behavior:
 
 1. Tolak publish jika CLI tidak diberi `--approved`.
 2. Baca env Repliz dan R2 public config.
-3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong, atau jika target YouTube aktif dan `title` tidak bisa di-resolve.
-4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, dan `REPLIZ_INSTAGRAM_ACCOUNT_ID`.
-5. Upload `--file` ke R2 dengan Wrangler jika object belum ada atau `--force` dipakai.
-6. Bentuk `videoUrl` dari public R2 URL.
-7. Tolak publish ulang jika receipt untuk kombinasi `r2Key + targetAccounts + description + title` sudah ada, kecuali diberi `--force`.
-8. Validasi semua accountId lewat Repliz.
-9. Buat schedule untuk tiap accountId.
-10. Simpan receipt lokal.
-11. Poll status sampai terminal `success/error` atau timeout.
+3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong, jika target YouTube aktif dan `title` tidak bisa di-resolve, atau jika target Threads aktif dan salah satu bubble `post.threads` melebihi 150 karakter.
+4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, `REPLIZ_INSTAGRAM_ACCOUNT_ID`, dan `REPLIZ_THREADS_ACCOUNT_ID`.
+5. Bagi target per `platform:accountId` menjadi *dijadwalkan* (baru/error/`--force`), *reuse* (`targetKey` sama dengan entry sukses sebelumnya), atau *blocked* (`targetKey` beda dari entry sukses sebelumnya, tanpa `--force`) — lihat Per-Target Publish Idempotency di atas.
+6. Bila ada target yang perlu dijadwalkan: upload `--file` ke R2 dengan Wrangler, lalu bentuk `videoUrl` dari public R2 URL. Bila tidak ada (semua reuse, tidak ada yang blocked), berhenti tanpa network call.
+7. Validasi accountId lewat Repliz hanya untuk target yang akan dijadwalkan.
+8. Buat schedule untuk tiap target yang akan dijadwalkan.
+9. Poll status sampai terminal `success/error` atau timeout, untuk schedule baru saja.
+10. Simpan receipt lokal: gabungan entry yang di-reuse (apa adanya) + entry baru (dengan `targetKey` baru), plus `blocked[]` bila ada.
 
 Default `scheduleAt`:
 
@@ -324,11 +388,23 @@ Format:
       "platform": "tiktok",
       "scheduleId": "69c7532ff0c3b7c83ab9e681",
       "status": "success",
-      "postId": "platform_post_id_if_returned"
+      "postId": "platform_post_id_if_returned",
+      "targetKey": "sha256:..."
+    }
+  ],
+  "blocked": [
+    {
+      "platform": "instagram",
+      "accountId": "680affa5ce12f2f72916f67e",
+      "reason": "content changed since the last successful publish; rerun with --force to repost"
     }
   ]
 }
 ```
+
+`targetKey` is per-schedule-entry (see Per-Target Publish Idempotency above);
+`blocked` is only present when at least one already-succeeded target's content
+changed and the run was not `--force`d.
 
 Do not store Repliz access keys, Repliz secret keys, Cloudflare API tokens, full Basic Auth headers, or signed URLs.
 
@@ -341,16 +417,22 @@ Do not store Repliz access keys, Repliz secret keys, Cloudflare API tokens, full
 - Wrangler missing or not authenticated: fail before creating Repliz schedules.
 - R2 upload failure: fail before creating Repliz schedules.
 - R2 public URL is not reachable with HTTP 200/206: fail before creating Repliz schedules.
-- Account missing/disconnected: fail before creating any schedules.
+- Account missing/disconnected: fail before creating any schedules for that account (other accounts still proceed).
 - One account schedule fails in a multi-account publish: keep successful `scheduleId`s in receipt and mark failed account with error message.
+- A Threads post or reply bubble exceeds 150 characters: fail before R2 upload or Repliz scheduling, naming which bubble and its length.
 - Poll timeout: keep receipt as non-terminal and print command to resume status check.
+- A target whose content changed since its last successful publish, without `--force`: do not schedule it; record it in `receipt.blocked[]` and print it, but still proceed with any other target that needs scheduling.
 
 ## Acceptance Criteria
 
 - Given Wrangler is authenticated and a local MP4 exists, the script uploads the file to R2 and records `r2Key`.
 - Given `--approved` is missing, the script fails before R2 upload or Repliz scheduling.
 - Given a valid Repliz credential, connected accountId, caption, and R2 public MP4 URL, the script creates a schedule and records `scheduleId`.
-- Given Facebook, YouTube, TikTok, and Instagram account IDs in `.env`, the script creates one Repliz schedule per configured platform and records all schedule IDs.
+- Given Facebook, YouTube, TikTok, Instagram, and Threads account IDs in `.env`, the script creates one Repliz schedule per configured platform and records all schedule IDs.
 - Given the same video/caption/accounts twice, the second run exits without creating duplicate schedules unless `--force` is used.
+- Given a slug that already published successfully to some platforms, and a newly configured platform added to `.env` (e.g. Threads), the second run schedules only the new platform and leaves the already-successful platforms' receipt entries untouched.
+- Given a slug whose caption changed after a platform already succeeded, rerunning without `--force` does not resend that platform and records it in `blocked`.
 - Given a disconnected account, no schedule is created.
 - Given a successful schedule, status polling updates local receipt to `success`.
+- Given a Threads target with a caption longer than 150 characters and no manually authored `## Threads` thread, the script auto-wraps it into a post + reply chain, each ≤150 characters.
+- Given a Threads target with a post or reply over 150 characters (manually authored or explicit `post.threads`), the script fails before any network call.

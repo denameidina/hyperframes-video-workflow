@@ -54,22 +54,23 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 30. [adr/0008-four-phase-workflow.md](adr/0008-four-phase-workflow.md) - Produksi 4 fase (Story, Screen Plan, Build, QA opsional) dengan gate.
 31. [adr/0009-motion-broll-motion-kit.md](adr/0009-motion-broll-motion-kit.md) - Motion b-roll lewat engine motion-kit + sub-composition HyperFrames.
 32. [adr/0010-per-video-hyperframes-projects.md](adr/0010-per-video-hyperframes-projects.md) - Komposisi per video di `videos/<slug>/`; root `index.html` hanya template.
+33. [adr/0011-per-target-publish-idempotency.md](adr/0011-per-target-publish-idempotency.md) - Idempotensi publish per target account (amends 0006); aman menambah platform baru.
 
 ### Design System & Frontend
-33. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-34. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+34. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+35. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-35. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-36. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-37. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-38. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-39. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-40. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+36. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+37. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+38. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+39. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+40. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+41. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-41. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-42. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+42. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+43. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
@@ -85,7 +86,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0010) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0011) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
@@ -123,7 +124,8 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - **Visual Decision Log** — log wajib fase Screen Plan di `visual-plan.md` untuk tiap peluang visual-support.
 - **Gate 1 / Gate 2 / Gate 3** — review cut (opsional), rencana visual (kondisional R1–R6), review render (wajib).
 - **receipt** — `videos/<slug>/repliz-publish.json` (metadata + hasil publish).
-- **publishKey** — sha256 idempotensi `{r2Key, targetAccounts, description}`.
+- **publishKey** — sha256 ringkasan seluruh run `{r2Key, targetAccounts, description}`; disimpan di receipt tapi tidak lagi dipakai untuk keputusan skip (lihat `targetKey`, ADR-0011).
+- **targetKey** — sha256 per target account `{r2Key, platform, accountId, description, title, replies}`; menentukan apakah satu platform di-reuse, dijadwalkan ulang, atau `blocked` (ADR-0011).
 - **r2Key** — object key R2 `<prefix>/<slug>/<file>`.
 - **approval / `--approved`** — gate manusia wajib sebelum upload/scheduling.
 - **target account** — akun sosial tujuan dari `REPLIZ_<PLATFORM>_ACCOUNT_ID`.
