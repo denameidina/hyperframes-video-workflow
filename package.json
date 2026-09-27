@@ -13,6 +13,8 @@
     "test:repliz": "node --test scripts/repliz-publish.test.mjs",
     "test:motion-kit": "node --test scripts/motion-kit.test.mjs",
     "test:style-kit": "node --test scripts/style-kit.test.mjs scripts/style-docs.test.mjs scripts/paper-pack.test.mjs",
+    "test:asset-lib": "node --test scripts/asset-lib.test.mjs",
+    "asset-lib": "node scripts/asset-lib.mjs",
     "check:broll-examples": "node scripts/check-broll-examples.mjs",
     "check:style-examples": "node scripts/check-broll-examples.mjs docs/agents/references/style-examples style-examples",
     "test:render-blur": "node --test scripts/render-blur.test.mjs",
