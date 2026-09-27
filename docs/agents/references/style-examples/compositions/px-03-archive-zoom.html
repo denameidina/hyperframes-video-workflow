@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a public-domain archival photo ("Woman typist", c. 1900, Library of Congress via Wikimedia Commons) split into the matted subject and a Codex-reconstructed plate, with one dolly-zoom, in a panel above the face. The plate is reconstructed and never proof. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #card { position: absolute; left: 90px; top: 150px; width: 900px; height: 560px; overflow: hidden; background: #111; }
+        #card .sk-view, #card .sk-world, #card .sk-ly { width: 900px; height: 560px; }
+        #view { perspective-origin: 450px 280px; }
+        #card img.sk-plate { object-position: 50% 36%; filter: contrast(1.05); }
+        #src { left: 104px; top: 662px; font-size: 24px; }
+      </style>
+      <div id="root" data-composition-id="px-03-archive-zoom" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage">
+          <div class="sk-cut" id="card">
+            <div class="sk-view" id="view"><div class="sk-world" id="world">
+              <div class="sk-ly" id="back"><img class="sk-plate" src="assets/px-archive-plate.jpg" alt="" /></div>
+              <div class="sk-ly" id="subj"><img class="sk-plate" src="assets/px-archive-subject.png" alt="" /></div>
+            </div></div>
+            <div class="sk-grain" id="grain" style="width:900px;height:560px"></div>
+          </div>
+          <div class="sk-source" id="src">Foto: "Woman typist", ±1900, Library of Congress (domain publik)</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-03-archive-zoom';
+          const $ = SK.finder(ID);
+          const O = { ox: 450, oy: 280 };
+          const Z0 = -300, P0 = SK.P;
+          SK.layer($('back'), -800, { ...O, fill: 1.35 });
+          SK.layer($('subj'), Z0, O);
+          const u = M.track(0, [[1.2, 1, [3.2, 1]]]);   // one dolly-zoom, on the realization word
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            const { P, d } = SK.dollyZoom(u(t), { P0, z0: Z0, d1: 110 });
+            $('view').style.perspective = P.toFixed(1) + 'px';
+            SK.camera($('world'), { z: d }, O);
+            $('card').style.opacity = M.clamp(t / 0.25).toFixed(3);
+            $('src').style.opacity = t >= 0.3 ? '1' : '0';
+            SK.grain($('grain'), t, 13);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a multiplane collage from the paper pack, the Natural Earth map, and a Codex paper laptop. The camera dollies in and the focus racks from the map to the laptop. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #card { position: absolute; left: 110px; top: 360px; width: 860px; height: 620px; overflow: hidden; }
+        #map { position: absolute; left: 0; top: 0; width: 2400px; height: 950px; }
+        #pin { position: absolute; left: 0; top: 0; width: 34px; }
+        #lap { position: absolute; left: 190px; top: 1180px; width: 700px; }
+      </style>
+      <div id="root" data-composition-id="px-01-collage-dolly" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop sk-kraft-dark">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly sk-kraft-dark" id="back"></div>
+            <div class="sk-ly" id="mid"><div class="sk-cut sk-paper-cream" id="card"><img id="map" src="vendor/paper-pack/map-indonesia.svg" alt="" /><div class="sk-pin" id="pin"></div></div></div>
+            <div class="sk-ly" id="front"><img class="sk-cut" id="lap" src="assets/cut-laptop.png" alt="" /></div>
+          </div></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-01-collage-dolly';
+          const $ = SK.finder(ID);
+          const J = SK.geo(...SK.CITIES.jakarta);
+          // centre Jakarta in the 860×620 card: shift the map, then put the pin tip on the city
+          const mx = 430 - J.x, my = 310 - J.y;
+          $('map').style.transform = `translate(${mx.toFixed(1)}px,${my.toFixed(1)}px)`;
+          $('pin').style.transform = `translate(${(430 - 17).toFixed(1)}px,${(310 - 50).toFixed(1)}px)`;
+          const L = [{ el: $('back'), z: -1600 }, { el: $('mid'), z: -500 }, { el: $('front'), z: -80 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { fill: i === 0 ? 1.2 : 1 }));
+          const dolly = M.track(0, [[0.3, 280, [3, 1]]]);
+          const focus = M.track(-500, [[2.8, -80, M.SLOW]]);   // rack focus: map, then the laptop
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.camera($('world'), { z: dolly(t), y: -0.08 * dolly(t) });
+            SK.dof(L, focus(t), { k: 90, max: 10 });
+            SK.grain($('grain'), t, 11);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

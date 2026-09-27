@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a Codex layered scene (reference scene, then a plate and a keyed desk layer by editing it, plus a separate chair cut-out), panned and orbited a little in the top half of a split. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; background: #1b2a4a; }
+        #half .sk-view, #half .sk-world, #half .sk-ly { height: 960px; }
+        #view { perspective-origin: 540px 480px; }
+        #chair { position: absolute; left: 230px; top: 640px; width: 620px; }
+      </style>
+      <div id="root" data-composition-id="px-02-night-desk" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage">
+          <div id="half">
+            <div class="sk-view" id="view"><div class="sk-world" id="world">
+              <div class="sk-ly" id="back"><img class="sk-plate" src="assets/px-desk-plate.jpg" alt="" /></div>
+              <div class="sk-ly" id="mid"><img class="sk-plate" src="assets/px-desk-mid.png" alt="" /></div>
+              <div class="sk-ly" id="near"><img id="chair" src="assets/px-desk-chair.png" alt="" /></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-02-night-desk';
+          const $ = SK.finder(ID);
+          const O = { ox: 540, oy: 480 };
+          const L = [{ el: $('back'), z: -1200 }, { el: $('mid'), z: -380 }, { el: $('near'), z: 160 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { ...O, fill: i === 0 ? 1.18 : 1.04 }));
+          const pan = M.track(-45, [[0.4, 45, [2.2, 1]]]);
+          const orbit = M.track(1.5, [[0.4, -2.5, [2.2, 1]]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('half').style.transform = `translateY(${(-(1 - M.eo(t / 0.3)) * 960).toFixed(2)}px)`;
+            SK.camera($('world'), { x: pan(t), ry: orbit(t), z: 40 }, O);
+            SK.dof(L, -380, { k: 100, max: 9 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

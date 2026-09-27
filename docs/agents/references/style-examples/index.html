@@ -23,8 +23,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="153.5">
-      <div id="base-video" class="clip" data-start="0" data-duration="153.5" data-track-index="1">
+    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="177.5">
+      <div id="base-video" class="clip" data-start="0" data-duration="177.5" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -92,11 +92,21 @@
              data-start="148" data-duration="5" data-track-index="6"></video>
       <div id="mm-04-polaroid-caption-front-mount" class="broll-front" data-composition-id="mm-04-polaroid-caption-front" data-composition-src="compositions/mm-04-polaroid-caption-front.html"
            data-start="148" data-duration="5" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="px-01-collage-dolly-mount" class="broll" data-composition-id="px-01-collage-dolly" data-composition-src="compositions/px-01-collage-dolly.html"
+           data-start="153.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="px-02-night-desk-mount" class="broll" data-composition-id="px-02-night-desk" data-composition-src="compositions/px-02-night-desk.html"
+           data-start="159" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="px-03-archive-zoom-mount" class="broll" data-composition-id="px-03-archive-zoom" data-composition-src="compositions/px-03-archive-zoom.html"
+           data-start="165.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="px-04-stage-mount" class="broll" data-composition-id="px-04-stage" data-composition-src="compositions/px-04-stage.html"
+           data-start="171" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="px-04-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="171" data-duration="6" data-track-index="6"></video>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // Split treatment (tx-02, mg-02, wb-03, sm-02, vx-02): slide the base video into the bottom half, then back.
+      // Split treatment (tx-02, mg-02, wb-03, sm-02, vx-02, px-02): slide the base video into the bottom half, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 10.55);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 28);
@@ -107,7 +117,9 @@
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 86.55);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 112);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 117.55);
-      // Collage treatment (mm-01..04): the collage clip is an opaque full-frame backdrop, so it already covers the
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 159);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 164.55);
+      // Collage and parallax-stage treatments (mm-01..04, px-04): the collage clip is an opaque full-frame backdrop, so it already covers the
       // base video; never tween #base-video opacity (the linter treats it as a full-frame overlay).
       window.__timelines['style-examples'] = tl;
     </script>

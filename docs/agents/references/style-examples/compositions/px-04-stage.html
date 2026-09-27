@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: parallax-stage — the Codex night-desk plate and desk layer drift slowly behind the matted speaker (the placeholder on host track 6). The stage is opaque, so it covers the base video. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+      </style>
+      <div id="root" data-composition-id="px-04-stage" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage" style="background:#1b2a4a">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="assets/px-desk-plate.jpg" alt="" /></div>
+            <div class="sk-ly" id="mid"><img class="sk-plate" src="assets/px-desk-mid.png" alt="" /></div>
+          </div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-04-stage';
+          const $ = SK.finder(ID);
+          const L = [{ el: $('back'), z: -1500 }, { el: $('mid'), z: -500 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { fill: i === 0 ? 1.2 : 1.1 }));
+          // slower than the speaker: a gentle push and drift under the whole sentence
+          const push = M.track(0, [[0.2, 120, [1.6, 1]]]);
+          const drift = M.track(-30, [[0.2, 30, [1.4, 1]]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.camera($('world'), { x: drift(t), z: push(t) });
+            SK.dof(L, -500, { k: 90, max: 8 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
