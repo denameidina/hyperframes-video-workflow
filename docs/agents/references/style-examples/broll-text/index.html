@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-broll-text" data-start="0" data-width="1080" data-height="1920" data-duration="21.5">
-      <div id="base-video" class="clip" data-start="0" data-duration="21.5" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-broll-text" data-start="0" data-width="1080" data-height="1920" data-duration="58.5">
+      <div id="base-video" class="clip" data-start="0" data-duration="58.5" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -38,6 +38,18 @@
            data-start="11.5" data-duration="4.5" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="tx-04-stack-mount" class="broll" data-composition-id="tx-04-stack" data-composition-src="compositions/tx-04-stack.html"
            data-start="16.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-05-type-counter-mount" class="broll" data-composition-id="tx-05-type-counter" data-composition-src="compositions/tx-05-type-counter.html"
+           data-start="22" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-06-split-scale-mount" class="broll" data-composition-id="tx-06-split-scale" data-composition-src="compositions/tx-06-split-scale.html"
+           data-start="28.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-07-zoom-grid-mount" class="broll" data-composition-id="tx-07-zoom-grid" data-composition-src="compositions/tx-07-zoom-grid.html"
+           data-start="34" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-08-jitter-footage-mount" class="broll" data-composition-id="tx-08-jitter-footage" data-composition-src="compositions/tx-08-jitter-footage.html"
+           data-start="40.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-09-stamp-swash-mount" class="broll" data-composition-id="tx-09-stamp-swash" data-composition-src="compositions/tx-09-stamp-swash.html"
+           data-start="46" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="tx-10-font-riso-mount" class="broll" data-composition-id="tx-10-font-riso" data-composition-src="compositions/tx-10-font-riso.html"
+           data-start="52.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -45,6 +57,8 @@
       // Split treatment: slide the base video into the bottom half for the clip, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 10.55);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 46);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 51.55);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-broll-text'] = tl;
     </script>

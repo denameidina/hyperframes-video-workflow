@@ -5,7 +5,7 @@ on screen exactly on the spoken word. Loaded by `docs/agents/02-screen-plan.md`
 (visual step, after `styles/README.md`) and `docs/agents/03-build.md` (author
 step). Engine: `vendor/style-kit/` (`window.SK`) on top of `vendor/motion-kit/`
 (`window.M`). Worked examples: `docs/agents/references/style-examples/broll-text/`
-(`tx-01` … `tx-04`, `npm run check:style-examples -- broll-text`).
+(`tx-01` … `tx-10`, `npm run check:style-examples -- broll-text`).
 
 ## When To Use
 
@@ -105,6 +105,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **jitter-flash** | 2–4 frame flash of a distressed word, then a clean hold | Pain points, "masalahnya…" | Flash before the word; clean on the word | tape crackle | Positive or CTA beats | `SK.boil` offset with `fps: 24` for the flash only |
 | **over-footage** | Thin, oversized type laid over running footage at partial opacity | Keep the face visible while the word lands | Fade in on the onset, 0.8–1.5 s | none | Heavy type that hides the face | panel treatment, `opacity: .85`, `'fade'` |
 | **split-scale** | Phrase in two parts; the second-half keyword is bigger | The final payoff phrase | Big word lands on its onset | soft bass pop | Making every line a two-size split | two lines, second at 1.6× size, `'pop'` |
+| **font-swap** | One word cycles through 3–4 display fonts in fast steps, then settles on one | "berubah", "versi baru", identity | Swap every 2 frames (15/s) over the lead-in word; settle on the stressed syllable | shutter click per step | More than 4 fonts; swapping for the whole clip | `.sk-f-*` classes swapped by `SK.cycle(t, n)` until the settle time |
+| **stamp-slam** | A stamp or badge drops from 1.4× onto the keyword with a short decaying shake | Verdicts and labels: "GRATIS", "BARU", "HEMAT" | Lands on the first syllable; shake ≤ 0.3 s | rubber-stamp thud | Stamping many words; stamping a claim that is not a verdict | `SK.stamp(id, { text })` + `'slam'` + `SK.shake` |
+| **swash-underline** | A hand-drawn swash draws under the payoff word | The last keyword of a sentence | Draws in 0.3–0.5 s from the word onset | marker sweep | Underlining a whole line; more than one swash per screen | `SK.doodle('frame.swash-N')` + `SK.drawSeq` |
+| **riso-poster** | The word as a two-ink print: two ink layers offset 6–10 px, riso grain, halftone | A big statement that should feel "printed", zine | The two inks register on the word (0.3 s) | paper slap | A busy image behind; more than two inks | `sk-pal-text-risograph` + two copies of the word (`mix-blend-mode: multiply`) + a `.sk-tex-riso` overlay |
 
 ## References
 
@@ -237,6 +241,9 @@ clip):
 - `bg: null` in `SK.clip` for split and panel (transparent stage); draw the split
   backdrop yourself in the top 960 px.
 - Keep every per-frame value a function of `t`. No timers, no `Math.random`.
+- `SK.typeOn(el, text, u)` types `text` up to `u` (0..1) with a blinking caret
+  (type-on); `SK.shake(t, t0)` returns a decaying `{x, y, r}` jolt (stamp-slam,
+  jitter-flash). Both write the DOM only when the value changes.
 
 ## SFX
 
@@ -247,6 +254,9 @@ clip):
 | highlight-swipe, strike-through | marker swish / pen scratch | 0.1–0.14 |
 | word-swap | paper flick | 0.1 |
 | counter-word | tick roll → click | 0.08–0.12 |
+| type-on | muted key clicks | 0.06–0.1 |
+| stamp-slam | rubber-stamp thud | 0.14–0.18 |
+| font-swap | shutter click per step | 0.06–0.1 |
 
 All cues stay under speech (Motion And SFX Gate in `quality-gates.md`).
 
@@ -258,6 +268,12 @@ All cues stay under speech (Motion And SFX Gate in `quality-gates.md`).
 | `style-examples/broll-text/compositions/tx-02-quote-split.html` | quote-card + highlight-swipe | split |
 | `style-examples/broll-text/compositions/tx-03-word-swap.html` | word-swap + strike-through + mask-reveal | panel |
 | `style-examples/broll-text/compositions/tx-04-stack.html` | stack + mask-reveal, paper palette, step counter | cutaway |
+| `style-examples/broll-text/compositions/tx-05-type-counter.html` | type-on + counter-word, terminal palette and type | cutaway |
+| `style-examples/broll-text/compositions/tx-06-split-scale.html` | split-word + split-scale, cream-red palette | panel |
+| `style-examples/broll-text/compositions/tx-07-zoom-grid.html` | zoom-assemble + grid-column, editorial type | cutaway |
+| `style-examples/broll-text/compositions/tx-08-jitter-footage.html` | jitter-flash + over-footage, brutal type | panel |
+| `style-examples/broll-text/compositions/tx-09-stamp-swash.html` | stamp-slam + swash-underline, library stamp and swash | split |
+| `style-examples/broll-text/compositions/tx-10-font-riso.html` | font-swap + riso-poster, risograph palette and texture | cutaway |
 
 ## Anti-slop Checklist
 

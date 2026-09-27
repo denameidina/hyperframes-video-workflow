@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #card { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; background: var(--sk-bg); }
+        #l1 { position: absolute; left: 90px; top: 250px; font-size: 180px; line-height: 1; color: var(--sk-ink); }
+        #l2 { position: absolute; left: 90px; top: 450px; font-size: 96px; line-height: 1.1; color: var(--sk-ink); }
+        #sw { position: absolute; left: 330px; top: 560px; }
+        #st { position: absolute; left: 620px; top: 96px; width: 340px; height: 128px; }
+      </style>
+      <div id="root" data-composition-id="tx-09-stamp-swash" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-text sk-pal-text-cream-red">
+
+          <div id="card"></div>
+          <div id="l1" class="sk-display">BIAYA SERVER</div>
+          <div id="l2" class="sk-sans">turun <span id="kw">tiap bulan</span></div>
+          <div id="sw"></div>
+          <div id="st"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-09-stamp-swash';
+          const $ = SK.finder(ID);
+
+          $('sw').innerHTML = SK.doodle('frame.swash-2', { size: 520, sw: 11, color: 'var(--sk-accent)' });
+          $('st').innerHTML = SK.stamp('frame.stamp-hemat', { size: 340, color: 'var(--sk-accent)' });
+          const swash = Array.from($('sw').querySelectorAll('path')).map((el, i) => ({ el, at: 3.3 + i * 0.25, dur: 0.35 }));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('card').style.transform = `translateY(${(-(1 - M.eo(t / 0.35)) * 960).toFixed(2)}px)`;
+            SK.enter($('l1'), t - 0.35, 'slam');
+            SK.enter($('l2'), t - 0.9, 'rise');
+            // stamp-slam: drop from 1.4x at 2.2 s, then a short decaying shake
+            const d = t - 2.2, st = $('st');
+            st.style.opacity = d < 0 ? '0' : '1';
+            const s = d < 0 ? 1.4 : 1 + 0.4 * (1 - M.eo(d / 0.12));
+            const k = SK.shake(t, 2.32, { amp: 12, dur: 0.3 });
+            st.style.transform = `translate(${k.x.toFixed(2)}px,${k.y.toFixed(2)}px) rotate(${(-9 + k.r).toFixed(3)}deg) scale(${s.toFixed(4)})`;
+            SK.drawSeq(t, swash);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        .w { position: absolute; left: 0; right: 0; top: 560px; text-align: center; font-size: 180px; line-height: 1; text-transform: uppercase; }
+        #ink { color: var(--sk-ink); mix-blend-mode: multiply; }
+        #pink { color: var(--sk-accent); mix-blend-mode: multiply; opacity: 0; }
+        #sub { position: absolute; left: 0; right: 0; top: 800px; text-align: center; font-size: 90px; color: var(--sk-ink); }
+        #tone { position: absolute; left: 250px; top: 300px; width: 580px; height: 580px; border-radius: 50%; background: var(--sk-accent-2); opacity: 0; }
+        #dots { position: absolute; left: 250px; top: 300px; width: 580px; height: 580px; border-radius: 50%; opacity: 0; }
+      </style>
+      <div id="root" data-composition-id="tx-10-font-riso" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-text sk-pal-text-risograph">
+
+          <div id="tone"></div>
+          <div id="dots" class="sk-tex-halftone" style="position:absolute"></div>
+          <div id="pink" class="w sk-f-archivo-black">BERUBAH</div>
+          <div id="ink" class="w sk-f-bebas-neue">BERUBAH</div>
+          <div id="sub" class="sk-f-instrument-serif">cara kita kerja</div>
+          <div class="sk-tex-riso"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-10-font-riso';
+          const $ = SK.finder(ID);
+
+          const FACES = ['sk-f-bebas-neue', 'sk-f-instrument-serif', 'sk-f-permanent-marker', 'sk-f-archivo-black'];
+          const ink = $('ink');
+          SK.clip(ID, { T: 6, update: (t) => {
+            // font-swap: a new face every step (15/s) until it locks on the last one at 1.6 s
+            const face = t < 1.6 ? FACES[SK.cycle(t, FACES.length)] : FACES[3];
+            if (ink._face !== face) { ink.className = 'w ' + face; ink._face = face; }
+            SK.enter(ink, t - 0.2, 'fade');
+            // riso-poster: the accent ink layer slides in misregistered and settles 8 px off
+            const m = 8 + 44 * (1 - M.eo((t - 2.3) / 0.4));
+            $('pink').style.opacity = t < 2.3 ? '0' : '1';
+            $('pink').style.transform = `translate(${m.toFixed(2)}px,${(m * 0.5).toFixed(2)}px)`;
+            SK.enter($('sub'), t - 2.8, 'rise');
+            // the riso 'sun' behind the word: a second-ink disc with halftone, printed after the word
+            const tone = M.eo((t - 2.0) / 0.5);
+            $('tone').style.opacity = (tone * 0.55).toFixed(4);
+            $('tone').style.transform = `scale(${(0.9 + 0.1 * tone).toFixed(4)})`;
+            $('dots').style.opacity = (tone * 0.9).toFixed(4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

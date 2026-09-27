@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #card { position: absolute; left: 90px; top: 200px; width: 900px; height: 520px; border-radius: 36px; background: var(--sk-bg); }
+        #l1 { position: absolute; left: 0; right: 0; top: 270px; text-align: center; font-size: 78px; color: var(--sk-ink); }
+        .big { position: absolute; left: 0; right: 0; top: 380px; text-align: center; font-size: 250px; line-height: 1; color: var(--sk-accent); }
+        #top { clip-path: inset(0 0 50% 0); }
+        #bot { clip-path: inset(50% 0 0 0); }
+        #cut { position: absolute; left: 110px; top: 502px; width: 860px; height: 12px; background: var(--sk-ink); transform-origin: 0 50%; }
+      </style>
+      <div id="root" data-composition-id="tx-06-split-scale" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-text sk-pal-text-cream-red">
+
+          <div id="card"></div>
+          <div id="l1" class="sk-sans">data sama tim</div>
+          <div id="top" class="big sk-f-bebas-neue">TERPISAH</div>
+          <div id="bot" class="big sk-f-bebas-neue">TERPISAH</div>
+          <div id="cut"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-06-split-scale';
+          const $ = SK.finder(ID);
+
+          const slide = M.track(0, [[2.2, 1, [22, 0.8]]]);
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            $('card').style.transform = `scale(${(0.9 + 0.1 * M.eo(t / 0.35)).toFixed(4)})`;
+            $('card').style.opacity = M.eo(t / 0.25).toFixed(4);
+            SK.enter($('l1'), t - 0.3, 'rise');
+            for (const id of ['top', 'bot']) SK.enter($(id), t - 0.8, 'pop');
+            const cu = M.eo((t - 1.95) / 0.25);
+            $('cut').style.transform = `scaleX(${cu.toFixed(4)})`;
+            $('cut').style.opacity = (cu > 0 && t < 2.6 ? 1 : Math.max(0, 1 - (t - 2.6) / 0.2)).toFixed(4);
+            const s = slide(t);
+            $('top').style.translate = `${(-70 * s).toFixed(2)}px ${(-26 * s).toFixed(2)}px`;
+            $('bot').style.translate = `${(70 * s).toFixed(2)}px ${(26 * s).toFixed(2)}px`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

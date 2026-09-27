@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #wrap { position: absolute; left: 0; top: 260px; width: 1080px; height: 360px; transform-origin: 318px 180px; }
+        #word { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-size: 300px; line-height: 1.1; color: var(--sk-ink); }
+        #word b { color: var(--sk-accent); font-weight: 400; }
+        .col { position: absolute; top: 760px; width: 300px; height: 620px; overflow: hidden; border-top: 6px solid var(--sk-ink); }
+        .col div { position: absolute; left: 0; right: 0; top: 40px; text-align: center; }
+        .k { font-size: 44px; color: var(--sk-muted); }
+        .v { top: 110px !important; font-size: 96px; line-height: 1; color: var(--sk-ink); }
+      </style>
+      <div id="root" data-composition-id="tx-07-zoom-grid" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-text sk-type-text-editorial" style="--sk-bg:#f2efe8;--sk-ink:#141414;--sk-accent:#d62828;--sk-muted:#8a8578">
+
+          <div id="wrap"><div id="word" class="sk-display"><b>A</b>UTOMASI</div></div>
+          <div class="col" id="c0" style="left:60px"><div class="k sk-serif">satu</div><div class="v sk-display">INPUT</div></div>
+          <div class="col" id="c1" style="left:390px"><div class="k sk-serif">dua</div><div class="v sk-display">PROSES</div></div>
+          <div class="col" id="c2" style="left:720px"><div class="k sk-serif">tiga</div><div class="v sk-display">HASIL</div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-07-zoom-grid';
+          const $ = SK.finder(ID);
+
+          const z = M.track(4.2, [[0.1, 1, [9, 1]]]);
+          const cols = ['c0', 'c1', 'c2'].map((id, i) => ({ el: $(id), y: M.track(640, [[2.3 + i * 0.4, 0, [20, 0.86]], [4.6 + i * 0.12, i === 1 ? 0 : 640, [18, 0.9]]]) }));
+          SK.clip(ID, { T: 6, update: (t) => {
+            $('wrap').style.transform = `scale(${z(t).toFixed(4)})`;
+            $('word').style.opacity = M.eo(t / 0.15).toFixed(4);
+            for (const c of cols) {
+              const y = c.y(t);
+              for (const d of c.el.children) d.style.transform = `translateY(${y.toFixed(2)}px)`;
+              c.el.style.borderTopColor = y < 620 ? '' : 'transparent';
+            }
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #bar { position: absolute; left: 70px; top: 330px; width: 940px; height: 64px; border-radius: 18px 18px 0 0; background: #1a231d; }
+        #bar i { position: absolute; top: 22px; width: 20px; height: 20px; border-radius: 50%; background: #3b4a3f; }
+        #term { position: absolute; left: 70px; top: 394px; width: 940px; height: 300px; border-radius: 0 0 18px 18px; background: #111813; }
+        #cmd { position: absolute; left: 110px; top: 450px; font-size: 56px; color: var(--sk-ink); white-space: pre; }
+        #cmd b { color: var(--sk-accent); font-weight: 400; }
+        #lab { position: absolute; left: 0; right: 0; top: 860px; text-align: center; font-size: 52px; color: var(--sk-muted); }
+        #num { position: absolute; left: 0; right: 0; top: 950px; text-align: center; font-size: 150px; font-weight: 800; letter-spacing: -0.04em; color: var(--sk-accent); font-feature-settings: "tnum" 1; }
+      </style>
+      <div id="root" data-composition-id="tx-05-type-counter" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-text sk-pal-text-terminal sk-type-text-terminal">
+
+          <div id="bar"><i style="left:26px"></i><i style="left:60px"></i><i style="left:94px"></i></div>
+          <div id="term"></div>
+          <div id="cmd" class="sk-mono"><b>$ </b><span id="typed"></span></div>
+          <div id="lab" class="sk-mono">hemat per bulan</div>
+          <div id="num" class="sk-mono">Rp 0 jt</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-05-type-counter';
+          const $ = SK.finder(ID);
+
+          const typed = $('typed');
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.enter($('bar'), t - 0.1, 'rise');
+            SK.enter($('term'), t - 0.15, 'rise');
+            SK.enter($('cmd'), t - 0.3, 'fade');
+            SK.typeOn(typed, 'otomatis laporan --harian', (t - 0.45) / 1.5, { t });
+            SK.enter($('lab'), t - 2.3, 'rise');
+            SK.enter($('num'), t - 2.5, 'pop');
+            $('num').textContent = 'Rp ' + SK.count(t, 2.5, 3.6, 0, 12.5, 1) + ' jt';
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

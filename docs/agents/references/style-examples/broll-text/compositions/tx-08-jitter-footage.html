@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words and numbers are invented to show the mechanism. In a real clip every word is verbatim from the transcript and every number is spoken (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+
+        #pain { position: absolute; left: 0; right: 0; top: 260px; text-align: center; font-size: 116px; letter-spacing: -0.02em; color: var(--sk-ink); text-shadow: 0 6px 24px rgba(0,0,0,.35); }
+        #ghost { position: absolute; left: 0; right: 0; top: 260px; text-align: center; font-size: 116px; letter-spacing: -0.02em; color: var(--sk-accent); mix-blend-mode: screen; }
+        #over { position: absolute; left: -20px; right: -20px; top: 820px; text-align: center; font-size: 330px; font-weight: 300; line-height: 1; letter-spacing: -0.05em; color: #ffffff; }
+      </style>
+      <div id="root" data-composition-id="tx-08-jitter-footage" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-text sk-type-text-brutal" style="--sk-ink:#fafafa;--sk-accent:#facc15">
+
+          <div id="ghost" class="sk-display">MASALAHNYA</div>
+          <div id="pain" class="sk-display">MASALAHNYA</div>
+          <div id="over" class="sk-sans">capek.</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-08-jitter-footage';
+          const $ = SK.finder(ID);
+
+          // jitter-flash: a distressed flash for 0.3 s (24 fps boil), then a clean hold on the word
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            const flash = t >= 0.25 && t < 0.55;
+            const b = SK.boil(7, t, flash ? 18 : 0, 24);
+            SK.enter($('pain'), t - 0.25, 'fade');
+            $('pain').style.translate = `${b.x.toFixed(2)}px ${b.y.toFixed(2)}px`;
+            $('pain').style.letterSpacing = flash ? `${(0.02 + Math.abs(b.r) * 0.02).toFixed(3)}em` : '-0.02em';
+            $('ghost').style.opacity = flash ? '0.9' : '0';
+            $('ghost').style.translate = `${(-b.x * 1.6).toFixed(2)}px ${(b.y * 0.8).toFixed(2)}px`;
+            // over-footage: thin oversized type over the running face, partial opacity
+            const o = M.eo((t - 2.0) / 0.6) * 0.85;
+            $('over').style.opacity = o.toFixed(4);
+            $('over').style.transform = `scale(${(1.06 - 0.06 * M.eo((t - 2.0) / 1.2)).toFixed(4)})`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
