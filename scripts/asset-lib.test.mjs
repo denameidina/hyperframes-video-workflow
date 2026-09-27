@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { absolutize, shapeToPath, splitSubpaths, stringify, tokenize } from './lib/svg-path.mjs';
 import { dp, geomPath, mapSvg, ringArea } from './lib/geo-svg.mjs';
-import { buildAll, LIB, OUTPUTS, parseStrokeSvg, pngSize, STYLE_KEY, STYLES, TAGS } from './lib/asset-lib-build.mjs';
+import { buildAll, LIB, mapRegions, OUTPUTS, parseStrokeSvg, pngSize, STYLE_KEY, STYLES, TAGS } from './lib/asset-lib-build.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -265,4 +265,26 @@ test('new hand anchors match their PNG sizes', () => {
     assert.deepEqual([sz.w, sz.h], [e.anchor.w, e.anchor.h], e.id);
     assert.ok(e.anchor.tx < sz.w && e.anchor.ty < sz.h, e.id);
   }
+});
+
+test('mapRegions keeps neighbours as base paths and every other id as a region', () => {
+  const r = mapRegions('<svg><path id="neighbors" fill="#ccc" d="M0 0Z"/><path d="M1 1Z"/><path id="aceh" fill="#b9ad96" d="M2 2Z"/></svg>');
+  assert.deepEqual(r, { base: [{ fill: '#ccc', d: 'M0 0Z' }, { fill: '#d8d2c4', d: 'M1 1Z' }], regions: { aceh: 'M2 2Z' } });
+  const lib = load().LIB;
+  const maps = JSON.parse(read(`${LIB}/src/maps.json`));
+  assert.deepEqual(Object.keys(lib.regions).sort(), maps.map((m) => m.id).sort());
+  for (const m of maps) assert.deepEqual(JSON.parse(JSON.stringify(lib.regions[m.id])), mapRegions(read(m.file ?? `${LIB}/maps/${m.id}.svg`)), m.id);
+  assert.equal(Object.keys(lib.regions['id-provinces'].regions).length, 33);
+});
+
+test('SK.mapSvg inlines one tintable path per region and rejects unknown maps and regions', () => {
+  const SK = load();
+  const ids = Object.keys(SK.LIB.regions['id-provinces'].regions);
+  const s = SK.mapSvg('map.id-provinces', { fill: '#111111', regions: { [ids[0]]: '#ff0000' }, strokeWidth: 3 });
+  assert.match(s, /^<svg class="sk-map" width="\d+" height="\d+" viewBox="0 0 \d+ \d+" stroke="#efe9dc" stroke-width="3" stroke-linejoin="round">/);
+  assert.equal((s.match(/data-region="/g) || []).length, 33);
+  assert.ok(s.includes(`data-region="${ids[0]}" d="${SK.LIB.regions['id-provinces'].regions[ids[0]]}" fill="#ff0000"`));
+  assert.ok(s.includes(`data-region="${ids[1]}"`) && s.includes('fill="#111111"'));
+  assert.throws(() => SK.mapSvg('id-provinces', { regions: { nowhere: 'red' } }), /unknown region of id-provinces "nowhere"/);
+  assert.throws(() => SK.mapSvg('mars'), /unknown map "mars"/);
 });

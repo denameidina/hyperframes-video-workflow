@@ -238,6 +238,12 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Drawn lines and arcs use `SK.draw`/`SK.drawSeq`; they hide with opacity, so the
   clip disappears cleanly when its mount ends.
 - `bg: null` for split and panel; draw the split backdrop in the top 960 px.
+- Maps: `SK.mapSvg(map, { regions: { id: colour } })` returns an inline `<svg>`
+  with one `<path data-region>` per region (`world`, `sea`, `id-provinces`,
+  `java`; ids in `SK.LIB.regions[map]`). Insert it once, then tint regions in
+  `update(t)`; find them with `querySelectorAll('[data-region]')`, never a
+  template-literal selector (the linter rejects it). `SK.arcPath(p0, p1, bend)`
+  gives a curved route between two `SK.geo` points.
 
 ## SFX
 

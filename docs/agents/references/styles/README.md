@@ -119,7 +119,7 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
   `style-kit.css` after motion-kit, then `vendor/paper-pack/paper-pack.css`, then the asset
   library (`vendor/asset-lib/asset-lib.js` + `.css`: `SK.icon`, `SK.pict`, `SK.doodle`,
   `SK.mark`, `SK.rough`, `SK.stamp`, `SK.frame`, `SK.tornFrame`, `SK.doc`, `SK.geo(…, map)`,
-  `SK.asset`; classes `.sk-pal-*`, `.sk-type-*`, `.sk-grade-px-*`, `.sk-f-*`, `.sk-tex-*`,
+  `SK.asset`, `SK.mapSvg`; classes `.sk-pal-*`, `.sk-type-*`, `.sk-grade-px-*`, `.sk-f-*`, `.sk-tex-*`,
   `.sk-obj-*`). Insert library HTML once, outside `update(t)`. Mounts are the same as motion b-roll (class
   `broll`, track 4, `id` = `broll-NN-name-mount`, `data-duration` = clip `T`).
 - One clip = one sub-composition that calls `SK.clip(id, { T, update })`

@@ -143,6 +143,16 @@ SK.geo = (lat,lon,map='indonesia')=>{
   return {x:(lon-m.lon0)*m.k, y:(m.lat0-lat)*m.k};
 };
 for(const [k,v] of Object.entries(SK.LIB.cities)) if(!has(SK.CITIES,k)) SK.CITIES[k]=v;
+/* mapSvg: the map as an inline <svg> so each region can be coloured — o.regions = { id: colour };
+   other regions get o.fill, the neighbours keep their own grey. Sized in map pixels (the same frame
+   as SK.geo), so wrap it and scale the wrapper. */
+SK.mapSvg = (map,o={})=>{
+  const id=bare(map,'map'), m=pick(SK.MAPS,'map',id), r=pick(SK.LIB.regions,'map',id), tint=o.regions??{};
+  for(const k of Object.keys(tint)) pick(r.regions,'region of '+id,k);
+  const base=r.base.map(b=>`<path d="${b.d}" fill="${b.fill}"/>`).join('');
+  const regs=Object.entries(r.regions).map(([k,d])=>`<path data-region="${k}" d="${d}" fill="${tint[k]??o.fill??'#b9ad96'}"/>`).join('');
+  return `<svg class="sk-map" width="${m.w}" height="${m.h}" viewBox="0 0 ${m.w} ${m.h}" stroke="${o.stroke??'#efe9dc'}" stroke-width="${o.strokeWidth??2}" stroke-linejoin="round">${base}${regs}</svg>`;
+};
 // ---- hands -------------------------------------------------------------------------------------
 for(const [k,v] of Object.entries(SK.LIB.hands)) if(!has(SK.HAND,k)) SK.HAND[k]=v;
 })();

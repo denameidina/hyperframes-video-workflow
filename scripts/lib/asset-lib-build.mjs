@@ -45,6 +45,20 @@ export function parseStrokeSvg(src, file) {
   return { vb: [Number(vb[1]), Number(vb[2])], d, tags: list('tags'), styles: list('styles'), text: attr('text') ?? null };
 }
 
+// map SVG → { base: [{fill, d}], regions: {id: d} }: a path with id "neighbors" (or without an id) is
+// background, every other <path id> is a region a clip may tint (SK.mapSvg)
+export function mapRegions(svg) {
+  const out = { base: [], regions: {} };
+  for (const m of svg.matchAll(/<path\b([^>]*)\/>/g)) {
+    const attr = (n) => (m[1].match(new RegExp(`\\s${n}="([^"]*)"`)) || [])[1];
+    const id = attr('id'), d = attr('d');
+    if (!d) continue;
+    if (!id || id === 'neighbors') out.base.push({ fill: attr('fill') ?? '#d8d2c4', d });
+    else out.regions[id] = d;
+  }
+  return out;
+}
+
 const check = (e) => {
   if (!KINDS.includes(e.kind)) throw new Error(`${e.id}: unknown kind "${e.kind}"`);
   for (const s of e.styles) if (!STYLES.includes(s)) throw new Error(`${e.id}: unknown style "${s}"`);
@@ -69,7 +83,7 @@ export function buildAll(root) {
   const docs = json(root, S + '/docs.json', []);
   const items = json(root, S + '/items.json', []);
 
-  const lib = { icons: {}, picts: {}, strokes: {}, torn: {}, maps: {}, cities, hands: {}, assets: {} };
+  const lib = { icons: {}, picts: {}, strokes: {}, torn: {}, maps: {}, regions: {}, cities, hands: {}, assets: {} };
   const entries = [];
   const licenses = []; // [path relative to LIB, source, license, changes]
   const add = (e) => {
@@ -131,6 +145,7 @@ export function buildAll(root) {
     const b = m.box, file = m.file ?? `${LIB}/maps/${m.id}.svg`;
     lib.maps[m.id] = { src: file, w: Math.round((b.lon1 - b.lon0) * b.k), h: Math.round((b.lat0 - b.lat1) * b.k), lon0: b.lon0, lat0: b.lat0, k: b.k };
     add({ id: 'map.' + m.id, kind: 'map', file, styles: ['vox', 'motion-graphic', 'parallax'], tags: ['peta', 'tempat'], source: m.source, license: 'Public domain' });
+    lib.regions[m.id] = mapRegions(read(root, file));
     if (!m.file) licenses.push([`maps/${m.id}.svg`, m.source, 'Public domain', m.changes]);
   }
   if (Object.keys(cities).length) licenses.push(['maps/cities.json', 'Natural Earth 10m populated places v5.1.2 — https://www.naturalearthdata.com/about/terms-of-use/', 'Public domain', `${Object.keys(cities).length} cities: Indonesian province capitals + Southeast Asian capitals, [lat, lon]`]);
