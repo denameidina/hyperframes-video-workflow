@@ -1,6 +1,6 @@
 # Pustaka Aset Bersama + Preset Palet/Tipografi (Sub-proyek 1 dari "Style Enrichment") — Design
 
-Status: approved (brainstorming 2026-09-27; spike lolos 2026-09-27), belum diimplementasi
+Status: approved (brainstorming 2026-09-27; spike + replay plan lolos 2026-09-27), belum diimplementasi
 Date: 2026-09-27
 Branch: `feat/asset-lib`
 Dibangun di atas: style-kit (ADR-0012), paper pack (ADR-0013), VOX/mix-media
@@ -73,7 +73,7 @@ snapshot):
 
 - ~500 aset baru dari 12 jenis, masing-masing punya id, tag gaya, tag topik,
   sumber, dan lisensi di `catalog.json`.
-- 56 preset palet (8 per gaya) dan 22 preset tipografi sebagai class CSS.
+- 56 preset palet/grade (8 per gaya) dan 23 preset tipografi sebagai class CSS.
 - Contact sheet per jenis dan per preset, supaya agen bisa *melihat* pilihan;
   ditambah `CATALOG.md` yang bisa di-grep.
 - API `SK` baru: `SK.icon`, `SK.pict`, `SK.doodle`, `SK.rough`, `SK.doc`, dan
@@ -158,7 +158,7 @@ dipin. Datanya dibekukan di repo, dan nomor versi serta checksum dicatat di
 | Jenis | Isi | Jumlah | Sumber | Perkiraan |
 | --- | --- | --- | --- | --- |
 | icon | Ikon garis Lucide, daftar di bawah | 266 | lucide-static 1.48.0 (ISC) | ~80 KB |
-| pictogram | Ikon isi Phosphor, daftar di bawah | 66 | @phosphor-icons/core 2.1.1, bobot `fill` (MIT) | ~45 KB |
+| pictogram | Ikon isi Phosphor, daftar di bawah | 70 | @phosphor-icons/core 2.1.1, bobot `fill` (MIT) | ~45 KB |
 | doodle | Doodle whiteboard buatan tangan, daftar di bawah; plus `SK.rough` untuk ikon mana pun | 50 | project (MIT) | ~60 KB |
 | paper | Benda kertas dan cut-out karton | 36 | Codex | ~4 MB |
 | hand | Tangan ilustrasi datar, satu gaya dengan `hand-write.png` | 4 | Codex | ~0,4 MB |
@@ -196,7 +196,7 @@ pertamanya (`lain` menjadi tag `benda`).
 Semua ikon ditandai untuk gaya `motion-graphic`, `vox`, `whiteboard` (lewat
 `SK.rough`), `broll-text`, dan `mix-media`.
 
-### pictogram (Phosphor fill, 66)
+### pictogram (Phosphor fill, 70)
 
 Nama sudah diverifikasi terhadap `@phosphor-icons/core@2.1.1`. Id:
 `pict.<nama>`. Dipakai untuk Isotype (satu ikon diulang, tidak pernah
@@ -331,7 +331,7 @@ dan kertas cat air dihapus dari daftar.
 
 Prosedural (0 KB, SVG/CSS di `asset-lib.css`): `.sk-tex-graph` (grid
 milimeter), `.sk-tex-dots` (dot grid), `.sk-tex-halftone`, `.sk-tex-riso`
-(grain risograph), `.sk-tex-film` (film grain, digerakkan `SK.grain`),
+(grain risograph), `.sk-tex-film` (film grain, digerakkan `SK.grain`) — riso dan film berupa tile PNG 256 px yang dibuat ffmpeg dengan seed tetap, karena noise SVG di background data-URI tampil kosong di Chrome HyperFrames,
 `.sk-tex-whiteboard` (putih dengan bekas hapusan samar).
 
 `.sk-lined`, `.sk-grid`, dan `.sk-newsprint` di paper-pack tetap ada dan tidak
@@ -494,9 +494,9 @@ Nilai bertanda † adalah rata-rata terukur untuk bg class tekstur.
 
 ### parallax (`px`), preset grade
 
-Parallax tidak memakai palet hex. Preset di sini adalah grade: `filter` di
-`.sk-view`, warna dan opasitas kabut (haze), dan opasitas grain untuk semua
-layer.
+Parallax tidak memakai palet hex. Preset di sini adalah grade: class
+`.sk-grade-px-*` dipasang di stage, lalu mengatur `filter` di `.sk-view`, warna
+dan opasitas kabut (`.sk-haze`), dan opasitas `.sk-grain`.
 
 | nama | filter | haze | grain | status |
 | --- | --- | --- | --- | --- |
@@ -514,7 +514,7 @@ Empat preset "lama" mengubah deskripsi kualitatif di tabel `Look`
 grade (px-03 hanya punya `contrast(1.05)` lokal pada plate-nya), jadi class
 baru ini tidak mengubah piksel contoh mana pun.
 
-## Preset tipografi (22)
+## Preset tipografi (23)
 
 Class `.sk-type-<gaya>-<nama>` mengisi variabel `--sk-font-display`,
 `--sk-font-body`, `--sk-font-hand`, dan `--sk-font-mono`.
@@ -547,7 +547,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 | `SK.stamp(id, {text, color, size})` | String HTML stempel/badge SVG; stempel bertulisan memakai teks tetapnya, badge memakai `text` dari transkrip. |
 | `SK.tornFrame(id, w, h)` | `clip-path` sobekan dari preset `SK.torn`. |
 | `SK.rough(svgEl, {seed=1, amp=1.2, step=6})` | Mengganti setiap `<path>` di dalam `svgEl` dengan versi goresan tangan. Path disampel tiap `step` px dengan `getPointAtLength`, diberi jitter memakai `SK.rng(seed)`, lalu dihaluskan (Catmull-Rom). Hasilnya deterministik untuk seed yang sama, dan di-cache per elemen. |
-| `SK.doc(kind, fields, {w})` | String HTML `.sk-doc` untuk template VOX; stempel "ILUSTRASI" selalu ada. |
+| `SK.doc(kind, fields, {w})` | String HTML `.sk-doc .sk-docx` untuk template VOX (tata letak di `.sk-docx`; `.sk-doc` tidak diubah); tag "Ilustrasi" selalu ada. |
 | `SK.mark(id, {color})` | String `<svg>` tanda pena merah (`mark.*`). |
 | `SK.geo(lat, lon, map='indonesia')` | Koordinat piksel pada peta `SK.MAPS[map]`. |
 | `SK.HAND` | Ditambah pose `hold-card`, `swipe`, `erase`, `hold-highlighter`. |
@@ -598,8 +598,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
     hands, frames, docs, maps, textures, scenes
   - fonts: tiap font dengan kalimat Indonesia "Bangun sistem AI untuk bisnis
     nyata — Rp 169 jt"
-  - palettes ×7 (swatch + contoh judul/label per preset)
-  - types ×7
+  - preset ×7, satu halaman per gaya (swatch palet/grade + contoh tipografi)
 - `node scripts/asset-lib.mjs sheets` membuat ulang sheet. Perintahnya: `npm run
   asset-lib -- sheets`.
 - `CATALOG.md` dihasilkan dari `catalog.json`: satu tabel per jenis (id, gaya,
@@ -687,7 +686,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 
 ## Definisi selesai
 
-- ~500 aset + 56 palet + 22 tipografi ada di catalog. Semua test hijau.
+- ~500 aset + 56 palet/grade + 23 tipografi ada di catalog. Semua test hijau.
 - Semua contact sheet ada dan sudah direview. `CATALOG.md` sudah di-generate.
 - Dokumen workflow, 7 dokumen gaya, ADR-0016, rd-03, dan indeks internal/docs
   diperbarui di commit yang sama dengan kodenya.
