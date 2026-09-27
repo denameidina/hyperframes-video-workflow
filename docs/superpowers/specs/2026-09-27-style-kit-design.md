@@ -122,7 +122,15 @@ Semua fungsi adalah fungsi murni dari waktu lokal klip `t` (detik). Tidak ada
 | `SK.words(el)` | Pecah teks elemen jadi `<span class="sk-w">` per kata sekali (idempoten), kembalikan array span. |
 | `SK.reveal(spans, times, t, style)` | Tiap kata tampil di waktunya dengan gaya `pop`, `slam`, `rise`, `fade`, atau `mask`. |
 | `SK.count(t, t0, t1, from, to, fmt)` | Nilai count-up ter-ease dan ter-clamp, diformat `fmt` (default: pemisah ribuan titik, gaya Indonesia). |
-| `SK.pathLen` / `SK.lerpPoint` | Helper kecil untuk panah, garis, dan chart. |
+| `SK.len`, `SK.drawSeq(t, items, {speed, boil})` | Panjang path ter-cache; goresan berurutan dengan kecepatan pena konstan (default 750 px/s) dan boil hanya pada goresan yang selesai. |
+| `SK.write`, `SK.writeTip`, `SK.MARKER_SVG`, `SK.placeMarker` | Tulisan tangan kiri → kanan lewat `clip-path`; ujung marker mengikuti pena. |
+| `SK.line`, `SK.rect`, `SK.ellipse`, `SK.arrow` | Builder path gaya tangan (bow, sudut bertumpuk, lingkaran overshoot), deterministik per seed. |
+| `SK.jiggle`, `SK.smooth`, `SK.stagger`, `SK.fmt`, `SK.cam` | Boil pada elemen, easing smoothstep, stagger, format angka Indonesia, kamera fokus-titik. |
+
+Catatan spike 2026-09-27: elemen klip disembunyikan dengan `opacity`, bukan
+`visibility` (anak `visibility: visible` tetap tampil setelah mount
+disembunyikan), dan `<style>` klip tidak boleh menyebut `font-family` (linter);
+font dipilih lewat `.sk-display`, `.sk-sans`, `.sk-hand`.
 
 Penambahan primitive lain diperbolehkan saat implementasi bila dua atau lebih
 contoh klip membutuhkannya; primitive sekali-pakai tetap di dalam klip.
@@ -268,6 +276,9 @@ cakupan treatment, dan cakupan gaya terpenuhi.
   `boil` dalam batas dan deterministik; `count` format dan clamp; `words`
   pemecahan dan idempoten; `SK.clip` error untuk `T` ≤ 0, root hilang,
   `update` bukan fungsi. Skrip: `npm run test:style-kit`.
+- `scripts/style-docs.test.mjs` menjaga Target kekayaan referensi: jumlah pola,
+  referensi dengan URL sumber, checklist anti-slop, dan contoh yang ada di disk;
+  `npm run test:style-kit` menjalankan kedua test.
 - `scripts/check-broll-examples.mjs` digeneralisasi menerima folder contoh
   (default tetap motion-broll-examples) dan menyalin `vendor/style-kit`;
   skrip baru `npm run check:style-examples`.
