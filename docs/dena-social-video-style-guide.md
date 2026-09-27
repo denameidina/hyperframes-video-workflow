@@ -283,7 +283,7 @@ Use overlays to clarify context or reset attention every 4-8 seconds.
 Good overlays:
 
 - Motion b-roll: one morphing shape + cursor that shows the process, tool, comparison, or step Dena is talking about (`docs/agents/references/motion-broll-planning.md`).
-- Style b-roll: kinetic text, flat motion graphics, or whiteboard drawing when the words, a spoken number, or a framework are the point (`docs/agents/references/styles/README.md`).
+- Style b-roll: kinetic text, flat motion graphics, whiteboard drawing, or paper stop-motion when the words, a spoken number, a framework, or handmade objects are the point (`docs/agents/references/styles/README.md`).
 - Screenshot of tool/app when mentioning a tool.
 - Small UI mock/screenshot when talking about frontend.
 - Simple checklist card for frameworks, scope, requirements.

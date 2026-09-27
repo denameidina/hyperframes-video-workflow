@@ -103,7 +103,7 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 ## Style b-roll (style-kit)
 
 - Engine `vendor/style-kit/` (`window.SK`) dimuat setelah motion-kit di starter;
-  clip `broll-text`, `motion-graphic`, `whiteboard` memakai mount yang sama
+  clip `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion` memakai mount yang sama
   (track 4, class `broll`, z 22).
 - Palet bebas per clip (ditulis di Style B-roll Brief) lewat variabel
   `--sk-bg`, `--sk-ink`, `--sk-accent`, `--sk-accent-2`, `--sk-muted` pada
@@ -113,6 +113,18 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 - Font: Anton (`.sk-display`), Geist (`.sk-sans`), Caveat (`.sk-hand`), semua
   lokal. Teks di clip ≥ 34–36 px; area aman x 80–1000, y 180–1400.
 - Detail: `docs/agents/references/styles/README.md` dan satu file per gaya.
+
+## Paper pack (`vendor/paper-pack/`)
+
+- Tekstur kertas CC0 dari ambientCG (putih, krem, abu, kusut, kraft, kraft
+  bergaris, kraft gelap) sebagai kelas `.sk-paper-*`, `.sk-kraft*`, plus
+  `.sk-lined`, `.sk-grid`, `.sk-newsprint` dari garis CSS; dimuat lewat
+  `paper-pack.css` setelah `style-kit.css`.
+- Objek hasil Codex: selotip (`.sk-tape-a`, `.sk-tape-b`), `.sk-pin`, `.sk-clip`,
+  `.sk-sticky`, dan tangan whiteboard (`SK.placeHand`, pose `write`/`point`).
+  Lisensi per file di `LICENSES.md`.
+- Stop-motion: tema `.sk-stop` (kraft + tinta hangat + merah bata), bayangan
+  keras `.sk-cut` satu arah cahaya, grain `.sk-grain`, gerak 15 langkah/detik.
 
 ## SFX
 

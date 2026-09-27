@@ -580,7 +580,9 @@ Assign to:
 
 ## Style B-roll Review
 
-- Every `broll-text`, `motion-graphic`, and `whiteboard` clip matches its Style B-roll Brief (pattern, palette, font, treatment).
+- Every `broll-text`, `motion-graphic`, `whiteboard`, and `stop-motion` clip matches its Style B-roll Brief (pattern, palette, font, treatment, assets).
+- Every file in a brief's `Assets:` is in `asset-manifest.json` with its provenance; no generated cut-out shows text, Dena's likeness, or a real person or brand.
+- Stop-motion moves in steps (no glides, blur, or crossfades on paper); shadows are hard and point one way.
 - Each beat lands on its word (±0.15 s against `processed-transcript.json`); whiteboard strokes finish before their word.
 - Every on-screen word and number is verbatim from the transcript or given by the user.
 - The style's Anti-slop Checklist (`docs/agents/references/styles/<type>.md`) passes on the stills.

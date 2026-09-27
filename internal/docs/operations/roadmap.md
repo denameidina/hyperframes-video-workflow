@@ -28,9 +28,11 @@ ADR baru bila perlu.
 
 ### Style b-roll (7 gaya)
 [ADR-0012](../adr/0012-style-broll-style-kit.md): sub-proyek 1 (style-kit +
-broll-text, motion-graphic, whiteboard) selesai. Berikutnya sub-proyek 2
-(stop-motion, VOX, mix-media + pipeline aset bitmap: Codex, CC0 dibekukan lokal,
-remove-background; tangan whiteboard) lalu sub-proyek 3 (2.5D parallax). Video
+broll-text, motion-graphic, whiteboard) selesai; sub-proyek 2a
+([ADR-0013](../adr/0013-paper-pack-bitmap-assets.md): paper pack, pipeline aset
+per video, stop-motion, tangan whiteboard) selesai. Berikutnya 2b (VOX +
+mix-media: Dena tetap bicara di atas kolase lewat cutout video ber-alpha, diawali
+spike) lalu sub-proyek 3 (2.5D parallax). Video
 asli pertama yang memakai style b-roll menguji timing kata, palet bebas, dan
 aturan maksimal tiga tipe; catat temuannya.
 

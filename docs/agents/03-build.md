@@ -74,8 +74,9 @@ motion, match Dena default style, reuse existing project structure).
    readiness report naming the missing artifact and its owning phase; do not
    guess.
 2. **Produce assets.** Read `docs/agents/references/asset-production.md`. For
-   each Asset Brief in `visual-plan.md` (Motion B-roll and Style B-roll Briefs are
-   not assets; step 4a handles them), capture or generate the file into
+   each Asset Brief in `visual-plan.md`, and for each file in a Style B-roll
+   Brief's `Assets:` list (Style Assets in `asset-production.md`; the clips
+   themselves are not assets, step 4a writes them), capture or generate the file into
    `videos/<slug>/assets/` under its Planned file name, record it in
    `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
@@ -108,7 +109,7 @@ motion, match Dena default style, reuse existing project structure).
    raw-time ASR extract.
 4a. **Author motion visuals.** For each `motion-broll` row, follow
    `docs/agents/references/motion-broll-authoring.md`; for each `broll-text`,
-   `motion-graphic`, or `whiteboard` row, follow the Build Contract in
+   `motion-graphic`, `whiteboard`, or `stop-motion` row, follow the Build Contract in
    `docs/agents/references/styles/README.md` and the Build Recipe in that
    style's file. Write the clip at its Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
    when the treatment is split, then run the Still Check at the brief's key-word

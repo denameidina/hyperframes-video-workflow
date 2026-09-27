@@ -45,3 +45,13 @@ Rough.js code is included.
 - Caveat (`vendor/style-kit/fonts/Caveat-Variable.woff2`, latin subset from
   `@fontsource-variable/caveat@5.3.0`): SIL Open Font License 1.1, Copyright 2014
   The Caveat Project Authors (`vendor/style-kit/fonts/OFL-Caveat.txt`).
+
+## paper-pack (`vendor/paper-pack`)
+
+- Paper and kraft textures: ambientCG (https://ambientcg.com), Creative Commons
+  CC0 1.0 Universal; asset ids and changes per file in
+  `vendor/paper-pack/LICENSES.md`.
+- Tape, pin, paper clip, sticky note, and whiteboard hands: generated for this
+  project with Codex image generation; project assets under this repo's license.
+- Example cut-outs in `docs/agents/references/style-examples/assets/` (laptop,
+  phone): generated for this project with Codex image generation.
