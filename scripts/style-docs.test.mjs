@@ -98,3 +98,16 @@ test('styles/README.md lists every available style and its reference file', () =
   }
   for (const h of ['Menu', 'Choosing A Style', 'Variety Rules', 'Style B-roll Brief', 'Build Contract (all styles)']) section(md, h);
 });
+
+// Sub-project 2 coverage: in these styles every pattern has at least one rendered example
+// (spec: docs/superpowers/specs/2026-09-28-pattern-examples-2a-design.md). 2b and 2c add styles here.
+const COVERED = ['broll-text.md', 'motion-graphic.md'];
+for (const file of COVERED) {
+  test(`${file}: every pattern has an example`, () => {
+    const md = readFileSync(new URL('styles/' + file, REF), 'utf8');
+    const patterns = section(md, 'Patterns').split('\n').filter((l) => l.startsWith('| **')).map((l) => l.match(/^\| \*\*([^*]+)\*\*/)[1]);
+    const shown = section(md, 'Examples').split('\n').filter((l) => l.startsWith('| `style-examples/')).map((l) => l.split('|')[2]).join(' ');
+    const missing = patterns.filter((p) => !new RegExp(`(^|[^a-z-])${p.replace(/[/-]/g, (c) => '\\' + c)}([^a-z-]|$)`).test(shown));
+    assert.deepEqual(missing, [], `patterns without an example in ${file}`);
+  });
+}

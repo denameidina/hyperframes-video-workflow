@@ -1,6 +1,6 @@
 # Pola + Contoh (Style Enrichment, Sub-proyek 2a) — Design
 
-Status: approved (brainstorming 2026-09-28), belum diimplementasi
+Status: implemented 2026-09-28 (plan `docs/superpowers/plans/2026-09-28-pattern-examples-2a.md`)
 Date: 2026-09-28
 Branch: `feat/examples-2a`
 Sub-proyek: 2 dari rangkaian "Style Enrichment", putaran pertama dari tiga
