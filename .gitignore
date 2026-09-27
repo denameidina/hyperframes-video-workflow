@@ -21,6 +21,8 @@ node_modules/
 *.mov
 *.m4v
 *.webm
+# example assets that must ship with the repo (media is otherwise ignored)
+!docs/agents/references/style-examples/assets/*.webm
 *.mp3
 *.wav
 *.m4a
