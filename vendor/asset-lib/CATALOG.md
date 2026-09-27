@@ -354,3 +354,120 @@ Sheet: [pictogram](../../docs/agents/references/asset-catalog/sheets/) — files
 | `pict.briefcase` | `SK.pict('briefcase')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 | `pict.gear` | `SK.pict('gear')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 
+## font (17)
+
+Sheet: [font](../../docs/agents/references/asset-catalog/sheets/) — files `font*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `font.anton` | `.sk-f-anton` | broll-text | media | project (legacy, vendored earlier) |
+| `font.geist` | `.sk-f-geist` | motion-graphic, vox, stop-motion, mix-media, parallax | media | project (legacy, vendored earlier) |
+| `font.geist-mono` | `.sk-f-geist-mono` | motion-graphic | media | project (legacy, vendored earlier) |
+| `font.caveat` | `.sk-f-caveat` | whiteboard | media | project (legacy, vendored earlier) |
+| `font.newsreader` | `.sk-f-newsreader` | vox | media | project (legacy, vendored earlier) |
+| `font.bebas-neue` | `.sk-f-bebas-neue` | broll-text | media | fontsource @fontsource/bebas-neue@5.3.0 — https://www.npmjs.com/package/@fontsource/bebas-neue |
+| `font.archivo-black` | `.sk-f-archivo-black` | broll-text, stop-motion | media | fontsource @fontsource/archivo-black@5.3.0 — https://www.npmjs.com/package/@fontsource/archivo-black |
+| `font.bricolage-grotesque` | `.sk-f-bricolage-grotesque` | motion-graphic | media | fontsource @fontsource-variable/bricolage-grotesque@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/bricolage-grotesque |
+| `font.space-grotesk` | `.sk-f-space-grotesk` | broll-text, motion-graphic, vox, mix-media | media | fontsource @fontsource-variable/space-grotesk@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/space-grotesk |
+| `font.plus-jakarta-sans` | `.sk-f-plus-jakarta-sans` | motion-graphic | media | fontsource @fontsource-variable/plus-jakarta-sans@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/plus-jakarta-sans |
+| `font.instrument-serif` | `.sk-f-instrument-serif` | broll-text, mix-media, parallax | media | fontsource @fontsource/instrument-serif@5.3.0 — https://www.npmjs.com/package/@fontsource/instrument-serif |
+| `font.dm-serif-display` | `.sk-f-dm-serif-display` | vox | media | fontsource @fontsource/dm-serif-display@5.3.0 — https://www.npmjs.com/package/@fontsource/dm-serif-display |
+| `font.jetbrains-mono` | `.sk-f-jetbrains-mono` | broll-text, motion-graphic | media | fontsource @fontsource-variable/jetbrains-mono@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/jetbrains-mono |
+| `font.permanent-marker` | `.sk-f-permanent-marker` | whiteboard, mix-media | media | fontsource @fontsource/permanent-marker@5.3.0 — https://www.npmjs.com/package/@fontsource/permanent-marker |
+| `font.kalam` | `.sk-f-kalam` | whiteboard | media | fontsource @fontsource/kalam@5.3.0 — https://www.npmjs.com/package/@fontsource/kalam |
+| `font.patrick-hand` | `.sk-f-patrick-hand` | whiteboard, stop-motion | media | fontsource @fontsource/patrick-hand@5.3.0 — https://www.npmjs.com/package/@fontsource/patrick-hand |
+| `font.special-elite` | `.sk-f-special-elite` | vox, mix-media | media | fontsource @fontsource/special-elite@5.3.0 — https://www.npmjs.com/package/@fontsource/special-elite |
+
+## palette (56)
+
+Sheet: [palette](../../docs/agents/references/asset-catalog/sheets/) — files `palette*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `palette.text-default` | `.sk-pal-text-default` | broll-text | media | project (legacy Look table) |
+| `palette.text-paper` | `.sk-pal-text-paper` | broll-text | media | project (legacy Look table) |
+| `palette.text-signal` | `.sk-pal-text-signal` | broll-text | media | project (legacy Look table) |
+| `palette.text-ink-blue` | `.sk-pal-text-ink-blue` | broll-text | media | project (legacy Look table) |
+| `palette.text-jakarta-dusk` | `.sk-pal-text-jakarta-dusk` | broll-text | media | project |
+| `palette.text-risograph` | `.sk-pal-text-risograph` | broll-text | media | project |
+| `palette.text-terminal` | `.sk-pal-text-terminal` | broll-text | media | project |
+| `palette.text-cream-red` | `.sk-pal-text-cream-red` | broll-text | media | project |
+| `palette.mg-default` | `.sk-pal-mg-default` | motion-graphic | media | project (legacy Look table) |
+| `palette.mg-night` | `.sk-pal-mg-night` | motion-graphic | media | project (legacy Look table) |
+| `palette.mg-economist` | `.sk-pal-mg-economist` | motion-graphic | media | project (legacy Look table) |
+| `palette.mg-mint` | `.sk-pal-mg-mint` | motion-graphic | media | project (legacy Look table) |
+| `palette.mg-fintech` | `.sk-pal-mg-fintech` | motion-graphic | media | project |
+| `palette.mg-sunrise` | `.sk-pal-mg-sunrise` | motion-graphic | media | project |
+| `palette.mg-mono-ink` | `.sk-pal-mg-mono-ink` | motion-graphic | media | project |
+| `palette.mg-ai-violet` | `.sk-pal-mg-ai-violet` | motion-graphic | media | project |
+| `palette.wb-default` | `.sk-pal-wb-default` | whiteboard | media | project (legacy Look table) |
+| `palette.wb-kraft` | `.sk-pal-wb-kraft` | whiteboard | media | project (legacy Look table) |
+| `palette.wb-blackboard` | `.sk-pal-wb-blackboard` | whiteboard | media | project (legacy Look table) |
+| `palette.wb-blueprint` | `.sk-pal-wb-blueprint` | whiteboard | media | project (legacy Look table) |
+| `palette.wb-graph-paper` | `.sk-pal-wb-graph-paper` | whiteboard | media | project |
+| `palette.wb-chalk-green` | `.sk-pal-wb-chalk-green` | whiteboard | media | project |
+| `palette.wb-napkin` | `.sk-pal-wb-napkin` | whiteboard | media | project |
+| `palette.wb-neon-marker` | `.sk-pal-wb-neon-marker` | whiteboard | media | project |
+| `palette.vox-default` | `.sk-pal-vox-default` | vox | media | project (legacy Look table) |
+| `palette.vox-newsprint` | `.sk-pal-vox-newsprint` | vox | media | project (legacy Look table) |
+| `palette.vox-dark-desk` | `.sk-pal-vox-dark-desk` | vox | media | project (legacy Look table) |
+| `palette.vox-blueprint` | `.sk-pal-vox-blueprint` | vox | media | project (legacy Look table) |
+| `palette.vox-archive-sepia` | `.sk-pal-vox-archive-sepia` | vox | media | project |
+| `palette.vox-cork-board` | `.sk-pal-vox-cork-board` | vox | media | project |
+| `palette.vox-evidence` | `.sk-pal-vox-evidence` | vox | media | project |
+| `palette.vox-pastel-brief` | `.sk-pal-vox-pastel-brief` | vox | media | project |
+| `palette.stop-default` | `.sk-pal-stop-default` | stop-motion | media | project (legacy Look table) |
+| `palette.stop-notebook` | `.sk-pal-stop-notebook` | stop-motion | media | project (legacy Look table) |
+| `palette.stop-night-desk` | `.sk-pal-stop-night-desk` | stop-motion | media | project (legacy Look table) |
+| `palette.stop-blueprint-paper` | `.sk-pal-stop-blueprint-paper` | stop-motion | media | project (legacy Look table) |
+| `palette.stop-warung` | `.sk-pal-stop-warung` | stop-motion | media | project |
+| `palette.stop-school-craft` | `.sk-pal-stop-school-craft` | stop-motion | media | project |
+| `palette.stop-midnight-desk` | `.sk-pal-stop-midnight-desk` | stop-motion | media | project |
+| `palette.stop-pastel-cut` | `.sk-pal-stop-pastel-cut` | stop-motion | media | project |
+| `palette.mm-default` | `.sk-pal-mm-default` | mix-media | media | project (legacy Look table) |
+| `palette.mm-notebook` | `.sk-pal-mm-notebook` | mix-media | media | project (legacy Look table) |
+| `palette.mm-kraft-desk` | `.sk-pal-mm-kraft-desk` | mix-media | media | project (legacy Look table) |
+| `palette.mm-night-zine` | `.sk-pal-mm-night-zine` | mix-media | media | project (legacy Look table) |
+| `palette.mm-zine-pink` | `.sk-pal-mm-zine-pink` | mix-media | media | project |
+| `palette.mm-scrapbook` | `.sk-pal-mm-scrapbook` | mix-media | media | project |
+| `palette.mm-xerox` | `.sk-pal-mm-xerox` | mix-media | media | project |
+| `palette.mm-pop-collage` | `.sk-pal-mm-pop-collage` | mix-media | media | project |
+| `palette.px-default` | `.sk-grade-px-default` | parallax | media | project (legacy Look table) |
+| `palette.px-archive` | `.sk-grade-px-archive` | parallax | media | project (legacy Look table) |
+| `palette.px-night-desk` | `.sk-grade-px-night-desk` | parallax | media | project (legacy Look table) |
+| `palette.px-paper-stage` | `.sk-grade-px-paper-stage` | parallax | media | project (legacy Look table) |
+| `palette.px-golden-hour` | `.sk-grade-px-golden-hour` | parallax | media | project |
+| `palette.px-blue-hour` | `.sk-grade-px-blue-hour` | parallax | media | project |
+| `palette.px-faded-film` | `.sk-grade-px-faded-film` | parallax | media | project |
+| `palette.px-mono-archive` | `.sk-grade-px-mono-archive` | parallax | media | project |
+
+## type (23)
+
+Sheet: [type](../../docs/agents/references/asset-catalog/sheets/) — files `type*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `type.text-poster` | `.sk-type-text-poster` | broll-text | media | project (legacy) |
+| `type.text-editorial` | `.sk-type-text-editorial` | broll-text | media | project |
+| `type.text-brutal` | `.sk-type-text-brutal` | broll-text | media | project |
+| `type.text-terminal` | `.sk-type-text-terminal` | broll-text | media | project |
+| `type.mg-clean` | `.sk-type-mg-clean` | motion-graphic | media | project (legacy) |
+| `type.mg-jakarta` | `.sk-type-mg-jakarta` | motion-graphic | media | project |
+| `type.mg-data` | `.sk-type-mg-data` | motion-graphic | media | project |
+| `type.mg-expressive` | `.sk-type-mg-expressive` | motion-graphic | media | project |
+| `type.wb-caveat` | `.sk-type-wb-caveat` | whiteboard | media | project (legacy) |
+| `type.wb-kalam` | `.sk-type-wb-kalam` | whiteboard | media | project |
+| `type.wb-neat` | `.sk-type-wb-neat` | whiteboard | media | project |
+| `type.wb-marker` | `.sk-type-wb-marker` | whiteboard | media | project |
+| `type.vox-paper` | `.sk-type-vox-paper` | vox | media | project (legacy) |
+| `type.vox-magazine` | `.sk-type-vox-magazine` | vox | media | project |
+| `type.vox-archive` | `.sk-type-vox-archive` | vox | media | project |
+| `type.stop-default` | `.sk-type-stop-default` | stop-motion | media | project (legacy) |
+| `type.stop-school` | `.sk-type-stop-school` | stop-motion | media | project |
+| `type.stop-label` | `.sk-type-stop-label` | stop-motion | media | project |
+| `type.mm-zine` | `.sk-type-mm-zine` | mix-media | media | project |
+| `type.mm-editorial` | `.sk-type-mm-editorial` | mix-media | media | project |
+| `type.mm-typewriter` | `.sk-type-mm-typewriter` | mix-media | media | project |
+| `type.px-memory` | `.sk-type-px-memory` | parallax | media | project |
+| `type.px-label` | `.sk-type-px-label` | parallax | media | project (legacy) |
+

@@ -6,5 +6,30 @@ Paper-pack files keep their rows in `vendor/paper-pack/LICENSES.md`.
 
 | File | Source | License | Changes |
 | --- | --- | --- | --- |
+| `fonts/archivo-black-latin-400-normal.woff2` | fontsource @fontsource/archivo-black@5.3.0 — https://www.npmjs.com/package/@fontsource/archivo-black | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/bebas-neue-latin-400-normal.woff2` | fontsource @fontsource/bebas-neue@5.3.0 — https://www.npmjs.com/package/@fontsource/bebas-neue | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/bricolage-grotesque-latin-wght-normal.woff2` | fontsource @fontsource-variable/bricolage-grotesque@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/bricolage-grotesque | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/dm-serif-display-latin-400-normal.woff2` | fontsource @fontsource/dm-serif-display@5.3.0 — https://www.npmjs.com/package/@fontsource/dm-serif-display | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/instrument-serif-latin-400-normal.woff2` | fontsource @fontsource/instrument-serif@5.3.0 — https://www.npmjs.com/package/@fontsource/instrument-serif | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/jetbrains-mono-latin-wght-normal.woff2` | fontsource @fontsource-variable/jetbrains-mono@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/jetbrains-mono | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/kalam-latin-400-normal.woff2` | fontsource @fontsource/kalam@5.3.0 — https://www.npmjs.com/package/@fontsource/kalam | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/kalam-latin-700-normal.woff2` | fontsource @fontsource/kalam@5.3.0 — https://www.npmjs.com/package/@fontsource/kalam | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/LICENSE-permanent-marker.txt` | fontsource @fontsource/permanent-marker@5.3.0 — https://www.npmjs.com/package/@fontsource/permanent-marker | Apache-2.0 | license text, unchanged |
+| `fonts/LICENSE-special-elite.txt` | fontsource @fontsource/special-elite@5.3.0 — https://www.npmjs.com/package/@fontsource/special-elite | Apache-2.0 | license text, unchanged |
+| `fonts/OFL-archivo-black.txt` | fontsource @fontsource/archivo-black@5.3.0 — https://www.npmjs.com/package/@fontsource/archivo-black | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-bebas-neue.txt` | fontsource @fontsource/bebas-neue@5.3.0 — https://www.npmjs.com/package/@fontsource/bebas-neue | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-bricolage-grotesque.txt` | fontsource @fontsource-variable/bricolage-grotesque@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/bricolage-grotesque | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-dm-serif-display.txt` | fontsource @fontsource/dm-serif-display@5.3.0 — https://www.npmjs.com/package/@fontsource/dm-serif-display | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-instrument-serif.txt` | fontsource @fontsource/instrument-serif@5.3.0 — https://www.npmjs.com/package/@fontsource/instrument-serif | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-jetbrains-mono.txt` | fontsource @fontsource-variable/jetbrains-mono@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/jetbrains-mono | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-kalam.txt` | fontsource @fontsource/kalam@5.3.0 — https://www.npmjs.com/package/@fontsource/kalam | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-patrick-hand.txt` | fontsource @fontsource/patrick-hand@5.3.0 — https://www.npmjs.com/package/@fontsource/patrick-hand | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-plus-jakarta-sans.txt` | fontsource @fontsource-variable/plus-jakarta-sans@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/plus-jakarta-sans | OFL-1.1 | license text, unchanged |
+| `fonts/OFL-space-grotesk.txt` | fontsource @fontsource-variable/space-grotesk@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/space-grotesk | OFL-1.1 | license text, unchanged |
+| `fonts/patrick-hand-latin-400-normal.woff2` | fontsource @fontsource/patrick-hand@5.3.0 — https://www.npmjs.com/package/@fontsource/patrick-hand | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/permanent-marker-latin-400-normal.woff2` | fontsource @fontsource/permanent-marker@5.3.0 — https://www.npmjs.com/package/@fontsource/permanent-marker | Apache-2.0 | Latin subset woff2, unchanged |
+| `fonts/plus-jakarta-sans-latin-wght-normal.woff2` | fontsource @fontsource-variable/plus-jakarta-sans@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/plus-jakarta-sans | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/space-grotesk-latin-wght-normal.woff2` | fontsource @fontsource-variable/space-grotesk@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/space-grotesk | OFL-1.1 | Latin subset woff2, unchanged |
+| `fonts/special-elite-latin-400-normal.woff2` | fontsource @fontsource/special-elite@5.3.0 — https://www.npmjs.com/package/@fontsource/special-elite | Apache-2.0 | Latin subset woff2, unchanged |
 | `icons/lucide.json` | lucide-static 1.48.0 — https://registry.npmjs.org/lucide-static/-/lucide-static-1.48.0.tgz | ISC | 266 icons; every shape converted to absolute path data, one string per subpath |
 | `pictograms/phosphor.json` | @phosphor-icons/core 2.1.1 (fill) — https://registry.npmjs.org/@phosphor-icons/core/-/core-2.1.1.tgz | MIT | 70 icons, 256 grid, path data only |

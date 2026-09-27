@@ -1,0 +1,116 @@
+{
+  "roles": {"text":"text","mg":"text","wb":"text","vox":"hl","stop":"fill","mm":"fill"},
+  "docPaper": "#fbfaf6",
+  "exceptions": {"text.paper":["accent"],"mg.default":["accent2"],"mg.mint":["accent2"],"vox.dark-desk":["ink","accent2"],"stop.night-desk":["ink"],"mm.night-zine":["ink"]},
+  "palettes": {
+    "text": {
+      "default": {"bg":"#0a0a0a","ink":"#fafafa","accent":"#facc15","accent2":"#ef4444","muted":"#737373","legacy":true},
+      "paper": {"bg":"#f2f0ea","ink":"#111111","accent":"#ff4d00","accent2":"#2563eb","muted":"#8a8578","legacy":true},
+      "signal": {"bg":"#111111","ink":"#f5f5f5","accent":"#22d3ee","accent2":"#f43f5e","muted":"#525252","legacy":true},
+      "ink-blue": {"bg":"#0b1f4d","ink":"#f8fafc","accent":"#fde047","accent2":"#fb7185","muted":"#64748b","legacy":true},
+      "jakarta-dusk": {"bg":"#1a1033","ink":"#fff4e6","accent":"#ff8a3d","accent2":"#ff4f8b","muted":"#7a6a99"},
+      "risograph": {"bg":"#f6efe2","ink":"#1d3fbb","accent":"#e8336d","accent2":"#00897b","muted":"#a79f8f","overlay":"sk-tex-riso"},
+      "terminal": {"bg":"#0b0f0c","ink":"#d7ffd9","accent":"#39ff88","accent2":"#ffb000","muted":"#4f6b55"},
+      "cream-red": {"bg":"#f3ead8","ink":"#1a1a1a","accent":"#d62828","accent2":"#003049","muted":"#9a8f7a"}
+    },
+    "mg": {
+      "default": {"bg":"#f4efe6","ink":"#1c1917","accent":"#2563eb","accent2":"#f97316","muted":"#a8a29e","legacy":true},
+      "night": {"bg":"#0f172a","ink":"#f8fafc","accent":"#38bdf8","accent2":"#f472b6","muted":"#64748b","legacy":true},
+      "economist": {"bg":"#f5f4f0","ink":"#0d0d0d","accent":"#e3120b","accent2":"#6b7280","muted":"#b8b8b8","legacy":true},
+      "mint": {"bg":"#ecfdf5","ink":"#052e16","accent":"#059669","accent2":"#f59e0b","muted":"#86efac","legacy":true},
+      "fintech": {"bg":"#0b1220","ink":"#e6edf7","accent":"#22c55e","accent2":"#f43f5e","muted":"#475569"},
+      "sunrise": {"bg":"#fff7ed","ink":"#1c1917","accent":"#c2410c","accent2":"#7c3aed","muted":"#d6c7b4"},
+      "mono-ink": {"bg":"#fafafa","ink":"#0a0a0a","accent":"#e11d48","accent2":"#525252","muted":"#d4d4d4"},
+      "ai-violet": {"bg":"#13111c","ink":"#f5f3ff","accent":"#a78bfa","accent2":"#2dd4bf","muted":"#4c4868"}
+    },
+    "wb": {
+      "default": {"bg":"#fbfbf8","ink":"#151515","accent":"#dc2626","accent2":"#2563eb","muted":"#9ca3af","legacy":true},
+      "kraft": {"bg":"#efe6d6","ink":"#2b2118","accent":"#c2410c","accent2":"#1d4ed8","muted":"#a08c70","legacy":true},
+      "blackboard": {"bg":"#1f2a24","ink":"#f1f5f0","accent":"#fde047","accent2":"#93c5fd","muted":"#6b7f72","legacy":true},
+      "blueprint": {"bg":"#123a6b","ink":"#eaf2ff","accent":"#fbbf24","accent2":"#f472b6","muted":"#7ea3d4","legacy":true},
+      "graph-paper": {"bg":"#f7f9fc","ink":"#1f2937","accent":"#e11d48","accent2":"#0284c7","muted":"#cbd5e1","bgClass":"sk-tex-graph"},
+      "chalk-green": {"bg":"#233027","ink":"#f4f1e8","accent":"#ffd166","accent2":"#8ecae6","muted":"#5f7a6b","bgClass":"sk-tex-blackboard"},
+      "napkin": {"bg":"#fbf6ee","ink":"#3b2f2f","accent":"#2563eb","accent2":"#dc2626","muted":"#cbbfae"},
+      "neon-marker": {"bg":"#111111","ink":"#f5f5f5","accent":"#ff3ea5","accent2":"#3ef0ff","muted":"#555555"}
+    },
+    "vox": {
+      "default": {"bg":"#f5ebd0","ink":"#1b1b1b","accent":"#ffe14d","accent2":"#d7263d","muted":"#8c8577","bgClass":"sk-paper-cream","legacy":true},
+      "newsprint": {"bg":"#c4b9b4","ink":"#1b1b1b","accent":"#ffe14d","accent2":"#d7263d","muted":"#6b665c","bgClass":"sk-newsprint","legacy":true},
+      "dark-desk": {"bg":"#a68768","ink":"#f5efe6","accent":"#ffe14d","accent2":"#ff6b6b","muted":"#a8a29e","bgClass":"sk-kraft-dark","legacy":true},
+      "blueprint": {"bg":"#f5f3f4","ink":"#1e3a5f","accent":"#ffe14d","accent2":"#d7263d","muted":"#7ea3d4","bgClass":"sk-grid","legacy":true},
+      "archive-sepia": {"bg":"#caa77a","ink":"#2a1f14","accent":"#f2c14e","accent2":"#9b2226","muted":"#8a7a5c","bgClass":"sk-tex-paper-tan"},
+      "cork-board": {"bg":"#ab6f3e","ink":"#1b1b1b","accent":"#ffe14d","accent2":"#6e0d10","muted":"#6b4f33","bgClass":"sk-tex-cork"},
+      "evidence": {"bg":"#1d1f22","ink":"#f1ede4","accent":"#ffe14d","accent2":"#e5383b","muted":"#6b6f76"},
+      "pastel-brief": {"bg":"#eef2f7","ink":"#1e293b","accent":"#a7f3d0","accent2":"#e11d48","muted":"#94a3b8"}
+    },
+    "stop": {
+      "default": {"bg":"#bb8f4d","ink":"#2b2118","accent":"#b5452b","accent2":"#2f6f8f","muted":"#8a7355","bgClass":"sk-kraft","legacy":true},
+      "notebook": {"bg":"#f5f3f4","ink":"#1f2937","accent":"#dc2626","accent2":"#2563eb","muted":"#9ca3af","bgClass":"sk-lined","legacy":true},
+      "night-desk": {"bg":"#a68768","ink":"#f5efe6","accent":"#f59e0b","accent2":"#7dd3fc","muted":"#a8a29e","bgClass":"sk-kraft-dark","legacy":true},
+      "blueprint-paper": {"bg":"#f5f3f4","ink":"#1e3a5f","accent":"#b5452b","accent2":"#2f6f8f","muted":"#7ea3d4","bgClass":"sk-grid","legacy":true},
+      "warung": {"bg":"#ba8e4e","ink":"#2b2118","accent":"#d62828","accent2":"#2a9d8f","muted":"#8a7355","bgClass":"sk-tex-cardboard"},
+      "school-craft": {"bg":"#f5f3f4","ink":"#1f2937","accent":"#f4a261","accent2":"#3a86ff","muted":"#adb5bd","bgClass":"sk-paper-white"},
+      "midnight-desk": {"bg":"#2a1f17","ink":"#f5efe6","accent":"#e9c46a","accent2":"#7dd3fc","muted":"#a8a29e","overlay":"sk-tex-film"},
+      "pastel-cut": {"bg":"#f5ebd0","ink":"#2b2d42","accent":"#ffafcc","accent2":"#a2d2ff","muted":"#bdb2a0","bgClass":"sk-paper-cream"}
+    },
+    "mm": {
+      "default": {"bg":"#f5f3f4","ink":"#2b2118","accent":"#b5452b","accent2":"#2f6f8f","muted":"#8a7355","bgClass":"sk-grid","legacy":true},
+      "notebook": {"bg":"#f5f3f4","ink":"#1f2937","accent":"#dc2626","accent2":"#2563eb","muted":"#9ca3af","bgClass":"sk-lined","legacy":true},
+      "kraft-desk": {"bg":"#bb8f4d","ink":"#2b2118","accent":"#b5452b","accent2":"#2f6f8f","muted":"#8a7355","bgClass":"sk-kraft","legacy":true},
+      "night-zine": {"bg":"#a68768","ink":"#f5efe6","accent":"#f59e0b","accent2":"#7dd3fc","muted":"#a8a29e","bgClass":"sk-kraft-dark","legacy":true},
+      "zine-pink": {"bg":"#f5f3f4","ink":"#111111","accent":"#ff3d8b","accent2":"#1f6feb","muted":"#9e9e9e","bgClass":"sk-paper-white","overlay":"sk-tex-riso"},
+      "scrapbook": {"bg":"#bb8f4d","ink":"#2b2118","accent":"#e76f51","accent2":"#2a9d8f","muted":"#8a7355","bgClass":"sk-kraft"},
+      "xerox": {"bg":"#c4b9b4","ink":"#111111","accent":"#ff2a2a","accent2":"#5f5f5f","muted":"#8a8a8a","bgClass":"sk-paper-grey","overlay":"sk-tex-halftone"},
+      "pop-collage": {"bg":"#ffd23f","ink":"#1a1a1a","accent":"#ee4266","accent2":"#3bceac","muted":"#8a7355","overlay":"sk-tex-halftone"}
+    }
+  },
+  "grades": {
+    "default": {"filter":"none","haze":null,"grain":0,"legacy":true},
+    "archive": {"filter":"grayscale(.6) contrast(1.05)","haze":["#d9d4c7",0.12],"grain":0.18,"legacy":true},
+    "night-desk": {"filter":"brightness(.9)","haze":["#0f1e3d",0.15],"grain":0.12,"legacy":true},
+    "paper-stage": {"filter":"none","haze":["#f5f3f4",0.2],"grain":0.1,"legacy":true},
+    "golden-hour": {"filter":"sepia(.15) saturate(1.1) brightness(1.03)","haze":["#ffb86b",0.12],"grain":0.12},
+    "blue-hour": {"filter":"saturate(.9) hue-rotate(-8deg) brightness(.92)","haze":["#1e3a8a",0.18],"grain":0.12},
+    "faded-film": {"filter":"contrast(.9) saturate(.8) brightness(1.05)","haze":["#f5e6d0",0.1],"grain":0.2},
+    "mono-archive": {"filter":"grayscale(1) contrast(1.1)","haze":["#d9d4c7",0.12],"grain":0.22}
+  },
+  "types": {
+    "text": {
+      "poster": {"display":"Anton","body":"Geist","legacy":true},
+      "editorial": {"display":"Bebas Neue","body":"Instrument Serif"},
+      "brutal": {"display":"Archivo Black","body":"Space Grotesk"},
+      "terminal": {"display":"JetBrains Mono","body":"JetBrains Mono","mono":"JetBrains Mono"}
+    },
+    "mg": {
+      "clean": {"body":"Geist","legacy":true},
+      "jakarta": {"display":"Plus Jakarta Sans","body":"Plus Jakarta Sans"},
+      "data": {"body":"Space Grotesk","mono":"JetBrains Mono"},
+      "expressive": {"display":"Bricolage Grotesque","body":"Geist"}
+    },
+    "wb": {
+      "caveat": {"hand":"Caveat","legacy":true},
+      "kalam": {"hand":"Kalam"},
+      "neat": {"hand":"Patrick Hand"},
+      "marker": {"display":"Permanent Marker","hand":"Caveat"}
+    },
+    "vox": {
+      "paper": {"serif":"Newsreader","body":"Geist","legacy":true},
+      "magazine": {"serif":"DM Serif Display","body":"Space Grotesk"},
+      "archive": {"serif":"Special Elite","body":"Newsreader"}
+    },
+    "stop": {
+      "default": {"body":"Geist","legacy":true},
+      "school": {"body":"Patrick Hand"},
+      "label": {"display":"Archivo Black","body":"Geist"}
+    },
+    "mm": {
+      "zine": {"display":"Permanent Marker","body":"Geist"},
+      "editorial": {"serif":"Instrument Serif","body":"Space Grotesk"},
+      "typewriter": {"body":"Special Elite"}
+    },
+    "px": {
+      "memory": {"serif":"Instrument Serif","body":"Geist"},
+      "label": {"body":"Geist","legacy":true}
+    }
+  }
+}

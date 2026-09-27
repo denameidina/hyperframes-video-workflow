@@ -5907,5 +5907,1375 @@
   ],
   "source": "@phosphor-icons/core 2.1.1 (fill)",
   "license": "MIT"
+ },
+ {
+  "id": "font.anton",
+  "kind": "font",
+  "inline": ".sk-f-anton",
+  "use": ".sk-f-anton",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy, vendored earlier)",
+  "license": "OFL-1.1"
+ },
+ {
+  "id": "font.geist",
+  "kind": "font",
+  "inline": ".sk-f-geist",
+  "use": ".sk-f-geist",
+  "styles": [
+   "motion-graphic",
+   "vox",
+   "stop-motion",
+   "mix-media",
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy, vendored earlier)",
+  "license": "OFL-1.1"
+ },
+ {
+  "id": "font.geist-mono",
+  "kind": "font",
+  "inline": ".sk-f-geist-mono",
+  "use": ".sk-f-geist-mono",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy, vendored earlier)",
+  "license": "OFL-1.1"
+ },
+ {
+  "id": "font.caveat",
+  "kind": "font",
+  "inline": ".sk-f-caveat",
+  "use": ".sk-f-caveat",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy, vendored earlier)",
+  "license": "OFL-1.1"
+ },
+ {
+  "id": "font.newsreader",
+  "kind": "font",
+  "inline": ".sk-f-newsreader",
+  "use": ".sk-f-newsreader",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy, vendored earlier)",
+  "license": "OFL-1.1"
+ },
+ {
+  "id": "font.bebas-neue",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/bebas-neue-latin-400-normal.woff2",
+  "use": ".sk-f-bebas-neue",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/bebas-neue@5.3.0 — https://www.npmjs.com/package/@fontsource/bebas-neue",
+  "license": "OFL-1.1",
+  "bytes": 13768
+ },
+ {
+  "id": "font.archivo-black",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/archivo-black-latin-400-normal.woff2",
+  "use": ".sk-f-archivo-black",
+  "styles": [
+   "broll-text",
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/archivo-black@5.3.0 — https://www.npmjs.com/package/@fontsource/archivo-black",
+  "license": "OFL-1.1",
+  "bytes": 18604
+ },
+ {
+  "id": "font.bricolage-grotesque",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/bricolage-grotesque-latin-wght-normal.woff2",
+  "use": ".sk-f-bricolage-grotesque",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource-variable/bricolage-grotesque@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/bricolage-grotesque",
+  "license": "OFL-1.1",
+  "bytes": 41344
+ },
+ {
+  "id": "font.space-grotesk",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/space-grotesk-latin-wght-normal.woff2",
+  "use": ".sk-f-space-grotesk",
+  "styles": [
+   "broll-text",
+   "motion-graphic",
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource-variable/space-grotesk@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/space-grotesk",
+  "license": "OFL-1.1",
+  "bytes": 22288
+ },
+ {
+  "id": "font.plus-jakarta-sans",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/plus-jakarta-sans-latin-wght-normal.woff2",
+  "use": ".sk-f-plus-jakarta-sans",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource-variable/plus-jakarta-sans@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/plus-jakarta-sans",
+  "license": "OFL-1.1",
+  "bytes": 27348
+ },
+ {
+  "id": "font.instrument-serif",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/instrument-serif-latin-400-normal.woff2",
+  "use": ".sk-f-instrument-serif",
+  "styles": [
+   "broll-text",
+   "mix-media",
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/instrument-serif@5.3.0 — https://www.npmjs.com/package/@fontsource/instrument-serif",
+  "license": "OFL-1.1",
+  "bytes": 21032
+ },
+ {
+  "id": "font.dm-serif-display",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/dm-serif-display-latin-400-normal.woff2",
+  "use": ".sk-f-dm-serif-display",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/dm-serif-display@5.3.0 — https://www.npmjs.com/package/@fontsource/dm-serif-display",
+  "license": "OFL-1.1",
+  "bytes": 24744
+ },
+ {
+  "id": "font.jetbrains-mono",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/jetbrains-mono-latin-wght-normal.woff2",
+  "use": ".sk-f-jetbrains-mono",
+  "styles": [
+   "broll-text",
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource-variable/jetbrains-mono@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/jetbrains-mono",
+  "license": "OFL-1.1",
+  "bytes": 40404
+ },
+ {
+  "id": "font.permanent-marker",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/permanent-marker-latin-400-normal.woff2",
+  "use": ".sk-f-permanent-marker",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/permanent-marker@5.3.0 — https://www.npmjs.com/package/@fontsource/permanent-marker",
+  "license": "Apache-2.0",
+  "bytes": 29564
+ },
+ {
+  "id": "font.kalam",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/kalam-latin-400-normal.woff2",
+  "use": ".sk-f-kalam",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/kalam@5.3.0 — https://www.npmjs.com/package/@fontsource/kalam",
+  "license": "OFL-1.1",
+  "bytes": 22336
+ },
+ {
+  "id": "font.patrick-hand",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/patrick-hand-latin-400-normal.woff2",
+  "use": ".sk-f-patrick-hand",
+  "styles": [
+   "whiteboard",
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/patrick-hand@5.3.0 — https://www.npmjs.com/package/@fontsource/patrick-hand",
+  "license": "OFL-1.1",
+  "bytes": 23944
+ },
+ {
+  "id": "font.special-elite",
+  "kind": "font",
+  "file": "vendor/asset-lib/fonts/special-elite-latin-400-normal.woff2",
+  "use": ".sk-f-special-elite",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "fontsource @fontsource/special-elite@5.3.0 — https://www.npmjs.com/package/@fontsource/special-elite",
+  "license": "Apache-2.0",
+  "bytes": 53296
+ },
+ {
+  "id": "palette.text-default",
+  "kind": "palette",
+  "inline": ".sk-pal-text-default",
+  "use": ".sk-pal-text-default",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-paper",
+  "kind": "palette",
+  "inline": ".sk-pal-text-paper",
+  "use": ".sk-pal-text-paper",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-signal",
+  "kind": "palette",
+  "inline": ".sk-pal-text-signal",
+  "use": ".sk-pal-text-signal",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-ink-blue",
+  "kind": "palette",
+  "inline": ".sk-pal-text-ink-blue",
+  "use": ".sk-pal-text-ink-blue",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-jakarta-dusk",
+  "kind": "palette",
+  "inline": ".sk-pal-text-jakarta-dusk",
+  "use": ".sk-pal-text-jakarta-dusk",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-risograph",
+  "kind": "palette",
+  "inline": ".sk-pal-text-risograph",
+  "use": ".sk-pal-text-risograph",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-terminal",
+  "kind": "palette",
+  "inline": ".sk-pal-text-terminal",
+  "use": ".sk-pal-text-terminal",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.text-cream-red",
+  "kind": "palette",
+  "inline": ".sk-pal-text-cream-red",
+  "use": ".sk-pal-text-cream-red",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-default",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-default",
+  "use": ".sk-pal-mg-default",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-night",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-night",
+  "use": ".sk-pal-mg-night",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-economist",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-economist",
+  "use": ".sk-pal-mg-economist",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-mint",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-mint",
+  "use": ".sk-pal-mg-mint",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-fintech",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-fintech",
+  "use": ".sk-pal-mg-fintech",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-sunrise",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-sunrise",
+  "use": ".sk-pal-mg-sunrise",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-mono-ink",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-mono-ink",
+  "use": ".sk-pal-mg-mono-ink",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mg-ai-violet",
+  "kind": "palette",
+  "inline": ".sk-pal-mg-ai-violet",
+  "use": ".sk-pal-mg-ai-violet",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-default",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-default",
+  "use": ".sk-pal-wb-default",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-kraft",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-kraft",
+  "use": ".sk-pal-wb-kraft",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-blackboard",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-blackboard",
+  "use": ".sk-pal-wb-blackboard",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-blueprint",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-blueprint",
+  "use": ".sk-pal-wb-blueprint",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-graph-paper",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-graph-paper",
+  "use": ".sk-pal-wb-graph-paper",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-chalk-green",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-chalk-green",
+  "use": ".sk-pal-wb-chalk-green",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-napkin",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-napkin",
+  "use": ".sk-pal-wb-napkin",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.wb-neon-marker",
+  "kind": "palette",
+  "inline": ".sk-pal-wb-neon-marker",
+  "use": ".sk-pal-wb-neon-marker",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-default",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-default",
+  "use": ".sk-pal-vox-default",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-newsprint",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-newsprint",
+  "use": ".sk-pal-vox-newsprint",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-dark-desk",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-dark-desk",
+  "use": ".sk-pal-vox-dark-desk",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-blueprint",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-blueprint",
+  "use": ".sk-pal-vox-blueprint",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-archive-sepia",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-archive-sepia",
+  "use": ".sk-pal-vox-archive-sepia",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-cork-board",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-cork-board",
+  "use": ".sk-pal-vox-cork-board",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-evidence",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-evidence",
+  "use": ".sk-pal-vox-evidence",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.vox-pastel-brief",
+  "kind": "palette",
+  "inline": ".sk-pal-vox-pastel-brief",
+  "use": ".sk-pal-vox-pastel-brief",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-default",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-default",
+  "use": ".sk-pal-stop-default",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-notebook",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-notebook",
+  "use": ".sk-pal-stop-notebook",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-night-desk",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-night-desk",
+  "use": ".sk-pal-stop-night-desk",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-blueprint-paper",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-blueprint-paper",
+  "use": ".sk-pal-stop-blueprint-paper",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-warung",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-warung",
+  "use": ".sk-pal-stop-warung",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-school-craft",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-school-craft",
+  "use": ".sk-pal-stop-school-craft",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-midnight-desk",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-midnight-desk",
+  "use": ".sk-pal-stop-midnight-desk",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.stop-pastel-cut",
+  "kind": "palette",
+  "inline": ".sk-pal-stop-pastel-cut",
+  "use": ".sk-pal-stop-pastel-cut",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-default",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-default",
+  "use": ".sk-pal-mm-default",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-notebook",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-notebook",
+  "use": ".sk-pal-mm-notebook",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-kraft-desk",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-kraft-desk",
+  "use": ".sk-pal-mm-kraft-desk",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-night-zine",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-night-zine",
+  "use": ".sk-pal-mm-night-zine",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-zine-pink",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-zine-pink",
+  "use": ".sk-pal-mm-zine-pink",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-scrapbook",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-scrapbook",
+  "use": ".sk-pal-mm-scrapbook",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-xerox",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-xerox",
+  "use": ".sk-pal-mm-xerox",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.mm-pop-collage",
+  "kind": "palette",
+  "inline": ".sk-pal-mm-pop-collage",
+  "use": ".sk-pal-mm-pop-collage",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-default",
+  "kind": "palette",
+  "inline": ".sk-grade-px-default",
+  "use": ".sk-grade-px-default",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-archive",
+  "kind": "palette",
+  "inline": ".sk-grade-px-archive",
+  "use": ".sk-grade-px-archive",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-night-desk",
+  "kind": "palette",
+  "inline": ".sk-grade-px-night-desk",
+  "use": ".sk-grade-px-night-desk",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-paper-stage",
+  "kind": "palette",
+  "inline": ".sk-grade-px-paper-stage",
+  "use": ".sk-grade-px-paper-stage",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy Look table)",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-golden-hour",
+  "kind": "palette",
+  "inline": ".sk-grade-px-golden-hour",
+  "use": ".sk-grade-px-golden-hour",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-blue-hour",
+  "kind": "palette",
+  "inline": ".sk-grade-px-blue-hour",
+  "use": ".sk-grade-px-blue-hour",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-faded-film",
+  "kind": "palette",
+  "inline": ".sk-grade-px-faded-film",
+  "use": ".sk-grade-px-faded-film",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "palette.px-mono-archive",
+  "kind": "palette",
+  "inline": ".sk-grade-px-mono-archive",
+  "use": ".sk-grade-px-mono-archive",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.text-poster",
+  "kind": "type",
+  "inline": ".sk-type-text-poster",
+  "use": ".sk-type-text-poster",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "type.text-editorial",
+  "kind": "type",
+  "inline": ".sk-type-text-editorial",
+  "use": ".sk-type-text-editorial",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.text-brutal",
+  "kind": "type",
+  "inline": ".sk-type-text-brutal",
+  "use": ".sk-type-text-brutal",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.text-terminal",
+  "kind": "type",
+  "inline": ".sk-type-text-terminal",
+  "use": ".sk-type-text-terminal",
+  "styles": [
+   "broll-text"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mg-clean",
+  "kind": "type",
+  "inline": ".sk-type-mg-clean",
+  "use": ".sk-type-mg-clean",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mg-jakarta",
+  "kind": "type",
+  "inline": ".sk-type-mg-jakarta",
+  "use": ".sk-type-mg-jakarta",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mg-data",
+  "kind": "type",
+  "inline": ".sk-type-mg-data",
+  "use": ".sk-type-mg-data",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mg-expressive",
+  "kind": "type",
+  "inline": ".sk-type-mg-expressive",
+  "use": ".sk-type-mg-expressive",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.wb-caveat",
+  "kind": "type",
+  "inline": ".sk-type-wb-caveat",
+  "use": ".sk-type-wb-caveat",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "type.wb-kalam",
+  "kind": "type",
+  "inline": ".sk-type-wb-kalam",
+  "use": ".sk-type-wb-kalam",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.wb-neat",
+  "kind": "type",
+  "inline": ".sk-type-wb-neat",
+  "use": ".sk-type-wb-neat",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.wb-marker",
+  "kind": "type",
+  "inline": ".sk-type-wb-marker",
+  "use": ".sk-type-wb-marker",
+  "styles": [
+   "whiteboard"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.vox-paper",
+  "kind": "type",
+  "inline": ".sk-type-vox-paper",
+  "use": ".sk-type-vox-paper",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "type.vox-magazine",
+  "kind": "type",
+  "inline": ".sk-type-vox-magazine",
+  "use": ".sk-type-vox-magazine",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.vox-archive",
+  "kind": "type",
+  "inline": ".sk-type-vox-archive",
+  "use": ".sk-type-vox-archive",
+  "styles": [
+   "vox"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.stop-default",
+  "kind": "type",
+  "inline": ".sk-type-stop-default",
+  "use": ".sk-type-stop-default",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "type.stop-school",
+  "kind": "type",
+  "inline": ".sk-type-stop-school",
+  "use": ".sk-type-stop-school",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.stop-label",
+  "kind": "type",
+  "inline": ".sk-type-stop-label",
+  "use": ".sk-type-stop-label",
+  "styles": [
+   "stop-motion"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mm-zine",
+  "kind": "type",
+  "inline": ".sk-type-mm-zine",
+  "use": ".sk-type-mm-zine",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mm-editorial",
+  "kind": "type",
+  "inline": ".sk-type-mm-editorial",
+  "use": ".sk-type-mm-editorial",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.mm-typewriter",
+  "kind": "type",
+  "inline": ".sk-type-mm-typewriter",
+  "use": ".sk-type-mm-typewriter",
+  "styles": [
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.px-memory",
+  "kind": "type",
+  "inline": ".sk-type-px-memory",
+  "use": ".sk-type-px-memory",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "type.px-label",
+  "kind": "type",
+  "inline": ".sk-type-px-label",
+  "use": ".sk-type-px-label",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (legacy)",
+  "license": "MIT"
  }
 ]

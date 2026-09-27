@@ -155,3 +155,51 @@ test('the contact-sheet project matches the catalog and every page has a rendere
   assert.deepEqual(onDisk, pages.map((p) => `${p.name}.html`).sort());
   for (const p of pages) assert.ok(existsSync(join(ROOT, CATALOG_DIR, 'sheets', `${p.name}.webp`)), `sheets/${p.name}.webp is missing`);
 });
+
+// ---- presets -----------------------------------------------------------------------------------------
+const presets = JSON.parse(read(`${LIB}/src/presets.json`));
+const lum = (h) => { const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+const multiply = (a, b) => '#' + [1, 3, 5].map((i) => Math.round((parseInt(a.slice(i, i + 2), 16) * parseInt(b.slice(i, i + 2), 16)) / 255).toString(16).padStart(2, '0')).join('');
+test('every style has 8 palettes (4 legacy + 4 new) and parallax 8 grades', () => {
+  for (const st of ['text', 'mg', 'wb', 'vox', 'stop', 'mm']) {
+    const ps = Object.values(presets.palettes[st]);
+    assert.equal(ps.length, 8, st);
+    assert.equal(ps.filter((p) => p.legacy).length, 4, st);
+  }
+  assert.equal(Object.keys(presets.grades).length, 8);
+});
+test('palettes meet the contrast rules; only the listed legacy palettes are exempt', () => {
+  const failures = [];
+  for (const [st, list] of Object.entries(presets.palettes)) {
+    const role = presets.roles[st];
+    for (const [n, p] of Object.entries(list)) {
+      const fail = (what) => failures.push(`${st}.${n}:${what}`);
+      if (ratio(p.ink, p.bg) < (role === 'text' ? 4.5 : 3)) fail('ink');
+      if (role === 'text') { if (ratio(p.accent, p.bg) < 3) fail('accent'); if (ratio(p.accent2, p.bg) < 3) fail('accent2'); }
+      if (role === 'fill') for (const k of ['accent', 'accent2']) if (Math.max(ratio('#111111', p[k]), ratio('#ffffff', p[k])) < 4.5) fail(k);
+      if (role === 'hl') { if (ratio('#1b1b1b', multiply(presets.docPaper, p.accent)) < 4.5) fail('accent'); if (ratio(p.accent2, presets.docPaper) < 3) fail('accent2'); }
+    }
+  }
+  const allowed = Object.entries(presets.exceptions).flatMap(([k, v]) => v.map((x) => `${k}:${x}`));
+  assert.deepEqual(failures.sort(), allowed.sort());
+  for (const k of Object.keys(presets.exceptions)) {
+    const [st, n] = k.split('.');
+    assert.ok(presets.palettes[st][n].legacy, `${k}: only legacy palettes may be exceptions`);
+  }
+});
+test('every type preset names a font the library can load', () => {
+  const css = read(`${LIB}/asset-lib.css`) + read('vendor/style-kit/style-kit.css') + read('vendor/motion-kit/motion-kit.css');
+  const families = new Set([...css.matchAll(/@font-face \{ font-family: '([^']+)'/g)].map((m) => m[1]));
+  for (const [st, list] of Object.entries(presets.types)) {
+    assert.ok(STYLE_KEY[st], st);
+    for (const [n, t] of Object.entries(list)) for (const r of ['display', 'body', 'hand', 'serif', 'mono']) if (t[r]) assert.ok(families.has(t[r]), `${st}.${n}.${r}: no @font-face for ${t[r]}`);
+  }
+});
+test('style-kit roles read the type variables and fall back to the old fonts', () => {
+  const css = read('vendor/style-kit/style-kit.css');
+  assert.match(css, /\.sk-display \{ font-family: var\(--sk-font-display, 'Anton'\), sans-serif;/);
+  assert.match(css, /\.sk-sans \{ font-family: var\(--sk-font-body, 'Geist'\), system-ui, sans-serif;/);
+  assert.match(css, /\.sk-hand \{ font-family: var\(--sk-font-hand, 'Caveat'\), cursive;/);
+  assert.match(css, /\.sk-serif \{ font-family: var\(--sk-font-serif, 'Newsreader'\), serif;/);
+});

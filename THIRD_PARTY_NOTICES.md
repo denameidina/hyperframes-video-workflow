@@ -60,6 +60,11 @@ templates are this project's own work (MIT). Per-file sources are listed in
   `lucide-static@1.48.0` (https://lucide.dev), ISC License.
 - Pictograms (`vendor/asset-lib/pictograms/phosphor.json`): path data from
   `@phosphor-icons/core@2.1.1` fill weight (https://phosphoricons.com), MIT License.
+- Fonts (`vendor/asset-lib/fonts/`, Latin subsets from fontsource `@5.3.0`):
+  Bebas Neue, Archivo Black, Bricolage Grotesque, Space Grotesk, Plus Jakarta
+  Sans, Instrument Serif, DM Serif Display, JetBrains Mono, Kalam, Patrick Hand —
+  SIL Open Font License 1.1; Permanent Marker and Special Elite — Apache License
+  2.0. License texts are next to the fonts (`OFL-*.txt`, `LICENSE-*.txt`).
 
 
 ## paper-pack (`vendor/paper-pack`)

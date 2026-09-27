@@ -1,2 +1,4 @@
 /* ---- base (vendor/asset-lib/src/base.css): hand-written rules appended to the generated sheet ---- */
+/* mono role; the other roles live in style-kit.css with the same var() fallback pattern */
+.sk-mono { font-family: var(--sk-font-mono, 'Geist Mono'), ui-monospace, monospace; text-transform: none; }
 .sk-icon, .sk-pict, .sk-doodle, .sk-mark { display: block; overflow: visible; }

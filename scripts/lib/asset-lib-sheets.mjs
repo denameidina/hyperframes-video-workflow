@@ -27,7 +27,7 @@ const short = (id) => id.slice(id.indexOf('.') + 1);
 const cell = (art, label, o = {}) => `<div class="c${o.dark ? ' c-grey' : ''}"${o.style ? ` style="${o.style}"` : ''}><div class="a">${art}</div><div class="l sk-f-geist-mono">${label}</div></div>`;
 
 // sample text for fonts and documents: invented, marked as an example on the page itself
-const SAMPLE = 'Bangun sistem AI untuk bisnis nyata — Rp 169 jt';
+const SAMPLE = 'Sistem AI untuk bisnis — Rp 169 jt';
 const DOC_SAMPLE = {
   'article': { kicker: 'Contoh', headline: 'Judul artikel contoh', dek: 'Satu kalimat ringkasan.' },
   'report-page': { section: 'Contoh', title: 'Ringkasan', rows: [{ label: 'Baris A', value: '12' }, { label: 'Baris B', value: '34' }] },
@@ -87,7 +87,7 @@ export function sheetPages(root) {
       return cell(`<div style="display:flex;gap:10px">${s.layers.map((l) => `<img src="${l.file}" style="height:300px;background:#8a8a8a" alt="" />`).join('')}</div>`, `${short(e.id)} — ${s.layers.map((l) => `${l.role} z${l.z}`).join(', ')}`);
     }), 5);
   }
-  grid('font', 'font — .sk-f-*', 1, of('font').map((e) => cell(`<div class="${e.use.slice(1)}" style="font-size:46px;color:#1c1917;white-space:nowrap">${SAMPLE}</div>`, short(e.id), { style: 'height:96px' })), 18);
+  grid('font', 'font — .sk-f-*', 1, of('font').map((e) => cell(`<div class="${e.use.slice(1)}" style="width:980px;font-size:38px;line-height:1.1;color:#1c1917;white-space:nowrap;overflow:hidden">${SAMPLE}</div>`, short(e.id), { style: 'height:68px;align-items:flex-start;padding:8px 20px' })), 17);
   for (const [st, list] of Object.entries(presets.palettes)) {
     const types = Object.entries(presets.types[st] ?? {});
     pages.push({ name: `preset-${STYLE_KEY[st]}`, title: `preset — ${STYLE_KEY[st]}: .sk-pal-${st}-* and .sk-type-${st}-*`, cols: 2, cells: [

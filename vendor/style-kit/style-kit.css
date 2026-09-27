@@ -12,25 +12,26 @@
 .sk-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.04em; }
 .sk-stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .sk-marker { position: absolute; left: 0; top: 0; transform-origin: 0 0; z-index: 10; filter: drop-shadow(0 6px 8px rgba(0,0,0,.18)); }
-.sk-text { --sk-bg: #0a0a0a; --sk-ink: #fafafa; --sk-accent: #facc15; --sk-accent-2: #ef4444; --sk-muted: #737373; font-family: 'Anton', sans-serif; text-transform: uppercase; line-height: 0.92; letter-spacing: 0.005em; }
-.sk-mg { --sk-bg: #f4efe6; --sk-ink: #1c1917; --sk-accent: #2563eb; --sk-accent-2: #f97316; --sk-muted: #a8a29e; font-family: 'Geist', system-ui, sans-serif; font-feature-settings: "tnum" 1; }
-.sk-wb { --sk-bg: #fbfbf8; --sk-ink: #151515; --sk-accent: #dc2626; --sk-accent-2: #2563eb; --sk-muted: #9ca3af; font-family: 'Caveat', cursive; }
+.sk-text { --sk-bg: #0a0a0a; --sk-ink: #fafafa; --sk-accent: #facc15; --sk-accent-2: #ef4444; --sk-muted: #737373; font-family: var(--sk-font-display, 'Anton'), sans-serif; text-transform: uppercase; line-height: 0.92; letter-spacing: 0.005em; }
+.sk-mg { --sk-bg: #f4efe6; --sk-ink: #1c1917; --sk-accent: #2563eb; --sk-accent-2: #f97316; --sk-muted: #a8a29e; font-family: var(--sk-font-body, 'Geist'), system-ui, sans-serif; font-feature-settings: "tnum" 1; }
+.sk-wb { --sk-bg: #fbfbf8; --sk-ink: #151515; --sk-accent: #dc2626; --sk-accent-2: #2563eb; --sk-muted: #9ca3af; font-family: var(--sk-font-hand, 'Caveat'), cursive; }
 /* font switches for clips: a clip's own <style> must not name a font family (the linter only
-   sees @font-face in this sheet and motion-kit.css) */
-.sk-display { font-family: 'Anton', sans-serif; text-transform: uppercase; }
-.sk-sans { font-family: 'Geist', system-ui, sans-serif; text-transform: none; }
-.sk-hand { font-family: 'Caveat', cursive; text-transform: none; }
-.sk-serif { font-family: 'Newsreader', serif; text-transform: none; }
+   sees @font-face in the kit sheets). Each role reads a --sk-font-* variable that a type preset
+   (.sk-type-*, vendor/asset-lib/asset-lib.css) may set; without one it is the old font. */
+.sk-display { font-family: var(--sk-font-display, 'Anton'), sans-serif; text-transform: uppercase; }
+.sk-sans { font-family: var(--sk-font-body, 'Geist'), system-ui, sans-serif; text-transform: none; }
+.sk-hand { font-family: var(--sk-font-hand, 'Caveat'), cursive; text-transform: none; }
+.sk-serif { font-family: var(--sk-font-serif, 'Newsreader'), serif; text-transform: none; }
 .sk-wb .sk-stroke { stroke: var(--sk-ink); stroke-width: 7; }
 /* paper and stop-motion (sub-project 2a); paper backgrounds live in vendor/paper-pack/paper-pack.css */
-.sk-stop { --sk-bg: #c4965a; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; font-family: 'Geist', system-ui, sans-serif; }
+.sk-stop { --sk-bg: #c4965a; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; font-family: var(--sk-font-body, 'Geist'), system-ui, sans-serif; }
 .sk-cut { filter: drop-shadow(3px 5px 1px rgba(40,25,10,.32)); }
 .sk-grain { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; mix-blend-mode: multiply; opacity: .16;
   background-size: 256px 256px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .sk-hand-img { position: absolute; left: 0; top: 0; transform-origin: 0 0; z-index: 11; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }
 /* VOX and mix-media (sub-project 2b) */
-.sk-vox { --sk-bg: #efe9dc; --sk-ink: #1b1b1b; --sk-accent: #ffe14d; --sk-accent-2: #d7263d; --sk-muted: #8c8577; font-family: 'Geist', system-ui, sans-serif; }
+.sk-vox { --sk-bg: #efe9dc; --sk-ink: #1b1b1b; --sk-accent: #ffe14d; --sk-accent-2: #d7263d; --sk-muted: #8c8577; font-family: var(--sk-font-body, 'Geist'), system-ui, sans-serif; }
 .sk-hl { position: absolute; opacity: 0; background: var(--sk-hl-color, #ffe14d); mix-blend-mode: multiply; border-radius: 4px 10px 6px 12px / 10px 5px 11px 6px; }
 .sk-redact { position: absolute; opacity: 0; background: #111111; }
 .sk-doc { position: absolute; background: #fbfaf6; color: #1b1b1b; }
