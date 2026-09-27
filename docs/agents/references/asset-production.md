@@ -75,6 +75,8 @@ generating new ones.
 | `dena-footage` | `ffmpeg -ss <processed time> -i processed.mp4 -frames:v 1 assets/frames/NN.png`, then `npx --yes hyperframes@0.7.24 remove-background assets/frames/NN.png -o assets/cutouts/NN-dena.png` | `assets/cutouts/NN-dena.png` | `provenance: "dena-footage"`, `source` = processed time |
 | `user` | the user's file; remove the background the same way when needed | `assets/cutouts/NN-name.png` | `provenance: "user"`, `source` = what the user gave |
 | `capture` (VOX document) | a screenshot of the real page per Screenshot Rules and URL Research below; crop to the quoted region, redact private data | `assets/captures/NN-name.png` | `type: "screenshot"`, `provenance: "screenshot"`, `source` = URL, `captured` (date), license when the text is licensed (e.g. CC BY-SA) |
+| `layers` (parallax photo/frame) | `npm run video -- layers <slug> --at <s> --name NN-scene` (a frame) or `--image <file>` (a user photo) → `assets/layers/NN-scene-src.png` + `NN-scene-fg.png`; then the plate with `codex-image` (Parallax Plate Recipe below) → `NN-scene-bg.png` | `assets/layers/NN-scene-*.png` | `src`/`fg`: `dena-footage` or `user`; plate: `provenance: "reconstructed"` + `promptSummary` |
+| `archive` (parallax archival photo) | a public-domain photo whose status is confirmed on its own page (for example Wikimedia Commons "published before 1931"), then `layers --image` + the plate recipe | `assets/layers/NN-archive-*.png` | `provenance: "pd-archive"`, `source` = page URL, `license` = the stated reason |
 | `dena-video` (mix-media speaker) | `npm run video -- cutout <slug> --from <clip start> --dur <clip duration> --name NN-dena` (segment of `processed.mp4` → `remove-background`; ≤ 15 s; it fails if nothing is written) | `assets/cutouts/NN-dena.webm` | `provenance: "dena-footage"`, `source` = processed time range |
 
 Cut-out Recipe (`codex`), filled per object:
@@ -102,6 +104,22 @@ Rules:
   painted checkerboard, extra fingers, plastic-looking paper, or anything generic
   to the transcript, and regenerate with the whole spec (not just the fix).
 - Crop to the object and keep the long edge ≤ 800 px.
+
+Parallax Plate Recipe (`codex-image`, edit): pass the source with `--ref`, a
+`--size` matching the source aspect (both edges multiples of 16) and `--fit`, and
+say: "remove only the <person / objects>; fill where they were with the
+continuing <wall / floor / desk>; this is a pixel-aligned plate — keep the exact
+framing, crop, and aspect ratio of the input; every other pixel stays where it
+is". Check the plate against the source outside the subject (they should match);
+if anything moved, regenerate. A plate is `reconstructed`, never proof.
+
+Codex layered scene (parallax): generate the full scene first; make the plate by
+an edit of it ("remove the <foreground objects> … keep everything else
+unchanged"); make a foreground layer by an edit onto a flat `#00FF00` green and
+key it (soft alpha from how much green exceeds red/blue, then pull the green
+down on the edge), or generate a separate transparent object without a
+reference (a reference drops the alpha). Green objects key out with the
+background — keep them on a different layer or pick another key colour.
 
 ## Generated Image Prompt Rules
 

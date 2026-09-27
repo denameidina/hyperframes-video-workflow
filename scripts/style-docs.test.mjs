@@ -3,7 +3,9 @@
 // and examples that exist on disk.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const REF = new URL('../docs/agents/references/', import.meta.url);
 const STYLES = [
@@ -13,6 +15,7 @@ const STYLES = [
   { file: 'stop-motion.md', patterns: 12, refs: 6, prefix: 'sm-' },
   { file: 'vox.md', patterns: 12, refs: 6, prefix: 'vx-', sections: ['Documents', 'Document Ethics'] },
   { file: 'mix-media.md', patterns: 12, refs: 6, prefix: 'mm-', treatments: ['collage'], sections: ['Treatment: collage', 'Matte Notes'] },
+  { file: 'parallax.md', patterns: 12, refs: 6, prefix: 'px-', treatments: ['cutaway', 'split', 'panel', 'parallax-stage'], sections: ['Layer Sources', 'Depth Budget'] },
 ];
 
 const section = (md, title) => {
@@ -82,5 +85,16 @@ test('every example clip on disk is mounted in the example host, and every mount
   const clips = [...host.matchAll(/data-composition-src="compositions\/([^"]+)"/g)].map((m) => m[1]);
   const onDisk = readdirSync(new URL('style-examples/compositions/', REF)).filter((f) => f.endsWith('.html'));
   assert.deepEqual([...clips].sort(), [...onDisk].sort());
-  assert.equal(clips.length, 28);
+  assert.equal(clips.length, 32);
+});
+
+test('every asset the examples reference is tracked in git', () => {
+  const root = fileURLToPath(new URL('../', import.meta.url));
+  const base = 'docs/agents/references/style-examples/';
+  const tracked = new Set(execFileSync('git', ['ls-files', base], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean));
+  const pages = ['index.html', ...readdirSync(new URL('style-examples/compositions/', REF)).map((f) => 'compositions/' + f)];
+  for (const page of pages) {
+    const html = readFileSync(new URL('style-examples/' + page, REF), 'utf8');
+    for (const [, ref] of html.matchAll(/(?:src|href)="(assets\/[^"]+)"/g)) assert.ok(tracked.has(base + ref), `${ref} (in ${page}) is not tracked in git`);
+  }
 });
