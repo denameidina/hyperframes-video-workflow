@@ -68,4 +68,67 @@ SK.rough = (svg,o={})=>{
   });
   return svg;
 };
+// ---- strokes: doodles, marks, stamp borders ----------------------------------------------------
+/* One <path class="sk-dpath"> per pen stroke in drawing order, so SK.draw / SK.drawSeq can draw it
+   on. Not .sk-stroke: `.sk-wb .sk-stroke` would force stroke-width 7 in viewBox units.
+   o.size is the width in px; o.sw the on-screen stroke width in px. */
+const strokeSvg = (id,o,cls)=>{
+  const s=pick(SK.LIB.strokes,'stroke asset',id);
+  const w=o.size??240, h=w*s.vb[1]/s.vb[0], k=s.vb[0]/w;
+  return `<svg class="${cls}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" viewBox="0 0 ${s.vb[0]} ${s.vb[1]}" fill="none" stroke="${o.color??'currentColor'}" stroke-width="${((o.sw??7)*k).toFixed(3)}" stroke-linecap="round" stroke-linejoin="round">${s.d.map(d=>`<path class="sk-dpath" d="${d}"/>`).join('')}</svg>`;
+};
+SK.doodle = (id,o={})=>strokeSvg(full(id,'doodle'),o,'sk-doodle');
+// red-pen marks (circle, underline, arrow, …) default to the palette's second accent
+SK.mark = (id,o={})=>strokeSvg(full(id,'mark'),{color:'var(--sk-accent-2, #d7263d)',sw:9,...o},'sk-mark');
+
+// ---- frames ------------------------------------------------------------------------------------
+/* stamp / badge: an SVG border plus centred text. Stamps with fixed words (ILUSTRASI, CONTOH, …)
+   use them; badges need o.text from the transcript. */
+SK.stamp = (id,o={})=>{
+  const key=full(id,'frame'), s=pick(SK.LIB.strokes,'stamp',key), text=o.text??s.text;
+  if(!text) throw new Error(`asset-lib: ${key} needs o.text (a word from the transcript)`);
+  const w=o.size??320, h=w*s.vb[1]/s.vb[0];
+  return `<div class="sk-stamp" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;color:${o.color??'var(--sk-accent-2, #d7263d)'}">${strokeSvg(key,{size:w,sw:o.sw??5,color:'currentColor'},'sk-stamp-border')}<span class="sk-stamp-text" style="font-size:${(o.fontSize??h*0.3).toFixed(1)}px">${esc(text)}</span></div>`;
+};
+// torn-paper clip-path from a named SK.torn preset, sized to the piece
+SK.tornFrame = (id,w,h)=>{
+  const p=pick(SK.LIB.torn,'torn frame',full(id,'frame'));
+  return SK.torn(w,h,p.seed,{edges:p.edges,amp:p.amp,step:p.step});
+};
+/* CSS frames. o.content is HTML placed in the photo/screen area (an <img>, a .sk-obj, text);
+   film-strip-3 takes o.content as an array of three. */
+const FRAMES = {
+  'polaroid': o=>`<div class="sk-frame sk-frame-polaroid" style="width:${o.w}px"><div class="sk-frame-photo" style="height:${o.h}px">${o.content??''}</div><div class="sk-frame-caption sk-hand">${esc(o.caption??'')}</div></div>`,
+  'polaroid-tilt': o=>FRAMES['polaroid'](o).replace('sk-frame-polaroid"','sk-frame-polaroid sk-frame-tilt"'),
+  'film-strip-3': o=>`<div class="sk-frame sk-frame-film" style="width:${o.w}px">${[0,1,2].map(i=>`<div class="sk-frame-cell" style="height:${o.h}px">${(o.content??[])[i]??''}</div>`).join('')}</div>`,
+  'browser-generic': o=>`<div class="sk-frame sk-frame-browser" style="width:${o.w}px"><div class="sk-frame-bar"><i></i><i></i><i></i><span class="sk-frame-url"></span></div><div class="sk-frame-screen" style="height:${o.h}px">${o.content??''}</div></div>`,
+  'phone-generic': o=>`<div class="sk-frame sk-frame-phone" style="width:${o.w}px"><div class="sk-frame-screen" style="height:${o.h}px">${o.content??''}</div></div>`,
+  'notebook-page': o=>`<div class="sk-frame sk-frame-notebook" style="width:${o.w}px;height:${o.h}px">${o.content??''}</div>`,
+  'index-card': o=>`<div class="sk-frame sk-frame-card" style="width:${o.w}px;height:${o.h}px">${o.content??''}</div>`,
+};
+SK.frame = (id,o={})=>pick(FRAMES,'frame',bare(id,'frame'))({w:o.w??600,h:o.h??600,...o});
+
+// ---- VOX documents -----------------------------------------------------------------------------
+/* SK.doc(kind, fields, {w}) → an illustrative document (never a copy of a real outlet or app).
+   Text comes from the transcript; a missing text field becomes grey placeholder lines. Every
+   document carries the ILUSTRASI tag and it cannot be turned off (RD-03-43). */
+const lines = (n,w)=>Array.from({length:n},(_,i)=>`<div class="sk-doc-line" style="width:${i===n-1?w*0.6:w}px"></div>`).join('');
+const para = (v,n,w)=>v==null?lines(n,w):[].concat(v).map(t=>`<p>${esc(t)}</p>`).join('');
+const DOCS = {
+  'article': (f,w)=>`<div class="sk-doc-kicker">${esc(f.kicker??'')}</div><h1 class="sk-serif">${esc(f.headline??'')}</h1><div class="sk-doc-dek sk-serif">${esc(f.dek??'')}</div>${para(f.body,6,w-96)}`,
+  'report-page': (f,w)=>`<div class="sk-doc-kicker">${esc(f.section??'')}</div><h2>${esc(f.title??'')}</h2><table class="sk-doc-table">${(f.rows??[]).map(r=>`<tr><td>${esc(r.label)}</td><td class="sk-doc-num">${esc(r.value)}</td></tr>`).join('')}</table>${para(f.body,3,w-96)}`,
+  'spreadsheet': (f)=>`<table class="sk-doc-grid"><tr><th></th>${(f.columns??[]).map((c,i)=>`<th>${esc(c)}</th>`).join('')}</tr>${(f.rows??[]).map((r,i)=>`<tr class="${i===f.highlightRow?'sk-doc-hl':''}"><th>${i+1}</th>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>`,
+  'chat-thread': (f)=>`<div class="sk-doc-chat">${(f.messages??[]).map(m=>`<div class="sk-doc-msg ${m.side==='r'?'sk-doc-r':'sk-doc-l'}"><b>${esc(m.from??'')}</b>${esc(m.text)}</div>`).join('')}</div>`,
+  'email': (f,w)=>`<div class="sk-doc-mailhead"><div><b>Dari</b> ${esc(f.from??'')}</div><div><b>Subjek</b> ${esc(f.subject??'')}</div></div>${para(f.body,5,w-96)}`,
+  'social-post': (f,w)=>`<div class="sk-doc-author"><i class="sk-doc-avatar"></i><b>${esc(f.name??'Akun')}</b></div><div class="sk-doc-post">${esc(f.text??'')}</div>${f.text==null?lines(3,w-96):''}<div class="sk-doc-meta">${esc(f.meta??'')}</div>`,
+  'receipt': (f)=>`<div class="sk-doc-center"><b>${esc(f.title??'STRUK')}</b></div>${(f.items??[]).map(i=>`<div class="sk-doc-row"><span>${esc(i.name)}</span><span>${esc(i.price)}</span></div>`).join('')}<div class="sk-doc-row sk-doc-total"><span>TOTAL</span><span>${esc(f.total??'')}</span></div>`,
+  'invoice': (f)=>`<div class="sk-doc-row"><h2>INVOICE</h2><span>${esc(f.number??'')}</span></div><div class="sk-doc-kicker">Kepada: ${esc(f.to??'')}</div><table class="sk-doc-table">${(f.items??[]).map(i=>`<tr><td>${esc(i.name)}</td><td class="sk-doc-num">${esc(i.qty??'')}</td><td class="sk-doc-num">${esc(i.price)}</td></tr>`).join('')}</table><div class="sk-doc-row sk-doc-total"><span>Total</span><span>${esc(f.total??'')}</span></div>`,
+  'search-results': (f,w)=>`<div class="sk-doc-search">${esc(f.query??'')}</div>${(f.results??[]).map(r=>`<div class="sk-doc-result"><div class="sk-doc-rtitle">${esc(r.title)}</div><div>${esc(r.snippet??'')}</div></div>`).join('')}${f.results==null?lines(6,w-96):''}`,
+  'terminal': (f)=>`<div class="sk-doc-term">${(f.lines??[]).map(l=>`<div>${l.prompt?'<span class="sk-doc-prompt">$ </span>':''}${esc(l.text)}</div>`).join('')}</div>`,
+};
+SK.doc = (kind,f={},o={})=>{
+  const w=o.w??800, body=pick(DOCS,'document',kind)(f,w);
+  return `<div class="sk-doc sk-docx sk-doc-${kind}" style="width:${w}px">${body}<div class="sk-tag sk-doc-tag">Ilustrasi</div></div>`;
+};
+SK.DOC_KINDS = Object.keys(DOCS);
 })();

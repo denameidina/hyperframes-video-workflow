@@ -203,3 +203,29 @@ test('style-kit roles read the type variables and fall back to the old fonts', (
   assert.match(css, /\.sk-hand \{ font-family: var\(--sk-font-hand, 'Caveat'\), cursive;/);
   assert.match(css, /\.sk-serif \{ font-family: var\(--sk-font-serif, 'Newsreader'\), serif;/);
 });
+
+// ---- strokes, frames, documents ----------------------------------------------------------------------
+test('parseStrokeSvg reads viewBox, strokes, tags, styles, and fixed text', () => {
+  const s = parseStrokeSvg('<svg viewBox="0 0 320 120" data-tags="status" data-styles="vox" data-text="ILUSTRASI"><path d="M10 10h300"/><path d="m10 20 5 5"/></svg>', 'x.svg');
+  assert.deepEqual(s, { vb: [320, 120], d: ['M10 10L310 10', 'M10 20L15 25'], tags: ['status'], styles: ['vox'], text: 'ILUSTRASI' });
+  assert.throws(() => parseStrokeSvg('<svg><path d="M0 0L1 1"/></svg>', 'x.svg'), /viewBox/);
+});
+test('SK.frame and SK.tornFrame build from named presets', () => {
+  const SK = load();
+  assert.match(SK.frame('polaroid', { w: 500, h: 400, caption: 'Rapat <1>' }), /class="sk-frame sk-frame-polaroid" style="width:500px".*height:400px.*Rapat &lt;1&gt;/);
+  assert.match(SK.frame('polaroid-tilt', {}), /sk-frame-polaroid sk-frame-tilt/);
+  assert.equal(SK.tornFrame('torn-all', 300, 200), SK.torn(300, 200, 11, { edges: 'trbl', amp: 8, step: 14 }));
+  assert.throws(() => SK.frame('window'), /unknown frame "window"/);
+});
+test('SK.doc renders every template with the Ilustrasi tag and escapes transcript text', () => {
+  const SK = load();
+  const kinds = JSON.parse(read(`${LIB}/src/docs.json`)).map((d) => d.kind);
+  assert.deepEqual([...SK.DOC_KINDS].sort(), [...kinds].sort());
+  for (const k of kinds) {
+    const html = SK.doc(k, {});
+    assert.match(html, new RegExp(`^<div class="sk-doc sk-docx sk-doc-${k}" style="width:800px">`), k);
+    assert.match(html, /<div class="sk-tag sk-doc-tag">Ilustrasi<\/div><\/div>$/, k);
+  }
+  assert.match(SK.doc('chat-thread', { messages: [{ from: 'Klien', side: 'l', text: 'harga <final>?' }] }), /harga &lt;final&gt;\?/);
+  assert.match(SK.doc('article', { headline: 'Judul' }), /<div class="sk-doc-line"/);
+});

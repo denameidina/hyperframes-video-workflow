@@ -354,6 +354,46 @@ Sheet: [pictogram](../../docs/agents/references/asset-catalog/sheets/) — files
 | `pict.briefcase` | `SK.pict('briefcase')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 | `pict.gear` | `SK.pict('gear')` | motion-graphic, stop-motion, vox | kerja | @phosphor-icons/core 2.1.1 (fill) |
 
+## frame (15)
+
+Sheet: [frame](../../docs/agents/references/asset-catalog/sheets/) — files `frame*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `frame.stamp-ilustrasi` | `SK.stamp('frame.stamp-ilustrasi')` | vox, mix-media | status, media | project |
+| `frame.swash-1` | `SK.doodle('frame.swash-1')` | broll-text, whiteboard, mix-media | arah | project |
+| `frame.polaroid` | `SK.frame('polaroid', …)` | mix-media, parallax, stop-motion | media, hidup | project (CSS) |
+| `frame.polaroid-tilt` | `SK.frame('polaroid-tilt', …)` | mix-media, parallax, stop-motion | media, hidup | project (CSS) |
+| `frame.film-strip-3` | `SK.frame('film-strip-3', …)` | mix-media, parallax | media | project (CSS) |
+| `frame.browser-generic` | `SK.frame('browser-generic', …)` | vox, mix-media, motion-graphic | perangkat, media | project (CSS) |
+| `frame.phone-generic` | `SK.frame('phone-generic', …)` | vox, mix-media, motion-graphic | perangkat, chat | project (CSS) |
+| `frame.notebook-page` | `SK.frame('notebook-page', …)` | whiteboard, stop-motion, mix-media | kertas, ide | project (CSS) |
+| `frame.index-card` | `SK.frame('index-card', …)` | stop-motion, vox, mix-media | kertas, ide | project (CSS) |
+| `frame.torn-top` | `SK.tornFrame('torn-top', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+| `frame.torn-bottom` | `SK.tornFrame('torn-bottom', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+| `frame.torn-left` | `SK.tornFrame('torn-left', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+| `frame.torn-right` | `SK.tornFrame('torn-right', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+| `frame.torn-all` | `SK.tornFrame('torn-all', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+| `frame.torn-rough` | `SK.tornFrame('torn-rough', w, h)` | stop-motion, mix-media, vox | kertas | project (SK.torn preset) |
+
+## doc (11)
+
+Sheet: [doc](../../docs/agents/references/asset-catalog/sheets/) — files `doc*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `mark.red-circle` | `SK.mark('mark.red-circle')` | vox, whiteboard | status | project |
+| `doc.article` | `SK.doc('article', …)` | vox, mix-media | media | project |
+| `doc.report-page` | `SK.doc('report-page', …)` | vox, mix-media | data, kerja | project |
+| `doc.spreadsheet` | `SK.doc('spreadsheet', …)` | vox, mix-media | data, kerja | project |
+| `doc.chat-thread` | `SK.doc('chat-thread', …)` | vox, mix-media | chat | project |
+| `doc.email` | `SK.doc('email', …)` | vox, mix-media | chat, kerja | project |
+| `doc.social-post` | `SK.doc('social-post', …)` | vox, mix-media | media, chat | project |
+| `doc.receipt` | `SK.doc('receipt', …)` | vox, mix-media | uang, umkm | project |
+| `doc.invoice` | `SK.doc('invoice', …)` | vox, mix-media | uang, bisnis | project |
+| `doc.search-results` | `SK.doc('search-results', …)` | vox, mix-media | ide, media | project |
+| `doc.terminal` | `SK.doc('terminal', …)` | vox, mix-media | ai, kerja | project |
+
 ## font (17)
 
 Sheet: [font](../../docs/agents/references/asset-catalog/sheets/) — files `font*.webp`

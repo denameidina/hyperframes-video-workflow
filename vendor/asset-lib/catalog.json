@@ -5909,6 +5909,211 @@
   "license": "MIT"
  },
  {
+  "id": "mark.red-circle",
+  "kind": "doc",
+  "inline": "SK.mark('mark.red-circle')",
+  "use": "SK.mark('mark.red-circle')",
+  "styles": [
+   "vox",
+   "whiteboard"
+  ],
+  "tags": [
+   "status"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.stamp-ilustrasi",
+  "kind": "frame",
+  "inline": "SK.stamp('frame.stamp-ilustrasi')",
+  "use": "SK.stamp('frame.stamp-ilustrasi')",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "status",
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.swash-1",
+  "kind": "frame",
+  "inline": "SK.doodle('frame.swash-1')",
+  "use": "SK.doodle('frame.swash-1')",
+  "styles": [
+   "broll-text",
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "arah"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.article",
+  "kind": "doc",
+  "inline": "SK.doc('article', …)",
+  "use": "SK.doc('article', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.report-page",
+  "kind": "doc",
+  "inline": "SK.doc('report-page', …)",
+  "use": "SK.doc('report-page', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "data",
+   "kerja"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.spreadsheet",
+  "kind": "doc",
+  "inline": "SK.doc('spreadsheet', …)",
+  "use": "SK.doc('spreadsheet', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "data",
+   "kerja"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.chat-thread",
+  "kind": "doc",
+  "inline": "SK.doc('chat-thread', …)",
+  "use": "SK.doc('chat-thread', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.email",
+  "kind": "doc",
+  "inline": "SK.doc('email', …)",
+  "use": "SK.doc('email', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "chat",
+   "kerja"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.social-post",
+  "kind": "doc",
+  "inline": "SK.doc('social-post', …)",
+  "use": "SK.doc('social-post', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "chat"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.receipt",
+  "kind": "doc",
+  "inline": "SK.doc('receipt', …)",
+  "use": "SK.doc('receipt', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "uang",
+   "umkm"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.invoice",
+  "kind": "doc",
+  "inline": "SK.doc('invoice', …)",
+  "use": "SK.doc('invoice', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "uang",
+   "bisnis"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.search-results",
+  "kind": "doc",
+  "inline": "SK.doc('search-results', …)",
+  "use": "SK.doc('search-results', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "media"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
+  "id": "doc.terminal",
+  "kind": "doc",
+  "inline": "SK.doc('terminal', …)",
+  "use": "SK.doc('terminal', …)",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "ai",
+   "kerja"
+  ],
+  "source": "project",
+  "license": "MIT"
+ },
+ {
   "id": "font.anton",
   "kind": "font",
   "inline": ".sk-f-anton",
@@ -7276,6 +7481,219 @@
    "media"
   ],
   "source": "project (legacy)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.polaroid",
+  "kind": "frame",
+  "inline": "SK.frame('polaroid', …)",
+  "use": "SK.frame('polaroid', …)",
+  "styles": [
+   "mix-media",
+   "parallax",
+   "stop-motion"
+  ],
+  "tags": [
+   "media",
+   "hidup"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.polaroid-tilt",
+  "kind": "frame",
+  "inline": "SK.frame('polaroid-tilt', …)",
+  "use": "SK.frame('polaroid-tilt', …)",
+  "styles": [
+   "mix-media",
+   "parallax",
+   "stop-motion"
+  ],
+  "tags": [
+   "media",
+   "hidup"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.film-strip-3",
+  "kind": "frame",
+  "inline": "SK.frame('film-strip-3', …)",
+  "use": "SK.frame('film-strip-3', …)",
+  "styles": [
+   "mix-media",
+   "parallax"
+  ],
+  "tags": [
+   "media"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.browser-generic",
+  "kind": "frame",
+  "inline": "SK.frame('browser-generic', …)",
+  "use": "SK.frame('browser-generic', …)",
+  "styles": [
+   "vox",
+   "mix-media",
+   "motion-graphic"
+  ],
+  "tags": [
+   "perangkat",
+   "media"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.phone-generic",
+  "kind": "frame",
+  "inline": "SK.frame('phone-generic', …)",
+  "use": "SK.frame('phone-generic', …)",
+  "styles": [
+   "vox",
+   "mix-media",
+   "motion-graphic"
+  ],
+  "tags": [
+   "perangkat",
+   "chat"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.notebook-page",
+  "kind": "frame",
+  "inline": "SK.frame('notebook-page', …)",
+  "use": "SK.frame('notebook-page', …)",
+  "styles": [
+   "whiteboard",
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "ide"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.index-card",
+  "kind": "frame",
+  "inline": "SK.frame('index-card', …)",
+  "use": "SK.frame('index-card', …)",
+  "styles": [
+   "stop-motion",
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "ide"
+  ],
+  "source": "project (CSS)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-top",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-top', w, h)",
+  "use": "SK.tornFrame('torn-top', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-bottom",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-bottom', w, h)",
+  "use": "SK.tornFrame('torn-bottom', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-left",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-left', w, h)",
+  "use": "SK.tornFrame('torn-left', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-right",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-right', w, h)",
+  "use": "SK.tornFrame('torn-right', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-all",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-all', w, h)",
+  "use": "SK.tornFrame('torn-all', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
+  "license": "MIT"
+ },
+ {
+  "id": "frame.torn-rough",
+  "kind": "frame",
+  "inline": "SK.tornFrame('torn-rough', w, h)",
+  "use": "SK.tornFrame('torn-rough', w, h)",
+  "styles": [
+   "stop-motion",
+   "mix-media",
+   "vox"
+  ],
+  "tags": [
+   "kertas"
+  ],
+  "source": "project (SK.torn preset)",
   "license": "MIT"
  }
 ]

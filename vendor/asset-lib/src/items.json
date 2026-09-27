@@ -1,2 +1,15 @@
 [
+  {"id":"frame.polaroid","kind":"frame","inline":"SK.frame('polaroid', …)","styles":["mix-media","parallax","stop-motion"],"tags":["media","hidup"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.polaroid-tilt","kind":"frame","inline":"SK.frame('polaroid-tilt', …)","styles":["mix-media","parallax","stop-motion"],"tags":["media","hidup"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.film-strip-3","kind":"frame","inline":"SK.frame('film-strip-3', …)","styles":["mix-media","parallax"],"tags":["media"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.browser-generic","kind":"frame","inline":"SK.frame('browser-generic', …)","styles":["vox","mix-media","motion-graphic"],"tags":["perangkat","media"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.phone-generic","kind":"frame","inline":"SK.frame('phone-generic', …)","styles":["vox","mix-media","motion-graphic"],"tags":["perangkat","chat"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.notebook-page","kind":"frame","inline":"SK.frame('notebook-page', …)","styles":["whiteboard","stop-motion","mix-media"],"tags":["kertas","ide"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.index-card","kind":"frame","inline":"SK.frame('index-card', …)","styles":["stop-motion","vox","mix-media"],"tags":["kertas","ide"],"source":"project (CSS)","license":"MIT"},
+  {"id":"frame.torn-top","kind":"frame","inline":"SK.tornFrame('torn-top', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"t","seed":3,"amp":8,"step":14}},
+  {"id":"frame.torn-bottom","kind":"frame","inline":"SK.tornFrame('torn-bottom', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"b","seed":5,"amp":8,"step":14}},
+  {"id":"frame.torn-left","kind":"frame","inline":"SK.tornFrame('torn-left', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"l","seed":7,"amp":8,"step":14}},
+  {"id":"frame.torn-right","kind":"frame","inline":"SK.tornFrame('torn-right', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"r","seed":9,"amp":8,"step":14}},
+  {"id":"frame.torn-all","kind":"frame","inline":"SK.tornFrame('torn-all', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"trbl","seed":11,"amp":8,"step":14}},
+  {"id":"frame.torn-rough","kind":"frame","inline":"SK.tornFrame('torn-rough', w, h)","styles":["stop-motion","mix-media","vox"],"tags":["kertas"],"source":"project (SK.torn preset)","license":"MIT","torn":{"edges":"trbl","seed":13,"amp":14,"step":22}}
 ]

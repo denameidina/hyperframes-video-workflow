@@ -1,0 +1,12 @@
+[
+  {"kind":"article","tags":["media"],"styles":["vox","mix-media"]},
+  {"kind":"report-page","tags":["data","kerja"],"styles":["vox","mix-media"]},
+  {"kind":"spreadsheet","tags":["data","kerja"],"styles":["vox","mix-media"]},
+  {"kind":"chat-thread","tags":["chat"],"styles":["vox","mix-media"]},
+  {"kind":"email","tags":["chat","kerja"],"styles":["vox","mix-media"]},
+  {"kind":"social-post","tags":["media","chat"],"styles":["vox","mix-media"]},
+  {"kind":"receipt","tags":["uang","umkm"],"styles":["vox","mix-media"]},
+  {"kind":"invoice","tags":["uang","bisnis"],"styles":["vox","mix-media"]},
+  {"kind":"search-results","tags":["ide","media"],"styles":["vox","mix-media"]},
+  {"kind":"terminal","tags":["ai","kerja"],"styles":["vox","mix-media"]}
+]
