@@ -100,6 +100,20 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
   host menggeser `#base-video` ke bawah lewat `y`), panel (clip transparan di zona
   kosong). Detail: `docs/agents/references/motion-broll-authoring.md`.
 
+## Style b-roll (style-kit)
+
+- Engine `vendor/style-kit/` (`window.SK`) dimuat setelah motion-kit di starter;
+  clip `broll-text`, `motion-graphic`, `whiteboard` memakai mount yang sama
+  (track 4, class `broll`, z 22).
+- Palet bebas per clip (ditulis di Style B-roll Brief) lewat variabel
+  `--sk-bg`, `--sk-ink`, `--sk-accent`, `--sk-accent-2`, `--sk-muted` pada
+  `.sk-stage`; default tema: `.sk-text` hitam + kuning, `.sk-mg` krem + biru,
+  `.sk-wb` putih kertas + tinta + merah/biru. Caption, hook, dan CTA tetap
+  sistem Dena.
+- Font: Anton (`.sk-display`), Geist (`.sk-sans`), Caveat (`.sk-hand`), semua
+  lokal. Teks di clip ≥ 34–36 px; area aman x 80–1000, y 180–1400.
+- Detail: `docs/agents/references/styles/README.md` dan satu file per gaya.
+
 ## SFX
 
 - Cue SFX (`#sfx-*`) dengan `data-volume` rendah (`0.09–0.12`), audible di HP

@@ -6,7 +6,9 @@
     <title>Dena - __SLUG__</title>
     <script src="vendor/gsap.min.js"></script>
     <script src="vendor/motion-kit/motion-kit.js"></script>
+    <script src="vendor/style-kit/style-kit.js"></script>
     <link rel="stylesheet" href="vendor/motion-kit/motion-kit.css" />
+    <link rel="stylesheet" href="vendor/style-kit/style-kit.css" />
     <style>
       * { box-sizing: border-box; }
       html, body {
@@ -97,6 +99,8 @@
           "broll-NN-name-mount", data-composition-id "broll-NN-name", source
           compositions/broll/NN-name.html, width 1080, height 1920, duration = clip T.
           Full example: docs/agents/references/motion-broll-authoring.md (Host Setup).
+        - Style b-roll (broll-text, motion-graphic, whiteboard): the same mount; the clip
+          calls SK.clip. Build Contract: docs/agents/references/styles/README.md.
       -->
     </main>
     <script>

@@ -25,7 +25,8 @@ menyusunnya. Aturan umum ada di
   `muted`), `#base-audio` (`processed-audio.wav`, track 10), `#progress` (track 3).
 - Kelas: `.caption` (Arial 950, stroke, z 45), `.hl`, `.hook-card`/`.cta-card`
   (track 5, z 56), `.proof-chip`, `.label-card`, `.sticker`, `.broll` (z 22).
-- `motion-kit.js` + `motion-kit.css` sudah dimuat untuk motion b-roll.
+- `motion-kit.js` + `motion-kit.css` sudah dimuat untuk motion b-roll, lalu
+  `style-kit.js` + `style-kit.css` untuk style b-roll.
 - Timeline `window.__timelines["dena-<slug>"]` dengan tween progress sepanjang
   durasi; komentar contoh untuk caption (track 2/8 bergantian), hook/CTA, SFX
   (track 11+, tanpa `data-media-start`), mount b-roll (track 4, `id` wajib),

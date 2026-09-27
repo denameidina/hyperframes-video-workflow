@@ -41,6 +41,7 @@ komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
 | HyperFrames 0.7.24 | Render HTML → MP4, preview, lint, validate, inspect, publish | `npx --yes hyperframes@0.7.24 <cmd>` | `package.json` |
 | GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di template/starter dan tiap `videos/<slug>/index.html` | `index.html:7` |
 | motion-kit | Engine motion b-roll: satu shape morph + kursor, spring closed-form, frame = fungsi waktu lokal clip | Vendored `vendor/motion-kit/`, di-`<script>` + `<link>` di `index.html`; clip memanggil `M.clip()` | `docs/agents/references/motion-broll-authoring.md` |
+| style-kit | Engine style b-roll (broll-text, motion-graphic, whiteboard): draw-on, boil, handwriting, count-up, kamera; frame = fungsi waktu lokal clip | Vendored `vendor/style-kit/` (+ font OFL Anton, Caveat), dimuat setelah motion-kit; clip memanggil `SK.clip()` | `docs/agents/references/styles/README.md` |
 | render-blur | Pass motion blur opsional: render 4× fps → ffmpeg `tmix` → fps asal, audio disalin | `npm run render:blur -- --slug <slug>` | `scripts/render-blur.mjs` |
 | video CLI | Scaffold + jalankan proyek HyperFrames per video | `npm run video -- new\|check\|dev\|snapshot\|render <slug>` | `scripts/video.mjs` |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |

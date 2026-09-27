@@ -31,3 +31,17 @@ Copyright (c) 2026 Bart. The upstream license is kept in
   Copyright (c) 2023 Vercel, in collaboration with basement.studio
   (`vendor/motion-kit/fonts/OFL-Geist.txt`).
 - Icon paths in `M.IC`: adapted from Lucide, ISC License.
+
+## style-kit (`vendor/style-kit`)
+
+`vendor/style-kit/style-kit.js` and `style-kit.css` are this project's own code
+(MIT, `vendor/style-kit/LICENSE`). The hand-drawn path builders follow the ideas
+described in Rough.js (https://shihn.ca/posts/2020/roughjs-algorithms/); no
+Rough.js code is included.
+
+- Anton (`vendor/style-kit/fonts/Anton-Regular.woff2`, latin subset from
+  `@fontsource/anton@5.3.0`): SIL Open Font License 1.1, Copyright 2020 The Anton
+  Project Authors (`vendor/style-kit/fonts/OFL-Anton.txt`).
+- Caveat (`vendor/style-kit/fonts/Caveat-Variable.woff2`, latin subset from
+  `@fontsource-variable/caveat@5.3.0`): SIL Open Font License 1.1, Copyright 2014
+  The Caveat Project Authors (`vendor/style-kit/fonts/OFL-Caveat.txt`).
