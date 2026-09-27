@@ -203,6 +203,10 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-55** (Unwanted) — If sebuah aset per video menduplikasi aset yang
   sudah ada di pustaka, then fase Build shall memakai aset pustaka, kecuali
   brief mencatat alasannya.
+- **RD-03-57** (Ubiquitous) — Contoh gaya shall ditambahkan lewat
+  `style-examples/<gaya>/examples.json`; `index.html` dan `snapshots.json` host
+  shall dihasilkan oleh `npm run style-examples -- build`, tidak ditulis tangan
+  ([ADR-0017](../adr/0017-per-style-example-hosts.md)).
 
 ## Referensi
 

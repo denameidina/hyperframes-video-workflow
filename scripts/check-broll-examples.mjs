@@ -6,7 +6,7 @@
 // docs/superpowers/specs/2026-09-27-style-kit-design.md ("Pengujian").
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -31,6 +31,9 @@ try {
   cpSync('vendor/style-kit', join(dir, 'vendor/style-kit'), { recursive: true });
   cpSync('vendor/paper-pack', join(dir, 'vendor/paper-pack'), { recursive: true });
   cpSync('vendor/asset-lib', join(dir, 'vendor/asset-lib'), { recursive: true, filter: (f) => !f.includes('/src') });
+  // per-style example hosts share one assets/ folder next to them (docs/agents/references/style-examples/assets)
+  const shared = join(SRC, '..', 'assets');
+  if (!existsSync(join(SRC, 'assets')) && existsSync(shared)) cpSync(shared, join(dir, 'assets'), { recursive: true });
   const { at } = JSON.parse(readFileSync(join(SRC, 'snapshots.json'), 'utf8'));
   hf('lint', dir);
   hf('validate', dir);
