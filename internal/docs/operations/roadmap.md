@@ -30,9 +30,9 @@ ADR baru bila perlu.
 [ADR-0012](../adr/0012-style-broll-style-kit.md): sub-proyek 1 (style-kit +
 broll-text, motion-graphic, whiteboard) selesai; sub-proyek 2a
 ([ADR-0013](../adr/0013-paper-pack-bitmap-assets.md): paper pack, pipeline aset
-per video, stop-motion, tangan whiteboard) selesai. Berikutnya 2b (VOX +
-mix-media: Dena tetap bicara di atas kolase lewat cutout video ber-alpha, diawali
-spike) lalu sub-proyek 3 (2.5D parallax). Video
+per video, stop-motion, tangan whiteboard) selesai; sub-proyek 2b
+([ADR-0014](../adr/0014-vox-mix-media.md): VOX, mix-media, `video cutout`)
+selesai. Berikutnya sub-proyek 3 (2.5D parallax). Video
 asli pertama yang memakai style b-roll menguji timing kata, palet bebas, dan
 aturan maksimal tiga tipe; catat temuannya.
 

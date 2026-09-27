@@ -76,7 +76,7 @@ Designed recuts must:
 - verify SFX is audible in the final render but does not cover speech
 - avoid motion/SFX that feels generic, chaotic, or detached from the transcript
 - land motion b-roll state changes on their words and keep the cursor inside the frame
-- land style b-roll beats on their words, boil whiteboard strokes only after they finish, step stop-motion on twos, and keep every on-screen word and number verbatim
+- land style b-roll beats on their words, boil whiteboard strokes only after they finish, step stop-motion and VOX graphics on twos, keep every on-screen word and number verbatim, show a source line on every VOX capture, and keep a mix-media cut-out in sync with the audio
 
 ## HyperFrames Gate
 

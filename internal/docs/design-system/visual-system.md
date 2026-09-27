@@ -103,7 +103,8 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 ## Style b-roll (style-kit)
 
 - Engine `vendor/style-kit/` (`window.SK`) dimuat setelah motion-kit di starter;
-  clip `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion` memakai mount yang sama
+  clip `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`,
+  `mix-media` memakai mount yang sama
   (track 4, class `broll`, z 22).
 - Palet bebas per clip (ditulis di Style B-roll Brief) lewat variabel
   `--sk-bg`, `--sk-ink`, `--sk-accent`, `--sk-accent-2`, `--sk-muted` pada
@@ -125,6 +126,17 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
   Lisensi per file di `LICENSES.md`.
 - Stop-motion: tema `.sk-stop` (kraft + tinta hangat + merah bata), bayangan
   keras `.sk-cut` satu arah cahaya, grain `.sk-grain`, gerak 15 langkah/detik.
+
+## VOX dan mix-media
+
+- VOX: tema `.sk-vox`, highlighter kuning multiply (`.sk-hl` + `SK.highlight`),
+  pena merah, serif Newsreader (`.sk-serif`), peta `map-indonesia.svg` (Natural
+  Earth) dengan pin lewat `SK.geo`. Capture wajib `.sk-source`; ilustrasi wajib
+  `.sk-tag` "Ilustrasi".
+- Mix-media (treatment `collage`): kolase opaque (track 4, z 22), cutout Dena
+  `<video class="cutout sk-sticker-cut">` (track 6, z 24), lapisan depan
+  `.broll-front` (track 7, z 26); caption (z 45) tetap di atas. Outline stiker
+  #F6F2E9 ±10 px + bayangan keras; area wajah bebas elemen.
 
 ## SFX
 

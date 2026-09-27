@@ -20,7 +20,8 @@ step, a chapter change, or a story moment with a concrete object.
 Use something else when:
 
 - the words, a spoken number, a hand-built framework, or handmade objects are
-  the point: pick `broll-text`, `motion-graphic`, `whiteboard`, or `stop-motion`
+  the point, or Dena should stay on screen: pick `broll-text`, `motion-graphic`,
+  `whiteboard`, `stop-motion`, `vox`, or `mix-media`
   from `styles/README.md`;
 - the line needs real proof (the actual tool UI or the actual result): use a
   capture; the capture may sit inside one state of the shape;

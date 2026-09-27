@@ -580,7 +580,9 @@ Assign to:
 
 ## Style B-roll Review
 
-- Every `broll-text`, `motion-graphic`, `whiteboard`, and `stop-motion` clip matches its Style B-roll Brief (pattern, palette, font, treatment, assets).
+- Every `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`, and `mix-media` clip matches its Style B-roll Brief (pattern, palette, font, treatment, assets).
+- VOX: every capture shows a source line (≥ 28 px, ≥ 1.5 s) and has private data redacted; every illustration carries "Ilustrasi" and imitates no real outlet; highlights sit on the spoken words only.
+- Mix-media: the speaker cut-out is in sync with the audio (lips match at the key-word stills), the sticker outline is steady, the face zone is clear, and the collage fully covers the base video.
 - Every file in a brief's `Assets:` is in `asset-manifest.json` with its provenance; no generated cut-out shows text, Dena's likeness, or a real person or brand.
 - Stop-motion moves in steps (no glides, blur, or crossfades on paper); shadows are hard and point one way.
 - Each beat lands on its word (±0.15 s against `processed-transcript.json`); whiteboard strokes finish before their word.

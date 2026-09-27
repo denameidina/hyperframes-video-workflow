@@ -46,7 +46,8 @@ yang sama dengan hook Story.
 rencana motion lama): Visual Decision Log wajib untuk tiap peluang visual-support
 (time, line, purpose, best_real_asset, simple_asset_option,
 imagegen_candidate, decision, reason); prioritas motion visual (motion b-roll
-atau style b-roll: broll-text, motion-graphic, whiteboard, stop-motion) > capture bukti
+atau style b-roll: broll-text, motion-graphic, whiteboard, stop-motion, vox,
+mix-media) > capture bukti
 > generated still > generated video (lihat `styles/README.md` dan
 `motion-broll-planning.md`); riset URL/tool dan rencana
 capture; motion primitives (caption-pop 0.12–0.2s, hook-card-snap 0.2–0.35s,
@@ -57,7 +58,8 @@ proof-card-slide 0.25–0.45s, punch-zoom 0.2–0.4s, flash-cut <0.12s, cta-morp
 **Gate 2** (kondisional): berhenti hanya bila baris Timeline kena R1–R6 (angka/
 klaim tak verbatim, data asli/privat, wajah tertutup >10s atau saat kalimat
 personal, wajah tertutup di 0–3s tanpa pilihan brief, CTA berjanji, generated
-yang menggambarkan orang/brand nyata). Referensi: `captions.md`,
+yang menggambarkan orang/brand nyata, atau dokumen ilustratif yang meniru media
+nyata). Referensi: `captions.md`,
 `caption-artifacts.md`, `visual-planning.md`, `motion-grammar.md`,
 `motion-broll-planning.md`, `styles/README.md` + `styles/<gaya>.md`.
 

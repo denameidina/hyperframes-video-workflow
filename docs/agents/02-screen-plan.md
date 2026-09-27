@@ -110,7 +110,7 @@ unobstructed, use only project-local assets).
 
 ### Visual step
 
-4. **Map and decide.** Read `docs/agents/references/styles/README.md` and `docs/agents/references/motion-broll-planning.md` first (a motion visual from the menu is the default visual; for each `broll-text`, `motion-graphic`, `whiteboard`, or `stop-motion` row also read that style's file in `docs/agents/references/styles/`, and list its bitmaps under `Assets:` with a source), then `docs/agents/references/visual-planning.md` (Asset
+4. **Map and decide.** Read `docs/agents/references/styles/README.md` and `docs/agents/references/motion-broll-planning.md` first (a motion visual from the menu is the default visual; for each `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`, or `mix-media` row also read that style's file in `docs/agents/references/styles/`, and list its bitmaps under `Assets:` with a source), then `docs/agents/references/visual-planning.md` (Asset
    Categories, Asset Decision Workflow steps 1–4, Dena-Specific Asset Rules,
    Dena-Specific Examples, Default Asset Density) and the image-generation
    decision rules at the top of Generated Image Prompt Rules in
@@ -164,7 +164,7 @@ the matching trigger IDs in the row's `Gate 2 trigger` column (`-` when none):
 | R3 | A visual that covers Dena's face completely for more than 10 seconds, or covers a personal, emotional, or opinion line |
 | R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `## User Approvals` in `creative-brief.md` allows that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
 | R5 | A CTA that implies a promise ("nanti gue share/kirim/bahas…") without the user's explicit approval |
-| R6 | Generated image or video that depicts a real person or a real brand |
+| R6 | Generated image or video that depicts a real person or a real brand, or an illustrative (VOX) document that imitates a real outlet's masthead, layout, or logo |
 
 Decide each trigger from `visual-plan.md` plus these artifacts:
 

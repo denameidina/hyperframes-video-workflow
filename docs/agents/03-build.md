@@ -109,9 +109,11 @@ motion, match Dena default style, reuse existing project structure).
    raw-time ASR extract.
 4a. **Author motion visuals.** For each `motion-broll` row, follow
    `docs/agents/references/motion-broll-authoring.md`; for each `broll-text`,
-   `motion-graphic`, `whiteboard`, or `stop-motion` row, follow the Build Contract in
+   `motion-graphic`, `whiteboard`, `stop-motion`, `vox`, or `mix-media` row, follow the Build Contract in
    `docs/agents/references/styles/README.md` and the Build Recipe in that
-   style's file. Write the clip at its Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
+   style's file. For a `mix-media` row, first run
+   `npm run video -- cutout <slug> --from <start> --dur <duration> --name NN-dena`
+   and mount the speaker `<video>` on track 6 as in `mix-media.md`. Write the clip at its Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
    when the treatment is split, then run the Still Check at the brief's key-word
    times and fix what it shows before step 5.
 5. **Verify.** Run `npm run video -- check <slug>` and fix every error; review warnings. Preview
