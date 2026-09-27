@@ -117,6 +117,22 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-34** (Unwanted) — If `remove-background` tidak menulis output atau
   outputnya kosong, then `video cutout` shall gagal dengan pesan yang menyebut
   file tersebut.
+- **RD-02-35** (Ubiquitous) — Clip `parallax` shall menyusun 2–5 lapisan
+  full-frame `.sk-ly` di dalam `.sk-view` (perspective) dan `.sk-world`
+  (preserve-3d), menempatkan tiap lapisan lewat `SK.layer` (skala kompensasi
+  `(P − z) / P` berporos di tengah view) dan menggerakkan kamera lewat
+  `SK.camera`, sebagai fungsi murni waktu lokal clip.
+- **RD-02-36** (Ubiquitous) — Treatment `parallax-stage` shall memakai resep host
+  collage: mount parallax opaque di track 4, `<video>` cutout Dena di track 6,
+  mount depan opsional di track 7.
+- **RD-02-37** (Event-driven) — When `npm run video -- layers <slug> (--at <s> |
+  --image <file>) --name NN-name` dijalankan, the system shall memvalidasi
+  argumen (tepat satu sumber, `--at` di dalam durasi `processed.mp4`), menghapus
+  output lama, mengambil sumber ke `assets/layers/<name>-src.png`, menjalankan
+  `remove-background` ke `<name>-fg.png`, dan gagal bila salah satunya tidak
+  tertulis.
+- **RD-02-38** (Ubiquitous) — Setiap file yang dirujuk contoh di
+  `docs/agents/references/style-examples/` shall ter-track di git.
 
 ## Verifikasi
 

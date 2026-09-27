@@ -139,11 +139,11 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 
 - **RD-03-35** (Ubiquitous) — Fase Screen Plan shall memilih tipe motion visual
   (`motion-broll`, `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`,
-  `vox`, `mix-media`) per baris lewat
+  `vox`, `mix-media`, `parallax`) per baris lewat
   tabel "Choosing A Style" di `docs/agents/references/styles/README.md` dan
   mencatat alasannya di Visual Decision Log.
 - **RD-03-36** (Ubiquitous) — Setiap baris `broll-text`, `motion-graphic`,
-  `whiteboard`, `stop-motion`, `vox`, atau `mix-media` di `visual-plan.md` shall punya Style B-roll
+  `whiteboard`, `stop-motion`, `vox`, `mix-media`, atau `parallax` di `visual-plan.md` shall punya Style B-roll
   Brief dengan treatment, pola, palet (hex), font, beat per kata, dan daftar
   `Assets:`.
 - **RD-03-37** (Unwanted) — If teks atau angka yang tampil di clip style b-roll
@@ -172,6 +172,15 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-45** (Event-driven) — When sebuah baris `mix-media` direncanakan, fase
   Build shall membuat cutout Dena dengan `npm run video -- cutout` untuk jendela
   klip itu, bukan dengan meng-generate kemiripannya.
+- **RD-03-46** (Unwanted) — If sebuah plate latar parallax direkonstruksi
+  (lubang bekas orang/objek ditambal Codex), then plate itu shall dicatat
+  `provenance: "reconstructed"` dan tidak dipakai sebagai bukti.
+- **RD-03-47** (Unwanted) — If sebuah foto arsip dipakai untuk parallax, then foto
+  itu shall berstatus domain publik yang diverifikasi di halaman asetnya, dengan
+  sumber dan alasan status dicatat di manifest.
+- **RD-03-48** (Ubiquitous) — Gerak kamera clip `parallax` shall tetap di dalam
+  Depth Budget (`parallax.md`) sehingga tepi plate dan celah antar-lapisan tidak
+  terlihat.
 
 ## Referensi
 
