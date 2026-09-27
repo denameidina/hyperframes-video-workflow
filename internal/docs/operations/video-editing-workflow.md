@@ -47,7 +47,7 @@ rencana motion lama): Visual Decision Log wajib untuk tiap peluang visual-suppor
 (time, line, purpose, best_real_asset, simple_asset_option,
 imagegen_candidate, decision, reason); prioritas motion visual (motion b-roll
 atau style b-roll: broll-text, motion-graphic, whiteboard, stop-motion, vox,
-mix-media) > capture bukti
+mix-media, parallax) > capture bukti
 > generated still > generated video (lihat `styles/README.md` dan
 `motion-broll-planning.md`); riset URL/tool dan rencana
 capture; motion primitives (caption-pop 0.12–0.2s, hook-card-snap 0.2–0.35s,

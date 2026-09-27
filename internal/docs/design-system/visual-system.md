@@ -104,7 +104,7 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 
 - Engine `vendor/style-kit/` (`window.SK`) dimuat setelah motion-kit di starter;
   clip `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`,
-  `mix-media` memakai mount yang sama
+  `mix-media`, `parallax` memakai mount yang sama
   (track 4, class `broll`, z 22).
 - Palet bebas per clip (ditulis di Style B-roll Brief) lewat variabel
   `--sk-bg`, `--sk-ink`, `--sk-accent`, `--sk-accent-2`, `--sk-muted` pada
@@ -137,6 +137,16 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
   `<video class="cutout sk-sticker-cut">` (track 6, z 24), lapisan depan
   `.broll-front` (track 7, z 26); caption (z 45) tetap di atas. Outline stiker
   #F6F2E9 ±10 px + bayangan keras; area wajah bebas elemen.
+
+## Parallax
+
+- `.sk-view` (perspective 1200) > `.sk-world` (preserve-3d) > 2–5 lapisan
+  full-frame `.sk-ly`; `SK.layer` (skala kompensasi, `fill` 1,15–1,35 untuk
+  plate), `SK.camera`, `SK.dof`, `SK.dollyZoom`.
+- Depth Budget: latar bergeser ≤ 3–6% lebar frame, skala ≤ 8–12% per 3–5 s,
+  orbit ≤ 6°, blur 2–6 px tengah / 6–12 px belakang, subjek tajam.
+- `parallax-stage`: resep collage dengan latar parallax opaque di belakang cutout
+  Dena.
 
 ## SFX
 

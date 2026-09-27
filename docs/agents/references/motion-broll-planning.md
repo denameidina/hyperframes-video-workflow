@@ -21,7 +21,7 @@ Use something else when:
 
 - the words, a spoken number, a hand-built framework, or handmade objects are
   the point, or Dena should stay on screen: pick `broll-text`, `motion-graphic`,
-  `whiteboard`, `stop-motion`, `vox`, or `mix-media`
+  `whiteboard`, `stop-motion`, `vox`, `mix-media`, or `parallax`
   from `styles/README.md`;
 - the line needs real proof (the actual tool UI or the actual result): use a
   capture; the capture may sit inside one state of the shape;

@@ -283,7 +283,7 @@ Use overlays to clarify context or reset attention every 4-8 seconds.
 Good overlays:
 
 - Motion b-roll: one morphing shape + cursor that shows the process, tool, comparison, or step Dena is talking about (`docs/agents/references/motion-broll-planning.md`).
-- Style b-roll: kinetic text, flat motion graphics, whiteboard drawing, paper stop-motion, a VOX document with a highlighted source, or a mix-media collage with Dena still talking — when the words, a spoken number, a framework, handmade objects, a source, or Dena's presence are the point (`docs/agents/references/styles/README.md`).
+- Style b-roll: kinetic text, flat motion graphics, whiteboard drawing, paper stop-motion, a VOX document with a highlighted source, a mix-media collage with Dena still talking, or a 2.5D parallax scene — when the words, a spoken number, a framework, handmade objects, a source, or Dena's presence are the point (`docs/agents/references/styles/README.md`).
 - Screenshot of tool/app when mentioning a tool.
 - Small UI mock/screenshot when talking about frontend.
 - Simple checklist card for frameworks, scope, requirements.
