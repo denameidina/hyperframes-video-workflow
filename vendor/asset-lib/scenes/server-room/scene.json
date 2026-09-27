@@ -1,0 +1,22 @@
+{
+  "id": "scene.server-room",
+  "light": "cool blue light with small green LEDs",
+  "provenance": "codex (generated scene, not a real place)",
+  "layers": [
+    {
+      "file": "vendor/asset-lib/scenes/server-room/plate.webp",
+      "z": -1400,
+      "role": "back"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/server-room/mid.png",
+      "z": -500,
+      "role": "mid"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/server-room/front.png",
+      "z": -80,
+      "role": "front"
+    }
+  ]
+}

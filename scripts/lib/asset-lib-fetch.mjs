@@ -173,7 +173,12 @@ export function processImage(input, output, { max = 720, pad = 4 } = {}) {
     const x = Math.max(0, x1 - pad), y = Math.max(0, y1 - pad), w = x2 - x1 + 1 + 2 * pad, h = y2 - y1 + 1 + 2 * pad;
     const scale = Math.max(w, h) > max ? (w >= h ? `scale=${max}:-2:flags=lanczos` : `scale=-2:${max}:flags=lanczos`) : 'null';
     const crop = `crop=${w}:${h}:${x}:${y},${scale}`;
-    if (output.endsWith('.webp')) run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', crop, '-c:v', 'libwebp', '-quality', '80', '-lossless', '0', output]);
+    if (output.endsWith('.webp')) {
+      // Homebrew ffmpeg may lack libwebp: crop/scale with ffmpeg, encode with cwebp (keeps alpha)
+      const png = join(tmp, 'crop.png');
+      run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', crop, png]);
+      run('cwebp', ['-quiet', '-q', '80', png, '-o', output]);
+    }
     else run('ffmpeg', ['-loglevel', 'error', '-y', '-i', rgba, '-vf', `${crop},split[a][b];[a]palettegen=max_colors=256:reserve_transparent=1[p];[b][p]paletteuse=alpha_threshold=128`, output]);
     return { w, h };
   } finally { rmSync(tmp, { recursive: true, force: true }); }

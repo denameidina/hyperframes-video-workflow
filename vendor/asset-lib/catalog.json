@@ -10178,5 +10178,90 @@
    "ty": 324
   },
   "bytes": 131777
+ },
+ {
+  "id": "scene.warung-counter",
+  "kind": "scene",
+  "file": "vendor/asset-lib/scenes/warung-counter/scene.json",
+  "use": "vendor/asset-lib/scenes/warung-counter/scene.json",
+  "styles": [
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "umkm",
+   "tempat"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "bytes": 536450
+ },
+ {
+  "id": "scene.cafe-cowork",
+  "kind": "scene",
+  "file": "vendor/asset-lib/scenes/cafe-cowork/scene.json",
+  "use": "vendor/asset-lib/scenes/cafe-cowork/scene.json",
+  "styles": [
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "kerja",
+   "tempat"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "bytes": 726847
+ },
+ {
+  "id": "scene.city-dusk",
+  "kind": "scene",
+  "file": "vendor/asset-lib/scenes/city-dusk/scene.json",
+  "use": "vendor/asset-lib/scenes/city-dusk/scene.json",
+  "styles": [
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "tempat",
+   "hidup"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "bytes": 373412
+ },
+ {
+  "id": "scene.server-room",
+  "kind": "scene",
+  "file": "vendor/asset-lib/scenes/server-room/scene.json",
+  "use": "vendor/asset-lib/scenes/server-room/scene.json",
+  "styles": [
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "ai",
+   "data"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "bytes": 379281
+ },
+ {
+  "id": "scene.street-motor",
+  "kind": "scene",
+  "file": "vendor/asset-lib/scenes/street-motor/scene.json",
+  "use": "vendor/asset-lib/scenes/street-motor/scene.json",
+  "styles": [
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "tempat",
+   "hidup"
+  ],
+  "source": "Codex (generated)",
+  "license": "project asset (MIT)",
+  "bytes": 596821
  }
 ]

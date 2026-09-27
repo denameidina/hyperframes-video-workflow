@@ -1,0 +1,22 @@
+{
+  "id": "scene.warung-counter",
+  "light": "warm late-afternoon light from the left",
+  "provenance": "codex (generated scene, not a real place)",
+  "layers": [
+    {
+      "file": "vendor/asset-lib/scenes/warung-counter/plate.webp",
+      "z": -1400,
+      "role": "back"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/warung-counter/mid.png",
+      "z": -500,
+      "role": "mid"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/warung-counter/front.png",
+      "z": -80,
+      "role": "front"
+    }
+  ]
+}

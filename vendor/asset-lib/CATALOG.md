@@ -572,6 +572,18 @@ Sheet: [texture](../../docs/agents/references/asset-catalog/sheets/) — files `
 | `texture.plaster` | `.sk-tex-plaster` | parallax, mix-media, broll-text | kertas | ambientCG Plaster002, 2K-JPG Color map — https://ambientcg.com/view?id=Plaster002 |
 | `texture.blackboard` | `.sk-tex-blackboard` | whiteboard | kertas | ambientCG Concrete031, 2K-JPG Color map — https://ambientcg.com/view?id=Concrete031 |
 
+## scene (5)
+
+Sheet: [scene](../../docs/agents/references/asset-catalog/sheets/) — files `scene*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `scene.warung-counter` | `vendor/asset-lib/scenes/warung-counter/scene.json` | parallax, mix-media | umkm, tempat | Codex (generated) |
+| `scene.cafe-cowork` | `vendor/asset-lib/scenes/cafe-cowork/scene.json` | parallax, mix-media | kerja, tempat | Codex (generated) |
+| `scene.city-dusk` | `vendor/asset-lib/scenes/city-dusk/scene.json` | parallax, mix-media | tempat, hidup | Codex (generated) |
+| `scene.server-room` | `vendor/asset-lib/scenes/server-room/scene.json` | parallax, mix-media | ai, data | Codex (generated) |
+| `scene.street-motor` | `vendor/asset-lib/scenes/street-motor/scene.json` | parallax, mix-media | tempat, hidup | Codex (generated) |
+
 ## font (17)
 
 Sheet: [font](../../docs/agents/references/asset-catalog/sheets/) — files `font*.webp`

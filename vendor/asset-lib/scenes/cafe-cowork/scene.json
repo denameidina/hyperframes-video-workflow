@@ -1,0 +1,22 @@
+{
+  "id": "scene.cafe-cowork",
+  "light": "soft morning light from the window at left",
+  "provenance": "codex (generated scene, not a real place)",
+  "layers": [
+    {
+      "file": "vendor/asset-lib/scenes/cafe-cowork/plate.webp",
+      "z": -1400,
+      "role": "back"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/cafe-cowork/mid.png",
+      "z": -500,
+      "role": "mid"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/cafe-cowork/front.png",
+      "z": -80,
+      "role": "front"
+    }
+  ]
+}

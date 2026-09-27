@@ -1,0 +1,22 @@
+{
+  "id": "scene.street-motor",
+  "light": "warm midday light from the left",
+  "provenance": "codex (generated scene, not a real place)",
+  "layers": [
+    {
+      "file": "vendor/asset-lib/scenes/street-motor/plate.webp",
+      "z": -1400,
+      "role": "back"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/street-motor/mid.png",
+      "z": -500,
+      "role": "mid"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/street-motor/front.png",
+      "z": -80,
+      "role": "front"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "scene.city-dusk",
+  "light": "orange and violet dusk, sun low at left",
+  "provenance": "codex (generated scene, not a real place)",
+  "layers": [
+    {
+      "file": "vendor/asset-lib/scenes/city-dusk/plate.webp",
+      "z": -1400,
+      "role": "back"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/city-dusk/mid.png",
+      "z": -500,
+      "role": "mid"
+    },
+    {
+      "file": "vendor/asset-lib/scenes/city-dusk/front.png",
+      "z": -80,
+      "role": "front"
+    }
+  ]
+}
