@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the number and label are invented to show the mechanism. In a real clip the number is verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ring { position: absolute; left: 190px; top: 420px; width: 700px; height: 700px; transform: rotate(-90deg); }
+        #num { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font-size: 210px; font-weight: 800; letter-spacing: -0.04em; }
+        #lab { position: absolute; left: 120px; right: 120px; top: 1220px; text-align: center; font-size: 62px; font-weight: 600; line-height: 1.15; }
+      </style>
+      <div id="root" data-composition-id="mg-01-count" data-width="1080" data-height="1920" data-duration="5.5">
+        <div class="sk-stage sk-mg">
+          <svg id="ring" viewBox="0 0 700 700" width="700" height="700">
+            <circle cx="350" cy="350" r="290" fill="none" stroke="#e7e0d3" stroke-width="64" />
+            <circle id="arc" cx="350" cy="350" r="290" fill="none" stroke="var(--sk-accent)" stroke-width="64" stroke-linecap="butt" />
+          </svg>
+          <div id="num">0%</div>
+          <div id="lab"><span class="sk-w">waktu</span> <span class="sk-w">habis</span> <span class="sk-w">buat</span> <span class="sk-w" style="color:var(--sk-accent-2)">admin</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-01-count';
+          const $ = SK.finder(ID);
+          const words = SK.words($('lab'));
+          SK.clip(ID, { T: 5.5, update: (t) => {
+            const u = M.eo((t - 0.5) / 1.6);
+            SK.draw($('arc'), 0.7 * u);
+            $('num').textContent = SK.count(t, 0.5, 2.1, 0, 70) + '%';
+            SK.enter($('num'), t - 0.3, 'pop');
+            SK.reveal(words, [2.5, 2.75, 2.95, 3.2], t, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

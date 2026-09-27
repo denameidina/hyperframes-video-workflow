@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the ratio and labels are invented to show the mechanism. In a real clip the ratio is verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #legend { position: absolute; left: 90px; top: 250px; font-size: 38px; font-weight: 600; color: var(--sk-muted); }
+        #grid { position: absolute; left: 90px; top: 360px; width: 900px; }
+        .p { position: absolute; width: 150px; height: 210px; color: var(--sk-ink); transform-origin: 50% 100%; }
+        #big { position: absolute; left: 0; right: 0; top: 1000px; text-align: center; font-size: 190px; font-weight: 800; letter-spacing: -0.05em; color: var(--sk-ink); }
+        #big .hot { color: var(--sk-accent-2); }
+        #cap { position: absolute; left: 120px; right: 120px; top: 1250px; text-align: center; font-size: 54px; font-weight: 600; line-height: 1.2; color: var(--sk-ink); }
+      </style>
+      <div id="root" data-composition-id="mg-03-icon-grid" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-mg">
+          <div id="legend">1 ikon = 1 klien</div>
+          <div id="grid"></div>
+          <div id="big"><span class="sk-w hot">1</span> <span class="sk-w">dari</span> <span class="sk-w">10</span></div>
+          <div id="cap"><span class="sk-w">yang</span> <span class="sk-w">balik</span> <span class="sk-w">lagi</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-03-icon-grid';
+          const $ = SK.finder(ID);
+          const PERSON = '<svg viewBox="0 0 100 140" width="150" height="210"><circle cx="50" cy="30" r="24" fill="currentColor"/><path d="M12 136 C12 86 30 66 50 66 C70 66 88 86 88 136 Z" fill="currentColor"/></svg>';
+          const grid = $('grid');
+          grid.innerHTML = Array.from({ length: 10 }, (_, i) => `<div class="p" id="p${i}" style="left:${(i % 5) * 187}px;top:${Math.floor(i / 5) * 270}px">${PERSON}</div>`).join('');
+          const P = Array.from({ length: 10 }, (_, i) => $('p' + i));
+          const big = SK.words($('big')), cap = SK.words($('cap'));
+          const hot = M.ctrack('#1c1917', [[2.6, '#f97316']]);
+          const rest = M.ctrack('#1c1917', [[2.6, '#d6cfc2']]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.enter($('legend'), t - 0.2, 'fade');
+            const dts = SK.stagger(t, 0.45, 0.07, 10);
+            P.forEach((el, i) => {
+              SK.enter(el, dts[i], 'pop');
+              el.style.color = i === 0 ? hot(t) : rest(t);
+            });
+            SK.reveal(big, [2.6, 2.85, 3.05], t, 'pop');
+            SK.reveal(cap, [3.6, 3.8, 3.95], t, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

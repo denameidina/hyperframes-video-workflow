@@ -173,6 +173,7 @@ npm run test:motion-kit        # unit test motion b-roll engine
 npm run test:style-kit         # unit test style-kit engine + style reference richness
 npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
+npm run check:style-examples   # lint + validate + snapshot style b-roll examples
 npm run video -- new <slug>    # scaffold videos/<slug>/ from the Dena starter
 npm run video -- check <slug>  # lint + validate + inspect one video project
 npm run video -- dev <slug>    # preview one video project (long-running)

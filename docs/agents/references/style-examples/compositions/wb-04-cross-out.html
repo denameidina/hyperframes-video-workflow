@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words are invented to show the mechanism. In a real clip every word comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .say { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 120px; font-weight: 700; line-height: 1; color: var(--sk-ink); white-space: nowrap; }
+        #s1 { color: var(--sk-accent-2); }
+      </style>
+      <div id="root" data-composition-id="wb-04-cross-out" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <div class="sk-cam" id="cam">
+            <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+            <div class="say" id="s0" style="top:930px">tambah orang</div>
+            <div class="say" id="s1" style="top:1210px">rapikan sistem</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-04-cross-out';
+          const $ = SK.finder(ID);
+          const P = {
+            head: SK.ellipse(540, 400, 95, 105, 2, 0.04),
+            body: SK.line(540, 505, 540, 700, 3, 4),
+            armL: SK.line(540, 560, 440, 650, 4, 4), armR: SK.line(540, 560, 640, 650, 5, 4),
+            legL: SK.line(540, 700, 470, 840, 6, 4), legR: SK.line(540, 700, 610, 840, 7, 4),
+            eyeL: 'M505 385 L507 395', eyeR: 'M573 385 L575 395',
+            mouth: 'M500 445 Q540 425 580 445',
+            smile: 'M500 430 Q540 465 580 430',
+            strike: SK.line(250, 985, 850, 975, 9, 10),
+            strike2: SK.line(260, 1010, 840, 955, 10, 10),
+            under: SK.line(270, 1350, 820, 1340, 11, 6),
+          };
+          $('ink').innerHTML = Object.entries(P).map(([id, d]) => `<path id="${id}" class="sk-stroke" d="${d}"${id.startsWith('strike') ? ' style="stroke:var(--sk-accent);stroke-width:12"' : id === 'under' ? ' style="stroke:var(--sk-accent-2);stroke-width:8"' : ''}/>`).join('');
+          $('cam').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('cam').querySelector('.sk-marker');
+          const S = ['head', 'eyeL', 'eyeR', 'mouth', 'body', 'armL', 'armR', 'legL', 'legR'].map((id, i) => ({ el: $(id), at: 0.2 + i * 0.13, dur: id === 'head' ? 0.35 : 0.12 }))
+            .concat([{ el: $('strike'), at: 2.55, dur: 0.22 }, { el: $('strike2'), at: 2.8, dur: 0.2 }, { el: $('under'), at: 4.6, dur: 0.35 }, { el: $('smile'), at: 5.0, dur: 0.15 }]);
+          const camY = M.track(900, [[3.2, 1000, M.SLOW]]);
+          const W = [['s0', 1.5, 0.7, 250, 830, 1030], ['s1', 3.3, 0.8, 230, 850, 1310]];
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.cam($('cam'), 1, 540, camY(t));
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+            if (t >= 5.0) $('mouth').style.opacity = '0';
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

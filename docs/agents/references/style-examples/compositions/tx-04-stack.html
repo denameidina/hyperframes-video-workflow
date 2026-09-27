@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words are invented to show the mechanism. In a real clip every word is verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #list { position: absolute; left: 90px; top: 330px; font-size: 200px; color: var(--sk-ink); }
+        #list .row { display: block; height: 186px; }
+        #num { position: absolute; left: 96px; top: 250px; font-weight: 700; font-size: 44px; letter-spacing: 0.08em; color: var(--sk-muted); }
+        #bar { position: absolute; left: 96px; top: 1285px; width: 610px; height: 22px; background: var(--sk-accent); transform-origin: 0 50%; transform: scaleX(0); }
+      </style>
+      <div id="root" data-composition-id="tx-04-stack" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-text" style="--sk-bg:#f2f0ea;--sk-ink:#111111;--sk-accent:#ff4d00;--sk-muted:#8a8578">
+          <div id="num" class="sk-sans">01 &mdash; 03</div>
+          <div id="list">
+            <span class="row"><span class="sk-mask"><span class="sk-w">CATAT</span></span></span>
+            <span class="row"><span class="sk-mask"><span class="sk-w">OTOMATIS</span></span></span>
+            <span class="row"><span class="sk-mask"><span class="sk-w">LAPORAN</span></span></span>
+            <span class="row"><span class="sk-mask"><span class="sk-w" style="color:var(--sk-accent)">JALAN</span></span></span>
+            <span class="row"><span class="sk-mask"><span class="sk-w" style="color:var(--sk-accent)">SENDIRI</span></span></span>
+          </div>
+          <div id="bar"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-04-stack';
+          const $ = SK.finder(ID);
+          const words = SK.words($('list'));
+          const AT = [0.3, 1.0, 1.7, 2.5, 2.75];
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.reveal(words, AT, t, 'mask');
+            const n = t >= 1.7 ? '03' : t >= 1.0 ? '02' : '01';
+            $('num').textContent = n + ' — 03';
+            SK.enter($('num'), t - 0.2, 'fade');
+            $('bar').style.transform = `scaleX(${M.eo((t - 3.1) / 0.35).toFixed(4)})`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

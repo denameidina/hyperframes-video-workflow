@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: labels are invented and the bars are relative (no values), to show the mechanism. In a real clip labels come from the transcript and bars never imply invented numbers (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bgTop { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; background: var(--sk-bg); }
+        #title { position: absolute; left: 90px; top: 90px; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; color: var(--sk-ink); }
+        #sub { position: absolute; left: 92px; top: 172px; font-size: 34px; font-weight: 500; color: var(--sk-muted); }
+        .bar { position: absolute; width: 250px; border-radius: 18px 18px 0 0; transform-origin: 50% 100%; }
+        .bl { position: absolute; top: 840px; width: 330px; text-align: center; font-size: 44px; font-weight: 700; color: var(--sk-ink); }
+        #axis { position: absolute; left: 0; top: 0; }
+        #gap { position: absolute; left: 610px; top: 330px; font-size: 40px; font-weight: 700; color: var(--sk-accent); white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="mg-02-compare-bars" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-mg" style="--sk-bg:#0f172a;--sk-ink:#f8fafc;--sk-accent:#38bdf8;--sk-muted:#64748b">
+          <div id="bgTop"></div>
+          <div id="title">Waktu per minggu</div>
+          <div id="sub">ilustrasi &middot; perbandingan relatif</div>
+          <div class="bar" id="bA" style="left:200px;background:#475569"></div>
+          <div class="bar" id="bB" style="left:630px;background:var(--sk-accent)"></div>
+          <svg id="axis" viewBox="0 0 1080 960" width="1080" height="960"><path id="base" class="sk-stroke" d="M120 810 L960 810" style="stroke:#94a3b8;stroke-width:4" /><path id="brk" class="sk-stroke" d="M470 300 L560 300 L560 650 L760 650" style="stroke:var(--sk-accent);stroke-width:5" /></svg>
+          <div class="bl" id="lA" style="left:160px">Manual</div>
+          <div class="bl" id="lB" style="left:590px">Otomatis</div>
+          <div id="gap">jauh lebih singkat</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-02-compare-bars';
+          const $ = SK.finder(ID);
+          const hA = M.track(0, [[0.7, 510, M.SLOW]]);
+          const hB = M.track(0, [[2.0, 160, M.SLOW]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('bgTop').style.transform = `translateY(${(-(1 - M.eo(t / 0.35)) * 960).toFixed(2)}px)`;
+            SK.enter($('title'), t - 0.25, 'rise');
+            SK.enter($('sub'), t - 0.4, 'fade');
+            SK.draw($('base'), M.eo((t - 0.35) / 0.4));
+            for (const [id, h] of [['bA', hA(t)], ['bB', hB(t)]]) {
+              const el = $(id);
+              el.style.top = (810 - h).toFixed(2) + 'px';
+              el.style.height = Math.max(0, h).toFixed(2) + 'px';
+            }
+            SK.enter($('lA'), t - 0.8, 'rise');
+            SK.enter($('lB'), t - 2.1, 'rise');
+            SK.draw($('brk'), M.eo((t - 3.0) / 0.5));
+            SK.enter($('gap'), t - 3.4, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

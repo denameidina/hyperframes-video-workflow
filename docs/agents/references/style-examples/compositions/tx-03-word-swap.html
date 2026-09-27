@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words are invented to show the mechanism. In a real clip every word is verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #card { position: absolute; left: 90px; top: 210px; width: 900px; height: 430px; border-radius: 36px; background: var(--sk-bg); transform-origin: 50% 50%; }
+        #l1 { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font-size: 120px; color: var(--sk-ink); }
+        #slot { position: absolute; left: 0; right: 0; top: 215px; height: 150px; text-align: center; font-size: 140px; }
+        #slot .sk-w { position: absolute; left: 0; right: 0; }
+        #old { color: var(--sk-muted); }
+        #new { color: var(--sk-accent); }
+        #strike { position: absolute; left: 230px; width: 440px; top: 285px; height: 16px; border-radius: 8px; background: var(--sk-accent-2); transform-origin: 0 50%; transform: scaleX(0); }
+      </style>
+      <div id="root" data-composition-id="tx-03-word-swap" data-width="1080" data-height="1920" data-duration="4.5">
+        <div class="sk-stage sk-text" style="--sk-bg:rgba(10,10,10,.92)">
+          <div id="card">
+            <div id="l1"><span class="sk-w">YANG</span> <span class="sk-w">LO</span> <span class="sk-w">BUTUH</span></div>
+            <div id="slot"><span class="sk-w" id="old">LEMBUR</span><span class="sk-w" id="new">SISTEM</span></div>
+            <div id="strike"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-03-word-swap';
+          const $ = SK.finder(ID);
+          const l1 = SK.words($('l1'));
+          const card = M.track(0, [[0.05, 1, [20, 0.7]]]);
+          SK.clip(ID, { T: 4.5, bg: null, update: (t) => {
+            const c = card(t);
+            $('card').style.opacity = M.clamp(c * 3).toFixed(4);
+            $('card').style.transform = `scale(${(0.9 + 0.1 * c).toFixed(4)})`;
+            SK.reveal(l1, [0.25, 0.45, 0.6], t, 'mask');
+            const out = M.eo((t - 2.3) / 0.2);
+            SK.enter($('old'), t - 0.85, 'pop');
+            if (t >= 2.3) {
+              $('old').style.opacity = (1 - out).toFixed(4);
+              $('old').style.transform = `translate(0px,${(out * 70).toFixed(2)}px) scale(1)`;
+            }
+            $('strike').style.transform = `scaleX(${M.eo((t - 1.6) / 0.25).toFixed(4)})`;
+            $('strike').style.opacity = (1 - out).toFixed(4);
+            SK.enter($('new'), t - 2.4, 'slam');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

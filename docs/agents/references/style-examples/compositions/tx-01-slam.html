@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: words are invented to show the mechanism. In a real clip every word comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #stack { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 250px; }
+        #stack .sk-w { display: block; }
+      </style>
+      <div id="root" data-composition-id="tx-01-slam" data-width="1080" data-height="1920" data-duration="4">
+        <div class="sk-stage sk-text">
+          <div id="stack"><span class="sk-w" id="w0">BUKAN</span><span class="sk-w" id="w1">SOAL</span><span class="sk-w" id="w2">TOOLS</span><span class="sk-w" id="w3">TAPI</span><span class="sk-w" id="w4" style="color:var(--sk-accent)">SISTEM</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-01-slam';
+          const $ = SK.finder(ID);
+          const words = SK.words($('stack'));
+          const AT = [0.2, 0.55, 0.9, 1.7, 2.05];
+          const dim = M.track(0, [[1.7, 1, M.FAST]]);
+          const punch = M.track(1, [[2.05, 1.08, [30, 0.5]], [2.35, 1, M.SLOW]]);
+          SK.clip(ID, { T: 4, update: (t) => {
+            SK.reveal(words, AT, t, 'slam');
+            const d = M.clamp(dim(t));
+            for (let i = 0; i < 3; i++) words[i].style.color = `rgba(250,250,250,${(1 - 0.72 * d).toFixed(3)})`;
+            $('stack').style.transform = `scale(${punch(t).toFixed(4)})`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

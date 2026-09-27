@@ -81,6 +81,7 @@ npm run test:style-kit       # node --test scripts/style-kit.test.mjs scripts/st
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
+npm run check:style-examples # lint + validate + snapshot contoh style b-roll → renders/style-examples/
 ```
 
 ## Troubleshooting cepat

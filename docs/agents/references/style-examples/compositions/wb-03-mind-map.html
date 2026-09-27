@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the labels are invented to show the mechanism. In a real clip every label comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; background: var(--sk-bg); }
+        .lab { position: absolute; width: 360px; text-align: center; font-size: 84px; font-weight: 700; line-height: 1; color: var(--sk-ink); white-space: nowrap; }
+        #c { font-size: 100px; }
+      </style>
+      <div id="root" data-composition-id="wb-03-mind-map" data-width="1080" data-height="1920" data-duration="7">
+        <div class="sk-stage sk-wb">
+          <div id="half">
+            <div class="sk-cam" id="cam" style="height:960px">
+              <svg class="sk-full" id="ink" viewBox="0 0 1080 960" width="1080" height="960" style="height:960px"></svg>
+              <div class="lab" id="c" style="left:360px;top:425px">Bisnis</div>
+              <div class="lab" id="l0" style="left:40px;top:150px">Sales</div>
+              <div class="lab" id="l1" style="left:680px;top:150px">Tim</div>
+              <div class="lab" id="l2" style="left:40px;top:760px">Sistem</div>
+              <div class="lab" id="l3" style="left:680px;top:760px">Uang</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-03-mind-map';
+          const $ = SK.finder(ID);
+          const B = [[395, 400, 300, 240], [685, 400, 780, 240], [395, 560, 300, 720], [685, 560, 780, 720]];
+          $('ink').innerHTML =
+            `<path id="o" class="sk-stroke" d="${SK.ellipse(540, 478, 230, 120, 6)}"/>` +
+            B.map((b, i) => `<path id="b${i}" class="sk-stroke" d="${SK.line(b[0], b[1], b[2], b[3], 30 + i, 8)}"/>`).join('') +
+            `<path id="hot" class="sk-stroke" d="${SK.ellipse(220, 800, 200, 85, 12)}" style="stroke:var(--sk-accent);stroke-width:9"/>`;
+          $('cam').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('cam').querySelector('.sk-marker');
+          const S = [{ el: $('o'), at: 0.3 }, { el: $('b0'), at: 1.5 }, { el: $('b1'), at: 2.4 }, { el: $('b2'), at: 3.3 }, { el: $('b3'), at: 4.2 }, { el: $('hot'), at: 5.4 }];
+          const W = [['c', 0.95, 0.45, 430, 650, 510], ['l0', 1.8, 0.4, 130, 310, 225], ['l1', 2.7, 0.3, 810, 910, 225], ['l2', 3.6, 0.45, 110, 330, 835], ['l3', 4.5, 0.35, 790, 930, 835]];
+          const camS = M.track(1, [[5.95, 1.35, M.SLOW]]);
+          const camX = M.track(540, [[5.95, 330, M.SLOW]]);
+          const camY = M.track(480, [[5.95, 700, M.SLOW]]);
+          SK.clip(ID, { T: 7, bg: null, update: (t) => {
+            $('half').style.transform = `translateY(${(-(1 - M.eo(t / 0.3)) * 960).toFixed(2)}px)`;
+            SK.cam($('cam'), camS(t), camX(t), camY(t), 1080, 960);
+            let tip = SK.drawSeq(t, S, { boil: 1 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

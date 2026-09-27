@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the quote is invented to show the mechanism. In a real clip every word is verbatim from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #card { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; background: var(--sk-bg); }
+        #mark { position: absolute; left: 80px; top: 70px; font-size: 300px; line-height: 1; color: var(--sk-accent); }
+        #quote { position: absolute; left: 90px; right: 90px; top: 330px; font-weight: 800; font-size: 96px; line-height: 1.06; letter-spacing: -0.03em; color: var(--sk-ink); }
+        .kw { position: relative; isolation: isolate; }
+        .swipe { position: absolute; left: -10px; right: -10px; top: 48%; bottom: 2%; background: var(--sk-hl); z-index: -1; transform-origin: 0 50%; transform: scaleX(0); }
+      </style>
+      <div id="root" data-composition-id="tx-02-quote-split" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-text" style="--sk-bg:#f5f0e6;--sk-ink:#111111;--sk-accent:#111111;--sk-hl:#fde047">
+          <div id="card"></div>
+          <div id="mark" class="sk-display">&ldquo;</div>
+          <div id="quote" class="sk-sans"><span class="sk-w">Sistem</span> <span class="sk-w">yang</span> <span class="sk-w">rapi</span> <span class="sk-w">bikin</span> <span class="sk-w">lo</span> <span class="sk-w">nggak</span> <span class="sk-w">perlu</span> <span class="sk-w kw"><i class="swipe" id="swipe"></i>jadi pahlawan</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-02-quote-split';
+          const $ = SK.finder(ID);
+          const words = SK.words($('quote'));
+          const AT = [0.55, 0.8, 1.0, 1.35, 1.55, 1.75, 2.0, 2.3];
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const card = M.eo((t - 0) / 0.35);
+            $('card').style.transform = `translateY(${(-(1 - card) * 960).toFixed(2)}px)`;
+            SK.enter($('mark'), t - 0.3, 'drop', { dy: 80 });
+            SK.reveal(words, AT, t, 'rise');
+            $('swipe').style.transform = `scaleX(${M.eo((t - 2.75) / 0.32).toFixed(4)})`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

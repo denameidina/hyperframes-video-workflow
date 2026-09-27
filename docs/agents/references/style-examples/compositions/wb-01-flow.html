@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: labels are invented to show the mechanism. In a real clip every label comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .lab { position: absolute; width: 560px; text-align: center; font-size: 104px; font-weight: 700; line-height: 1; }
+      </style>
+      <div id="root" data-composition-id="wb-01-flow" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <div class="sk-cam" id="cam">
+            <svg class="sk-full" viewBox="0 0 1080 1920" width="1080" height="1920" id="ink"></svg>
+            <div class="lab" id="l0" style="left:260px;top:468px">Masalah</div>
+            <div class="lab" id="l1" style="left:260px;top:908px">Sistem</div>
+            <div class="lab" id="l2" style="left:260px;top:1348px">Hasil</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-01-flow';
+          const $ = SK.finder(ID);
+          const Y = [420, 860, 1300];
+          const a0 = SK.arrow(540, 640, 540, 830, 21), a1 = SK.arrow(540, 1080, 540, 1270, 22);
+          const D = [
+            ['b0', SK.rect(270, Y[0], 540, 190, 1), 'sk-stroke'],
+            ['s0', a0.shaft, 'sk-stroke'], ['h0', a0.head, 'sk-stroke'],
+            ['b1', SK.rect(270, Y[1], 540, 190, 5), 'sk-stroke'],
+            ['s1', a1.shaft, 'sk-stroke'], ['h1', a1.head, 'sk-stroke'],
+            ['b2', SK.rect(270, Y[2], 540, 190, 9), 'sk-stroke'],
+            ['c2', SK.ellipse(540, Y[2] + 95, 330, 150, 3), 'sk-stroke hot'],
+          ];
+          $('ink').innerHTML = D.map(([id, d, cls]) => `<path id="${id}" class="${cls}" d="${d}"${cls.includes('hot') ? ' style="stroke:var(--sk-accent);stroke-width:9"' : ''}/>`).join('');
+          $('cam').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('cam').querySelector('.sk-marker');
+          const S = [
+            { el: $('b0'), at: 0.25, dur: 0.75 },
+            { el: $('s0'), at: 1.75, dur: 0.35 }, { el: $('h0'), at: 2.1, dur: 0.15 },
+            { el: $('b1'), at: 2.3, dur: 0.7 },
+            { el: $('s1'), at: 3.7, dur: 0.35 }, { el: $('h1'), at: 4.05, dur: 0.15 },
+            { el: $('b2'), at: 4.25, dur: 0.6 },
+            { el: $('c2'), at: 5.25, dur: 0.5 },
+          ];
+          const W = [[1.05, 0.6], [3.05, 0.55], [4.9, 0.3]];
+          const camS = M.track(1.12, [[2.2, 1.0, M.SLOW], [5.2, 1.06, M.SLOW]]);
+          const camY = M.track(Y[0] + 95, [[2.2, 960, M.SLOW], [5.2, Y[2] + 95, M.SLOW]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.cam($('cam'), camS(t), 540, camY(t));
+            let tip = SK.drawSeq(t, S, { boil: 1.1 });
+            W.forEach(([at, dur], i) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($('l' + i), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(360, 720, Y[i] + 130, u);
+            });
+            SK.placeMarker(marker, tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the list is invented to show the mechanism. In a real clip every item comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #board { position: absolute; left: 90px; top: 150px; width: 900px; height: 540px; border-radius: 28px; background: var(--sk-bg); box-shadow: 0 26px 60px -24px rgba(0,0,0,.55); overflow: hidden; }
+        #ink { position: absolute; left: 0; top: 0; }
+        .it { position: absolute; left: 150px; font-size: 84px; font-weight: 700; line-height: 1; color: var(--sk-ink); white-space: nowrap; }
+        #ttl { position: absolute; left: 70px; top: 36px; font-size: 76px; font-weight: 700; color: var(--sk-accent-2); white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-02-framework-panel" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <div id="board">
+            <svg id="ink" viewBox="0 0 900 540" width="900" height="540"></svg>
+            <div id="ttl">3 langkah</div>
+            <div class="it" id="i0" style="top:180px">catat</div>
+            <div class="it" id="i1" style="top:290px">rapikan</div>
+            <div class="it" id="i2" style="top:400px">otomatis</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-02-framework-panel';
+          const $ = SK.finder(ID);
+          const Y = [226, 336, 446];
+          const tick = (y) => `M70 ${y} L95 ${y + 24} L126 ${y - 28}`;
+          $('ink').innerHTML =
+            `<path id="u" class="sk-stroke" d="${SK.line(72, 128, 400, 124, 4, 5)}" style="stroke:var(--sk-accent-2);stroke-width:7"/>` +
+            Y.map((y, i) => `<path id="k${i}" class="sk-stroke" d="${tick(y)}" style="stroke:var(--sk-accent);stroke-width:9"/>`).join('');
+          $('board').insertAdjacentHTML('beforeend', SK.MARKER_SVG);
+          const marker = $('board').querySelector('.sk-marker');
+          const W = [['ttl', 0.35, 0.55, 70, 400, 100], ['i0', 1.15, 0.4, 150, 340, 250], ['i1', 2.2, 0.5, 150, 410, 360], ['i2', 3.3, 0.6, 150, 460, 470]];
+          const S = [{ el: $('u'), at: 0.95, dur: 0.22 }, { el: $('k0'), at: 1.7, dur: 0.22 }, { el: $('k1'), at: 2.85, dur: 0.22 }, { el: $('k2'), at: 4.05, dur: 0.22 }];
+          const board = M.track(0, [[0.02, 1, [18, 0.8]]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const b = board(t);
+            $('board').style.opacity = M.clamp(b * 3).toFixed(4);
+            $('board').style.transform = `translateY(${((1 - b) * -60).toFixed(2)}px)`;
+            let tip = SK.drawSeq(t, S, { boil: 0.9 });
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            SK.placeMarker(marker, tip);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
