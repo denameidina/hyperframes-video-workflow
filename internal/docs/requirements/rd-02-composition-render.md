@@ -80,6 +80,22 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-24** (Ubiquitous) — Proses anak `scripts/video.mjs` shall berjalan tanpa
   `GEMINI_API_KEY` di environment.
 
+## Style b-roll
+
+- **RD-02-25** (Ubiquitous) — Starter `templates/dena-video/index.html` shall
+  memuat `vendor/style-kit/style-kit.js` dan `vendor/style-kit/style-kit.css`
+  tepat sekali, setelah `vendor/motion-kit/motion-kit.js`.
+- **RD-02-26** (Ubiquitous) — Setiap clip style b-roll shall berupa
+  sub-composition di `compositions/broll/` yang memanggil `SK.clip(id, cfg)`
+  secara sinkron, sehingga timeline paused terdaftar di `window.__timelines[id]`
+  dengan durasi `cfg.T`, dan setiap frame hanya bergantung pada waktu lokal clip.
+- **RD-02-27** (Unwanted) — If sebuah elemen di dalam clip style b-roll perlu
+  disembunyikan, then clip shall memakai `opacity` atau `display`, bukan
+  `visibility`, agar elemen tidak tampil setelah mount clip disembunyikan.
+- **RD-02-28** (Ubiquitous) — Clip style b-roll shall memilih font lewat kelas
+  `.sk-display`, `.sk-sans`, atau `.sk-hand` dan tidak menyebut `font-family`
+  di `<style>` clip; font berasal dari file lokal di `vendor/`.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system
