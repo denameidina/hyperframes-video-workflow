@@ -1,6 +1,6 @@
 # Pustaka Aset Bersama + Preset Palet/Tipografi (Sub-proyek 1 dari "Style Enrichment") — Design
 
-Status: approved (brainstorming 2026-09-27), belum diimplementasi
+Status: approved (brainstorming 2026-09-27; spike lolos 2026-09-27), belum diimplementasi
 Date: 2026-09-27
 Branch: `feat/asset-lib`
 Dibangun di atas: style-kit (ADR-0012), paper pack (ADR-0013), VOX/mix-media
@@ -27,6 +27,36 @@ sub-proyek, dengan urutan yang disetujui Dena:
 3. Moodboard per gaya. Still karya berhak cipta tidak di-commit: disimpan lokal
    di folder yang di-gitignore bersama sumbernya, atau dibuat sebagai "study"
    buatan sendiri.
+
+## Bukti kelayakan (spike, 2026-09-27)
+
+Salinan scratch repo, HyperFrames 0.7.24, `check-broll-examples` (lint, validate,
+snapshot):
+
+- **(a) Font dari sheet baru**: `@font-face` di `vendor/asset-lib/asset-lib.css`,
+  `.sk-f-bebas-neue`, dan `.sk-type-text-editorial` (variabel
+  `--sk-font-display`/`--sk-font-body` yang dibaca `.sk-display`/`.sk-sans` di
+  `style-kit.css`) lolos lint dengan 0 error. Bebas Neue dan Instrument Serif
+  ter-render.
+- **(b) `SK.rough`**: dua render berturut-turut menghasilkan frame yang
+  byte-identik. Setelan yang tampak seperti spidol (bukan gemetar): `amp` 0.3,
+  `step` 1 (satuan grid ikon), dua gelombang sinus berfrekuensi 0.12–0.22 dan
+  0.45–0.70 rad/satuan, dengan overshoot kecil di ujung.
+- **(c) Starter + contoh**: host contoh memuat `asset-lib.css`/`.js`, dan
+  `.sk-display`/`.sk-sans` diganti menjadi `var(--sk-font-*, <font lama>)`.
+  Ke-60 still lama (34 komposisi) byte-identik dengan baseline di main.
+- **(d) Grade parallax**: `filter` pada `.sk-view` mempertahankan skala lapisan
+  3D dan blur DOF, dan hanya mengubah warna (dibandingkan dengan still px-01
+  pada waktu lokal yang sama).
+- Ikon Lucide berisi `<circle>`, `<rect>`, `<line>`, `<polyline>`, `<polygon>`,
+  dan `<ellipse>` selain `<path>`, serta perintah relatif dan subpath ganda.
+  Build mengubah semuanya menjadi path absolut per subpath (`scripts/lib/svg-path.mjs`),
+  jadi `SK.draw`/`SK.rough` hanya menangani satu jenis data.
+- Peta Node (port `make_map.py`) untuk world/sea/id-provinces/java berukuran
+  62/55/52/19 KB.
+- Linter `inspect` memberi peringatan kontras (bukan error) untuk teks clip yang
+  sedang tidak tampil di host contoh, karena diukur di atas base video. Ini
+  artefak host contoh, bukan cacat palet.
 
 ## Keputusan yang sudah diambil
 
@@ -58,21 +88,30 @@ sub-proyek, dengan urutan yang disetujui Dena:
 - Foto orang atau ilustrasi karakter manusia yang detail. Pembawa peran tetap
   stick figure dan cut-out Dena.
 - Logo merek atau desain uang kertas asli.
-- Mengubah contoh lama. Ke-34 still lama harus identik piksel.
+- Mengubah contoh lama. Ke-60 still lama harus identik piksel.
 - Push ke remote.
 
 ## Struktur
 
 ```
 vendor/asset-lib/
-  asset-lib.js        # SK.LIB (data vektor) + builder; dimuat setelah style-kit.js
-  asset-lib.css       # @font-face, .sk-pal-*, .sk-type-*, .sk-f-*, .sk-tex-*, .sk-obj-*, .sk-frame-*
-  catalog.json        # satu entri per aset (termasuk paper-pack)
-  LICENSES.md         # satu baris per file
-  CATALOG.md          # hasil generate dari catalog.json
-  icons/  pictograms/ # data path (.json), dibaca ke asset-lib.js oleh skrip build
-  doodles/ frames/ docs/ maps/ textures/ paper/ hands/ scenes/<nama>/ fonts/
-scripts/asset-lib.mjs            # fetch | build | sheets | check
+  asset-lib.js        # BUILD: SK.LIB (data vektor) + runtime; dimuat setelah style-kit.js
+  asset-lib.css       # BUILD: @font-face, .sk-pal-*, .sk-type-*, .sk-f-*, .sk-tex-*, .sk-obj-*, .sk-frame-*
+  catalog.json        # BUILD: satu entri per aset (termasuk paper-pack)
+  LICENSES.md         # BUILD: satu baris per file
+  CATALOG.md          # BUILD: tabel per jenis + tautan sheet
+  src/                # SUMBER yang ditulis tangan
+    runtime.js        #   SK.icon, SK.pict, SK.doodle, SK.rough, SK.doc, SK.mark, SK.geo, SK.asset
+    base.css          #   class tekstur prosedural, objek, frame, doc
+    presets.json      #   56 palet + 22 tipografi (sumber untuk CSS, test kontras, dokumen)
+    bitmaps.json      #   metadata semua bitmap (sumber, lisensi, prompt, anchor, tag)
+    icons.json        #   daftar ikon terverifikasi per kategori → tag
+    pictograms.json   #   daftar pictogram + tag
+    doodles/*.svg  frames/*.svg  marks/*.svg
+  icons/lucide.json  pictograms/phosphor.json    # FETCH (dibekukan)
+  maps/*.svg  fonts/*.woff2 + lisensi  textures/*.jpg  paper/*.png  hands/*.png  scenes/<nama>/
+scripts/lib/svg-path.mjs  scripts/lib/geo-svg.mjs
+scripts/asset-lib.mjs            # fetch | build | sheets
 scripts/asset-lib.test.mjs       # npm run test:asset-lib
 docs/agents/references/asset-catalog/   # proyek HyperFrames untuk contact sheet
   sheets/*.webp
@@ -111,7 +150,7 @@ dipin. Datanya dibekukan di repo, dan nomor versi serta checksum dicatat di
   dan scene (z tiap layer).
 - Tag topik diambil dari kosakata tetap: `ai`, `uang`, `bisnis`, `umkm`,
   `chat`, `kerja`, `waktu`, `orang`, `perangkat`, `keamanan`, `data`, `logistik`,
-  `ide`, `status`, `arah`, `tempat`, `hidup`, `media`, `kertas`, `peta`. Test
+  `ide`, `status`, `arah`, `tempat`, `hidup`, `media`, `kertas`, `peta`, `benda`. Test
   menolak tag di luar daftar ini.
 
 ## Isi per jenis
@@ -126,9 +165,9 @@ dipin. Datanya dibekukan di repo, dan nomor versi serta checksum dicatat di
 | frame | Bingkai, mask sobekan, stempel/badge | 25 | project (SVG/CSS) | ~50 KB |
 | doc | Template dokumen VOX (`SK.doc`) + tanda pena | 10 + 8 | project | ~40 KB |
 | map | Peta | 4 | Natural Earth (PD) | ~0,6 MB |
-| texture | Bitmap CC0 dan prosedural | 10 + 5 | ambientCG (CC0) + project | ~2,5 MB |
+| texture | Bitmap CC0 (7 + 1 turunan) dan prosedural | 8 + 6 | ambientCG (CC0) + project | ~2 MB |
 | scene | Kit scene parallax berlapis | 5 | Codex | ~3 MB |
-| font | Font (subset Latin + Latin Ext) | 12 | Google Fonts (OFL/Apache 2.0) | ~0,7 MB |
+| font | Font (subset Latin, fontsource 5.3.0) | 12 (13 file) | Google Fonts via fontsource (OFL/Apache 2.0) | ~0,4 MB |
 | sheet | Contact sheet | ~20 | project | ~3 MB |
 | **Total** | | | | **~15 MB** (batas 25 MB) |
 
@@ -153,7 +192,7 @@ Nama sudah diverifikasi terhadap `lucide-static@1.48.0/tags.json` pada
 - **lain**: gift star heart sparkle party-popper medal hammer wrench construction bug skull ghost dice-5 box boxes container recycle trash download upload external-link
 
 Satu ikon bisa punya lebih dari satu tag topik. Kategori di atas menjadi tag
-pertamanya (`lain` tidak jadi tag; ikon di sana diberi tag dari kosakata).
+pertamanya (`lain` menjadi tag `benda`).
 Semua ikon ditandai untuk gaya `motion-graphic`, `vox`, `whiteboard` (lewat
 `SK.rough`), `broll-text`, dan `mix-media`.
 
@@ -257,19 +296,43 @@ Ditambah 3 bentuk stabilo (`.sk-hl` varian `-chisel`, `-marker`, `-block`).
 
 - `SK.MAPS` menyimpan `{src, w, h, lon0, lat0, k}` per peta.
 - `SK.geo(lat, lon, map = 'indonesia')` tetap kompatibel.
-- `SK.CITIES` ditambah ~30 kota: ibukota provinsi utama + 10 kota Asia Tenggara.
-  Koordinat dari GeoNames (CC BY 4.0, dicatat di `LICENSES.md`).
+- `SK.CITIES` ditambah ~35 kota: ibukota provinsi dari Natural Earth 10m
+  populated places v5.1.2 (`featurecla` "Admin-1 capital", kecuali Sumenep dan
+  Tuban yang salah label) + 10 ibu kota Asia Tenggara ("Admin-0 capital").
+  Domain publik. Delapan kota lama tetap memakai nilai lamanya supaya contoh
+  tidak berubah.
+- Natural Earth v5.1.2 admin-1 berisi 33 provinsi (sebelum pemekaran Kalimantan
+  Utara dan provinsi Papua). Keterbatasan ini dicatat di `LICENSES.md` dan
+  `vox.md`, dan peta provinsi tidak dipakai untuk klaim batas administratif
+  terbaru.
 - Simplifikasi Douglas–Peucker seperti peta lama. Warnanya pasir/abu
   terdesaturasi, di-set lewat CSS.
 
-### texture (10 bitmap + 5 prosedural)
+### texture (8 bitmap + 6 prosedural)
 
-Bitmap ambientCG (CC0), crop 9:16, 1080×1920, JPEG q6–7. Class
-`.sk-tex-<nama>`. Id asset ambientCG yang pasti dipilih saat fetch berdasarkan
-kecocokan look. Id dan URL dicatat di `LICENSES.md`, sama seperti paper-pack.
+Bitmap ambientCG (CC0) dari zip `2K-JPG` (peta `Color`): crop tengah 9:16,
+1080×1920, JPEG q6–7, ≤ 400 KB. Class `.sk-tex-<nama>`. Kandidat dipilih dari
+thumbnail ambientCG pada 2026-09-27.
 
-- **Bitmap**: newspaper (koran tanpa huruf terbaca, atau di-blur), cardboard-corrugated, cork, blackboard, whiteboard-ghost, concrete-light, fabric-linen, paper-watercolor, paper-recycled, wood-desk
-- **Prosedural (0 KB, SVG/CSS di `asset-lib.css`)**: `.sk-tex-graph` (grid milimeter), `.sk-tex-dots` (dot grid), `.sk-tex-halftone`, `.sk-tex-riso` (grain risograph dua warna), `.sk-tex-film` (film grain, digerakkan `SK.grain`)
+| nama | aset ambientCG | catatan |
+| --- | --- | --- |
+| cork | `Cork004` | papan gabus klasik |
+| cardboard | `Cardboard004` | karton bergaris, bersih |
+| paper-tan | `Paper005` | kertas tan berkerut |
+| concrete-light | `Concrete034` | beton terang halus |
+| linen | `Fabric036` | linen abu |
+| wood-desk | `Wood049` | kayu oak terang |
+| plaster | `Plaster002` | dinding plester putih |
+| blackboard | turunan `Concrete031` | beton gelap, diberi tint hijau slate (`colorchannelmixer`), dicatat sebagai turunan |
+
+ambientCG tidak punya papan tulis, koran, atau kertas cat air. Karena itu:
+papan tulis dibuat sebagai turunan, koran memakai `.sk-newsprint` yang sudah ada,
+dan kertas cat air dihapus dari daftar.
+
+Prosedural (0 KB, SVG/CSS di `asset-lib.css`): `.sk-tex-graph` (grid
+milimeter), `.sk-tex-dots` (dot grid), `.sk-tex-halftone`, `.sk-tex-riso`
+(grain risograph), `.sk-tex-film` (film grain, digerakkan `SK.grain`),
+`.sk-tex-whiteboard` (putih dengan bekas hapusan samar).
 
 `.sk-lined`, `.sk-grid`, dan `.sk-newsprint` di paper-pack tetap ada dan tidak
 diubah.
@@ -306,10 +369,11 @@ Aturan: tanpa orang, tanpa teks terbaca, dan tanpa merek. Label provenance:
 | `font.patrick-hand` | Patrick Hand | OFL | tulisan tangan rapi |
 | `font.special-elite` | Special Elite | Apache 2.0 | mesin ketik |
 
-- Subset: Latin + Latin Ext.
+- Subset: Latin (file `*-latin-*.woff2` dari fontsource 5.3.0, sama seperti Anton dan Caveat).
 - File lisensi (`OFL-*.txt` atau `LICENSE-*.txt`) ikut di `fonts/`.
-- Lisensi diverifikasi dari repo google/fonts saat fetch. Kalau ternyata
-  berbeda dari tabel ini, `LICENSES.md` mencatat lisensi aslinya.
+- Lisensi sudah diverifikasi dari `package.json` fontsource 5.3.0 (2026-09-27):
+  Permanent Marker dan Special Elite berlisensi Apache-2.0, sisanya OFL-1.1.
+  Kalam memakai dua file (400, 700).
 
 ## Preset palet (56)
 
@@ -395,7 +459,7 @@ Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
 | newsprint | `.sk-newsprint` | #1b1b1b | #ffe14d | #d7263d | #6b665c | lama |
 | dark-desk | `.sk-kraft-dark` | #f5efe6 | #ffe14d | #ff6b6b | #a8a29e | lama |
 | blueprint | `.sk-grid` | #1e3a5f | #ffe14d | #d7263d | #7ea3d4 | lama |
-| archive-sepia | `.sk-tex-paper-recycled` (#e9dcc3†) | #2a1f14 | #f2c14e | #9b2226 | #8a7a5c | baru |
+| archive-sepia | `.sk-tex-paper-tan` (#e9dcc3†) | #2a1f14 | #f2c14e | #9b2226 | #8a7a5c | baru |
 | cork-board | `.sk-tex-cork` (#b98a57†) | #1b1b1b | #ffe14d | #6e0d10 | #6b4f33 | baru |
 | evidence | #1d1f22 | #f1ede4 | #ffe14d | #ff5a5f | #6b6f76 | baru |
 | pastel-brief | #eef2f7 | #1e293b | #a7f3d0 | #e11d48 | #94a3b8 | baru |
@@ -408,7 +472,7 @@ Nilai yang ditandai † masih perkiraan, belum nilai final. Ada dua jenis:
 | notebook | `.sk-lined` | #1f2937 | #dc2626 | #2563eb | #9ca3af | lama |
 | night-desk | `.sk-kraft-dark` | #f5efe6 | #f59e0b | #7dd3fc | #a8a29e | lama |
 | blueprint-paper | `.sk-grid` | #1e3a5f | #b5452b | #2f6f8f | #7ea3d4 | lama |
-| warung | `.sk-tex-cardboard-corrugated` | #2b2118 | #d62828 | #2a9d8f | #8a7355 | baru |
+| warung | `.sk-tex-cardboard` | #2b2118 | #d62828 | #2a9d8f | #8a7355 | baru |
 | school-craft | `.sk-paper-white` | #1f2937 | #f4a261 | #3a86ff | #adb5bd | baru |
 | midnight-kraft | `.sk-kraft-dark` | #f5efe6 | #e9c46a | #7dd3fc | #a8a29e | baru |
 | pastel-cut | `.sk-paper-cream` | #2b2d42 | #ffafcc | #a2d2ff | #bdb2a0 | baru |
@@ -577,7 +641,9 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 ## Pengujian (`npm run test:asset-lib`)
 
 - Catalog ↔ file ↔ `LICENSES.md`: tiga arah lengkap. Tidak ada file tanpa
-  entri, dan tidak ada entri tanpa file.
+  entri, dan tidak ada entri tanpa file. `catalog.json`, `LICENSES.md`, dan
+  `CATALOG.md` dihasilkan oleh `build` dari sumber (data fetch, SVG, dan
+  `src/bitmaps.json` untuk bitmap), sehingga satu sumber per jenis.
 - Semua file di `vendor/asset-lib/` dan `asset-catalog/sheets/` tercatat di git.
 - Ukuran total aset baru ≤ 25 MB.
 - `asset-lib.js` sama dengan hasil `build` dari sumbernya.
@@ -593,7 +659,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 - `SK.rough` deterministik: seed sama → path sama, diuji dengan stub
   `getPointAtLength`. Stabilitas render dicek di spike (b).
 - Regresi: `npm run test:style-kit`, `test:motion-kit`, `test:video`, dan
-  `check:style-examples` tetap hijau. Ke-34 still contoh lama identik piksel
+  `check:style-examples` tetap hijau. Ke-60 still contoh lama identik piksel
   dengan snapshot di main.
 - Visual: setiap contact sheet dilihat satu per satu, dan aset yang lolos
   dicentang di `staging-assetlib/REVIEW.md`.
@@ -608,7 +674,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
    frame yang identik di dua render berturut-turut. Cadangan: `rough` dihitung
    saat build (node, parser path sederhana) dan hasilnya dibekukan.
 3. **(c) Starter + contoh memuat pustaka.** Memuat `asset-lib.css`/`.js` tidak
-   mengubah satu piksel pun pada 34 still lama, dan variabel `--sk-font-*`
+   mengubah satu piksel pun pada 60 still lama, dan variabel `--sk-font-*`
    dengan fallback menghasilkan font yang sama.
 4. **(d) Grade parallax di `.sk-view`.** `filter` pada `.sk-view` tidak
    meratakan 3D `.sk-world`. Cadangan: grade sebagai overlay `mix-blend-mode`
@@ -620,7 +686,7 @@ karena clip tidak boleh menulis `font-family` di `<style>` miliknya.
 - Semua contact sheet ada dan sudah direview. `CATALOG.md` sudah di-generate.
 - Dokumen workflow, 7 dokumen gaya, ADR-0016, rd-03, dan indeks internal/docs
   diperbarui di commit yang sama dengan kodenya.
-- 34 still lama identik piksel. Total ukuran ≤ 25 MB.
+- 60 still lama identik piksel. Total ukuran ≤ 25 MB.
 - Merge ke main lokal hanya setelah Dena setuju.
 
 ## Risiko
