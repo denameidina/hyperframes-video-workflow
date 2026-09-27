@@ -40,3 +40,8 @@
 /* sticker outline for a matted person (host <video>): chained drop-shadows compound, so four 10px
    offsets build a ~10px off-white ring; the last one is the hard paper shadow */
 .sk-sticker-cut { filter: drop-shadow(10px 0 0 #f6f2e9) drop-shadow(-10px 0 0 #f6f2e9) drop-shadow(0 10px 0 #f6f2e9) drop-shadow(0 -10px 0 #f6f2e9) drop-shadow(8px 12px 0 rgba(40,25,10,.28)); }
+/* 2.5D parallax (sub-project 3): view > world > full-frame layers */
+.sk-view { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; perspective: 1200px; perspective-origin: 540px 960px; }
+.sk-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-style: preserve-3d; }
+.sk-ly { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+.sk-ly > img.sk-plate { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }

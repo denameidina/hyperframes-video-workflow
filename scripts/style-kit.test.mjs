@@ -420,3 +420,61 @@ test('geo projects lat/lon into the map and keeps cities in place', () => {
   assert.ok(at('medan').y < at('jakarta').y, 'Medan is north of Jakarta');
   assert.ok(Math.abs(at('jakarta').x - 643) < 1 && Math.abs(at('jakarta').y - 685) < 1, 'Jakarta at (643, 685)');
 });
+
+// ---- 2.5D parallax (sub-project 3) ----
+
+test('layer places a full-frame layer at depth with framing compensation', () => {
+  const { SK } = load();
+  const el = fakeEl('ly');
+  assert.equal(SK.layer(el, -600), 1.5);
+  assert.equal(el.style.transform, 'translateZ(-600.00px) scale(1.50000)');
+  assert.equal(el.style.transformOrigin, '540px 960px');
+  assert.equal(SK.layer(el, 0), 1);
+  near(SK.layer(el, -600, { fill: 1.2 }), 1.8);
+  // at rest the perspective shrink P / (P - z) cancels the compensation exactly
+  for (const z of [-1400, -500, 0, 200]) {
+    const s = SK.layer(fakeEl('x'), z);
+    assert.ok(Math.abs((SK.P / (SK.P - z)) * s - 1) < 1e-9, `z=${z}`);
+  }
+});
+
+test('camera moves the world opposite to a pan and toward a dolly', () => {
+  const { SK } = load();
+  const w = fakeEl('world');
+  SK.camera(w, { x: 40, y: -10, z: 300, rx: 2, ry: -3 });
+  assert.equal(w.style.transform, 'translate3d(-40.00px,10.00px,300.00px) rotateX(2.000deg) rotateY(-3.000deg)');
+  SK.camera(w);
+  assert.equal(w.style.transform, 'translate3d(0.00px,0.00px,0.00px) rotateX(0.000deg) rotateY(0.000deg)');
+  assert.equal(w.style.transformOrigin, '540px 960px');
+});
+
+test('layer and camera accept a smaller view centre for split and panel views', () => {
+  const { SK } = load();
+  const el = fakeEl('ly'), w = fakeEl('world');
+  SK.layer(el, -300, { ox: 540, oy: 480 });
+  assert.equal(el.style.transformOrigin, '540px 480px');
+  SK.camera(w, { z: 10 }, { ox: 450, oy: 275 });
+  assert.equal(w.style.transformOrigin, '450px 275px');
+});
+
+test('dof blurs by distance from the focus depth and clamps', () => {
+  const { SK } = load();
+  const a = fakeEl('a'), b = fakeEl('b'), c = fakeEl('c');
+  SK.dof([{ el: a, z: -500 }, { el: b, z: -1400 }, { el: c, z: 5000 }], -500, { k: 100, max: 12 });
+  assert.equal(a.style.filter, 'none');
+  assert.equal(b.style.filter, 'blur(9.00px)');
+  assert.equal(c.style.filter, 'blur(12.00px)');
+});
+
+test('dollyZoom keeps the subject size while the camera dollies', () => {
+  const { SK } = load();
+  const z0 = -400, P0 = 1200;
+  const s0 = (P0 - z0) / P0;
+  for (const u of [0, 0.25, 0.5, 1]) {
+    const { P, d } = SK.dollyZoom(u, { P0, z0, d1: 250 });
+    const apparent = (P / (P - (z0 + d))) * s0;
+    assert.ok(Math.abs(apparent - 1) < 1e-9, `u=${u}: ${apparent}`);
+  }
+  assert.equal(SK.dollyZoom(0, { P0, z0 }).P, P0);
+  assert.ok(SK.dollyZoom(1, { P0, z0, d1: 5000 }).d < -z0, 'dolly stops short of the subject');
+});

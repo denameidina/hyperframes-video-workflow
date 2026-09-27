@@ -1,8 +1,9 @@
 /* style-kit: primitives for style b-roll clips (broll-text, motion-graphic, whiteboard, stop-motion,
-   vox, mix-media)
+   vox, mix-media, parallax)
    as HyperFrames sub-compositions. Specs: docs/superpowers/specs/2026-09-27-style-kit-design.md,
    docs/superpowers/specs/2026-09-27-paper-pack-stop-motion-design.md,
-   docs/superpowers/specs/2026-09-27-vox-mix-media-design.md.
+   docs/superpowers/specs/2026-09-27-vox-mix-media-design.md,
+   docs/superpowers/specs/2026-09-27-parallax-design.md.
    Needs gsap and window.M (vendor/motion-kit/motion-kit.js) loaded first; reuses M.clamp,
    M.eo, M.S and M.track instead of copying them. Every frame is a pure function of
    clip-local time t (seconds): no timers, clocks, or Math.random. */
@@ -283,5 +284,43 @@ SK.CITIES = {
   jakarta:[-6.2088,106.8456], bandung:[-6.9175,107.6191], yogyakarta:[-7.7956,110.3695],
   surabaya:[-7.2575,112.7521], denpasar:[-8.6705,115.2126], medan:[3.5952,98.6722],
   makassar:[-5.1477,119.4327], jayapura:[-2.5337,140.7181],
+};
+
+// ---- 2.5D parallax (sub-project 3) ------------------------------------------------------------
+/* A parallax clip is .sk-stage > #view (perspective: P) > #world (transform-style: preserve-3d) >
+   2–5 full-frame .sk-ly layers. Negative z is behind the screen plane. */
+SK.P = 1200;
+/* layer: put a full-frame layer at depth z, scaled (P - z) / P about the frame centre so its framing
+   matches the design while the camera rests; o.fill (e.g. 1.15) makes plates larger than the frame so
+   a camera move never shows an edge. o.ox/o.oy is the view centre (default 540, 960; a split or panel
+   view passes its own). Returns the scale. */
+SK.layer = (el,z,o={})=>{
+  const P=o.P||SK.P, s=((P-z)/P)*(o.fill||1);
+  el.style.transformOrigin=`${o.ox??540}px ${o.oy??960}px`;
+  el.style.transform=`translateZ(${z.toFixed(2)}px) scale(${s.toFixed(5)})`;
+  return s;
+};
+/* camera: dolly z (toward the scene), pan x/y (the scene shifts the other way), small orbit rx/ry in
+   degrees (keep |r| <= 6 so layer edges stay hidden); o.ox/o.oy as in SK.layer */
+SK.camera = (world,c={},o={})=>{
+  const x=c.x||0, y=c.y||0, z=c.z||0, rx=c.rx||0, ry=c.ry||0;
+  world.style.transformOrigin=`${o.ox??540}px ${o.oy??960}px`;
+  world.style.transform=`translate3d(${(-x).toFixed(2)}px,${(-y).toFixed(2)}px,${z.toFixed(2)}px) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+};
+/* dof: blur each layer by its distance from the focus depth: min(max, |z - focusZ| / k) px.
+   items = [{el, z}]; move focusZ over time for a rack focus. */
+SK.dof = (items,focusZ,o={})=>{
+  const k=o.k||110, max=o.max??12;
+  items.forEach(({el,z})=>{
+    const b=Math.min(max,Math.abs(z-focusZ)/k);
+    el.style.filter=b>0.05?`blur(${b.toFixed(2)}px)`:'none';
+  });
+};
+/* dollyZoom ("vertigo"): as the camera dollies d toward a subject at depth z0 (< 0), shrink the
+   perspective so the subject keeps its size while everything else stretches: P = P0 * (z0 + d) / z0.
+   u in 0..1 runs d from 0 to o.d1 (the dolly stops short of the subject). Returns {P, d}. */
+SK.dollyZoom = (u,o={})=>{
+  const P0=o.P0||SK.P, z0=o.z0??-400, d1=Math.min(o.d1??200,-z0*0.85), d=d1*clamp(u);
+  return {P:P0*(z0+d)/z0, d};
 };
 })();
