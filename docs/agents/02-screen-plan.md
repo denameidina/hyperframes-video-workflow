@@ -110,7 +110,7 @@ unobstructed, use only project-local assets).
 
 ### Visual step
 
-4. **Map and decide.** Read `docs/agents/references/motion-broll-planning.md` first (motion b-roll is the default visual), then `docs/agents/references/visual-planning.md` (Asset
+4. **Map and decide.** Read `docs/agents/references/styles/README.md` and `docs/agents/references/motion-broll-planning.md` first (a motion visual from the menu is the default visual; for each `broll-text`, `motion-graphic`, or `whiteboard` row also read that style's file in `docs/agents/references/styles/`), then `docs/agents/references/visual-planning.md` (Asset
    Categories, Asset Decision Workflow steps 1–4, Dena-Specific Asset Rules,
    Dena-Specific Examples, Default Asset Density) and the image-generation
    decision rules at the top of Generated Image Prompt Rules in

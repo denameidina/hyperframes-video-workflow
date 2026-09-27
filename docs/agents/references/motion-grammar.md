@@ -363,6 +363,7 @@ Useful notes:
 - click for checklist/proof marker
 - subtle riser before mission line
 - silence/drop before key line
+- style b-roll cues per pattern: the SFX table in each `styles/<type>.md`
 
 For designed Dena recuts, plan SFX on important transitions, proof reveals, title hits, and CTA shifts by default. Do not require SFX for every caption pop or small motion.
 

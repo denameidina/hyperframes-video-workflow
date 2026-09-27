@@ -283,6 +283,7 @@ Use overlays to clarify context or reset attention every 4-8 seconds.
 Good overlays:
 
 - Motion b-roll: one morphing shape + cursor that shows the process, tool, comparison, or step Dena is talking about (`docs/agents/references/motion-broll-planning.md`).
+- Style b-roll: kinetic text, flat motion graphics, or whiteboard drawing when the words, a spoken number, or a framework are the point (`docs/agents/references/styles/README.md`).
 - Screenshot of tool/app when mentioning a tool.
 - Small UI mock/screenshot when talking about frontend.
 - Simple checklist card for frameworks, scope, requirements.
@@ -301,6 +302,7 @@ Default visual language for tech/founder monologues:
 
 - Clean black/white/yellow caption system.
 - Motion b-roll in the same palette: `#050505`, white, one yellow accent.
+- Style b-roll may use its own palette per clip, written in its Style B-roll Brief; captions, hook card, and CTA stay in the Dena system.
 - Occasional glass/black cards.
 - Minimal accent lines.
 - Screenshots and UI cards when context demands.

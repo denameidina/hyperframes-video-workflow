@@ -74,8 +74,8 @@ motion, match Dena default style, reuse existing project structure).
    readiness report naming the missing artifact and its owning phase; do not
    guess.
 2. **Produce assets.** Read `docs/agents/references/asset-production.md`. For
-   each Asset Brief in `visual-plan.md` (Motion B-roll Briefs are not assets; step
-   4a handles them), capture or generate the file into
+   each Asset Brief in `visual-plan.md` (Motion B-roll and Style B-roll Briefs are
+   not assets; step 4a handles them), capture or generate the file into
    `videos/<slug>/assets/` under its Planned file name, record it in
    `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
@@ -106,9 +106,11 @@ motion, match Dena default style, reuse existing project structure).
    element, extract the audio of `processed.mp4` (or use `audio-clean.wav` when
    Story made one) to `videos/<slug>/processed-audio.wav`; never use Story's
    raw-time ASR extract.
-4a. **Author motion b-roll.** For each `motion-broll` row, follow
-   `docs/agents/references/motion-broll-authoring.md`: write the clip at its
-   Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
+4a. **Author motion visuals.** For each `motion-broll` row, follow
+   `docs/agents/references/motion-broll-authoring.md`; for each `broll-text`,
+   `motion-graphic`, or `whiteboard` row, follow the Build Contract in
+   `docs/agents/references/styles/README.md` and the Build Recipe in that
+   style's file. Write the clip at its Planned file, mount it in `videos/<slug>/index.html` on track 4, add the split transform
    when the treatment is split, then run the Still Check at the brief's key-word
    times and fix what it shows before step 5.
 5. **Verify.** Run `npm run video -- check <slug>` and fix every error; review warnings. Preview
@@ -124,7 +126,7 @@ motion, match Dena default style, reuse existing project structure).
 ## Outputs
 
 - `videos/<slug>/index.html`
-- `videos/<slug>/compositions/broll/*.html` for motion b-roll clips; other
+- `videos/<slug>/compositions/broll/*.html` for motion b-roll and style b-roll clips; other
   `compositions/*.html` only when sub-compositions are justified
 - `videos/<slug>/assets/*` and `videos/<slug>/assets/asset-manifest.json`, when
   assets exist

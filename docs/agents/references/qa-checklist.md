@@ -578,6 +578,15 @@ Assign to:
 - Treatment rules hold: no face cover in 0–3 s without approval, 2 s of face between cutaways, cutaways ≤ 10 s.
 - One accent colour; no invented numbers; illustrative parts match the brief.
 
+## Style B-roll Review
+
+- Every `broll-text`, `motion-graphic`, and `whiteboard` clip matches its Style B-roll Brief (pattern, palette, font, treatment).
+- Each beat lands on its word (±0.15 s against `processed-transcript.json`); whiteboard strokes finish before their word.
+- Every on-screen word and number is verbatim from the transcript or given by the user.
+- The style's Anti-slop Checklist (`docs/agents/references/styles/<type>.md`) passes on the stills.
+- At most three motion visual types in the video; neighbouring clips differ unless they are one sequence.
+- Nothing from a finished clip stays on screen after its mount ends.
+
 ## Definition Of Done
 
 A QA pass is complete only when:

@@ -19,6 +19,8 @@ step, a chapter change, or a story moment with a concrete object.
 
 Use something else when:
 
+- the words, a spoken number, or a hand-built framework are the point: pick
+  `broll-text`, `motion-graphic`, or `whiteboard` from `styles/README.md`;
 - the line needs real proof (the actual tool UI or the actual result): use a
   capture; the capture may sit inside one state of the shape;
 - the moment is mood, texture, or background: use a generated still;

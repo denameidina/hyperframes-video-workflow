@@ -61,7 +61,7 @@ Fail the visual plan or asset production when:
 
 - visual assets exist but `visual-plan.md` has no `Visual Decision Log`
 - an asset opportunity says no generated media was needed without an `imagegen_candidate` decision
-- a moment that explains, shows, compares, or sequences uses a stiff card/SVG instead of motion b-roll, or a mood, background, or texture moment skips image generation without a reason
+- a moment that explains, shows, compares, or sequences uses a stiff card/SVG instead of a motion visual (motion b-roll or a style from `docs/agents/references/styles/README.md`), or a mood, background, or texture moment skips image generation without a reason
 - a generated asset has no provenance or prompt summary in `asset-manifest.json`
 - a generated asset looks generic, fake, or detached from transcript context
 
@@ -76,6 +76,7 @@ Designed recuts must:
 - verify SFX is audible in the final render but does not cover speech
 - avoid motion/SFX that feels generic, chaotic, or detached from the transcript
 - land motion b-roll state changes on their words and keep the cursor inside the frame
+- land style b-roll beats on their words, boil whiteboard strokes only after they finish, and keep every on-screen word and number verbatim
 
 ## HyperFrames Gate
 
