@@ -20,3 +20,10 @@
 .sk-sans { font-family: 'Geist', system-ui, sans-serif; text-transform: none; }
 .sk-hand { font-family: 'Caveat', cursive; text-transform: none; }
 .sk-wb .sk-stroke { stroke: var(--sk-ink); stroke-width: 7; }
+/* paper and stop-motion (sub-project 2a); paper backgrounds live in vendor/paper-pack/paper-pack.css */
+.sk-stop { --sk-bg: #c4965a; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; font-family: 'Geist', system-ui, sans-serif; }
+.sk-cut { filter: drop-shadow(3px 5px 1px rgba(40,25,10,.32)); }
+.sk-grain { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; mix-blend-mode: multiply; opacity: .16;
+  background-size: 256px 256px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.sk-hand-img { position: absolute; left: 0; top: 0; transform-origin: 0 0; z-index: 11; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }

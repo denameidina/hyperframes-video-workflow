@@ -296,3 +296,96 @@ test('clip rejects bad config', () => {
   assert.throws(() => SK.clip('sk-test', { T: 2 }), /needs cfg\.update\(t\)/);
   assert.throws(() => SK.clip('missing', { T: 2, update() {} }), /no \.sk-stage/);
 });
+
+// ---- stop-motion, paper, and hand (sub-project 2a) ----
+
+test('STOP_FPS holds each pose for two frames at 30 fps', () => {
+  const { SK } = load();
+  assert.equal(SK.STOP_FPS, 15);
+  assert.equal(30 / SK.STOP_FPS, 2);
+});
+
+test('onTwos evaluates a curve on the step grid', () => {
+  const { SK } = load();
+  const f = SK.onTwos((t) => t * 10);
+  assert.equal(f(0.05), 0);
+  assert.equal(f(0.07), 10 / 15);
+  assert.equal(f(0.1), 10 / 15);
+});
+
+test('piece places a pose with seeded jitter that holds within a step', () => {
+  const { SK } = load();
+  const a = fakeEl('a'), b = fakeEl('b');
+  SK.piece(a, { x: 100, y: 200, r: 5, s: 1.2, o: 0.5 }, 3, 0.01);
+  SK.piece(b, { x: 100, y: 200, r: 5, s: 1.2, o: 0.5 }, 3, 0.06);
+  assert.equal(a.style.transform, b.style.transform);
+  assert.match(a.style.transform, /^translate\(\d+\.\d{2}px,\d+\.\d{2}px\) rotate\(\d+\.\d{3}deg\) scale\(1\.2000\)$/);
+  assert.equal(a.style.opacity, '0.5000');
+  const [, x, y] = a.style.transform.match(/translate\(([\d.]+)px,([\d.]+)px/);
+  assert.ok(Math.abs(x - 100) <= 1.5 && Math.abs(y - 200) <= 1.5);
+  const c = fakeEl('c');
+  SK.piece(c, { x: 100, y: 200 }, 3, 0.07);
+  assert.notEqual(c.style.transform.split(' rotate')[0], a.style.transform.split(' rotate')[0]);
+  SK.piece(c, { x: 0, y: 0 }, 3, 0.5, { amp: 0 });
+  assert.equal(c.style.transform, 'translate(0.00px,0.00px) rotate(0.000deg) scale(1.0000)');
+});
+
+test('cycle picks a replacement drawing per step and repeats', () => {
+  const { SK } = load();
+  assert.equal(SK.cycle(0, 3), 0);
+  assert.equal(SK.cycle(1 / 15, 3), 1);
+  assert.equal(SK.cycle(2 / 15, 3), 2);
+  assert.equal(SK.cycle(3 / 15, 3), 0);
+  assert.equal(SK.cycle(0.5, 4, 12), 2);
+});
+
+test('torn builds a deterministic polygon that tears only the listed edges', () => {
+  const { SK } = load();
+  const p = SK.torn(200, 100, 5);
+  assert.equal(p, SK.torn(200, 100, 5));
+  assert.notEqual(p, SK.torn(200, 100, 6));
+  assert.match(p, /^polygon\([\d.]+px [\d.-]+px(,[\d.-]+px [\d.-]+px)+\)$/);
+  const pts = (s) => s.slice(8, -1).split(',').map((q) => q.split(' ').map(parseFloat));
+  const onlyTop = pts(SK.torn(200, 100, 5, { edges: 't', amp: 10 }));
+  assert.ok(onlyTop.some(([, y]) => y > 0 && y < 50), 'top edge torn inward');
+  assert.ok(onlyTop.filter(([x]) => x > 150).every(([x]) => x === 200 || x < 200), 'right edge straight');
+  for (const [x, y] of pts(p)) assert.ok(x >= -3 && x <= 203 && y >= -3 && y <= 103, `${x},${y}`);
+});
+
+test('grain jumps to a seeded offset each step', () => {
+  const { SK } = load();
+  const a = fakeEl('g'), b = fakeEl('g');
+  SK.grain(a, 0.01, 2); SK.grain(b, 0.05, 2);
+  assert.equal(a.style.backgroundPosition, b.style.backgroundPosition);
+  assert.match(a.style.backgroundPosition, /^\d+px \d+px$/);
+  SK.grain(b, 0.1, 2);
+  assert.notEqual(a.style.backgroundPosition, b.style.backgroundPosition);
+});
+
+test('lastTip reports the end of the most recently finished stroke', () => {
+  const { SK } = load();
+  const a = fakePath(), b = fakePath();
+  const items = [{ el: a, at: 0, dur: 1 }, { el: b, at: 1, dur: 1 }];
+  assert.equal(SK.lastTip(0.5, items), null);
+  const l = SK.lastTip(1.5, items);
+  assert.equal(l.x, 100);
+  assert.equal(l.since, 0.5);
+  assert.equal(SK.lastTip(3, items).since, 1);
+});
+
+test('placeHand puts the pen tip on the tip, hovers, then glides off', () => {
+  const { SK } = load();
+  const img = fakeEl('img', { setAttribute(k, v) { this[k] = v; } });
+  SK.placeHand(img, { x: 300, y: 400 });
+  assert.equal(img.src, 'vendor/paper-pack/hand-write.png');
+  const H = SK.HAND.write, s = 0.55;
+  assert.equal(img.style.width, (H.w * s).toFixed(1) + 'px');
+  assert.equal(img.style.transform, `translate(${(300 - H.tx * s).toFixed(2)}px,${(400 - H.ty * s).toFixed(2)}px)`);
+  SK.placeHand(img, null, { last: { x: 300, y: 400, since: 0.2 } });
+  assert.equal(img.style.transform, `translate(${(300 - H.tx * s).toFixed(2)}px,${(400 - H.ty * s).toFixed(2)}px)`, 'hovers first');
+  SK.placeHand(img, null, { last: { x: 300, y: 400, since: 5 } });
+  assert.equal(img.style.transform, `translate(${(1300 - H.tx * s).toFixed(2)}px,${(2200 - H.ty * s).toFixed(2)}px)`, 'gone');
+  SK.placeHand(img, { x: 10, y: 10 }, { pose: 'point' });
+  assert.equal(img.src, 'vendor/paper-pack/hand-point.png');
+  assert.throws(() => SK.placeHand(img, null, { pose: 'wave' }), /unknown hand pose "wave"/);
+});

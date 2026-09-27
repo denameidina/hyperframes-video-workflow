@@ -1,5 +1,6 @@
-/* style-kit: primitives for style b-roll clips (broll-text, motion-graphic, whiteboard)
-   as HyperFrames sub-compositions. Spec: docs/superpowers/specs/2026-09-27-style-kit-design.md.
+/* style-kit: primitives for style b-roll clips (broll-text, motion-graphic, whiteboard, stop-motion)
+   as HyperFrames sub-compositions. Specs: docs/superpowers/specs/2026-09-27-style-kit-design.md,
+   docs/superpowers/specs/2026-09-27-paper-pack-stop-motion-design.md.
    Needs gsap and window.M (vendor/motion-kit/motion-kit.js) loaded first; reuses M.clamp,
    M.eo, M.S and M.track instead of copying them. Every frame is a pure function of
    clip-local time t (seconds): no timers, clocks, or Math.random. */
@@ -191,5 +192,76 @@ SK.count = (t,t0,t1,from,to,dec=0)=>{
 SK.cam = (el,s,fx=540,fy=960,W=1080,H=1920)=>{
   el.style.transformOrigin='0 0';
   el.style.transform=`translate(${(W/2-s*fx).toFixed(2)}px,${(H/2-s*fy).toFixed(2)}px) scale(${s.toFixed(5)})`;
+};
+
+// ---- stop-motion and paper (sub-project 2a) ------------------------------------------------
+/* Stop-motion steps at 15 fps: HyperFrames renders at 30 fps, so every pose holds exactly two
+   frames ("on twos"); 12 fps would hold an uneven 3:2 pattern at 30 fps. */
+SK.STOP_FPS = 15;
+// wrap a curve f(t) so it is evaluated on the step grid: SK.onTwos(M.track(...))(t)
+SK.onTwos = (f,fps=SK.STOP_FPS)=>t=>f(SK.stepTime(t,fps));
+/* piece: place a cut-out at pose {x, y, r (deg), s, o} plus replacement jitter — a new seeded
+   offset every step (±amp px, ±0.35·amp deg), like a hand nudging paper between frames. */
+SK.piece = (el,pose,seed,t,o={})=>{
+  const b=SK.boil(seed,t,o.amp??1.5,o.fps||SK.STOP_FPS);
+  const x=(pose.x||0)+b.x, y=(pose.y||0)+b.y, r=(pose.r||0)+b.r, s=pose.s??1;
+  el.style.transform=`translate(${x.toFixed(2)}px,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg) scale(${s.toFixed(4)})`;
+  if(pose.o!=null) el.style.opacity=clamp(pose.o).toFixed(4);
+};
+// replacement animation: which of n drawings shows at time t (0..n-1, repeating)
+SK.cycle = (t,n,fps=SK.STOP_FPS)=>((Math.floor(t*fps+1e-9)%n)+n)%n;
+/* torn: clip-path polygon for a w×h piece; the listed edges ('t','r','b','l') tear inward by up
+   to amp px every ~step px, the others stay straight cut. Deterministic per seed. */
+SK.torn = (w,h,seed=1,o={})=>{
+  const edges=o.edges??'trbl', amp=o.amp??8, step=o.step??14, r=SK.rng(mix(seed,23)), pts=[];
+  const side=(k,x0,y0,x1,y1,nx,ny)=>{
+    const L=Math.hypot(x1-x0,y1-y0), n=Math.max(1,Math.round(L/step));
+    for(let i=0;i<n;i++){
+      const u=i/n, d=edges.includes(k)&&i>0?r()*amp:0, j=edges.includes(k)&&i>0?(r()-0.5)*step*0.4:0;
+      pts.push([x0+(x1-x0)*u+nx*d+(ny?j:0), y0+(y1-y0)*u+ny*d+(nx?j:0)]);
+    }
+  };
+  side('t',0,0,w,0,0,1); side('r',w,0,w,h,-1,0); side('b',w,h,0,h,0,-1); side('l',0,h,0,0,1,0);
+  return `polygon(${pts.map(([x,y])=>`${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})`;
+};
+// living grain: shift a .sk-grain overlay to a new seeded offset every step
+SK.grain = (el,t,seed=1,o={})=>{
+  const r=SK.rng(mix(seed,Math.floor(t*(o.fps||SK.STOP_FPS)+1e-9)));
+  el.style.backgroundPosition=`${Math.floor(r()*256)}px ${Math.floor(r()*256)}px`;
+};
+
+// ---- whiteboard hand ------------------------------------------------------------------------
+/* Flat hand PNGs from vendor/paper-pack; tx/ty is the pen tip (write) or fingertip (point) in
+   the image's own pixels, measured once from the asset. */
+SK.HAND = {
+  write:{src:'vendor/paper-pack/hand-write.png', w:664, h:720, tx:8, ty:711},
+  point:{src:'vendor/paper-pack/hand-point.png', w:697, h:720, tx:10, ty:705},
+};
+// the end point of the most recently finished stroke and the seconds since it finished
+SK.lastTip = (t,items,o={})=>{
+  let best=null;
+  for(const it of items){
+    const end=it.at+(it.dur??SK.len(it.el)/(o.speed||750));
+    if(end<=t&&(!best||end>best.end)) best={end,el:it.el};
+  }
+  if(!best) return null;
+  const p=SK.tip(best.el,1);
+  return {x:p.x, y:p.y, since:t-best.end};
+};
+/* placeHand: el is an <img class="sk-hand-img">. With a tip the pen sits on it; without one the
+   hand hovers at o.last for o.hover seconds (default 0.5), then glides off the bottom-right over
+   0.4 s; with neither it stays off-frame. o.scale sizes the hand (default 0.55). */
+SK.placeHand = (el,tip,o={})=>{
+  const H=SK.HAND[o.pose||'write'], s=o.scale??0.55;
+  if(!H) throw new Error(`style-kit: unknown hand pose "${o.pose}"`);
+  if(el._skHand!==H.src){el.setAttribute('src',H.src); el._skHand=H.src;}
+  let p=tip;
+  if(!p&&o.last){
+    const k=M.eo((o.last.since-(o.hover??0.5))/0.4);
+    p={x:o.last.x+(1300-o.last.x)*k, y:o.last.y+(2200-o.last.y)*k};
+  }
+  if(!p) p={x:1300, y:2200};
+  el.style.width=(H.w*s).toFixed(1)+'px';
+  el.style.transform=`translate(${(p.x-H.tx*s).toFixed(2)}px,${(p.y-H.ty*s).toFixed(2)}px)`;
 };
 })();
