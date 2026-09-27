@@ -181,6 +181,10 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-48** (Ubiquitous) — Gerak kamera clip `parallax` shall tetap di dalam
   Depth Budget (`parallax.md`) sehingga tepi plate dan celah antar-lapisan tidak
   terlihat.
+- **RD-03-49** (Unwanted) — If sebuah capture di clip `vox` punya bagian yang
+  diredaksi, then bar redaksi shall sudah menutup bagian itu sejak frame pertama
+  clip, sehingga teks yang disembunyikan tidak pernah terbaca selama kartu
+  bergerak masuk.
 
 ## Referensi
 

@@ -76,6 +76,20 @@ After transcription:
    - `agent`, `workflow`, `CRM`, `ERP`, `Flutter`, `frontend`, `backend`.
 5. Do not invent missing speech.
 
+Timing accuracy:
+
+- Full-file token offsets (`-ojf`) can drift ~0.5s and absorb pauses into the
+  next word. Confirm every cut boundary with `silencedetect` plus a 50ms RMS
+  scan, not the token times alone.
+- Verify a boundary by transcribing a short clip on each side of it (pad the
+  clip with ~0.5s of silence). A short clip can drop words, so bracket the
+  boundary (for example 90.55 / 90.65 / 90.72) instead of trusting one run, and
+  always re-read `processed-transcript.json` for words that should have been cut.
+- For caption word timing on the processed timeline, run whisper with
+  `-nfa --dtw large.v3.turbo` (DTW is silently disabled while flash attention is
+  on). DTW times land ~0.2-0.3s after the audible onset; start caption beats a
+  little earlier.
+
 If transcript is poor:
 
 - Keep the raw ASR file.

@@ -228,6 +228,12 @@ Every VOX clip shows one of two document kinds; the brief says which
 - Put the highlight inside a `position: relative` span around the spoken phrase,
   so it follows the text wherever it wraps. On a capture, place `.sk-hl` at the
   phrase's pixel box inside the capture's container.
+- On a dark capture (terminal, dark-mode UI) the default `multiply` marker only
+  tints the light text and the bar disappears; override it in the clip with
+  `mix-blend-mode: screen; background: rgba(255, 225, 77, 0.55)`.
+- Redaction bars on a capture are on from the clip's first frame
+  (`SK.highlight(bar, 1)`) when the card drops in, so the hidden text is never
+  readable mid-motion.
 - Map pins: `const p = SK.geo(...SK.CITIES.jakarta)` (or any `[lat, lon]`), put the
   pin and label inside the same camera layer as the map.
 - A capture is an `<img>` of `assets/captures/NN-name.png`; always add `.sk-source`.

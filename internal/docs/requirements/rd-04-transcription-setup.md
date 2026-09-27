@@ -40,6 +40,16 @@ Diturunkan dari setup docs, `.gitmodules`, dan fase Story (`docs/agents/referenc
   audio 1.2x (udah→sudah, nggak→tidak, dst.), the system shall memulihkan bentuk
   ucapan asli Dena di caption dan mengecek istilah tool/UI terhadap frame
   on-screen.
+- **RD-04-10** (Event-driven) — When sebuah batas cut dikonfirmasi dengan
+  mentranskrip klip pendek di sekitarnya, the system shall mengurung batas itu
+  dengan beberapa titik (mis. 90.55 / 90.65 / 90.72) dan membaca ulang
+  `processed-transcript.json` untuk kata yang seharusnya terbuang, karena satu
+  transkripsi klip pendek bisa melewatkan kata.
+- **RD-04-11** (Event-driven) — When timing kata timeline processed dibutuhkan
+  untuk caption, the system shall menjalankan whisper dengan
+  `-nfa --dtw large.v3.turbo` (DTW mati diam-diam selama flash attention aktif)
+  dan memulai beat caption sedikit sebelum timestamp DTW (~0.2-0.3s setelah
+  onset).
 
 ## Referensi
 
