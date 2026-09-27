@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the quotes are invented to show the mechanism. In a real clip every quote comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #card { position: absolute; left: 70px; top: 150px; width: 940px; height: 560px; transform-origin: 50% 0%; }
+        #cardPaper { position: absolute; inset: 0; }
+        #card > .tp { top: -28px; width: 200px; }
+        #head { position: absolute; left: 70px; top: 120px; width: 300px; height: 380px; }
+        .bubble { position: absolute; left: 400px; top: 110px; width: 490px; height: 260px; }
+        .bubble .bp { position: absolute; inset: 0; background: #fbfbf8; }
+        .bubble span { position: absolute; left: 30px; right: 30px; top: 58px; text-align: center; font-size: 66px; font-weight: 700; line-height: 1; color: #2b2118; }
+        #b1 span { color: var(--sk-accent-2); }
+      </style>
+      <div id="root" data-composition-id="sm-03-replace-panel" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop">
+          <div id="card" class="sk-cut">
+            <div id="cardPaper" class="sk-paper-cream"></div>
+            <div class="tp sk-tape-b" style="left:370px;transform:rotate(-3deg)"></div>
+            <svg id="head" viewBox="0 0 300 380" width="300" height="380">
+              <path d="M40 380 C40 290 90 250 150 250 C210 250 260 290 260 380 Z" fill="#2f6f8f" />
+              <ellipse cx="150" cy="150" rx="105" ry="120" fill="#e8b48a" />
+              <path d="M45 120 C50 40 110 20 160 25 C220 30 262 70 255 130 C230 90 180 80 140 85 C100 90 70 100 45 120 Z" fill="#2b2118" />
+              <ellipse cx="112" cy="150" rx="11" ry="14" fill="#2b2118" />
+              <ellipse cx="188" cy="150" rx="11" ry="14" fill="#2b2118" />
+              <path id="m0" d="M118 215 Q150 222 182 215" stroke="#2b2118" stroke-width="7" fill="none" stroke-linecap="round" />
+              <path id="m1" d="M120 208 Q150 250 180 208 Z" fill="#7a2e22" />
+              <path id="m2" d="M126 205 Q150 268 174 205 Z" fill="#7a2e22" />
+            </svg>
+            <div class="bubble sk-cut" id="b0"><div class="bp" id="bp0"></div><span class="sk-hand">klien nanya lagi</span></div>
+            <div class="bubble sk-cut" id="b1"><div class="bp" id="bp1"></div><span class="sk-hand">udah dicatat</span></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-03-replace-panel';
+          const $ = SK.finder(ID);
+          $('cardPaper').style.clipPath = SK.torn(940, 560, 12, { edges: 'lrb', amp: 10 });
+          const BUBBLE = 'polygon(0px 0px,490px 0px,490px 210px,120px 210px,60px 262px,70px 210px,0px 210px)';
+          $('bp0').style.clipPath = BUBBLE; $('bp1').style.clipPath = BUBBLE;
+          const card = SK.onTwos(M.track(0, [[0.1, 1, [20, 0.7]]]));
+          const TALK = [[0.8, 2.4], [3.3, 4.3]];
+          SK.clip(ID, { T: 5, bg: null, update: (t) => {
+            const c = card(t);
+            SK.piece($('card'), { x: 0, y: -40 * (1 - c), r: -3 * (1 - c), s: 0.9 + 0.1 * c, o: c > 0.05 ? 1 : 0 }, 1, t);
+            // replacement-face: one mouth drawing per step while talking, closed otherwise
+            const talking = TALK.some(([a, b]) => t >= a && t < b);
+            const m = talking ? [1, 2, 0, 2][SK.cycle(t, 4)] : 0;
+            for (let i = 0; i < 3; i++) $('m' + i).style.opacity = i === m ? '1' : '0';
+            // pin-and-swap: the second bubble replaces the first with no in-between
+            SK.piece($('b0'), { x: 0, y: 0, r: -2, o: t >= 1.0 && t < 3.2 ? 1 : 0 }, 6, t);
+            SK.piece($('b1'), { x: 0, y: 0, r: 2, o: t >= 3.2 ? 1 : 0 }, 7, t);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

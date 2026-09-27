@@ -9,6 +9,7 @@
     <script src="vendor/style-kit/style-kit.js"></script>
     <link rel="stylesheet" href="vendor/motion-kit/motion-kit.css" />
     <link rel="stylesheet" href="vendor/style-kit/style-kit.css" />
+    <link rel="stylesheet" href="vendor/paper-pack/paper-pack.css" />
     <style>
       body { margin: 0; background: #050505; }
       #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #050505; }
@@ -19,8 +20,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="74.5">
-      <div id="base-video" class="clip" data-start="0" data-duration="74.5" data-track-index="1">
+    <div id="root" data-composition-id="style-examples" data-start="0" data-width="1080" data-height="1920" data-duration="106">
+      <div id="base-video" class="clip" data-start="0" data-duration="106" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -48,17 +49,29 @@
            data-start="60.5" data-duration="7" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="wb-04-cross-out-mount" class="broll" data-composition-id="wb-04-cross-out" data-composition-src="compositions/wb-04-cross-out.html"
            data-start="68" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-01-slide-pin-mount" class="broll" data-composition-id="sm-01-slide-pin" data-composition-src="compositions/sm-01-slide-pin.html"
+           data-start="74.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-02-tear-split-mount" class="broll" data-composition-id="sm-02-tear-split" data-composition-src="compositions/sm-02-tear-split.html"
+           data-start="81" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-03-replace-panel-mount" class="broll" data-composition-id="sm-03-replace-panel" data-composition-src="compositions/sm-03-replace-panel.html"
+           data-start="87.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="sm-04-stack-crumple-mount" class="broll" data-composition-id="sm-04-stack-crumple" data-composition-src="compositions/sm-04-stack-crumple.html"
+           data-start="93" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="wb-05-hand-mount" class="broll" data-composition-id="wb-05-hand" data-composition-src="compositions/wb-05-hand.html"
+           data-start="99.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // Split treatment (tx-02, mg-02, wb-03): slide the base video into the bottom half, then back.
+      // Split treatment (tx-02, mg-02, wb-03, sm-02): slide the base video into the bottom half, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 10.55);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 28);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 33.55);
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 60.5);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 67.05);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 81);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 86.55);
       window.__timelines['style-examples'] = tl;
     </script>
   </body>

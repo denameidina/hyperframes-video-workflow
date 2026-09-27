@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the notes and label are invented to show the mechanism. In a real clip every word comes from the transcript (Gate 2 R1). The laptop is a Codex paper cut-out (assets/cut-laptop.png). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        .note { width: 250px; height: 248px; }
+        .note .bg { left: 0; top: 0; width: 250px; }
+        .note span { position: absolute; left: 0; right: 0; top: 78px; text-align: center; font-size: 64px; font-weight: 700; color: #2b2118; }
+        .note .pin { left: 100px; top: -34px; width: 46px; }
+        #label { width: 760px; height: 170px; }
+        #labelPaper { position: absolute; inset: 0; }
+        #labelPaper span { position: absolute; left: 0; right: 0; top: 30px; text-align: center; font-size: 104px; color: var(--sk-accent); }
+        #tapeL, #tapeR { position: absolute; top: -26px; width: 190px; }
+      </style>
+      <div id="root" data-composition-id="sm-01-slide-pin" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft">
+          <img class="p sk-cut" id="laptop" src="assets/cut-laptop.png" alt="" style="width:760px" />
+          <div class="p note sk-cut" id="n0"><div class="bg sk-sticky"></div><span class="sk-hand">chat</span><div class="pin sk-pin"></div></div>
+          <div class="p note sk-cut" id="n1"><div class="bg sk-sticky"></div><span class="sk-hand">invoice</span><div class="pin sk-pin"></div></div>
+          <div class="p note sk-cut" id="n2"><div class="bg sk-sticky"></div><span class="sk-hand">stok</span><div class="pin sk-pin"></div></div>
+          <div class="p sk-cut" id="label">
+            <div id="labelPaper" class="sk-paper-cream"><span class="sk-display">semua manual</span></div>
+            <div class="sk-tape-a" id="tapeL" style="left:-40px;transform:rotate(-24deg)"></div>
+            <div class="sk-tape-b" id="tapeR" style="left:610px;transform:rotate(20deg)"></div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-01-slide-pin';
+          const $ = SK.finder(ID);
+          $('labelPaper').style.clipPath = SK.torn(760, 170, 4, { edges: 'lr', amp: 12 });
+          // laptop slides in from the left on twos and lands with a one-step overshoot
+          const lx = SK.onTwos(M.track(-900, [[0.2, 160, [14, 0.7]]]));
+          const NOTES = [[1.6, 90, 1030, -5], [2.3, 415, 1060, 3], [3.0, 740, 1025, -3]];
+          const drop = NOTES.map(([at]) => SK.onTwos(M.track(1, [[at, 0, [26, 0.6]]])));
+          const lab = SK.onTwos(M.track(1, [[4.1, 0, [22, 0.7]]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.piece($('laptop'), { x: lx(t), y: 300 }, 1, t);
+            NOTES.forEach(([at, x, y, r], i) => {
+              const k = drop[i](t);
+              SK.piece($('n' + i), { x, y: y - 140 * k, r: r - 10 * k, s: 1 + 0.25 * k, o: t >= at ? 1 : 0 }, 10 + i, t);
+            });
+            const k = lab(t);
+            SK.piece($('label'), { x: 160, y: 1420 + 260 * k, r: -2 + 6 * k, o: t >= 4.1 ? 1 : 0 }, 20, t);
+            SK.grain($('grain'), t, 3);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

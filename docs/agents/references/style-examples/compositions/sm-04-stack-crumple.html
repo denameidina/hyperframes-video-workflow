@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words are invented to show the mechanism. In a real clip every word comes from the transcript (Gate 2 R1). The phone is a Codex paper cut-out (assets/cut-phone.png). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        .card { width: 600px; height: 330px; }
+        .card .cp { position: absolute; inset: 0; }
+        .card span { position: absolute; left: 150px; top: 96px; font-size: 104px; font-weight: 700; color: #2b2118; }
+        #ball { width: 230px; height: 230px; border-radius: 50%; }
+        #phone { width: 300px; }
+        #label { width: 640px; height: 150px; }
+        #labelPaper { position: absolute; inset: 0; }
+        #labelPaper span { position: absolute; left: 0; right: 0; top: 26px; text-align: center; font-size: 96px; color: var(--sk-accent); }
+        #label .tp { top: -26px; width: 170px; }
+      </style>
+      <div id="root" data-composition-id="sm-04-stack-crumple" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft-dark">
+          <div class="p card sk-cut" id="c0"><div class="cp sk-lined" id="cp0"></div><span class="sk-hand">nota</span></div>
+          <div class="p card sk-cut" id="c1"><div class="cp sk-lined" id="cp1"></div><span class="sk-hand">chat</span></div>
+          <div class="p card sk-cut" id="c2"><div class="cp sk-lined" id="cp2"></div><span class="sk-hand">excel</span></div>
+          <div class="p card sk-cut" id="c3"><div class="cp sk-lined" id="cp3"></div><span class="sk-hand">catatan</span></div>
+          <div class="p sk-cut sk-paper-crumpled" id="ball"></div>
+          <img class="p sk-cut" id="phone" src="assets/cut-phone.png" alt="" />
+          <div class="p sk-cut" id="label">
+            <div id="labelPaper" class="sk-paper-cream"><span class="sk-display">cukup satu</span></div>
+            <div class="tp sk-tape-a" style="left:-30px;transform:rotate(-18deg)"></div>
+            <div class="tp sk-tape-b" style="left:500px;transform:rotate(16deg)"></div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-04-stack-crumple';
+          const $ = SK.finder(ID);
+          for (let i = 0; i < 4; i++) $('cp' + i).style.clipPath = SK.torn(600, 330, 30 + i, { edges: 'tb', amp: 9 });
+          $('labelPaper').style.clipPath = SK.torn(640, 150, 41, { edges: 'lr', amp: 12 });
+          // stack-pile: each card drops onto the pile on its word, never perfectly aligned
+          const DROP = [[0.4, 240, 900, -6], [0.9, 250, 870, 4], [1.4, 225, 845, -3], [1.9, 245, 815, 7]];
+          const fall = DROP.map(([at]) => SK.onTwos(M.track(1, [[at, 0, [24, 0.65]]])));
+          // crumple-away: two replacement states (card, ball), then the ball leaves in steps
+          const away = SK.onTwos(M.track(0, [[3.3, 1, [10, 0.9]]]));
+          const slide = SK.onTwos(M.track(1400, [[3.9, 390, [14, 0.7]]]));
+          const lab = SK.onTwos(M.track(1, [[4.7, 0, [22, 0.7]]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            DROP.forEach(([at, x, y, r], i) => {
+              const k = fall[i](t);
+              const crumpled = i === 3 && t >= 2.9;
+              SK.piece($('c' + i), { x, y: y - 700 * k, r: r + 12 * k, o: t >= at && !crumpled ? 1 : 0 }, 30 + i, t);
+            });
+            const a = away(t);
+            const state = t < 2.9 ? 0 : t < 3.1 ? 1 : 2;
+            SK.piece($('ball'), { x: 430 - 700 * a, y: 700 + 500 * a, r: -200 * a, s: state === 1 ? 1.6 : 1, o: state ? 1 : 0 }, 44, t);
+            SK.piece($('phone'), { x: slide(t), y: 250, r: -4 }, 45, t);
+            const k = lab(t);
+            SK.piece($('label'), { x: 220, y: 1320 + 240 * k, r: 3 - 6 * k, o: t >= 4.7 ? 1 : 0 }, 46, t);
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the words are invented to show the mechanism. In a real clip every word comes from the transcript (Gate 2 R1). The phone is a Codex paper cut-out (assets/cut-phone.png). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; }
+        .p { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        #word { font-size: 250px; line-height: 1; color: var(--sk-accent); }
+        #sub { font-size: 84px; font-weight: 700; color: var(--sk-ink); }
+        #cover { width: 940px; height: 470px; }
+        #coverPaper { position: absolute; inset: 0; }
+        #cover .tp { top: -30px; width: 210px; }
+        #phone { width: 250px; }
+      </style>
+      <div id="root" data-composition-id="sm-02-tear-split" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop">
+          <div id="half" class="sk-paper-cream">
+            <div class="p sk-display" id="word">SISTEM</div>
+            <div class="p sk-hand" id="sub">yang jalan sendiri</div>
+            <img class="p sk-cut" id="phone" src="assets/cut-phone.png" alt="" />
+            <div class="p sk-cut" id="cover">
+              <div id="coverPaper" class="sk-kraft-ribbed"></div>
+              <div class="tp sk-tape-a" style="left:-50px;transform:rotate(-30deg)"></div>
+              <div class="tp sk-tape-b" style="left:780px;transform:rotate(28deg)"></div>
+            </div>
+            <div class="sk-grain" id="grain"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-02-tear-split';
+          const $ = SK.finder(ID);
+          $('coverPaper').style.clipPath = SK.torn(940, 470, 8, { edges: 'b', amp: 26, step: 22 });
+          // tear-reveal: the cover is ripped up and away in visible steps
+          const tear = SK.onTwos(M.track(0, [[1.2, 1, [9, 0.95]]]));
+          const pop = SK.onTwos(M.track(0, [[2.6, 1, [24, 0.55]]]));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            $('half').style.transform = `translateY(${(-(1 - M.eo(t / 0.3)) * 960).toFixed(2)}px)`;
+            const k = tear(t);
+            SK.piece($('cover'), { x: 70 - 120 * k, y: 200 - 820 * k, r: -14 * k }, 2, t);
+            SK.piece($('word'), { x: 110, y: 250 }, 3, t, { amp: 1 });
+            SK.piece($('sub'), { x: 120, y: 520, o: t >= 3.4 ? 1 : 0 }, 4, t, { amp: 1 });
+            const p = pop(t);
+            SK.piece($('phone'), { x: 760, y: 470, s: Math.max(0.01, p), r: 6, o: t >= 2.6 ? 1 : 0 }, 5, t);
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

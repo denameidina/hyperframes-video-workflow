@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: labels are invented to show the mechanism. In a real clip every label comes from the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .lab { position: absolute; width: 560px; text-align: center; font-size: 110px; font-weight: 700; line-height: 1; }
+      </style>
+      <div id="root" data-composition-id="wb-05-hand" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-wb">
+          <svg class="sk-full" viewBox="0 0 1080 1920" width="1080" height="1920" id="ink"></svg>
+          <div class="lab" id="l0" style="left:260px;top:520px">Ide</div>
+          <div class="lab" id="l1" style="left:260px;top:1150px">Sistem</div>
+          <img class="sk-hand-img" id="hand" alt="" />
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-05-hand';
+          const $ = SK.finder(ID);
+          const ar = SK.arrow(540, 700, 540, 1040, 51);
+          $('ink').innerHTML =
+            `<path id="o" class="sk-stroke" d="${SK.ellipse(540, 575, 230, 120, 50)}"/>` +
+            `<path id="s" class="sk-stroke" d="${ar.shaft}"/><path id="h" class="sk-stroke" d="${ar.head}"/>` +
+            `<path id="b" class="sk-stroke" d="${SK.rect(250, 1100, 580, 200, 52)}"/>`;
+          const PEN = { speed: 1100, boil: 1 };
+          const S = [{ el: $('o'), at: 0.3 }, { el: $('s'), at: 1.9 }, { el: $('h'), at: 2.25, dur: 0.15 }, { el: $('b'), at: 2.5 }];
+          const W = [['l0', 1.45, 0.35, 470, 610, 610], ['l1', 4.0, 0.6, 390, 690, 1245]];
+          const POINT = [4.8, 5.4];
+          // where the pen last lifted: the latest finished stroke or written word
+          const lastOf = (t) => {
+            let best = SK.lastTip(t, S, PEN);
+            for (const [, at, dur, , x1, y] of W) {
+              const end = at + dur;
+              if (end <= t && (!best || t - end < best.since)) best = { x: x1, y, since: t - end };
+            }
+            return best;
+          };
+          SK.clip(ID, { T: 6, update: (t) => {
+            let tip = SK.drawSeq(t, S, PEN);
+            W.forEach(([id, at, dur, x0, x1, y]) => {
+              const u = SK.smooth((t - at) / dur);
+              SK.write($(id), u);
+              if (u > 0 && u < 1) tip = SK.writeTip(x0, x1, y, u);
+            });
+            if (t >= POINT[0] && t < POINT[1]) {
+              SK.placeHand($('hand'), { x: 840, y: 1210 }, { pose: 'point' });
+            } else {
+              const last = t >= POINT[1] ? { x: 840, y: 1210, since: t - POINT[1] } : lastOf(t);
+              SK.placeHand($('hand'), tip, { last, hover: t >= POINT[1] ? 0 : 0.5 });
+            }
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
