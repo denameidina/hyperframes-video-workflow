@@ -56,7 +56,7 @@
 .sk-pal-wb-neon-marker { --sk-bg: #111111; --sk-ink: #f5f5f5; --sk-accent: #ff3ea5; --sk-accent-2: #3ef0ff; --sk-muted: #555555; }
 .sk-pal-vox-default { --sk-bg: #f5ebd0; --sk-ink: #1b1b1b; --sk-accent: #ffe14d; --sk-accent-2: #d7263d; --sk-muted: #8c8577; } /* add .sk-paper-cream */
 .sk-pal-vox-newsprint { --sk-bg: #c4b9b4; --sk-ink: #1b1b1b; --sk-accent: #ffe14d; --sk-accent-2: #d7263d; --sk-muted: #6b665c; } /* add .sk-newsprint */
-.sk-pal-vox-dark-desk { --sk-bg: #a68768; --sk-ink: #f5efe6; --sk-accent: #ffe14d; --sk-accent-2: #ff6b6b; --sk-muted: #a8a29e; } /* add .sk-kraft-dark */
+.sk-pal-vox-dark-desk { --sk-bg: #392b20; --sk-ink: #f5efe6; --sk-accent: #ffe14d; --sk-accent-2: #f05252; --sk-muted: #a8a29e; } /* add .sk-kraft-night */
 .sk-pal-vox-blueprint { --sk-bg: #f5f3f4; --sk-ink: #1e3a5f; --sk-accent: #ffe14d; --sk-accent-2: #d7263d; --sk-muted: #7ea3d4; } /* add .sk-grid */
 .sk-pal-vox-archive-sepia { --sk-bg: #caa77a; --sk-ink: #2a1f14; --sk-accent: #f2c14e; --sk-accent-2: #9b2226; --sk-muted: #8a7a5c; } /* add .sk-tex-paper-tan */
 .sk-pal-vox-cork-board { --sk-bg: #ab6f3e; --sk-ink: #1b1b1b; --sk-accent: #ffe14d; --sk-accent-2: #6e0d10; --sk-muted: #6b4f33; } /* add .sk-tex-cork */
@@ -64,7 +64,7 @@
 .sk-pal-vox-pastel-brief { --sk-bg: #eef2f7; --sk-ink: #1e293b; --sk-accent: #a7f3d0; --sk-accent-2: #e11d48; --sk-muted: #94a3b8; }
 .sk-pal-stop-default { --sk-bg: #bb8f4d; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; } /* add .sk-kraft */
 .sk-pal-stop-notebook { --sk-bg: #f5f3f4; --sk-ink: #1f2937; --sk-accent: #dc2626; --sk-accent-2: #2563eb; --sk-muted: #9ca3af; } /* add .sk-lined */
-.sk-pal-stop-night-desk { --sk-bg: #a68768; --sk-ink: #f5efe6; --sk-accent: #f59e0b; --sk-accent-2: #7dd3fc; --sk-muted: #a8a29e; } /* add .sk-kraft-dark */
+.sk-pal-stop-night-desk { --sk-bg: #392b20; --sk-ink: #f5efe6; --sk-accent: #f59e0b; --sk-accent-2: #7dd3fc; --sk-muted: #a8a29e; } /* add .sk-kraft-night */
 .sk-pal-stop-blueprint-paper { --sk-bg: #f5f3f4; --sk-ink: #1e3a5f; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #7ea3d4; } /* add .sk-grid */
 .sk-pal-stop-warung { --sk-bg: #ba8e4e; --sk-ink: #2b2118; --sk-accent: #d62828; --sk-accent-2: #2a9d8f; --sk-muted: #8a7355; } /* add .sk-tex-cardboard */
 .sk-pal-stop-school-craft { --sk-bg: #f5f3f4; --sk-ink: #1f2937; --sk-accent: #f4a261; --sk-accent-2: #3a86ff; --sk-muted: #adb5bd; } /* add .sk-paper-white */
@@ -73,7 +73,7 @@
 .sk-pal-mm-default { --sk-bg: #f5f3f4; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; } /* add .sk-grid */
 .sk-pal-mm-notebook { --sk-bg: #f5f3f4; --sk-ink: #1f2937; --sk-accent: #dc2626; --sk-accent-2: #2563eb; --sk-muted: #9ca3af; } /* add .sk-lined */
 .sk-pal-mm-kraft-desk { --sk-bg: #bb8f4d; --sk-ink: #2b2118; --sk-accent: #b5452b; --sk-accent-2: #2f6f8f; --sk-muted: #8a7355; } /* add .sk-kraft */
-.sk-pal-mm-night-zine { --sk-bg: #a68768; --sk-ink: #f5efe6; --sk-accent: #f59e0b; --sk-accent-2: #7dd3fc; --sk-muted: #a8a29e; } /* add .sk-kraft-dark */
+.sk-pal-mm-night-zine { --sk-bg: #392b20; --sk-ink: #f5efe6; --sk-accent: #f59e0b; --sk-accent-2: #7dd3fc; --sk-muted: #a8a29e; } /* add .sk-kraft-night */
 .sk-pal-mm-zine-pink { --sk-bg: #f5f3f4; --sk-ink: #111111; --sk-accent: #ff3d8b; --sk-accent-2: #1f6feb; --sk-muted: #9e9e9e; } /* add .sk-paper-white, overlay .sk-tex-riso */
 .sk-pal-mm-scrapbook { --sk-bg: #bb8f4d; --sk-ink: #2b2118; --sk-accent: #e76f51; --sk-accent-2: #2a9d8f; --sk-muted: #8a7355; } /* add .sk-kraft */
 .sk-pal-mm-xerox { --sk-bg: #c4b9b4; --sk-ink: #111111; --sk-accent: #ff2a2a; --sk-accent-2: #5f5f5f; --sk-muted: #8a8a8a; } /* add .sk-paper-grey, overlay .sk-tex-halftone */

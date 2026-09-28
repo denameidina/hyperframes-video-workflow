@@ -58,7 +58,7 @@ Every VOX clip shows one of two document kinds; the brief says which
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `.sk-pal-vox-default` | `#f5ebd0` | `#1b1b1b` | `#ffe14d` | `#d7263d` | `#8c8577` | `.sk-paper-cream` | legacy |
 | `.sk-pal-vox-newsprint` | `#c4b9b4` | `#1b1b1b` | `#ffe14d` | `#d7263d` | `#6b665c` | `.sk-newsprint` | legacy |
-| `.sk-pal-vox-dark-desk` | `#a68768` | `#f5efe6` | `#ffe14d` | `#ff6b6b` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink, accent2 |
+| `.sk-pal-vox-dark-desk` | `#392b20` | `#f5efe6` | `#ffe14d` | `#f05252` | `#a8a29e` | `.sk-kraft-night` | legacy |
 | `.sk-pal-vox-blueprint` | `#f5f3f4` | `#1e3a5f` | `#ffe14d` | `#d7263d` | `#7ea3d4` | `.sk-grid` | legacy |
 | `.sk-pal-vox-archive-sepia` | `#caa77a` | `#2a1f14` | `#f2c14e` | `#9b2226` | `#8a7a5c` | `.sk-tex-paper-tan` | new |
 | `.sk-pal-vox-cork-board` | `#ab6f3e` | `#1b1b1b` | `#ffe14d` | `#6e0d10` | `#6b4f33` | `.sk-tex-cork` | new |
@@ -71,7 +71,7 @@ Every VOX clip shows one of two document kinds; the brief says which
 | `.sk-type-vox-magazine` | — | Space Grotesk | — | DM Serif Display | — |
 | `.sk-type-vox-archive` | — | Newsreader | — | Special Elite | — |
 
-- `.sk-kraft-dark` averages #a68768: in `dark-desk` the light ink goes on dark paper pieces, never straight on the backdrop.
+- `dark-desk` sits on `.sk-kraft-night` (the kraft-dark grain multiplied down to #392b20); plain `.sk-kraft-dark` averages #a68768, too light for light ink.
 
 - Put the palette class on the stage (`<div class="sk-stage sk-vox sk-pal-vox-pastel-brief">`),
   plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the

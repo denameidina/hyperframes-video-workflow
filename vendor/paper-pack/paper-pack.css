@@ -1,6 +1,6 @@
 /* paper-pack: paper backgrounds for style b-roll clips. Loaded by the host after style-kit.css.
    Urls stay inside this folder (the linter rejects ../ paths). Sources: LICENSES.md. */
-.sk-paper-white, .sk-paper-cream, .sk-paper-grey, .sk-paper-crumpled, .sk-kraft, .sk-kraft-ribbed, .sk-kraft-dark,
+.sk-paper-white, .sk-paper-cream, .sk-paper-grey, .sk-paper-crumpled, .sk-kraft, .sk-kraft-ribbed, .sk-kraft-dark, .sk-kraft-night,
 .sk-lined, .sk-grid, .sk-newsprint { background-size: 1080px 1920px; background-position: 0 0; }
 .sk-paper-white { background-image: url(paper-white.jpg); }
 .sk-paper-cream { background-image: url(paper-cream.jpg); }
@@ -9,6 +9,9 @@
 .sk-kraft { background-image: url(kraft.jpg); }
 .sk-kraft-ribbed { background-image: url(kraft-ribbed.jpg); }
 .sk-kraft-dark { background-image: url(kraft-dark.jpg); }
+/* kraft-night: the kraft-dark texture multiplied down to a real night desk (average #392b20), so the
+   light-ink palettes (vox dark-desk, stop night-desk, mm night-zine) meet contrast; the grain stays */
+.sk-kraft-night { background-image: linear-gradient(#59534f, #59534f), url(kraft-dark.jpg); background-size: auto, 1080px 1920px; background-blend-mode: multiply, normal; }
 /* notebook: blue rules every 64px, red margin at 120px */
 .sk-lined {
   background-image: linear-gradient(to right, transparent 118px, rgba(220,38,38,.45) 118px 121px, transparent 121px),

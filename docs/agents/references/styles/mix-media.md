@@ -59,7 +59,7 @@ Rules:
 | `.sk-pal-mm-default` | `#f5f3f4` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-grid` | legacy |
 | `.sk-pal-mm-notebook` | `#f5f3f4` | `#1f2937` | `#dc2626` | `#2563eb` | `#9ca3af` | `.sk-lined` | legacy |
 | `.sk-pal-mm-kraft-desk` | `#bb8f4d` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-kraft` | legacy |
-| `.sk-pal-mm-night-zine` | `#a68768` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink |
+| `.sk-pal-mm-night-zine` | `#392b20` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-night` | legacy |
 | `.sk-pal-mm-zine-pink` | `#f5f3f4` | `#111111` | `#ff3d8b` | `#1f6feb` | `#9e9e9e` | `.sk-paper-white`, overlay `.sk-tex-riso` | new |
 | `.sk-pal-mm-scrapbook` | `#bb8f4d` | `#2b2118` | `#e76f51` | `#2a9d8f` | `#8a7355` | `.sk-kraft` | new |
 | `.sk-pal-mm-xerox` | `#c4b9b4` | `#111111` | `#ff2a2a` | `#5f5f5f` | `#8a8a8a` | `.sk-paper-grey`, overlay `.sk-tex-halftone` | new |
@@ -71,7 +71,7 @@ Rules:
 | `.sk-type-mm-editorial` | — | Space Grotesk | — | Instrument Serif | — |
 | `.sk-type-mm-typewriter` | — | Special Elite | — | — | — |
 
-- `.sk-kraft-dark` averages #a68768: in `night-zine` the light ink goes on dark paper pieces, never straight on the backdrop.
+- `night-zine` sits on `.sk-kraft-night` (the kraft-dark grain multiplied down to #392b20); plain `.sk-kraft-dark` averages #a68768, too light for light ink.
 
 - Put the palette class on the stage (`<div class="sk-stage sk-stop sk-pal-mm-pop-collage">`),
   plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the

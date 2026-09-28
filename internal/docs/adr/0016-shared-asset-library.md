@@ -30,11 +30,26 @@ kontras.
   bitmap hanya untuk benda fisik (kertas, tangan, scene, tekstur).
 - Preset: 8 palet per gaya (4 lama sebagai class + 4 baru), 8 grade parallax,
   23 preset tipografi; peran font di style-kit membaca `--sk-font-*` dengan font
-  lama sebagai fallback. Enam pengecualian kontras palet lama dipertahankan
-  (tiga disetujui Dena; tiga `.sk-kraft-dark` ditemukan lewat pengukuran dan
-  diperlakukan sama) dan dikunci oleh test.
+  lama sebagai fallback. Tiga pengecualian kontras palet lama yang disetujui
+  Dena (`text.paper` accent, `mg.default` dan `mg.mint` accent2) dipertahankan
+  dan dikunci oleh test; tiga palet `.sk-kraft-dark` diperbaiki (lihat
+  Amandemen 2026-09-28).
 - Contact sheet dirender dengan HyperFrames supaya agen bisa melihat pilihan.
 - `paper-pack` tidak dipindah; katalog mendaftarkannya.
+
+## Amandemen 2026-09-28 — meja kraft gelap
+
+Tiga palet lama bertinta terang (`vox.dark-desk`, `stop.night-desk`,
+`mm.night-zine`) memakai `.sk-kraft-dark`, yang rata-ratanya #a68768 (cokelat
+sedang): tinta #f5efe6 hanya 2,9:1, aksen 1,2–2,6:1. Dena memilih
+menggelapkannya, bukan mengecualikannya. Class baru `.sk-kraft-night` di
+`paper-pack.css` mengalikan tekstur kraft-dark dengan #59534f (rata-rata
+terukur #392b20, butir tekstur tetap); ketiga palet memakai `bg` #392b20 dan
+class itu, sehingga tinta 11,9:1 dan aksen 3,9–10,5:1. Pena merah
+`vox.dark-desk` jadi #f05252 (3,3:1 di kertas dokumen #fbfaf6, 3,9:1 di meja).
+`.sk-kraft-dark` sendiri tidak berubah; tidak ada contoh, studi, atau video
+yang memakai ketiga class palet, jadi hanya tiga sheet preset yang dirender
+ulang.
 
 ## Rationale
 

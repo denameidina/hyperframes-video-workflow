@@ -37,7 +37,7 @@ a Dena cut-out comes only from her footage.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `.sk-pal-stop-default` | `#bb8f4d` | `#2b2118` | `#b5452b` | `#2f6f8f` | `#8a7355` | `.sk-kraft` | legacy |
 | `.sk-pal-stop-notebook` | `#f5f3f4` | `#1f2937` | `#dc2626` | `#2563eb` | `#9ca3af` | `.sk-lined` | legacy |
-| `.sk-pal-stop-night-desk` | `#a68768` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-dark` | legacy — exception: ink |
+| `.sk-pal-stop-night-desk` | `#392b20` | `#f5efe6` | `#f59e0b` | `#7dd3fc` | `#a8a29e` | `.sk-kraft-night` | legacy |
 | `.sk-pal-stop-blueprint-paper` | `#f5f3f4` | `#1e3a5f` | `#b5452b` | `#2f6f8f` | `#7ea3d4` | `.sk-grid` | legacy |
 | `.sk-pal-stop-warung` | `#ba8e4e` | `#2b2118` | `#d62828` | `#2a9d8f` | `#8a7355` | `.sk-tex-cardboard` | new |
 | `.sk-pal-stop-school-craft` | `#f5f3f4` | `#1f2937` | `#f4a261` | `#3a86ff` | `#adb5bd` | `.sk-paper-white` | new |
@@ -50,7 +50,7 @@ a Dena cut-out comes only from her footage.
 | `.sk-type-stop-school` | — | Patrick Hand | — | — | — |
 | `.sk-type-stop-label` | Archivo Black | Geist | — | — | — |
 
-- `.sk-kraft-dark` averages #a68768: in `night-desk` the light ink goes on dark paper pieces, never straight on the backdrop.
+- `night-desk` sits on `.sk-kraft-night` (the kraft-dark grain multiplied down to #392b20); plain `.sk-kraft-dark` averages #a68768, too light for light ink.
 
 - Put the palette class on the stage (`<div class="sk-stage sk-stop sk-pal-stop-pastel-cut">`),
   plus the `add` class when listed; an overlay is its own full-frame div. Write the class in the
@@ -60,7 +60,7 @@ a Dena cut-out comes only from her footage.
 - One palette preset per style per video, unless a palette change marks a new story section.
 
 - Paper backgrounds: `.sk-paper-white`, `.sk-paper-cream`, `.sk-paper-grey`,
-  `.sk-paper-crumpled`, `.sk-kraft`, `.sk-kraft-ribbed`, `.sk-kraft-dark`,
+  `.sk-paper-crumpled`, `.sk-kraft`, `.sk-kraft-ribbed`, `.sk-kraft-dark`, `.sk-kraft-night`,
   `.sk-lined`, `.sk-grid`, `.sk-newsprint` (`paper-pack.css`, loaded after
   `style-kit.css`), plus the library's `.sk-tex-cardboard`, `.sk-tex-wood-desk`, `.sk-tex-cork`,
   `.sk-tex-paper-tan` (`texture-*.webp`). Give each piece its own paper; one texture everywhere reads

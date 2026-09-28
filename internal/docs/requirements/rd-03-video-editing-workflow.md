@@ -218,6 +218,13 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   `docs/agents/references/moodboard/local/` (gitignored) dan tidak pernah
   ter-track; moodboard yang di-commit hanya berisi studi buatan sendiri
   ([ADR-0018](../adr/0018-moodboard-studies.md)).
+- **RD-03-60** (Ubiquitous) — Setiap preset palet di
+  `vendor/asset-lib/src/presets.json` shall memenuhi aturan kontras per peran
+  (tinta ≥ 4,5:1 untuk b-roll text, ≥ 3:1 untuk gaya lain, diukur terhadap
+  rata-rata latarnya); pengecualian hanya tiga palet lama yang disetujui Dena
+  (`text.paper`, `mg.default`, `mg.mint`), dicatat di `exceptions` dan dikunci
+  oleh `scripts/asset-lib.test.mjs`
+  ([ADR-0016](../adr/0016-shared-asset-library.md)).
 
 ## Referensi
 
