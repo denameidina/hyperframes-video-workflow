@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Spotify Wrapped-style recaps — saturated flat shapes, one huge number, bold type. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #2b1a6b; }
+        .b { position: absolute; left: 0; top: 0; border-radius: 50%; }
+        #n { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font-size: 420px; line-height: .85; color: #d8ff3a; letter-spacing: -.04em; }
+        #k { position: absolute; left: 90px; top: 440px; font-size: 76px; color: #fff; }
+        #u { position: absolute; left: 90px; top: 1060px; font-size: 110px; line-height: .95; color: #ff7ac8; }
+      </style>
+      <div id="root" data-composition-id="mm-s6" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="b" id="b0" style="width:900px;height:900px;background:#ff4f2e"></div>
+          <div class="b" id="b1" style="width:620px;height:620px;background:#1ed6c2;border-radius:40% 60% 55% 45%"></div>
+          <div class="b" id="b2" style="width:360px;height:360px;background:#ff7ac8;border-radius:0"></div>
+          <div class="sk-display" id="k">bulan ini kamu jualan</div>
+          <div class="sk-display" id="n">0</div>
+          <div class="sk-display" id="u">ORDER<br>LEWAT CHAT</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-s6';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 3, update: (t) => {
+            const s = M.eo(M.clamp(t / 1.2));
+            $('b0').style.transform = `translate(${(380 - 200 * s).toFixed(1)}px, ${(-420 + 120 * s).toFixed(1)}px) scale(${(0.6 + 0.4 * s).toFixed(3)})`;
+            $('b1').style.transform = `translate(${(-260 + 60 * s).toFixed(1)}px, ${(1500 - 180 * s).toFixed(1)}px) rotate(${(40 * s).toFixed(1)}deg)`;
+            $('b2').style.transform = `translate(760px, ${(1400 - 100 * s).toFixed(1)}px) rotate(${(12 + 30 * s).toFixed(1)}deg)`;
+            $('n').textContent = SK.count(t, 0.4, 1.5, 0, 327);
+            SK.enter($('u'), t - 1.5, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

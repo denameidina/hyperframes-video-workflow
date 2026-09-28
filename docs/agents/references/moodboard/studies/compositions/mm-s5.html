@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Katie Vision-style edits — hand doodles and a marker label drawn over live footage, boiling on twelves. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ft { position: absolute; inset: 0; background: url(vendor/asset-lib/scenes/warung-counter/plate.webp) 45% 50% / cover; }
+        #ink { position: absolute; left: 0; top: 0; }
+        #lab { position: absolute; left: 120px; top: 380px; font-size: 96px; color: #fff; transform: rotate(-5deg); text-shadow: 5px 5px 0 #111; }
+        #stars { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="mm-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="ft"></div>
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="sk-f-permanent-marker" id="lab">stok numpuk!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-s5';
+          const $ = SK.finder(ID);
+          const ring = SK.ellipse(640, 1060, 330, 240, 761, 0.08), a = SK.arrow(360, 560, 520, 860, 762);
+          const sp = (x, y, s) => `M${x} ${y - s} L${x} ${y + s} M${x - s} ${y} L${x + s} ${y} M${x - s * .7} ${y - s * .7} L${x + s * .7} ${y + s * .7} M${x + s * .7} ${y - s * .7} L${x - s * .7} ${y + s * .7}`;
+          const P = [[ring, '#fff'], [a.shaft + ' ' + a.head, '#fff'], [sp(900, 700, 50), '#ffe03a'], [sp(180, 1500, 36), '#ffe03a'], ['M140 1700 q60 -40 120 0 t120 0 t120 0 t120 0', '#ff5fa2']];
+          $('ink').innerHTML = P.map(([d, c]) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+          const E = [...$('ink').querySelectorAll('path')];
+          SK.clip(ID, { T: 3, update: (t) => {
+            const tt = SK.stepTime(t, 12);
+            E.forEach((p, i) => { SK.draw(p, M.clamp((tt - 0.2 - i * 0.3) / 0.45)); const b = SK.boil(770 + i, t, 2, 12); p.setAttribute('transform', `translate(${b.x.toFixed(1)} ${b.y.toFixed(1)})`); });
+            SK.enter($('lab'), t - 0.3, 'pop');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

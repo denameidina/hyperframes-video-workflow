@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Richard Hamilton, pop collage (1956) — a room assembled from cut-out consumer objects, flat colour, one poster word. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #room { position: absolute; inset: 0; background: url(vendor/asset-lib/scenes/cafe-cowork/plate.webp) 40% 50% / cover; filter: saturate(1.4); }
+        #ceil { position: absolute; left: -40px; top: -40px; width: 1160px; height: 360px; background: #1f4e9c; }
+        #poster { position: absolute; left: 0; top: 0; padding: 22px 30px; background: #f7d23e; color: #c8102e; font-size: 150px; line-height: .9; }
+        #desk { position: absolute; left: 0; top: 0; width: 1100px; }
+        .o { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="mm-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="room"></div>
+          <div class="sk-cut" id="ceil"></div>
+          <div class="sk-display sk-cut" id="poster">JUAL<br>AN!</div>
+          <img class="sk-cut" id="desk" src="vendor/asset-lib/scenes/cafe-cowork/front.png" alt="" />
+          <div class="o sk-cut sk-obj-shopping-bag" id="o0" style="width:330px"></div>
+          <div class="o sk-cut sk-obj-coin-stack" id="o1" style="width:260px"></div>
+          <div class="o sk-cut sk-obj-lightbulb" id="o2" style="width:230px"></div>
+          <div class="o sk-cut sk-obj-banknote-generic" id="o3" style="width:420px"></div>
+          <div class="o sk-cut sk-obj-parcel-box" id="o4" style="width:300px"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-s2';
+          const $ = SK.finder(ID);
+          const P = [['ceil', 0, 0, -2], ['poster', 560, 360, 5], ['desk', -40, 940, 0], ['o0', 660, 1160, 4], ['o1', 120, 1320, -6], ['o2', 200, 190, 0], ['o3', 60, 520, -12], ['o4', 700, 1540, 8]];
+          SK.clip(ID, { T: 3, update: (t) => P.forEach(([id, x, y, r], i) => { const k = 1 - M.eo(M.clamp((t - 0.15 * i) / 0.3)); SK.piece($(id), { x, y: y - 300 * k, r: r + 20 * k }, 731 + i, t, { amp: 1 }); $(id).style.opacity = t >= 0.15 * i ? '1' : '0'; }) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

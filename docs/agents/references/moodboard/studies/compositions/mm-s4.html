@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Spider-Punk (Across the Spider-Verse, 2023) — rough ransom-letter collage, clashing colour, animated on threes. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #111; }
+        #ph { position: absolute; left: 0; top: 0; width: 1200px; height: 900px; background: url(vendor/asset-lib/scenes/street-motor/plate.webp) 50% 60% / cover; filter: grayscale(1) contrast(2.4); mix-blend-mode: screen; opacity: .8; }
+        .L { position: absolute; left: 0; top: 0; font-size: 230px; line-height: 1; padding: 0 20px; }
+        #off { position: absolute; inset: 0; }
+        .cut { position: absolute; left: 0; top: 0; background: #ff2d8a; }
+      </style>
+      <div id="root" data-composition-id="mm-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="sk-cut" id="ph"></div>
+          <div class="cut sk-cut" id="k0" style="width:900px;height:120px;background:#ffe03a"></div>
+          <div class="cut sk-cut" id="k1" style="width:700px;height:260px"></div>
+          <div id="L"></div>
+          <div class="sk-tex-halftone" style="opacity:.35"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-s4';
+          const $ = SK.finder(ID);
+          // ransom letters, each its own scrap, colour and font
+          const W = 'GAS TERUS', F = ['sk-display', 'sk-serif', 'sk-f-permanent-marker', 'sk-mono', 'sk-f-archivo-black'], C = [['#ffe03a', '#111'], ['#fff', '#111'], ['#ff2d8a', '#fff'], ['#111', '#ffe03a'], ['#3af0ff', '#111']];
+          const r = SK.rng(751), pos = [];
+          $('L').innerHTML = [...W].map((ch, i) => { if (ch === ' ') return ''; const c = C[i % 5]; return `<div class="L ${F[(i * 3) % 5]} sk-cut" id="l${i}" style="background:${c[0]};color:${c[1]}">${ch}</div>`; }).join('');
+          [...W].forEach((ch, i) => { if (ch === ' ') return; const row = i < 3 ? 0 : 1, col = i < 3 ? i : i - 4; pos.push([i, 90 + col * 185 + (r() - 0.5) * 30, 620 + row * 330 + (r() - 0.5) * 50, (r() - 0.5) * 16]); });
+          $('ph').style.clipPath = SK.torn(1200, 900, 752, { amp: 26 });
+          SK.clip(ID, { T: 3, update: (t) => {
+            const tt = SK.stepTime(t, 8);
+            SK.piece($('ph'), { x: -60, y: 1000, r: 3 }, 753, t, { amp: 6, fps: 8 });
+            SK.piece($('k0'), { x: 60, y: 540, r: -4 }, 754, t, { amp: 6, fps: 8 });
+            SK.piece($('k1'), { x: 360, y: 900, r: 5 }, 755, t, { amp: 6, fps: 8 });
+            pos.forEach(([i, x, y, rr], j) => { const on = tt >= 0.12 * j; $('l' + i).style.opacity = on ? '1' : '0'; SK.piece($('l' + i), { x, y, r: rr, s: on ? 1 + 0.3 * (1 - M.clamp((tt - 0.12 * j) / 0.25)) : 1 }, 756 + j, t, { amp: 5, fps: 8 }); });
+            SK.grain($('grain'), t, 8);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -101,6 +101,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Stickers | `paper.star-sticker`, `paper.arrow-sticker`, `paper.check-sticker`, `doodle.arrow-loop`, `doodle.circle-double` | `../asset-catalog/sheets/paper-1.webp`, `../asset-catalog/sheets/paper-2.webp`, `../asset-catalog/sheets/doodle-1.webp` |
 | Overlays | `texture.riso`, `texture.halftone` | `../asset-catalog/sheets/texture-1.webp` |
 | Type | `font.permanent-marker`, `font.instrument-serif`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `mm-s1` … `mm-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/mix-media.webp` |
 
 ## Timing
 
@@ -161,6 +162,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   organised around focal clusters; text as image.
 - 9:16: keep Dena in a calm centre band; 3–5 real fragments only in the top and
   bottom thirds.
+- Study: moodboard `mm-s1` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R2 — Richard Hamilton, *Just what is it that makes today's homes so different, so appealing?* (1956)
 - Source: https://en.wikipedia.org/wiki/Just_what_is_it_that_makes_today's_homes_so_different,_so_appealing
@@ -168,6 +170,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   deliberately mismatched scale.
 - 9:16: build a "room" around Dena from real product screenshots and cut-outs of
   the things she names.
+- Study: moodboard `mm-s2` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R3 — Zines and DIY print
 - Source: https://en.wikipedia.org/wiki/Zine
@@ -175,6 +178,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   together.
 - 9:16: a xeroxed/threshold backdrop — never on the face — reads as a founder's
   notebook page.
+- Study: moodboard `mm-s3` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R4 — *Spider-Man: Into the Spider-Verse* (2018)
 - Source: https://en.wikipedia.org/wiki/Spider-Man:_Into_the_Spider-Verse
@@ -189,6 +193,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   frame rates, so it feels like a flyer come to life.
 - 9:16: stickers and scraps boil on twos, the footage stays smooth — the contrast is
   the look.
+- Study: moodboard `mm-s4` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R6 — *The Mitchells vs. the Machines* (2021), "Katie Vision"
 - Source: https://collider.com/mitchells-vs-the-machines-animation-explained-video/
@@ -196,6 +201,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   amateurish on purpose.
 - 9:16: doodles come from Dena's own thought — drawn on the key word near her head
   or hands (`doodle-halo`).
+- Study: moodboard `mm-s5` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R7 — "How Vox uses animation…" (Storybench, 2024)
 - Source: https://www.storybench.org/how-vox-uses-animation-to-make-complicated-topics-digestible-for-everyone/
@@ -214,6 +220,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Steal: overlapping shape layers on a grid; each layer gets one motion behaviour.
 - 9:16: a grid underneath keeps the collage systematic; one motion verb per layer
   (drop, drift, draw).
+- Study: moodboard `mm-s6` — a self-made study of the technique, on `../moodboard/sheets/mix-media.webp`
 
 ### R10 — The Instagram "digital scrapbook" trend (Bustle)
 - Source: https://www.bustle.com/life/digital-scrapbook-instagram-style-photos-trend-apps

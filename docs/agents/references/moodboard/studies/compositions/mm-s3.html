@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: self-published zines — a photocopied photo, typewriter text, staples, tape, hand lettering. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #d9d6cf; }
+        #page { position: absolute; left: 70px; top: 180px; width: 940px; height: 1560px; background: #f4f2ec; box-shadow: 8px 10px 0 rgba(0,0,0,.18); transform: rotate(-1.5deg); }
+        #xp { position: absolute; left: 60px; top: 380px; width: 820px; height: 640px; background: url(vendor/asset-lib/scenes/warung-counter/plate.webp) 50% 50% / cover; filter: grayscale(1) contrast(3.2) brightness(1.1); }
+        #tt { position: absolute; left: 60px; top: 50px; font-size: 130px; line-height: .9; color: #111; }
+        #ty { position: absolute; left: 70px; top: 1070px; width: 800px; font-size: 44px; line-height: 1.4; color: #222; }
+        .st { position: absolute; width: 110px; }
+        #tp { position: absolute; left: 330px; top: 340px; width: 300px; transform: rotate(-4deg); }
+      </style>
+      <div id="root" data-composition-id="mm-s3" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop sk-pal-mm-xerox">
+          <div id="bg"></div>
+          <div id="page">
+            <div class="sk-f-permanent-marker" id="tt">WARUNG<br>ZINE #3</div>
+            <div class="sk-cut" id="xp"></div>
+            <div class="sk-obj-tape-clear" id="tp"></div>
+            <div class="sk-f-special-elite" id="ty"></div>
+            <div class="st sk-obj-staple" style="left:40px;top:20px;transform:rotate(80deg)"></div>
+            <div class="st sk-obj-staple" style="left:40px;top:1420px;transform:rotate(80deg)"></div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-s3';
+          const $ = SK.finder(ID);
+          $('xp').style.clipPath = SK.torn(820, 640, 741, { edges: 'rb', amp: 10 });
+          SK.clip(ID, { T: 3, update: (t) => { SK.typeOn($('ty'), 'catatan: stok dicatat di buku tulis. tiap malam dihitung ulang. tiap malam salah lagi.', M.clamp((t - 0.4) / 2.2), { t }); SK.grain($('grain'), t, 5); } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
