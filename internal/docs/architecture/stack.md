@@ -10,9 +10,10 @@ dari `package.json`, `.github/workflows/ci.yml`, `.gitmodules`, `index.html`,
 
 Repo ini adalah **workspace HyperFrames** untuk memproduksi video sosial vertikal
 (9:16, 1080x1920) milik Dena Meidina, plus satu CLI Node untuk auto-publish
-render final ke social media lewat Cloudflare R2 + Repliz. Tidak ada server
-aplikasi, tidak ada database, tidak ada frontend web ter-deploy. "Aplikasi" =
-komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
+render final ke social media lewat Cloudflare R2 + Repliz. Tidak ada database
+dan tidak ada frontend web ter-deploy; satu-satunya server aplikasi adalah
+Studio lokal (`npm run studio`, ADR-0020). "Aplikasi" = komposisi HTML yang
+dirender jadi MP4, sebuah CLI publish, dan Studio.
 
 ## Runtime & bahasa
 
@@ -44,6 +45,8 @@ komposisi HTML yang dirender jadi MP4, dan sebuah CLI publish.
 | style-kit | Engine style b-roll (broll-text, motion-graphic, whiteboard, stop-motion, vox, mix-media, parallax): draw-on, boil, handwriting, count-up, kamera, langkah on twos, sobekan, tangan, highlighter, peta (`SK.geo`), lapisan 3D (`SK.layer`, `SK.camera`, `SK.dof`, `SK.dollyZoom`); frame = fungsi waktu lokal clip | Vendored `vendor/style-kit/` (+ font OFL Anton, Caveat), dimuat setelah motion-kit; clip memanggil `SK.clip()` | `docs/agents/references/styles/README.md` |
 | render-blur | Pass motion blur opsional: render 4× fps → ffmpeg `tmix` → fps asal, audio disalin | `npm run render:blur -- --slug <slug>` | `scripts/render-blur.mjs` |
 | video CLI | Scaffold + jalankan proyek HyperFrames per video; `cutout` me-matte segmen `processed.mp4` untuk mix-media; `layers` menyiapkan sumber + subjek parallax | `npm run video -- new\|check\|dev\|snapshot\|render\|cutout\|layers <slug>` | `scripts/video.mjs` |
+| Studio | Web UI lokal (localhost + Tailscale): upload/hapus raw, sesi agen Claude/Codex di tmux dengan terminal xterm.js, daftar render, publish Repliz | `npm run studio` | `scripts/studio.mjs`, [ADR-0020](../adr/0020-studio-web-ui.md) |
+| xterm.js 6.0.0 | Terminal browser untuk Studio (di-vendor, MIT) | `vendor/xterm/` di-`<script>` oleh `scripts/studio/public/index.html` | `THIRD_PARTY_NOTICES.md` |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
 | ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
 | Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |

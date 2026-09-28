@@ -117,6 +117,19 @@ cp .env.example .env
 npm run test:repliz
 ```
 
+### Studio web UI
+
+```bash
+npm run studio
+```
+
+Membuka web UI lokal di `http://127.0.0.1:4777`, dan juga di IP Tailscale
+(untuk HP) bila Tailscale sedang terhubung saat Studio start. Dari sana bisa
+upload/hapus raw video, memulai sesi edit Claude/Codex interaktif di tmux dan
+men-steer terminalnya dari browser, memutar render, lalu publish render ke
+Repliz setelah konfirmasi. Isi `STUDIO_TOKEN` di `.env` untuk mewajibkan login.
+Khusus macOS + tmux. Lihat `internal/docs/adr/0020-studio-web-ui.md`.
+
 ## Project Layout
 
 ```text
