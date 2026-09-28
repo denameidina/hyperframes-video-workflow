@@ -121,6 +121,10 @@ unobstructed, use only project-local assets).
    `uang`, `ai`, `chat`, `umkm`, …) and open the contact sheets for the candidate style in
    `docs/agents/references/asset-catalog/sheets/`; choose a palette and type preset from the style
    reference's `## Look`, and list library ids in the brief's `Library assets:` (RD-03-50..52).
+   Before writing a Style B-roll Brief, open the style's moodboard
+   `docs/agents/references/moodboard/sheets/<style>.webp` (and `moodboard/local/<style>.webp`
+   when it exists): six self-made studies of the references' techniques. Name the study the
+   clip leans on in the brief's `Moodboard:` line (RD-03-58).
 5. **Research links and tools.** If the user gave a URL or the transcript names
    a tool/product/site, inspect it now and write what Build must capture in the
    Asset Briefs For Build section, tied to the transcript window. Use URL

@@ -210,6 +210,9 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   `style-examples/<gaya>/examples.json`; `index.html` dan `snapshots.json` host
   shall dihasilkan oleh `npm run style-examples -- build`, tidak ditulis tangan
   ([ADR-0017](../adr/0017-per-style-example-hosts.md)).
+- **RD-03-58** (Event-driven) — When Screen Plan memilih gaya untuk sebuah baris
+  visual, the agent shall melihat `moodboard/sheets/<gaya>.webp` (dan
+  `moodboard/local/<gaya>.webp` bila ada) sebelum menulis Style B-roll Brief.
 - **RD-03-59** (Unwanted) — If sebuah still dari karya pihak lain diunduh untuk
   moodboard, then still itu shall hanya disimpan di
   `docs/agents/references/moodboard/local/` (gitignored) dan tidak pernah

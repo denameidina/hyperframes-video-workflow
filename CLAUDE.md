@@ -180,6 +180,9 @@ npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
 npm run check:style-examples   # lint + validate + snapshot style b-roll examples (all 7 hosts; -- <style> for one)
 npm run style-examples -- build # regenerate example hosts from each style's examples.json
+npm run moodboard -- build     # regenerate the moodboard studies host from moodboard.json
+npm run moodboard -- sheets [style]  # render the per-style moodboard sheets (docs/agents/references/moodboard/sheets/)
+npm run moodboard -- fetch [style]   # download real reference stills into the gitignored moodboard/local/ (network)
 npm run video -- new <slug>    # scaffold videos/<slug>/ from the Dena starter
 npm run video -- check <slug>  # lint + validate + inspect one video project
 npm run video -- dev <slug>    # preview one video project (long-running)

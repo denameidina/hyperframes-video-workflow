@@ -92,3 +92,24 @@ test('fetchRefs uses image when given, falls back to og:image, skips failures, a
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
+test('every study has a composition and every composition is a study', () => {
+  const want = m.studies.map((s) => s.id + '.html').sort();
+  assert.deepEqual(readdirSync(join(ROOT, MB, 'studies/compositions')).sort(), want);
+});
+
+test('every style has a committed moodboard sheet under 400 KB (run: npm run moodboard -- sheets)', () => {
+  const t = tracked();
+  for (const st of STYLES) {
+    const p = `${MB}/sheets/${st}.webp`;
+    assert.ok(t.has(p), `${p} is not tracked`);
+    assert.ok(statSync(join(ROOT, p)).size <= 400 * 1024, `${p} is over 400 KB`);
+  }
+});
+
+test('each style doc points its studied references and its Kit at the moodboard', () => {
+  for (const s of m.studies) {
+    const block = docs[s.style].split(/^### /m).find((b) => b.startsWith(`${s.ref} — `));
+    assert.match(block, new RegExp(`^- Study: moodboard \`${s.id}\``, 'm'), `${s.style} ${s.ref}`);
+  }
+  for (const st of STYLES) assert.ok(docs[st].split('## Kit')[1].includes(`moodboard/sheets/${st}.webp`), st);
+});

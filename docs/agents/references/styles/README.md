@@ -92,6 +92,7 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Layers (parallax only): <each layer: file or class, z, source (photo | codex | collage | archive), provenance>
 - Camera (parallax only): <dolly-in | pan | orbit | dolly-zoom | tilt; amount; landing word>
 - Focus (parallax only): <focus depth; rack from → to on which word, or none>
+- Moodboard: <study id from `moodboard/sheets/<style>.webp`, e.g. `vx-s5`, or "none">
 - Library assets: <catalog ids from `vendor/asset-lib/CATALOG.md`, e.g. `doodle.think`, `paper.coin-stack`, `map.java`, or "none">
 - Assets: <each per-video bitmap the clip needs, or "none">
   - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript> — <why the library has nothing that fits>
@@ -132,6 +133,10 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
   with a class (`.sk-sticky`, `.sk-pin`, …), not repeated `<img>` tags.
 - Fonts: switch with `.sk-display`, `.sk-sans`, `.sk-hand`, `.sk-serif`; never
   name a font family in a clip's `<style>`.
+- Moodboard studies (`docs/agents/references/moodboard/`) show a technique, not a
+  layout to copy: never copy a study's words or a reference's logo, title, character,
+  or composition into a clip. Real stills of other people's work live only in the
+  gitignored `moodboard/local/` and are never used as clip assets (RD-03-59).
 - `mix-media` host recipe (collage): an opaque full-frame collage mount on track 4,
   the matted speaker `<video class="clip cutout sk-sticker-cut" muted>` on track 6
   (same start and duration, made with `npm run video -- cutout`), and an optional

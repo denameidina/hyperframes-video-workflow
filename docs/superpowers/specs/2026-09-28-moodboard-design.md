@@ -1,6 +1,6 @@
 # Moodboard per Gaya (Style Enrichment, Sub-proyek 3) — Design
 
-Status: approved (brainstorming 2026-09-28), belum diimplementasi
+Status: approved (brainstorming 2026-09-28), diimplementasi (ADR-0018)
 Date: 2026-09-28
 Branch: `feat/moodboard`
 Sub-proyek: 3 dari rangkaian "Style Enrichment" (1 pustaka aset — selesai,
