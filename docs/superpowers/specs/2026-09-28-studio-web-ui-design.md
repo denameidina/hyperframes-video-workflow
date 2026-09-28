@@ -94,8 +94,9 @@ Tiga tab.
 - Tombol **Upload** (input file, progress bar). Upload di-stream ke disk.
 - Per baris: **Edit this video** dan **Delete**.
 - **Delete** membuka dialog berisi daftar: file raw, tiap `videos/<slug>/` terkait
-  (termasuk render di dalamnya), dan sesi tmux yang akan di-kill. Harus diketik
-  ulang nama file untuk konfirmasi bila ada proyek dengan render.
+  (termasuk render di dalamnya), dan sesi tmux yang akan di-kill. Cukup klik
+  **Hapus** untuk konfirmasi (keputusan Dena 2026-09-28: tanpa ketik ulang nama
+  file).
 
 ### Form Edit
 

@@ -145,21 +145,12 @@ async function openDelete(name) {
     ...plan.projects.map((p) => `<li>videos/${esc(p.slug)}/${p.renders.length ? ` (${p.renders.length} render)` : ''}</li>`),
     ...plan.sessions.map((s) => `<li>sesi tmux studio-${esc(s)}</li>`),
   ].join('');
-  const mustType = plan.projects.some((p) => p.renders.length);
-  $('#delete-confirm-wrap').hidden = !mustType;
-  $('#delete-confirm').value = '';
-  $('#delete-confirm').dataset.required = mustType ? name : '';
   $('#delete-error').textContent = '';
   $('#delete-dialog').showModal();
 }
 $('#delete-form').addEventListener('submit', async (e) => {
   if (e.submitter?.value !== 'delete') return;
   e.preventDefault();
-  const need = $('#delete-confirm').dataset.required;
-  if (need && $('#delete-confirm').value !== need) {
-    $('#delete-error').textContent = 'Nama file tidak cocok';
-    return;
-  }
   try {
     await api(`/api/raw/${enc(deleteTarget)}`, { method: 'DELETE' });
     $('#delete-dialog').close();
