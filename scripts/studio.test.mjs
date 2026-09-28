@@ -10,6 +10,7 @@ import { Readable } from 'node:stream';
 import { deletePlan, deleteRawCascade, linkedProjects, listRaw, projectRaw, rawPath, receiveUpload, rendersOf, safeUploadName } from './studio/raw.mjs';
 import { EventEmitter } from 'node:events';
 import { Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
+import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -252,4 +253,40 @@ test('Publisher runs repliz-publish with --approved and locks per slug', () => {
   pub.start('vid-a', 'vid-a.mp4');
   assert.equal(spawned.length, 2);
   assert.throws(() => pub.start('vid-a', 'nope.mp4'), { status: 404 });
+});
+
+test('attachCommand pipes through cat into script(1) and clamps size', () => {
+  const [cmd, args] = attachCommand('vid-a', 9999, 'x');
+  assert.equal(cmd, 'sh');
+  assert.deepEqual(args, ['-c', `cat | script -q /dev/null sh -c 'stty rows 5 cols 400; exec tmux -u attach -t =studio-vid-a' 2>&1 | cat`]);
+  assert.throws(() => attachCommand('Bad Slug', 80, 24));
+});
+
+test('Terminals relays data, writes input, and kills the process group on close', () => {
+  const kills = [];
+  const children = [];
+  const t = new Terminals({
+    spawnImpl: (cmd, args, opts) => { const c = fakeChild(); c.pid = 5000 + children.length; children.push({ c, opts }); return c; },
+    killImpl: (pid, sig) => kills.push([pid, sig]),
+  });
+  const data = [];
+  let exited = 0;
+  const h = t.open('viewer-0001', 'vid-a', 80, 24, { onData: (b) => data.push(String(b)), onExit: () => exited++ });
+  assert.equal(children[0].opts.detached, true);
+  assert.equal(children[0].opts.env.TMUX, undefined);
+  assert.equal(children[0].opts.env.TERM, 'xterm-256color');
+  children[0].c.stdout.emit('data', Buffer.from('hello'));
+  t.write('viewer-0001', 'ls\r');
+  assert.deepEqual(data, ['hello']);
+  assert.deepEqual(children[0].c.stdin.writes, ['ls\r']);
+  const h2 = t.open('viewer-0001', 'vid-a', 100, 30, { onData() {}, onExit() {} }); // resize replaces the attach
+  assert.deepEqual(kills, [[5000, 'SIGTERM']]);
+  t.close(h); // stale handle: no second kill
+  assert.deepEqual(kills, [[5000, 'SIGTERM']]);
+  children[0].c.emit('exit');
+  assert.equal(exited, 0); // closed on purpose: no exit event to the viewer
+  t.close(h2);
+  assert.deepEqual(kills, [[5000, 'SIGTERM'], [5001, 'SIGTERM']]);
+  assert.throws(() => t.write('viewer-0001', 'x'), { status: 404 });
+  assert.equal(VIEWER_RE.test('bad id'), false);
 });
