@@ -187,3 +187,63 @@ export function buildSheets(root, only = STYLES) {
     return `${pages.length} sheets → ${MB}/sheets/`;
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
+
+// og:image (or twitter:image) of an HTML page, resolved against the page URL
+export function ogImage(html, base) {
+  const m = html.match(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]*>/i);
+  const c = m && m[0].match(/content=["']([^"']+)["']/i);
+  return c ? new URL(c[1].replace(/&amp;/g, '&'), base).href : null;
+}
+
+const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+
+// download the real stills of a style into local/<style>/ (never anywhere else); failures are skipped
+export async function fetchRefs(root, style, { fetchImpl = fetch, log = console.log } = {}) {
+  const m = readMoodboard(root);
+  const out = join(root, LOCAL, style);
+  const done = [];
+  for (const r of m.refs.filter((x) => x.style === style)) {
+    try {
+      let url = r.image;
+      if (!url) {
+        const page = await fetchImpl(r.source, { headers: { 'user-agent': 'Mozilla/5.0 (moodboard reference fetch)' } });
+        if (!page.ok) throw new Error(`HTTP ${page.status} for the source page`);
+        url = ogImage(await page.text(), r.source);
+        if (!url) throw new Error('no og:image on the source page');
+      }
+      const img = await fetchImpl(url, { headers: { 'user-agent': 'Mozilla/5.0 (moodboard reference fetch)' } });
+      if (!img.ok) throw new Error(`HTTP ${img.status} for the image`);
+      const type = (img.headers.get('content-type') || '').split(';')[0].trim();
+      const ext = EXT[type];
+      if (!ext) throw new Error(`not an image (${type || 'no content-type'})`);
+      mkdirSync(out, { recursive: true });
+      const file = join(out, `${r.ref}.${ext}`);
+      writeFileSync(file, Buffer.from(await img.arrayBuffer()));
+      done.push({ ref: r.ref, file });
+      log(`  ${style} ${r.ref}: saved`);
+    } catch (e) {
+      log(`  ${style} ${r.ref}: skipped (${e.message})`);
+    }
+  }
+  return done;
+}
+
+// tile the fetched stills of a style into local/<style>.webp (3 × 2, 9:16 cells)
+export function localSheet(root, style, files) {
+  if (!files.length) return null;
+  const dir = mkdtempSync(join(tmpdir(), 'moodboard-local-'));
+  try {
+    const cells = files.slice(0, 6);
+    const inputs = cells.flatMap((f) => ['-i', f.file]);
+    const scaled = cells.map((_, i) => `[${i}]scale=340:604:force_original_aspect_ratio=decrease,pad=340:604:(ow-iw)/2:(oh-ih)/2:color=0xecebe7[v${i}]`);
+    const pad = Array.from({ length: 6 - cells.length }, (_, k) => `color=c=0xecebe7:s=340x604:d=1[v${cells.length + k}]`);
+    const stack = `${Array.from({ length: 6 }, (_, i) => `[v${i}]`).join('')}xstack=inputs=6:layout=0_0|350_0|700_0|0_614|350_614|700_614:fill=0xecebe7`;
+    const png = join(dir, 'sheet.png');
+    const r = spawnSync('ffmpeg', ['-loglevel', 'error', '-y', ...inputs, '-filter_complex', [...scaled, ...pad, stack].join(';'), '-frames:v', '1', png]);
+    if (r.status !== 0) throw new Error(`ffmpeg failed: ${r.stderr}`);
+    const out = join(root, LOCAL, `${style}.webp`);
+    const w = spawnSync('cwebp', ['-quiet', '-q', '78', png, '-o', out]);
+    if (w.status !== 0) throw new Error('cwebp failed');
+    return out;
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}

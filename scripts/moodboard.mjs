@@ -3,10 +3,11 @@
 //   npm run moodboard -- build            moodboard.json → studies/index.html + snapshots.json
 //   npm run moodboard -- check            exit 1 when the studies host is stale
 //   npm run moodboard -- sheets [style]   render the studies and write sheets/<style>.webp (all styles by default)
+//   npm run moodboard -- fetch [style]    download the real stills into local/ (gitignored) and tile local/<style>.webp
 // Node 22+, built-in modules only (ADR-0007).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { buildSheets, checkMoodboard, readMoodboard, studiesHost } from './lib/moodboard.mjs';
+import { buildSheets, checkMoodboard, fetchRefs, localSheet, readMoodboard, studiesHost } from './lib/moodboard.mjs';
 import { STYLES } from './lib/style-examples.mjs';
 
 const root = resolve(new URL('..', import.meta.url).pathname);
@@ -24,5 +25,12 @@ try {
     console.log('moodboard studies host is up to date');
   } else if (cmd === 'sheets') {
     console.log(buildSheets(root, styles));
-  } else throw new Error('usage: moodboard <build|check|sheets [style]>');
+  } else if (cmd === 'fetch') {
+    for (const st of styles) {
+      console.log(`== ${st}`);
+      const got = await fetchRefs(root, st);
+      const sheet = localSheet(root, st, got);
+      console.log(sheet ? `  local sheet: ${sheet}` : '  nothing fetched');
+    }
+  } else throw new Error('usage: moodboard <build|check|sheets [style]|fetch [style]>');
 } catch (e) { console.error(e.message); process.exit(1); }

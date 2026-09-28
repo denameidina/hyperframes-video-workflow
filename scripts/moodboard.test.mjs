@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkMoodboard, LOCAL, MB, ordered, readMoodboard, sheetHtml, studiesHost } from './lib/moodboard.mjs';
+import { checkMoodboard, fetchRefs, LOCAL, MB, ogImage, ordered, readMoodboard, sheetHtml, studiesHost } from './lib/moodboard.mjs';
 import { STYLES } from './lib/style-examples.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -52,5 +52,43 @@ test('a sheet page lists its six studies in order with reference, title, and wha
     assert.ok(html.includes(`${s.ref} · ${s.id}`));
   }
   assert.match(html, /not the original works/);
+});
+
+test('ogImage finds og:image or twitter:image and resolves it against the page', () => {
+  assert.equal(ogImage('<meta property="og:image" content="/a/b.jpg">', 'https://x.org/p/'), 'https://x.org/a/b.jpg');
+  assert.equal(ogImage("<meta content='https://c.dn/i.png?x=1&amp;y=2' name='twitter:image'>", 'https://x.org/'), 'https://c.dn/i.png?x=1&y=2');
+  assert.equal(ogImage('<title>none</title>', 'https://x.org/'), null);
+});
+
+test('fetchRefs uses image when given, falls back to og:image, skips failures, and writes only under local/', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'mb-'));
+  try {
+    mkdirSync(join(root, MB), { recursive: true });
+    writeFileSync(join(root, MB, 'moodboard.json'), JSON.stringify({ studies: [], refs: [
+      { style: 'vox', ref: 'R1', source: 'https://a.test/page', image: 'https://a.test/direct.png' },
+      { style: 'vox', ref: 'R2', source: 'https://b.test/page' },
+      { style: 'vox', ref: 'R3', source: 'https://c.test/down' },
+      { style: 'vox', ref: 'R4', source: 'https://d.test/page' },
+      { style: 'parallax', ref: 'R1', source: 'https://e.test/page' },
+    ] }));
+    const res = (status, body, type) => ({ ok: status === 200, status, headers: { get: () => type }, text: async () => body, arrayBuffer: async () => new TextEncoder().encode(body).buffer });
+    const WEB = {
+      'https://a.test/direct.png': res(200, 'PNG1', 'image/png'),
+      'https://b.test/page': res(200, '<meta property="og:image" content="/og.jpg">', 'text/html'),
+      'https://b.test/og.jpg': res(200, 'JPG2', 'image/jpeg'),
+      'https://c.test/down': res(503, '', 'text/html'),
+      'https://d.test/page': res(200, '<meta property="og:image" content="https://d.test/page.html">', 'text/html'),
+      'https://d.test/page.html': res(200, '<html>', 'text/html'),
+    };
+    const seen = [];
+    const got = await fetchRefs(root, 'vox', { fetchImpl: async (u) => { seen.push(u); return WEB[u] ?? res(404, '', ''); }, log: () => {} });
+    assert.deepEqual(got.map((g) => g.ref), ['R1', 'R2']);
+    assert.equal(readFileSync(join(root, LOCAL, 'vox/R1.png'), 'utf8'), 'PNG1');
+    assert.equal(readFileSync(join(root, LOCAL, 'vox/R2.jpg'), 'utf8'), 'JPG2');
+    assert.ok(!seen.includes('https://a.test/page'), 'a given image skips the source page');
+    assert.ok(!seen.some((u) => u.startsWith('https://e.test')), 'only the asked style');
+    for (const g of got) assert.ok(g.file.startsWith(join(root, LOCAL) + '/'));
+    assert.deepEqual(readdirSync(join(root, MB)).sort(), ['local', 'moodboard.json']);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
