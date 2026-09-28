@@ -24,6 +24,11 @@ pola punya contoh yang bisa dirender.
   pustaka, plus aset contoh bersama yang sudah ada (`cut-phone.png`,
   `px-archive-plate.jpg`, `px-archive-subject.png`, `placeholder-cutout.webm`).
 - Satu helper baru: `SK.handheld`.
+- Generator host diperluas (keputusan Dena saat membangun, karena resep
+  zoom-punch-cutout dan split-self di `mix-media.md` butuh host): field opsional
+  `cutouts: [{ x, y, s, at }]` (satu atau dua potongan; yang kedua di track 5) dan
+  `punch: [[at, skala]]` (host men-tween potongan pertama masuk 2 langkah, keluar
+  3 langkah). Host tanpa field ini tetap identik; ADR-0017 diberi tambahan.
 - Test cakupan berlaku untuk semua gaya (`COVERED` diganti `STYLES`).
 - RD-03-56 disesuaikan (cakupan penuh); tanpa ADR baru.
 
@@ -36,7 +41,7 @@ pola punya contoh yang bisa dirender.
 ## Non-tujuan
 
 - Sub-proyek 3 (moodboard).
-- Mengubah contoh lama atau host generator.
+- Mengubah contoh lama, atau host yang tidak memakai field baru.
 - Push ke remote.
 
 ## Pola baru
@@ -91,7 +96,7 @@ bahasa Inggris.
 | `vx-08-timeline-pinned` | doc-timeline + pinned-source | cutaway | `SK.doc('article')`, `.sk-pin` |
 | `vx-09-loupe-before-after` | loupe-zoom + before-after-doc | panel | `SK.doc('report-page')` |
 | `vx-10-quote-split` | pull-quote + split-docs | cutaway | `SK.doc('article')`, `SK.doc('email')` |
-| `vx-11-archival-pan` | archival-pan | cutaway | `assets/px-archive-plate.jpg`, grain |
+| `vx-11-archival-pan` | archival-pan | cutaway | `assets/px-archive-plate.jpg` + `px-archive-subject.png` (foto utuh), grain |
 | `mm-05-halftone-punch` | halftone-duotone + zoom-punch-cutout | collage (cutout) | `.sk-tex-halftone` |
 | `mm-06-frame-grid` | frame-in-frame + grid-backdrop | collage (cutout, front) | `assets/cut-phone.png`, `.sk-grid` |
 | `mm-07-scrapbook-scribble` | scrapbook-stack + scribble-emphasis | collage (cutout) | `assets/cap-ken-burns.png`, `mark.red-circle` |
@@ -115,9 +120,8 @@ kunci; SFX tidak dirender. VOX: setiap `SK.doc` bertag "Ilustrasi", tanpa
 merek, nama orang, atau nomor sungguhan. Parallax: mengikuti Depth Budget di
 `parallax.md`.
 
-Bila linter menolak video placeholder yang sama dua kali (split-self), sisi
-"dulu" memakai still PNG dari placeholder itu (aset contoh bersama baru, dicatat
-di `THIRD_PARTY_NOTICES.md` seperti placeholder-nya).
+Linter menerima placeholder yang sama dua kali (split-self), asalkan tiap video
+di track berbeda; fallback still PNG tidak diperlukan.
 
 ## Pengujian
 
@@ -125,7 +129,10 @@ di `THIRD_PARTY_NOTICES.md` seperti placeholder-nya).
   `STYLES` (menggantikan `COVERED`).
 - `scripts/style-kit.test.mjs`: `SK.handheld` — deterministik, dalam batas
   `amp`, mulus (selisih antar-frame 1/30 s kecil), berbeda per seed.
-- `scripts/style-examples.test.mjs`: tanpa perubahan.
+- `scripts/style-examples.test.mjs`: `cutouts` (posisi, `at`, track 5) dan
+  `punch` (tween masuk/keluar) di host; `checkManifest` menolak punch tanpa
+  potongan, punch di luar clip, `cutout` + `cutouts` sekaligus, lebih dari dua
+  potongan, dan `at` di luar clip.
 - Render: `npm run check:style-examples -- vox`, `-- mix-media`,
   `-- parallax` 0 error; setiap still baru dilihat dan diperbaiki sebelum commit.
 - Still lama: VOX 8, mix-media 8, parallax 9 identik dengan baseline dari
@@ -163,7 +170,7 @@ operasi yang sama, di-replay di clone bersih, lalu dieksekusi di repo.
 - **Parallax berat** (CSS 3D, blur, plate besar): render lambat, tepi plate
   terlihat. Mitigasi: Depth Budget, `fill` di `SK.layer`, still di awal dan
   akhir gerak kamera.
-- **Placeholder dipakai dua kali** (split-self): fallback still PNG (di atas).
+- **Placeholder dipakai dua kali** (split-self): dua `<video>` di track 6 dan 5 lolos lint.
 - **Kejujuran VOX**: tag "Ilustrasi" wajib; arsip hanya foto public domain yang
   sudah tercatat.
 - **Contoh generik/slop**: kata contoh bertema Dena; review still per contoh.
