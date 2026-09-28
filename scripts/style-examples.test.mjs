@@ -34,6 +34,24 @@ test('the host slides the base video only for split clips and adds cutout / fron
   assert.match(html, /data-composition-id="style-examples-mix-media" data-start="0" data-width="1080" data-height="1920" data-duration="10"/);
 });
 
+test('cutouts place several speaker layers and punch steps the first one in and out', () => {
+  const html = hostHtml({ style: 'mix-media', examples: [
+    { clip: 'mm-01-a', duration: 5, treatment: 'collage', stills: [1], cutouts: [{ x: -240, s: 0.8 }, { x: 240, s: 0.8, at: 2 }] },
+    { clip: 'mm-02-b', duration: 4, treatment: 'collage', stills: [1], cutout: true, punch: [[2, 1.15]] },
+  ] });
+  assert.match(html, /<video id="mm-01-cut" [^>]*style="transform-origin: 50% 100%; transform: translate\(-240px, 0px\) scale\(0\.8\)"/);
+  assert.match(html, /<video id="mm-01-cut2" [^>]*style="transform-origin: 50% 100%; transform: translate\(240px, 0px\) scale\(0\.8\)"\s+data-start="2\.5" data-duration="3" data-track-index="5"/);
+  assert.match(html, /<video id="mm-02-cut" class="clip cutout sk-sticker-cut" src="assets\/placeholder-cutout\.webm" muted playsinline\n/);
+  assert.match(html, /tl\.to\('#mm-02-cut', \{ scale: 1\.15, transformOrigin: '50% 60%', duration: 0\.1, ease: 'steps\(2\)' \}, 8\);/);
+  assert.match(html, /tl\.to\('#mm-02-cut', \{ scale: 1, duration: 0\.3, ease: 'steps\(3\)' \}, 8\.12\);/);
+  const ok = { clip: 'mm-01-a', duration: 4, treatment: 'collage', stills: [1] };
+  assert.throws(() => checkManifest({ style: 'mix-media', examples: [{ ...ok, punch: [[1, 1.1]] }] }), /punch needs a cutout/);
+  assert.throws(() => checkManifest({ style: 'mix-media', examples: [{ ...ok, cutout: true, punch: [[3.8, 1.1]] }] }), /punch needs/);
+  assert.throws(() => checkManifest({ style: 'mix-media', examples: [{ ...ok, cutout: true, cutouts: [{}] }] }), /either cutout: true or a cutouts list of one or two/);
+  assert.throws(() => checkManifest({ style: 'mix-media', examples: [{ ...ok, cutouts: [{}, {}, {}] }] }), /one or two/);
+  assert.throws(() => checkManifest({ style: 'mix-media', examples: [{ ...ok, cutouts: [{ at: 4 }] }] }), /at must be inside/);
+});
+
 test('checkManifest rejects a wrong prefix, an unknown treatment, and stills outside the clip', () => {
   const ok = { clip: 'tx-01-a', duration: 4, treatment: 'cutaway', stills: [1] };
   assert.throws(() => checkManifest({ style: 'broll-text', examples: [{ ...ok, clip: 'mg-01-a' }] }), /starts with "tx-"/);

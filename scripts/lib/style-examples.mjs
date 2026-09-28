@@ -27,6 +27,9 @@ export function checkManifest(m) {
     if (!(e.duration > 0)) throw new Error(`${e.clip}: needs duration > 0`);
     if (!TREATMENTS.includes(e.treatment)) throw new Error(`${e.clip}: unknown treatment "${e.treatment}"`);
     if (!e.stills?.length || e.stills.some((s) => !(s >= 0 && s < e.duration))) throw new Error(`${e.clip}: stills must be clip-local times inside the clip`);
+    if (e.cutouts && (e.cutout || !Array.isArray(e.cutouts) || !e.cutouts.length || e.cutouts.length > 2)) throw new Error(`${e.clip}: use either cutout: true or a cutouts list of one or two`);
+    if (cutouts(e).some((c) => c.at != null && !(c.at >= 0 && c.at < e.duration))) throw new Error(`${e.clip}: a cutout's at must be inside the clip`);
+    if (e.punch && (!cutouts(e).length || e.punch.some(([at, s]) => !(at >= 0 && at + 0.4 <= e.duration && s > 1 && s <= 1.25)))) throw new Error(`${e.clip}: punch needs a cutout, times that end inside the clip, and scales in (1, 1.25]`);
   }
   return m;
 }
@@ -42,6 +45,10 @@ export function snapshots(m) {
 }
 
 const cutId = (clip) => clip.split('-').slice(0, 2).join('-') + '-cut';
+// matted speaker layers: cutout: true is one full-frame layer; cutouts: [{ x, y, s, at }] places several
+// (x/y px offsets, s scale about the feet, at = clip-local second it pops in), e.g. split-self.
+// The first is on track 6, a second on track 5 (a track holds one clip at a time; stacking is CSS z-index).
+const cutouts = (e) => e.cutouts ?? (e.cutout ? [{}] : []);
 
 export function hostHtml(m) {
   const clips = layout(m);
@@ -50,13 +57,20 @@ export function hostHtml(m) {
            data-start="${start}" data-duration="${dur}" data-track-index="${track}" data-width="1080" data-height="1920"></div>`;
   const body = clips.flatMap((e) => [
     mount(e.clip, 'broll', e.start, e.duration, 4),
-    ...(e.cutout ? [`      <video id="${cutId(e.clip)}" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
-             data-start="${e.start}" data-duration="${e.duration}" data-track-index="6"></video>`] : []),
+    ...cutouts(e).map((c, i) => {
+      const place = c.x || c.y || (c.s ?? 1) !== 1 ? ` style="transform-origin: 50% 100%; transform: translate(${c.x ?? 0}px, ${c.y ?? 0}px) scale(${c.s ?? 1})"` : '';
+      return `      <video id="${cutId(e.clip)}${i ? i + 1 : ''}" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline${place}
+             data-start="${r3(e.start + (c.at ?? 0))}" data-duration="${r3(e.duration - (c.at ?? 0))}" data-track-index="${6 - i}"></video>`;
+    }),
     ...(e.front ? [mount(e.clip + '-front', 'broll-front', e.start, e.duration, 7)] : []),
   ]).join('\n');
   const splits = clips.filter((e) => e.treatment === 'split');
   const tweens = splits.map((e) => `      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, ${e.start});
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, ${r3(e.start + e.duration - 0.45)});`).join('\n');
+  // zoom-punch-cutout: the speaker layer punches in on the word in 2 steps and backs out in 3 (mix-media.md);
+  // the way back starts 0.02 s after the way in ends (touching tweens trip the linter's overlap check)
+  const punches = clips.flatMap((e) => (e.punch ?? []).map(([at, sc]) => `      tl.to('#${cutId(e.clip)}', { scale: ${sc}, transformOrigin: '50% 60%', duration: 0.1, ease: 'steps(2)' }, ${r3(e.start + at)});
+      tl.to('#${cutId(e.clip)}', { scale: 1, duration: 0.3, ease: 'steps(3)' }, ${r3(e.start + at + 0.12)});`)).join('\n');
   return `<!doctype html>
 <html lang="id">
   <head>
@@ -94,7 +108,7 @@ ${body}
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-${tweens ? `      // Split treatment: slide the base video into the bottom half for the clip, then back.\n${tweens}\n` : ''}      // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
+${tweens ? `      // Split treatment: slide the base video into the bottom half for the clip, then back.\n${tweens}\n` : ''}${punches ? `      // Zoom-punch: step the matted speaker in and back out on the peak word.\n${punches}\n` : ''}      // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-${m.style}'] = tl;
     </script>
   </body>

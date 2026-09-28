@@ -24,6 +24,11 @@ derau float waktu lokal (80,2 − 74,5 vs 6,2 − 0,5).
   (`scripts/lib/style-examples.mjs`). Test gagal bila hasil generator beda dengan disk.
 - Tata letak tetap: clip pertama 0,5 s, jeda 0,5 s; split menggeser
   `#base-video` 480 px; cutout (track 6) dan front (track 7) dari flag manifest.
+- Tambahan 2c (resep mix-media yang butuh host): `cutouts: [{ x, y, s, at }]`
+  menaruh satu atau dua potongan (yang kedua di track 5, karena satu track hanya
+  boleh satu klip sekaligus) dan `punch: [[at, skala]]` men-tween potongan
+  pertama masuk 2 langkah dan keluar 3 langkah, 0,02 s setelahnya (tween yang
+  bersentuhan memicu peringatan linter). Host tanpa field ini tidak berubah.
 - Aset contoh bersama tetap di `style-examples/assets/` dan disalin ke proyek
   sementara oleh `scripts/check-broll-examples.mjs`.
 - `npm run check:style-examples [-- <gaya>]` merender satu atau ketujuh host.

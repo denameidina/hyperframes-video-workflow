@@ -143,7 +143,8 @@ but every file in its `Assets:` list does (Style Assets in `asset-production.md`
   backdrop. Details and the Depth Budget: `parallax.md`.
 - Examples: each style has a host in `style-examples/<style>/`. Its `index.html` and
   `snapshots.json` are GENERATED from `examples.json` (one line per example: `clip`,
-  `duration`, `treatment`, clip-local `stills`, optional `cutout` / `front`); never
+  `duration`, `treatment`, clip-local `stills`, optional `cutout` / `cutouts` / `punch` /
+  `front`; see `mix-media.md`); never
   edit them by hand. To add an example: write `compositions/<xx-NN-name>.html`, add
   its line to `examples.json`, run `npm run style-examples -- build`, then
   `npm run check:style-examples -- <style>` and look at the stills. Shared example
