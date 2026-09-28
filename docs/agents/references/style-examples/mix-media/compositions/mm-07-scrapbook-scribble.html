@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the cards' words and number are invented; the screenshot is the Wikipedia capture the VOX example uses (CC BY-SA 4.0). The speaker is the host's matted <video> (placeholder here) on track 6; this clip is the scrapbook behind them. Keep the face zone (x 300–780, y 780–1320) clear. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .card { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        #ca { width: 520px; padding: 14px; background: #fbfaf6; }
+        #ca img { display: block; width: 520px; }
+        #cb { width: 440px; height: 250px; }
+        #cc { width: 460px; height: 250px; }
+        .pp { position: absolute; inset: 0; }
+        .card .t { position: absolute; left: 36px; right: 30px; top: 34px; font-size: 54px; font-weight: 700; line-height: 1.05; color: #2b2118; }
+        #num { position: absolute; left: 36px; top: 120px; font-size: 96px; line-height: 1; color: #2b2118; }
+        #ink { position: absolute; left: 0; top: 0; overflow: visible; }
+        .tp { position: absolute; top: -22px; width: 130px; }
+      </style>
+      <div id="root" data-composition-id="mm-07-scrapbook-scribble" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-pal-mm-scrapbook sk-kraft">
+          <div class="card sk-cut" id="ca"><img src="assets/cap-ken-burns.png" alt="" /><div class="tp sk-tape-a" style="left:210px"></div></div>
+          <div class="card sk-cut" id="cb"><div class="pp sk-paper-white" id="pb"></div><div class="t sk-hand">chat masuk 3× lipat</div><div class="tp sk-tape-b" style="left:150px"></div></div>
+          <div class="card sk-cut" id="cc"><div class="pp sk-paper-cream" id="pc"></div><div class="t sk-hand">omzet bulan ini</div><div class="sk-display" id="num">+40%</div>
+            <svg id="ink" width="460" height="250"><path id="sc" fill="none" stroke="var(--sk-accent)" stroke-width="9" stroke-linecap="round"/></svg></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-07-scrapbook-scribble';
+          const $ = SK.finder(ID);
+          $('pb').style.clipPath = SK.torn(440, 250, 300, { edges: 'tb', amp: 8 });
+          $('pc').style.clipPath = SK.torn(460, 250, 301, { edges: 'lr', amp: 8 });
+          // scribble-emphasis: a loose circle around the number, finished as the number is said
+          $('sc').setAttribute('d', SK.ellipse(160, 170, 160, 72, 302, 0.07));
+          // scrapbook-stack: one proof card per claim drops onto the pile in the top third
+          const DROP = [['ca', 0.3, 50, 150, -6], ['cb', 1.0, 580, 110, 5], ['cc', 1.7, 300, 430, -2]];
+          const fall = DROP.map(([, at]) => SK.onTwos(M.track(1, [[at, 0, [24, 0.62]]])));
+          SK.clip(ID, { T: 6, update: (t) => {
+            DROP.forEach(([id, at, x, y, r], i) => {
+              const k = fall[i](t);
+              SK.piece($(id), { x, y: y - 500 * k, r: r + 12 * k, s: 1 + 0.15 * k, o: t >= at ? 1 : 0 }, 303 + i, t);
+            });
+            SK.draw($('sc'), SK.smooth((t - 2.6) / 0.4));
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

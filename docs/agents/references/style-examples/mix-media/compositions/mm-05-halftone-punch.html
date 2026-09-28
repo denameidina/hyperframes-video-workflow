@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the word is invented. The speaker is the host's matted <video> (placeholder here) on track 6, in true colour; the host punches it in on the peak word (manifest punch). This clip is the two-colour halftone backdrop behind it; never filter the video itself. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: var(--sk-bg); }
+        #dots { position: absolute; left: -60px; top: -60px; width: 1200px; height: 2040px; background-image: radial-gradient(circle, var(--dot) 9px, transparent 10px); background-size: 30px 30px;
+          -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 42%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 55% at 50% 42%, #000 20%, transparent 75%); }
+        #word { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-size: 200px; line-height: 1; color: var(--sk-ink); }
+      </style>
+      <div id="root" data-composition-id="mm-05-halftone-punch" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-stop sk-pal-mm-pop-collage" id="st">
+          <div id="bg"></div>
+          <div id="dots"></div>
+          <div class="sk-display" id="word">serius?</div>
+          <div class="sk-tex-halftone"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-05-halftone-punch';
+          const $ = SK.finder(ID);
+          const stage = SK.stageOf(ID);
+          // halftone-duotone: two inks only; they swap on the beat (2.2 s), when the host punches the speaker in
+          const BEAT = 2.2, A = ['#ffd23f', '#ee4266'];
+          SK.clip(ID, { T: 5, update: (t) => {
+            const on = t >= BEAT ? 1 : 0;
+            stage.style.setProperty('--sk-bg', A[on]);
+            stage.style.setProperty('--dot', A[1 - on]);
+            const d = SK.stepTime(t, 8) * 12;
+            $('dots').style.transform = `translate(${(d % 30).toFixed(1)}px, ${(-d % 30).toFixed(1)}px)`;
+            SK.enter($('word'), t - BEAT, 'slam');
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

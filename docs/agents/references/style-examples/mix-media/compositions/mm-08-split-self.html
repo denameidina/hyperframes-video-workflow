@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the labels are invented. The two speakers are the host's matted <video>s (the same placeholder twice here; in a real clip two different segments of Dena, "then" and "now"), placed by the manifest's cutouts list; the second pops in on the contrast word. This clip is the split backdrop behind them. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #then { position: absolute; left: 0; top: 0; width: 560px; height: 1920px; }
+        .lab { position: absolute; top: 330px; width: 380px; height: 140px; }
+        .lab .pp { position: absolute; inset: 0; }
+        .lab span { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font-size: 92px; font-weight: 700; line-height: 1; color: #2b2118; }
+        .tp { position: absolute; top: -24px; width: 150px; }
+      </style>
+      <div id="root" data-composition-id="mm-08-split-self" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-kraft">
+          <div class="sk-cut sk-paper-grey" id="then"></div>
+          <div class="lab sk-cut" id="l0"><div class="pp sk-paper-white" id="p0"></div><span class="sk-hand">dulu</span><div class="tp sk-tape-a" style="left:115px"></div></div>
+          <div class="lab sk-cut" id="l1"><div class="pp sk-paper-cream" id="p1"></div><span class="sk-hand">sekarang</span><div class="tp sk-tape-b" style="left:115px"></div></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-08-split-self';
+          const $ = SK.finder(ID);
+          $('then').style.clipPath = SK.torn(560, 1920, 280, { edges: 'r', amp: 18, step: 30 });
+          $('p0').style.clipPath = SK.torn(380, 140, 281, { edges: 'lr', amp: 10 });
+          $('p1').style.clipPath = SK.torn(380, 140, 282, { edges: 'lr', amp: 10 });
+          // split-self: "then" is on the grey half from the start; "now" lands with its label on the contrast word (2.0 s)
+          const d0 = SK.onTwos(M.track(1, [[0.2, 0, [22, 0.7]]])), d1 = SK.onTwos(M.track(1, [[2.0, 0, [22, 0.7]]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.piece($('l0'), { x: 100, y: -300 * d0(t), r: -4, o: t >= 0.2 ? 1 : 0 }, 283, t);
+            SK.piece($('l1'), { x: 600, y: -300 * d1(t), r: 3, o: t >= 2.0 ? 1 : 0 }, 284, t);
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

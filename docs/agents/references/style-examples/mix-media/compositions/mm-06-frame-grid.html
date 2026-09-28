@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the note is invented. The speaker is the host's matted <video> (placeholder here) on track 6; this clip is the grid backdrop behind it, and mm-06-frame-grid-front (track 7) is the phone frame in front. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #grid { position: absolute; left: -48px; top: -48px; width: 1176px; height: 2016px; }
+      </style>
+      <div id="root" data-composition-id="mm-06-frame-grid" data-width="1080" data-height="1920" data-duration="5.5">
+        <div class="sk-stage sk-stop">
+          <div class="sk-grid" id="grid"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-06-frame-grid';
+          const $ = SK.finder(ID);
+          // grid-backdrop: held, with a faint drift (the front layer drifts the same way so the grids stay aligned)
+          SK.clip(ID, { T: 5.5, update: (t) => {
+            $('grid').style.transform = `translate(${(t * 6).toFixed(2)}px, ${(t * 4).toFixed(2)}px)`;
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

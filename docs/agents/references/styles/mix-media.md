@@ -6,7 +6,7 @@ Loaded by `docs/agents/02-screen-plan.md` (visual step, after
 `styles/README.md`) and `docs/agents/03-build.md` (author step). Cut-out:
 `npm run video -- cutout` (matte of `processed.mp4`). Engine: `vendor/style-kit/`
 on top of `vendor/motion-kit/`; paper and objects: `vendor/paper-pack/`. Worked
-examples: `docs/agents/references/style-examples/mix-media/` (`mm-01` … `mm-04`, with a
+examples: `docs/agents/references/style-examples/mix-media/` (`mm-01` … `mm-10`, with a
 placeholder silhouette instead of a real person; `npm run check:style-examples -- mix-media`).
 
 ## When To Use
@@ -147,6 +147,11 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **split-self** | Two cut-outs of Dena (then vs now) | "Gue dulu vs sekarang" | Second self pops in on the contrast word | two paper slaps | Mismatched outlines or lighting | two `video cutout` segments, two host `<video>`s, both `.sk-sticker-cut` |
 | **scribble-emphasis** | A circle or underline over a number in a screenshot beside Dena | Pointing at a figure | The scribble finishes as the number is spoken | marker scratch | Scribbling over nothing | `SK.ellipse` on the card inside the back mount |
 | **grid-backdrop** | Notebook or grid paper, faint drift | Calm explanation beats | Held | none | A grid that fights the captions | `.sk-grid` / `.sk-lined` backdrop |
+| **frame-in-frame** | Dena shows inside a paper phone or laptop screen | "di HP gue…", digital context | The frame lands on the device word | paper tap | A frame over the face | front mount: a cover with a screen-shaped `clip-path: path(evenodd, …)` hole + a CSS bezel |
+| **ransom-caption** | A phrase of mismatched cut-out letters, pasted | A cheeky punchline | Letters paste one by one, done on the last word | paper slap | More than 3 words; unreadable | one chip per letter with a seeded font, colour, and tilt (`SK.rng`), popped on twos |
+| **sticker-bomb** | Library stickers pop around Dena on the beats | High energy, celebration | One sticker per beat or word, at most 6 | sticker pop | Stickers on the face; stickers for the whole clip | `.sk-obj-*-sticker` divs on the front mount, 2-step pop with overshoot |
+| **torn-panel-list** | Dena on one side; a list on torn paper on the other | A list while the face stays on screen | One item per word | paper swipe | More than 4 items; a panel over the face | manifest `cutouts: [{ x, s }]` moves Dena aside; a torn panel on the back mount |
+| **speech-cutout** | A paper speech bubble from Dena with a quote | Quoting someone | The bubble on "bilang"; the words with the quote | paper pop | A quote over 8 words; a tail that misses Dena | a torn paper oval with a tail (`clip-path: polygon`) on the front mount + `SK.write` |
 
 ## References
 
@@ -280,6 +285,13 @@ Collage clip (back): an opaque paper stage, pieces in the corners and top third:
 - The placeholder in the examples is `style-examples/assets/placeholder-cutout.webm`,
   rendered from `docs/agents/references/mix-media-placeholder/` (commands in its
   `README.md`).
+- Host speaker layers come from the example manifest: `cutout: true` is one
+  full-frame speaker; `cutouts: [{ x, y, s, at }]` places one or two (offset px,
+  scale about the feet, pop-in second), the second on track 5 (`mm-08`, `mm-10`);
+  `punch: [[at, scale]]` steps the speaker in and out on the word (`mm-05`). In a
+  video the same host code is written into `videos/<slug>/index.html`.
+- The halftone backdrop recolours on the beat by setting `--sk-bg` and the dot
+  colour on the stage; never filter the speaker `<video>` (`mm-05`).
 
 ## SFX
 
@@ -290,6 +302,8 @@ Collage clip (back): an opaque paper stage, pieces in the corners and top third:
 | torn-window, paper-strip-caption | paper rip / tape pull | 0.12–0.16 |
 | cut-in-object, zoom-punch-cutout | soft thud | 0.12–0.16 |
 | polaroid-frame | camera shutter | 0.1–0.14 |
+| sticker-bomb, ransom-caption, speech-cutout | sticker pop / paper slap / paper pop | 0.08–0.12 |
+| frame-in-frame, torn-panel-list, split-self | paper tap / paper swipe / two paper slaps | 0.08–0.12 |
 
 ## Examples
 
@@ -299,6 +313,12 @@ Collage clip (back): an opaque paper stage, pieces in the corners and top third:
 | `style-examples/mix-media/compositions/mm-02-orbit-arrow.html` | screenshot-orbit (+ front: arrow-to-speaker) | collage |
 | `style-examples/mix-media/compositions/mm-03-torn-window.html` | torn-window (front) + cut-in-object | collage |
 | `style-examples/mix-media/compositions/mm-04-polaroid-caption.html` | polaroid-frame + paper-strip-caption (front) | collage |
+| `style-examples/mix-media/compositions/mm-05-halftone-punch.html` | halftone-duotone + zoom-punch-cutout (manifest `punch`) | collage |
+| `style-examples/mix-media/compositions/mm-06-frame-grid.html` | frame-in-frame (front) + grid-backdrop | collage |
+| `style-examples/mix-media/compositions/mm-07-scrapbook-scribble.html` | scrapbook-stack + scribble-emphasis | collage |
+| `style-examples/mix-media/compositions/mm-08-split-self.html` | split-self (manifest `cutouts`, the second pops in) | collage |
+| `style-examples/mix-media/compositions/mm-09-sticker-ransom.html` | sticker-bomb + ransom-caption (front) | collage |
+| `style-examples/mix-media/compositions/mm-10-panel-speech.html` | torn-panel-list + speech-cutout (front) | collage |
 
 ## Anti-slop Checklist
 

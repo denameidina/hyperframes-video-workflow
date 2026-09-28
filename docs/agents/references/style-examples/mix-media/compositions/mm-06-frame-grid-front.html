@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. Front layer of mm-06 (track 7): the grid paper covers everything except a phone screen, so the speaker shows only inside the phone; the frame shrinks from full screen to the phone on the device word. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+        #grid { position: absolute; left: -48px; top: -48px; width: 1176px; height: 2016px; }
+        #bezel { position: absolute; left: 0; top: 0; box-sizing: border-box; border: 36px solid #262626; box-shadow: 0 0 0 10px #f4f1ea, 10px 16px 0 10px rgba(40,25,10,.3); }
+        #spk { position: absolute; left: 50%; top: 12px; width: 120px; height: 14px; margin-left: -60px; border-radius: 7px; background: #111; }
+        #note { position: absolute; left: 0; top: 0; width: 420px; height: 130px; }
+        #note .pp { position: absolute; inset: 0; }
+        #note span { position: absolute; left: 0; right: 0; top: 24px; text-align: center; font-size: 80px; font-weight: 700; line-height: 1; color: #2b2118; }
+      </style>
+      <div id="root" data-composition-id="mm-06-frame-grid-front" data-width="1080" data-height="1920" data-duration="5.5">
+        <div class="sk-stage sk-stop">
+          <div id="cover"><div class="sk-grid" id="grid"></div></div>
+          <div id="bezel"><div id="spk"></div></div>
+          <div class="sk-cut" id="note"><div class="pp sk-paper-cream" id="np"></div><span class="sk-hand">di HP gue</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-06-frame-grid-front';
+          const $ = SK.finder(ID);
+          $('np').style.clipPath = SK.torn(420, 130, 290, { edges: 'lr', amp: 10 });
+          // frame-in-frame: a rounded screen-shaped hole in the cover; it shrinks from beyond the frame to the phone on "HP"
+          const CX = 540, CY = 1180, W1 = 600, H1 = 1060, R1 = 56;
+          const k = SK.onTwos(M.track(0, [[1.2, 1, [14, 0.85]]]));
+          const hole = (w, h, r) => {
+            const x = CX - w / 2, y = CY - h / 2;
+            return `M0 0H1080V1920H0Z M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
+          };
+          SK.clip(ID, { T: 5.5, bg: null, update: (t) => {
+            const u = k(t), w = 2400 + (W1 - 2400) * u, h = 3600 + (H1 - 3600) * u, r = 200 + (R1 - 200) * u;
+            $('cover').style.clipPath = `path(evenodd, "${hole(w, h, r)}")`;
+            $('grid').style.transform = `translate(${(t * 6).toFixed(2)}px, ${(t * 4).toFixed(2)}px)`;
+            Object.assign($('bezel').style, { width: `${(w + 72).toFixed(1)}px`, height: `${(h + 72).toFixed(1)}px`, borderRadius: `${(r + 36).toFixed(1)}px`,
+              transform: `translate(${(CX - w / 2 - 36).toFixed(1)}px, ${(CY - h / 2 - 36).toFixed(1)}px)`, opacity: u > 0 ? '1' : '0' });
+            SK.piece($('note'), { x: 330, y: 360 - 500 * (1 - SK.onTwos((s) => M.clamp((s - 1.9) / 0.3))(t)), r: -3, o: t >= 1.9 ? 1 : 0 }, 291, t);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. The speaker is the host's matted <video> (placeholder here) on track 6; this clip is the plain zine backdrop behind it, and mm-09-sticker-ransom-front (track 7) carries the stickers and the ransom caption. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #pink { position: absolute; inset: 0; background: #ffc6dc; }
+      </style>
+      <div id="root" data-composition-id="mm-09-sticker-ransom" data-width="1080" data-height="1920" data-duration="5.5">
+        <div class="sk-stage sk-stop sk-pal-mm-zine-pink">
+          <div id="pink"></div>
+          <div class="sk-tex-halftone"></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-09-sticker-ransom';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 5.5, update: (t) => SK.grain($('grain'), t, 4) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

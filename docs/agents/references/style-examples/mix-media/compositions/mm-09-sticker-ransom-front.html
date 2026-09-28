@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the phrase is invented. Front layer of mm-09 (track 7): library stickers pop around the speaker on the beats, and a ransom-note caption is pasted letter by letter above them. Keep the face zone (x 300–780, y 780–1320) clear. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .st { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; }
+        #cap { position: absolute; left: 0; right: 0; top: 280px; text-align: center; white-space: nowrap; }
+        .lt { display: inline-block; margin: 0 4px; padding: 6px 14px 10px; font-size: 104px; line-height: 1; color: #111; box-shadow: 3px 5px 0 rgba(40,25,10,.3); }
+        .sp { display: inline-block; width: 40px; }
+      </style>
+      <div id="root" data-composition-id="mm-09-sticker-ransom-front" data-width="1080" data-height="1920" data-duration="5.5">
+        <div class="sk-stage sk-stop">
+          <div id="cap"></div>
+          <div class="st sk-obj-star-sticker" id="s0" style="width:190px"></div>
+          <div class="st sk-obj-check-sticker" id="s1" style="width:180px"></div>
+          <div class="st sk-obj-arrow-sticker" id="s2" style="width:210px"></div>
+          <div class="st sk-obj-circle-dot-sticker" id="s3" style="width:150px"></div>
+          <div class="st sk-obj-star-sticker" id="s4" style="width:140px"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-09-sticker-ransom-front';
+          const $ = SK.finder(ID);
+          // ransom-caption: every letter is its own paper chip with a seeded font, colour, and tilt
+          const TEXT = 'GAS TERUS', FONTS = ['sk-display', 'sk-serif', 'sk-hand', 'sk-mono', 'sk-sans'];
+          const BG = ['#ffe14d', '#ffffff', '#ff8fb8', '#9ad0ff', '#f4f1ea', '#111111'];
+          const r = SK.rng(310);
+          $('cap').innerHTML = [...TEXT].map((ch) => {
+            if (ch === ' ') return '<span class="sp"></span>';
+            const bg = BG[Math.floor(r() * BG.length)], f = FONTS[Math.floor(r() * FONTS.length)];
+            return `<span class="lt ${f}" data-r="${((r() - 0.5) * 16).toFixed(1)}" style="background:${bg};color:${bg === '#111111' ? '#fff' : '#111'}">${ch}</span>`;
+          }).join('');
+          const letters = [...$('cap').querySelectorAll('.lt')];
+          // sticker-bomb: one sticker per beat around (never on) the face
+          const ST = [[0.9, 60, 640, -12], [1.2, 850, 700, 10], [1.5, 40, 1330, 8], [1.8, 880, 1380, -6], [2.1, 170, 1640, 14]];
+          SK.clip(ID, { T: 5.5, bg: null, update: (t) => {
+            letters.forEach((el, i) => {
+              SK.enter(el, SK.stepTime(t, SK.STOP_FPS) - (0.2 + i * 0.1), 'pop');
+              el.style.transform += ` rotate(${el.dataset.r}deg)`; // keep each chip's seeded tilt
+            });
+            ST.forEach(([at, x, y, rot], i) => {
+              const s = Math.round(SK.stepTime(t - at, SK.STOP_FPS) * SK.STOP_FPS);
+              const sc = s < 0 ? 0 : [0.4, 1.18, 1][Math.min(s, 2)];
+              SK.piece($('s' + i), { x, y, r: rot, s: sc, o: s >= 0 ? 1 : 0 }, 311 + i, t);
+            });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

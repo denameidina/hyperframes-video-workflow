@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the list is invented. The speaker is the host's matted <video> (placeholder here) on track 6, shifted left by the manifest's cutouts entry; this clip is the backdrop and the torn list panel on the right, and mm-10-panel-speech-front (track 7) is the speech bubble. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #panel { position: absolute; left: 0; top: 0; width: 440px; height: 700px; }
+        #pp { position: absolute; inset: 0; }
+        #pt { position: absolute; left: 40px; top: 40px; font-size: 60px; font-weight: 700; color: var(--sk-accent-2); white-space: nowrap; }
+        .it { position: absolute; left: 40px; font-size: 76px; font-weight: 700; line-height: 1; color: #2b2118; white-space: nowrap; }
+        .it b { color: var(--sk-accent); margin-right: 14px; }
+      </style>
+      <div id="root" data-composition-id="mm-10-panel-speech" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop sk-pal-mm-kraft-desk sk-kraft">
+          <div class="sk-cut" id="panel">
+            <div class="sk-paper-white" id="pp"></div>
+            <div class="sk-hand" id="pt">3 langkah</div>
+            <div class="it sk-hand" id="i0" style="top:180px"><b>1</b>catat</div>
+            <div class="it sk-hand" id="i1" style="top:330px"><b>2</b>rapikan</div>
+            <div class="it sk-hand" id="i2" style="top:480px"><b>3</b>otomatis</div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-10-panel-speech';
+          const $ = SK.finder(ID);
+          $('pp').style.clipPath = SK.torn(440, 700, 320, { edges: 'trbl', amp: 12 });
+          // torn-panel-list: the panel stays on the side away from the face; one item per word
+          const slide = SK.onTwos(M.track(1, [[0.3, 0, [16, 0.8]]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.piece($('panel'), { x: 600 + 600 * slide(t), y: 520, r: 2 }, 321, t);
+            ['i0', 'i1', 'i2'].forEach((id, i) => SK.enter($(id), t - (1.0 + i * 0.5), 'rise'));
+            SK.enter($('pt'), t - 0.7, 'fade');
+            SK.grain($('grain'), t, 4);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-mix-media" data-start="0" data-width="1080" data-height="1920" data-duration="24">
-      <div id="base-video" class="clip" data-start="0" data-duration="24" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-mix-media" data-start="0" data-width="1080" data-height="1920" data-duration="61">
+      <div id="base-video" class="clip" data-start="0" data-duration="61" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -52,10 +52,45 @@
              data-start="19" data-duration="5" data-track-index="6"></video>
       <div id="mm-04-polaroid-caption-front-mount" class="broll-front" data-composition-id="mm-04-polaroid-caption-front" data-composition-src="compositions/mm-04-polaroid-caption-front.html"
            data-start="19" data-duration="5" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="mm-05-halftone-punch-mount" class="broll" data-composition-id="mm-05-halftone-punch" data-composition-src="compositions/mm-05-halftone-punch.html"
+           data-start="24.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-05-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="24.5" data-duration="5" data-track-index="6"></video>
+      <div id="mm-06-frame-grid-mount" class="broll" data-composition-id="mm-06-frame-grid" data-composition-src="compositions/mm-06-frame-grid.html"
+           data-start="30" data-duration="5.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-06-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="30" data-duration="5.5" data-track-index="6"></video>
+      <div id="mm-06-frame-grid-front-mount" class="broll-front" data-composition-id="mm-06-frame-grid-front" data-composition-src="compositions/mm-06-frame-grid-front.html"
+           data-start="30" data-duration="5.5" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="mm-07-scrapbook-scribble-mount" class="broll" data-composition-id="mm-07-scrapbook-scribble" data-composition-src="compositions/mm-07-scrapbook-scribble.html"
+           data-start="36" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-07-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="36" data-duration="6" data-track-index="6"></video>
+      <div id="mm-08-split-self-mount" class="broll" data-composition-id="mm-08-split-self" data-composition-src="compositions/mm-08-split-self.html"
+           data-start="42.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-08-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline style="transform-origin: 50% 100%; transform: translate(-265px, 0px) scale(0.66)"
+             data-start="42.5" data-duration="6" data-track-index="6"></video>
+      <video id="mm-08-cut2" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline style="transform-origin: 50% 100%; transform: translate(265px, 0px) scale(0.66)"
+             data-start="44.5" data-duration="4" data-track-index="5"></video>
+      <div id="mm-09-sticker-ransom-mount" class="broll" data-composition-id="mm-09-sticker-ransom" data-composition-src="compositions/mm-09-sticker-ransom.html"
+           data-start="49" data-duration="5.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-09-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline
+             data-start="49" data-duration="5.5" data-track-index="6"></video>
+      <div id="mm-09-sticker-ransom-front-mount" class="broll-front" data-composition-id="mm-09-sticker-ransom-front" data-composition-src="compositions/mm-09-sticker-ransom-front.html"
+           data-start="49" data-duration="5.5" data-track-index="7" data-width="1080" data-height="1920"></div>
+      <div id="mm-10-panel-speech-mount" class="broll" data-composition-id="mm-10-panel-speech" data-composition-src="compositions/mm-10-panel-speech.html"
+           data-start="55" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <video id="mm-10-cut" class="clip cutout sk-sticker-cut" src="assets/placeholder-cutout.webm" muted playsinline style="transform-origin: 50% 100%; transform: translate(-230px, 0px) scale(0.9)"
+             data-start="55" data-duration="6" data-track-index="6"></video>
+      <div id="mm-10-panel-speech-front-mount" class="broll-front" data-composition-id="mm-10-panel-speech-front" data-composition-src="compositions/mm-10-panel-speech-front.html"
+           data-start="55" data-duration="6" data-track-index="7" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
+      // Zoom-punch: step the matted speaker in and back out on the peak word.
+      tl.to('#mm-05-cut', { scale: 1.15, transformOrigin: '50% 60%', duration: 0.1, ease: 'steps(2)' }, 26.7);
+      tl.to('#mm-05-cut', { scale: 1, duration: 0.3, ease: 'steps(3)' }, 26.82);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-mix-media'] = tl;
     </script>

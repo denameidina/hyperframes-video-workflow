@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the quote is invented. Front layer of mm-10 (track 7): a paper speech bubble whose tail points at the speaker's mouth, with the quoted words written in as they are said. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bub { position: absolute; left: 0; top: 0; width: 540px; height: 330px; transform-origin: 30% 100%; }
+        #bp { position: absolute; inset: 0; }
+        #q { position: absolute; left: 40px; right: 40px; top: 70px; text-align: center; font-size: 74px; font-weight: 700; line-height: 1.02; color: #2b2118; }
+      </style>
+      <div id="root" data-composition-id="mm-10-panel-speech-front" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-stop">
+          <div class="sk-cut" id="bub"><div class="sk-paper-cream" id="bp"></div><div class="sk-hand" id="q">"kok ribet sih?"</div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mm-10-panel-speech-front';
+          const $ = SK.finder(ID);
+          // speech-cutout: an oval of paper with a tail, torn at the edge, aimed down at the speaker (left of centre)
+          const pts = [];
+          for (let i = 0; i < 40; i++) {
+            const a = (i / 40) * Math.PI * 2, j = 1 + (SK.rng(330 + i)() - 0.5) * 0.04;
+            pts.push(`${(270 + Math.cos(a) * 262 * j).toFixed(1)}px ${(135 + Math.sin(a) * 128 * j).toFixed(1)}px`);
+            if (i === 10) pts.push('190px 330px', '150px 258px');
+          }
+          $('bp').style.clipPath = `polygon(${pts.join(',')})`;
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const s = Math.round(SK.stepTime(t - 2.9, SK.STOP_FPS) * SK.STOP_FPS);
+            SK.piece($('bub'), { x: 40, y: 470, r: -3, s: s < 0 ? 0 : [0.5, 1.12, 1][Math.min(s, 2)], o: s >= 0 ? 1 : 0 }, 331, t);
+            SK.write($('q'), SK.smooth((t - 3.2) / 0.6));
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

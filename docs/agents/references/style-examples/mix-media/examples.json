@@ -4,6 +4,12 @@
     {"clip": "mm-01-collage-doodle", "duration": 5, "treatment": "collage", "stills": [2.1, 4.7], "cutout": true},
     {"clip": "mm-02-orbit-arrow", "duration": 6, "treatment": "collage", "stills": [3.6, 5.7], "cutout": true, "front": true},
     {"clip": "mm-03-torn-window", "duration": 6, "treatment": "collage", "stills": [0.8, 5.7], "cutout": true, "front": true},
-    {"clip": "mm-04-polaroid-caption", "duration": 5, "treatment": "collage", "stills": [1.8, 4.7], "cutout": true, "front": true}
+    {"clip": "mm-04-polaroid-caption", "duration": 5, "treatment": "collage", "stills": [1.8, 4.7], "cutout": true, "front": true},
+    {"clip": "mm-05-halftone-punch", "duration": 5, "treatment": "collage", "stills": [1.2, 2.3, 4.0], "cutout": true, "punch": [[2.2, 1.15]]},
+    {"clip": "mm-06-frame-grid", "duration": 5.5, "treatment": "collage", "stills": [1.4, 4.2], "cutout": true, "front": true},
+    {"clip": "mm-07-scrapbook-scribble", "duration": 6, "treatment": "collage", "stills": [1.3, 4.4], "cutout": true},
+    {"clip": "mm-08-split-self", "duration": 6, "treatment": "collage", "stills": [1.2, 4.5], "cutouts": [{"x": -265, "s": 0.66}, {"x": 265, "s": 0.66, "at": 2.0}]},
+    {"clip": "mm-09-sticker-ransom", "duration": 5.5, "treatment": "collage", "stills": [1.35, 3.8], "cutout": true, "front": true},
+    {"clip": "mm-10-panel-speech", "duration": 6, "treatment": "collage", "stills": [2.4, 4.8], "cutouts": [{"x": -230, "s": 0.9}], "front": true}
   ]
 }
