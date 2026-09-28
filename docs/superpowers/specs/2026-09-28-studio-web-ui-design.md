@@ -1,6 +1,6 @@
 # Studio — Web UI Sederhana untuk Raw, Sesi Agen, dan Publish — Design
 
-Status: approved (brainstorming 2026-09-28), belum diimplementasi
+Status: implemented 2026-09-28 (plan docs/superpowers/plans/2026-09-28-studio-web-ui.md)
 Date: 2026-09-28
 
 ## Latar belakang
@@ -65,9 +65,11 @@ mem-publish ke Repliz.
 ### Alamat listen
 
 - Selalu `127.0.0.1`.
-- Plus IP Tailscale bila `tailscale ip -4` (atau
-  `/Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4`) berhasil.
-  Gagal deteksi → hanya localhost, dengan pesan di log.
+- Plus IP Tailscale bila `tailscale status --json` (atau binary di
+  `/Applications/Tailscale.app/Contents/MacOS/Tailscale`) melaporkan
+  `BackendState: Running`. Tidak terhubung atau bind gagal → hanya localhost,
+  dengan pesan di log (ditemukan saat implementasi: `tailscale ip -4` tetap
+  mengembalikan IP walau Tailscale Stopped).
 - Port default `4777`, bisa diubah `--port` atau `STUDIO_PORT`.
 
 ### Sumber data = filesystem
