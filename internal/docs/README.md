@@ -61,22 +61,23 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 37. [adr/0015-parallax-css-3d.md](adr/0015-parallax-css-3d.md) - 2.5D parallax lewat multiplane CSS 3D, `parallax-stage`, dan `video layers`; ketujuh gaya lengkap.
 38. [adr/0016-shared-asset-library.md](adr/0016-shared-asset-library.md) - Pustaka aset bersama `vendor/asset-lib/` (ikon, doodle, kertas, peta, tekstur, scene, font), preset palet/tipografi, dan contact sheet.
 39. [adr/0017-per-style-example-hosts.md](adr/0017-per-style-example-hosts.md) - Satu host contoh per gaya di `style-examples/<gaya>/`, `index.html` + `snapshots.json` dihasilkan dari `examples.json`; tes cakupan pola.
+40. [adr/0018-moodboard-studies.md](adr/0018-moodboard-studies.md) - Moodboard per gaya: 42 studi teknik buatan sendiri + sheet per gaya; still asli hanya di `moodboard/local/` (gitignored).
 
 ### Design System & Frontend
-40. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-41. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+41. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+42. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-42. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-43. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-44. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-45. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-46. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-47. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+43. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+44. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+45. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+46. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+47. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+48. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-48. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-49. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+49. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+50. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
@@ -92,7 +93,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0017) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0018) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
