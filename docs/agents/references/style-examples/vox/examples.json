@@ -4,6 +4,13 @@
     {"clip": "vx-01-illustrative", "duration": 5, "treatment": "cutaway", "stills": [2.4, 4.7]},
     {"clip": "vx-02-capture-split", "duration": 6, "treatment": "split", "stills": [2.4, 5.7]},
     {"clip": "vx-03-map-pin", "duration": 5, "treatment": "cutaway", "stills": [1.7, 4.7]},
-    {"clip": "vx-04-clipping-panel", "duration": 5, "treatment": "panel", "stills": [1.9, 4.7]}
+    {"clip": "vx-04-clipping-panel", "duration": 5, "treatment": "panel", "stills": [1.9, 4.7]},
+    {"clip": "vx-05-chat-redact", "duration": 6, "treatment": "cutaway", "stills": [2.6, 5.2]},
+    {"clip": "vx-06-cell-underline", "duration": 6, "treatment": "split", "stills": [1.0, 4.6]},
+    {"clip": "vx-07-search-arrow", "duration": 6, "treatment": "cutaway", "stills": [1.4, 4.8]},
+    {"clip": "vx-08-timeline-pinned", "duration": 6.5, "treatment": "cutaway", "stills": [2.8, 5.8]},
+    {"clip": "vx-09-loupe-before-after", "duration": 6, "treatment": "panel", "stills": [2.0, 4.6]},
+    {"clip": "vx-10-quote-split", "duration": 6.5, "treatment": "cutaway", "stills": [2.2, 5.6]},
+    {"clip": "vx-11-archival-pan", "duration": 5, "treatment": "cutaway", "stills": [0.9, 4.6]}
   ]
 }

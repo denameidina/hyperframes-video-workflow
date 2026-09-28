@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a real public-domain archival photo ("Woman typist", c. 1900, Library of Congress; see THIRD_PARTY_NOTICES.md), rebuilt from the plate and subject layers the parallax example uses. In a real clip the photo is the one Dena names, with its real source line. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #print { position: absolute; left: 110px; top: 300px; width: 860px; height: 1114px; padding: 26px 26px 90px; background: #f4f1ea; box-sizing: content-box; }
+        #win { position: absolute; left: 26px; top: 26px; width: 860px; height: 1114px; overflow: hidden; background: #222; }
+        #cam { position: absolute; left: 0; top: 0; width: 860px; height: 1114px; transform-origin: 0 0; }
+        #cam img { position: absolute; left: -43px; top: -56px; width: 946px; height: 1226px; filter: sepia(.35) contrast(1.05); }
+        #cap { position: absolute; left: 26px; right: 26px; bottom: 22px; font-size: 44px; font-weight: 700; color: #3b3530; white-space: nowrap; }
+        #src { left: 110px; top: 1560px; }
+      </style>
+      <div id="root" data-composition-id="vx-11-archival-pan" data-width="1080" data-height="1920" data-duration="5">
+        <div class="sk-stage sk-vox sk-kraft">
+          <div class="sk-cut" id="print">
+            <div id="win">
+              <div id="cam">
+                <img src="assets/px-archive-plate.jpg" alt="" />
+                <img src="assets/px-archive-subject.png" alt="" />
+              </div>
+              <div class="sk-grain" id="grain"></div>
+            </div>
+            <div id="cap" class="sk-hand">kantor, sekitar 1900</div>
+          </div>
+          <div class="sk-source" id="src">Foto: "Woman typist", ±1900, Library of Congress (domain publik)</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-11-archival-pan';
+          const $ = SK.finder(ID);
+          // archival-pan: one slow direction, a stepped 6% push toward the detail being named (the typewriter).
+          // The photo is overscanned 10% so the push never shows its edge: at s = 1.06 the focus must stay
+          // within x 363–497, y 470–644 of the window.
+          const s = SK.onTwos(M.track(1, [[0.4, 1.06, [2.2, 1]]]));
+          const fx = SK.onTwos(M.track(430, [[0.4, 368, [2.2, 1]]])), fy = SK.onTwos(M.track(557, [[0.4, 638, [2.2, 1]]]));
+          const inY = SK.onTwos(M.track(1, [[0.05, 0, [18, 0.8]]]));
+          SK.clip(ID, { T: 5, update: (t) => {
+            SK.piece($('print'), { x: 0, y: 1300 * inY(t), r: -1.2 }, 270, t, { amp: 0.6 });
+            SK.cam($('cam'), s(t), fx(t), fy(t), 860, 1114);
+            SK.enter($('src'), t - 0.6, 'fade');
+            SK.grain($('grain'), t, 3);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

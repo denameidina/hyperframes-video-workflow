@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an illustrative chat (tagged "Ilustrasi"; no real person, shop, or number) with invented messages, to show the mechanism. In a real clip the quoted messages are verbatim from the transcript or a real capture; private details are redacted from the first frame they appear. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+        #sheet { position: absolute; left: 110px; top: 640px; }
+        #sheet .sk-docx { font-size: 42px; }
+        #sheet .sk-doc-msg b { font-size: 26px; }
+        .hlw { position: relative; }
+        #hl { left: -6px; right: -6px; top: 8%; bottom: 0; }
+        #rd { left: -4px; right: -4px; top: 4%; bottom: 4%; }
+      </style>
+      <div id="root" data-composition-id="vx-05-chat-redact" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-vox sk-paper-cream">
+          <div id="cam"><div id="sheet" class="sk-cut"></div></div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-05-chat-redact';
+          const $ = SK.finder(ID);
+          $('sheet').innerHTML = SK.doc('chat-thread', { messages: [
+            { from: 'Pelanggan', text: 'Kak, pesanan saya belum sampai?' },
+            { from: 'Admin', side: 'r', text: 'Maaf kak, lagi dicek ya' },
+            { from: 'Pelanggan', text: 'Nomor saya ' },
+            { from: 'Pelanggan', text: 'Tolong dibalas, sudah 3 hari' },
+          ] }, { w: 860 });
+          const msgs = [...$('sheet').querySelectorAll('.sk-doc-msg')];
+          // redact-bar: the private number is covered from the first frame its message is visible
+          msgs[2].insertAdjacentHTML('beforeend', '<span class="hlw"><span class="sk-redact" id="rd"></span>0812 0000 0000</span>');
+          // the key phrase gets the highlighter
+          msgs[3].innerHTML = '<b>Pelanggan</b>Tolong dibalas, <span class="hlw"><span class="sk-hl" id="hl"></span>sudah 3 hari</span>';
+          // chat-reveal: one message per quoted line
+          const AT = [0.4, 1.3, 2.2, 3.1];
+          const push = SK.onTwos(M.track(1, [[3.6, 1.18, M.SLOW]]));
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.cam($('cam'), push(t), 540, 1020);
+            msgs.forEach((m, i) => SK.enter(m, t - AT[i], 'rise', { dy: 30 }));
+            SK.highlight($('rd'), t >= AT[2] ? 1 : 0);
+            SK.highlight($('hl'), SK.smooth((t - 3.9) / 0.45));
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

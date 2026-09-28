@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an illustrative spreadsheet (tagged "Ilustrasi") with invented numbers, to show the mechanism. In a real clip the highlighted number is the one said in the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #half { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; overflow: hidden; }
+        #cam { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform-origin: 0 0; }
+        #sheet { position: absolute; left: 90px; top: 190px; }
+        #sheet .sk-doc-grid { table-layout: fixed; margin: 0; }
+        #sheet .sk-doc-grid th, #sheet .sk-doc-grid td { height: 64px; padding: 0 14px; font-size: 34px; box-sizing: border-box; }
+        #sheet .sk-doc-grid tr > :first-child { width: 64px; }
+        #hlc { position: absolute; opacity: 0; background: #ffe14d; mix-blend-mode: multiply; }
+        #ink { position: absolute; left: 0; top: 0; overflow: visible; }
+        #tag { right: 40px; bottom: 40px; top: auto; } /* the document's own tag leaves the frame during the push; this one stays (RD-03-54) */
+      </style>
+      <div id="root" data-composition-id="vx-06-cell-underline" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-vox">
+          <div id="half" class="sk-paper-cream">
+            <div id="cam">
+              <div id="sheet" class="sk-cut"></div>
+              <div id="hlc"></div>
+              <svg id="ink" width="1080" height="960"></svg>
+            </div>
+            <div class="sk-grain" id="grain"></div>
+            <div class="sk-tag" id="tag">Ilustrasi</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-06-cell-underline';
+          const $ = SK.finder(ID);
+          $('sheet').innerHTML = SK.doc('spreadsheet', {
+            columns: ['Bulan', 'Order', 'Omzet'],
+            rows: [['Jan', '120', 'Rp 18 jt'], ['Feb', '135', 'Rp 20 jt'], ['Mar', '210', 'Rp 31 jt'], ['Apr', '190', 'Rp 28 jt']],
+          }, { w: 900 });
+          // fixed geometry (table-layout: fixed): padding 48, index column 64, three equal columns, rows of 64
+          const W = (900 - 96 - 64) / 3, H = 64, X = 90 + 48 + 64 + W, Y = 190 + 48 + H * 3;
+          Object.assign($('hlc').style, { left: `${X}px`, top: `${Y}px`, width: `${W}px`, height: `${H}px` });
+          // pen-underline: a wavy red line under the number
+          let d = `M${X + 14} ${Y + H - 8}`;
+          for (let i = 1; i <= 8; i++) d += ` Q${X + 14 + i * 10 - 5} ${Y + H - 8 + (i % 2 ? -7 : 7)} ${X + 14 + i * 10} ${Y + H - 8}`;
+          $('ink').innerHTML = `<path id="ul" d="${d}" fill="none" stroke="var(--sk-accent-2)" stroke-width="5" stroke-linecap="round"/>`;
+          const inY = SK.onTwos(M.track(1, [[0.1, 0, [16, 0.8]]]));
+          // cell-zoom: a stepped push into the cell on its number word
+          const push = SK.onTwos(M.track(1, [[1.3, 1.7, M.SLOW]]));
+          const fx = SK.onTwos(M.track(540, [[1.3, X + W / 2, M.SLOW]])), fy = SK.onTwos(M.track(480, [[1.3, Y + H / 2, M.SLOW]]));
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            SK.cam($('cam'), push(t), fx(t), fy(t), 1080, 960);
+            SK.piece($('sheet'), { x: 0, y: 900 * inY(t), r: 0 }, 70, t, { amp: 0.6 });
+            SK.highlight($('hlc'), SK.smooth((t - 2.3) / 0.35));
+            SK.draw($('ul'), SK.smooth((t - 3.2) / 0.3));
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

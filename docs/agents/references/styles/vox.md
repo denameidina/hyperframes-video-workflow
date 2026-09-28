@@ -8,7 +8,7 @@ map zooms with pins, grain, and a source line on screen. Loaded by
 `docs/agents/03-build.md` (author step). Engine: `vendor/style-kit/`
 (`window.SK`, including `SK.highlight`, `SK.geo`) on top of `vendor/motion-kit/`;
 paper, pins, tape, and the Indonesia map: `vendor/paper-pack/`. Worked examples:
-`docs/agents/references/style-examples/vox/` (`vx-01` … `vx-04`,
+`docs/agents/references/style-examples/vox/` (`vx-01` … `vx-11`,
 `npm run check:style-examples -- vox`).
 
 ## When To Use
@@ -142,6 +142,11 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **split-docs** | Two documents stacked top and bottom | Claim vs reality, then vs now | Second enters on "tapi" / "sedangkan" | two slaps | Both too small to read | two `SK.piece` sheets, each ≥ 900 px wide |
 | **arrow-callout** | Hand-drawn arrow + 1–3 word label pointing at a detail | Pointing at a number or a line in a capture | Arrow draws on the noun | pen flick | Arrows pointing at nothing | `SK.arrow` + `.sk-hand` label |
 | **before-after-doc** | The same document, old then new; a wipe or strike changes it | Pivots, price or policy changes | Swap on "sekarang" / "berubah" | paper flip | Implying a change the source doesn't show | two layers + `SK.highlight`-style wipe or `.sk-redact` strike |
+| **chat-reveal** | Messages in an illustrative chat appear one by one; the key message gets the highlighter | "klien chat gue bilang…" | One message per quoted line; the highlighter on the key phrase | soft message pop | Messages nobody said; a real person's name or number | `SK.doc('chat-thread', …)` + `SK.enter` per `.sk-doc-msg` + `.sk-hl` |
+| **cell-zoom** | A stepped push into one spreadsheet cell; the cell is highlighted and its number underlined | One number in a report | The push lands on the number word | low hum | A number nobody said; zooming into an empty cell | `SK.doc('spreadsheet', …)` with fixed cell sizes + `SK.cam` push + a highlight block; keep a fixed "Ilustrasi" tag in frame |
+| **search-query** | A query types into an illustrative results page; the relevant result is pointed at | "coba lo search…" | Typing ends with the query; the pointer lands on the result named | soft typing | A real search engine's look; invented results that pass as real | `SK.doc('search-results', …)` + `SK.typeOn` on `.sk-doc-search` |
+| **doc-timeline** | Dated clippings in a row; the camera steps from date to date | A sequence of events | One camera step per date said | click per step | Dates nobody said; more than 4 clippings | `SK.doc` clippings on a wide board + a stepped `SK.cam` focus `x` |
+| **loupe-zoom** | A round magnifier enlarges one detail of the document | "lihat baris kecil ini" | The lens arrives on the pointing word, 0.3–0.5 s | small whoosh | A lens over what is not discussed; a shaking lens | a 2× copy of the document inside a round `overflow: hidden` lens, offset so its centre matches |
 
 ## References
 
@@ -273,6 +278,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Map pins: `const p = SK.geo(...SK.CITIES.jakarta)` (or any `[lat, lon]`), put the
   pin and label inside the same camera layer as the map.
 - A capture is an `<img>` of `assets/captures/NN-name.png`; always add `.sk-source`.
+- When the camera pushes so far into an `SK.doc` that its own tag leaves the frame,
+  add a fixed `.sk-tag` "Ilustrasi" outside the camera layer (`vx-06`); the tag must
+  stay visible (RD-03-54).
+- Private details in an illustrative document (a phone number in a chat) are
+  covered by `.sk-redact` from the first frame their line is visible (`vx-05`).
+- An archival photo is a print: overscan it about 10% inside its window so a
+  stepped push never shows its edge (`vx-11`).
 
 ## SFX
 
@@ -283,6 +295,8 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | clipping-stack, split-docs | paper slap | 0.1–0.14 |
 | stamp, map-zoom pin | rubber stamp / pin thud | 0.12–0.16 |
 | doc-push, archival-pan | low paper rustle / room tone | 0.06–0.1 |
+| chat-reveal, search-query | soft message pop / soft typing | 0.06–0.1 |
+| cell-zoom, doc-timeline, loupe-zoom | low hum / click per step / small whoosh | 0.06–0.1 |
 
 ## Examples
 
@@ -292,6 +306,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | `style-examples/vox/compositions/vx-02-capture-split.html` | real capture (Wikipedia, CC BY-SA 4.0) + circle-annotate + highlight-sweep + doc-push + source-line | split |
 | `style-examples/vox/compositions/vx-03-map-pin.html` | map-zoom onto Jakarta via `SK.geo` + source-line | cutaway |
 | `style-examples/vox/compositions/vx-04-clipping-panel.html` | clipping-stack + stamp, "Ilustrasi" tag | panel |
+| `style-examples/vox/compositions/vx-05-chat-redact.html` | chat-reveal + redact-bar on an illustrative chat | cutaway |
+| `style-examples/vox/compositions/vx-06-cell-underline.html` | cell-zoom + pen-underline on an illustrative spreadsheet | split |
+| `style-examples/vox/compositions/vx-07-search-arrow.html` | search-query + arrow-callout on illustrative results | cutaway |
+| `style-examples/vox/compositions/vx-08-timeline-pinned.html` | doc-timeline + pinned-source | cutaway |
+| `style-examples/vox/compositions/vx-09-loupe-before-after.html` | loupe-zoom + before-after-doc on an illustrative report | panel |
+| `style-examples/vox/compositions/vx-10-quote-split.html` | pull-quote + split-docs | cutaway |
+| `style-examples/vox/compositions/vx-11-archival-pan.html` | archival-pan on a public-domain photo with its source line | cutaway |
 
 ## Anti-slop Checklist
 

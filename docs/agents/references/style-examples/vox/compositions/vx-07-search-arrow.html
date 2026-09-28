@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an illustrative results page (tagged "Ilustrasi"; no real search engine or site) with invented results, to show the mechanism. In a real clip the query is the one Dena says, and a real results page is a capture with its source line. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #sheet { position: absolute; left: 50px; top: 620px; }
+        #sheet .sk-docx { font-size: 36px; }
+        #sheet .sk-doc-search { min-height: 52px; font-size: 40px; }
+        #sheet .sk-doc-rtitle { font-size: 50px; }
+        #ink { position: absolute; left: 0; top: 0; }
+        #lab { position: absolute; left: 860px; top: 772px; font-size: 64px; font-weight: 700; color: var(--sk-accent-2); white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="vx-07-search-arrow" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-vox sk-paper-cream">
+          <div id="sheet" class="sk-cut"></div>
+          <svg class="sk-full" viewBox="0 0 1080 1920" width="1080" height="1920" id="ink"></svg>
+          <div id="lab" class="sk-hand">yang ini</div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-07-search-arrow';
+          const $ = SK.finder(ID);
+          $('sheet').innerHTML = SK.doc('search-results', { query: '', results: [
+            { title: 'Rekap stok otomatis', snippet: 'Langkah membuat rekap stok harian…' },
+            { title: 'Template stok gratis', snippet: 'Salin template, isi, selesai…' },
+            { title: '5 aplikasi kasir', snippet: 'Perbandingan fitur dan harga…' },
+          ] }, { w: 800 });
+          const box = $('sheet').querySelector('.sk-doc-search');
+          const res = [...$('sheet').querySelectorAll('.sk-doc-result')];
+          // arrow-callout: a hand-drawn arrow from the note to the result, in the pen colour
+          const ar = SK.arrow(850, 812, 600, 812, 231, 4, 30);
+          $('ink').innerHTML = `<path id="as" d="${ar.shaft}" fill="none" stroke="var(--sk-accent-2)" stroke-width="8" stroke-linecap="round"/>` +
+            `<path id="ah" d="${ar.head}" fill="none" stroke="var(--sk-accent-2)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
+          const inY = SK.onTwos(M.track(1, [[0.1, 0, [16, 0.8]]]));
+          const Q = 'rekap stok otomatis';
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.piece($('sheet'), { x: 0, y: 1400 * inY(t), r: -1 }, 230, t, { amp: 0.8 });
+            // search-query: the query types in; the results land after it
+            SK.typeOn(box, Q, M.clamp((t - 0.7) / 1.1), { t });
+            res.forEach((r, i) => SK.enter(r, t - 2.0 - i * 0.25, 'rise', { dy: 24 }));
+            SK.draw($('as'), SK.smooth((t - 3.2) / 0.35));
+            SK.draw($('ah'), SK.smooth((t - 3.55) / 0.12));
+            $('lab').style.opacity = t >= 3.7 ? '1' : '0';
+            SK.write($('lab'), SK.smooth((t - 3.7) / 0.4));
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

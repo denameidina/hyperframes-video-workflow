@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an invented quote and illustrative documents (tagged "Ilustrasi"; no real person or outlet), to show the mechanism. In a real clip the quote is verbatim with its real speaker, and the documents are the ones Dena names. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #quote { position: absolute; left: 90px; top: 620px; width: 900px; transform-origin: 50% 0; }
+        #q { font-size: 84px; line-height: 1.12; color: #1b1b1b; }
+        #q .sk-w { display: inline-block; margin-right: .22em; }
+        #who { margin-top: 26px; font-size: 36px; color: var(--sk-muted); }
+        #mark { position: absolute; left: -20px; top: -110px; font-size: 220px; line-height: 1; color: var(--sk-accent-2); }
+        .dc { position: absolute; left: 70px; }
+        .dc .sk-docx { font-size: 40px; }
+        .dc .sk-docx h1 { font-size: 80px; }
+        #d0 { top: 520px; }
+        #d1 { top: 1180px; }
+      </style>
+      <div id="root" data-composition-id="vx-10-quote-split" data-width="1080" data-height="1920" data-duration="6.5">
+        <div class="sk-stage sk-vox sk-paper-cream">
+          <div class="dc sk-cut" id="d0"></div>
+          <div class="dc sk-cut" id="d1"></div>
+          <div id="quote">
+            <div id="mark" class="sk-serif">“</div>
+            <div id="q" class="sk-serif">Dibalas cepat, saya jadi langganan.</div>
+            <div id="who" class="sk-sans">— pesan pelanggan (ilustrasi)</div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-10-quote-split';
+          const $ = SK.finder(ID);
+          $('d0').innerHTML = SK.doc('article', { kicker: 'Catatan toko', headline: 'Pelanggan betah kalau dibalas cepat', body: ['Rekap bulan ini dari chat pelanggan.'] }, { w: 940 });
+          $('d1').innerHTML = SK.doc('email', { from: 'Pelanggan', subject: 'Pesanan ketiga minggu ini', body: ['Kak, saya pesan lagi ya. Sama seperti kemarin, dikirim besok pagi.'] }, { w: 940 });
+          // pull-quote: the words rise as they are said, then the quote moves up and makes room
+          const words = SK.words($('q'));
+          const AT = [0.3, 0.6, 0.95, 1.2, 1.5];
+          const up = M.track(0, [[2.7, 1, M.SLOW]]);
+          // split-docs: two sheets stacked; the second enters on "tapi"
+          const in0 = SK.onTwos(M.track(1, [[3.0, 0, [16, 0.8]]])), in1 = SK.onTwos(M.track(1, [[3.9, 0, [16, 0.8]]]));
+          SK.clip(ID, { T: 6.5, update: (t) => {
+            SK.reveal(words, AT, t, 'rise');
+            SK.enter($('mark'), t - 0.1, 'pop');
+            SK.enter($('who'), t - 1.9, 'fade');
+            const u = up(t);
+            $('quote').style.transform = `translateY(${(-480 * u).toFixed(1)}px) scale(${(1 - 0.3 * u).toFixed(4)})`;
+            SK.piece($('d0'), { x: 1200 * in0(t), y: 0, r: -1, o: t >= 3.0 ? 1 : 0 }, 260, t, { amp: 0.8 });
+            SK.piece($('d1'), { x: -1200 * in1(t), y: 0, r: 1, o: t >= 3.9 ? 1 : 0 }, 261, t, { amp: 0.8 });
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

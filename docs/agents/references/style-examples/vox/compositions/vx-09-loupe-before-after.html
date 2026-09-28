@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: an illustrative report (tagged "Ilustrasi") with invented numbers, to show the mechanism. In a real clip the old and new values are the ones said in the transcript (Gate 2 R1). -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .rep { position: absolute; left: 0; top: 0; }
+        .rep .sk-docx { font-size: 36px; }
+        .rep .sk-doc-kicker { height: 34px; line-height: 34px; }
+        .rep h2 { height: 64px; line-height: 64px; margin: 0 0 20px; }
+        .rep .sk-doc-table { margin: 0; }
+        .rep .sk-doc-table td { height: 72px; padding: 0; box-sizing: border-box; }
+        .ba { position: relative; display: inline-block; min-width: 110px; text-align: right; }
+        .old { position: relative; }
+        .strike { position: absolute; left: -6px; right: -6px; top: 48%; height: 6px; background: var(--sk-accent-2); transform-origin: 0 50%; transform: scaleX(0); }
+        .new { position: absolute; right: 150px; top: 0; color: var(--sk-accent-2); font-weight: 700; opacity: 0; white-space: nowrap; }
+        #card { left: 90px; top: 150px; }
+        #lens { position: absolute; left: 0; top: 0; width: 300px; height: 300px; border-radius: 50%; overflow: hidden; background: #f6f3ec; box-shadow: 0 0 0 12px #2b2b2b, 0 18px 40px rgba(0,0,0,.35); }
+        #lensIn { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        #handle { position: absolute; left: 0; top: 0; width: 40px; height: 190px; border-radius: 14px; background: #2b2b2b; transform-origin: 50% 0; }
+      </style>
+      <div id="root" data-composition-id="vx-09-loupe-before-after" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage sk-vox">
+          <div class="rep sk-cut" id="card"></div>
+          <div id="handle"></div>
+          <div id="lens"><div class="rep" id="lensIn"></div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-09-loupe-before-after';
+          const $ = SK.finder(ID);
+          const doc = SK.doc('report-page', { section: 'Laporan bulanan', title: 'Ringkasan Maret', rows: [
+            { label: 'Order masuk', value: '210' }, { label: 'Dibalas < 1 jam', value: '40%' }, { label: 'Komplain', value: '12' },
+          ], body: [] }, { w: 900 });
+          $('card').innerHTML = doc; $('lensIn').innerHTML = doc;
+          // before-after-doc: the old value is struck, the new one wipes in beside it (in the page and in the lens)
+          const stage = SK.stageOf(ID);
+          stage.querySelectorAll('.rep').forEach((r) => {
+            r.querySelectorAll('.sk-doc-num')[1].innerHTML = '<span class="ba"><span class="old">40%<i class="strike"></i></span><span class="new">85%</span></span>';
+          });
+          // loupe-zoom: a 2× copy of the page inside a round lens, centred on the row being named
+          const X0 = 90, Y0 = 150, CX = X0 + 900 - 48 - 70, CY = Y0 + 48 + 34 + 64 + 20 + 72 + 36, R = 150, Z = 2;
+          $('lensIn').style.transform = `translate(${R - Z * (CX - X0)}px, ${R - Z * (CY - Y0)}px) scale(${Z})`;
+          // the lens shows the row, then leaves before the change so the page itself shows it
+          const lensX = M.track(1300, [[1.0, CX, M.SLOW], [2.5, 1400, M.SLOW]]), lensY = M.track(1500, [[1.0, CY, M.SLOW], [2.5, 1700, M.SLOW]]);
+          const cardIn = M.track(0, [[0.02, 1, [18, 0.8]]]);
+          SK.clip(ID, { T: 6, bg: null, update: (t) => {
+            const c = cardIn(t);
+            $('card').style.opacity = M.clamp(c * 3).toFixed(4);
+            $('card').style.transform = `translateY(${((1 - c) * -60).toFixed(2)}px)`;
+            const lx = lensX(t), ly = lensY(t);
+            $('lens').style.transform = `translate(${(lx - R).toFixed(1)}px, ${(ly - R).toFixed(1)}px)`;
+            $('handle').style.transform = `translate(${(lx + 86).toFixed(1)}px, ${(ly + 86).toFixed(1)}px) rotate(-45deg)`;
+            const s = SK.smooth((t - 3.1) / 0.3), n = SK.smooth((t - 3.6) / 0.3);
+            stage.querySelectorAll('.strike').forEach((e) => (e.style.transform = `scaleX(${s.toFixed(4)})`));
+            stage.querySelectorAll('.new').forEach((e) => { e.style.opacity = n.toFixed(4); e.style.clipPath = `inset(0 ${((1 - n) * 100).toFixed(2)}% 0 0)`; });
+            stage.querySelectorAll('.old').forEach((e) => (e.style.opacity = (1 - 0.55 * n).toFixed(4)));
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

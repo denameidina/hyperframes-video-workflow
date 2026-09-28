@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: illustrative clippings (tagged "Ilustrasi"; no real outlet) with invented dates and headlines, to show the mechanism. In a real clip each date and headline is verbatim from the transcript or a real capture, and the source line names the real source. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 2320px; height: 1920px; transform-origin: 0 0; }
+        .clp { position: absolute; top: 760px; }
+        .clp .sk-docx h1 { font-size: 60px; }
+        .dt { position: absolute; top: 590px; width: 540px; text-align: center; font-size: 96px; font-weight: 700; line-height: 1; color: var(--sk-accent-2); white-space: nowrap; }
+        .pn { position: absolute; top: 718px; width: 46px; }
+        .sk-source { top: 1210px; }
+        #rule { position: absolute; left: 0; top: 700px; width: 2320px; height: 6px; background: #2b2b2b; opacity: .18; }
+      </style>
+      <div id="root" data-composition-id="vx-08-timeline-pinned" data-width="1080" data-height="1920" data-duration="6.5">
+        <div class="sk-stage sk-vox sk-kraft">
+          <div id="cam">
+            <div id="rule"></div>
+            <div class="dt sk-hand" id="d0" style="left:270px">Jan 2024</div>
+            <div class="dt sk-hand" id="d1" style="left:890px">Jun 2024</div>
+            <div class="dt sk-hand" id="d2" style="left:1510px">Des 2024</div>
+            <div class="clp sk-cut" id="c0" style="left:270px"></div>
+            <div class="clp sk-cut" id="c1" style="left:890px"></div>
+            <div class="clp sk-cut" id="c2" style="left:1510px"></div>
+            <div class="pn sk-pin" id="n0" style="left:517px"></div>
+            <div class="pn sk-pin" id="n1" style="left:1137px"></div>
+            <div class="pn sk-pin" id="n2" style="left:1757px"></div>
+            <div class="sk-source" id="s0" style="left:270px">Sumber: arsip toko (ilustrasi)</div>
+            <div class="sk-source" id="s1" style="left:890px">Sumber: arsip toko (ilustrasi)</div>
+            <div class="sk-source" id="s2" style="left:1510px">Sumber: arsip toko (ilustrasi)</div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-08-timeline-pinned';
+          const $ = SK.finder(ID);
+          const H = ['Buka toko online', 'Order naik dua kali', 'Admin mulai kewalahan'];
+          H.forEach((h, i) => { $('c' + i).innerHTML = SK.doc('article', { kicker: 'Catatan toko', headline: h, body: ['Ringkasan singkat dari catatan hari itu.'] }, { w: 540 }); });
+          // doc-timeline: the camera steps from date to date; each clipping is pinned as the camera arrives
+          const ARRIVE = [0.3, 2.1, 3.9], FX = [540, 1160, 1780];
+          const fx = SK.onTwos(M.track(FX[0], [[1.8, FX[1], M.SLOW], [3.6, FX[2], M.SLOW]]));
+          const drop = ARRIVE.map((at) => SK.onTwos(M.track(1, [[at, 0, [24, 0.7]]])));
+          SK.clip(ID, { T: 6.5, update: (t) => {
+            SK.cam($('cam'), 1.3, fx(t), 930, 1080, 1920);
+            ARRIVE.forEach((at, i) => {
+              const k = drop[i](t), on = t >= at ? 1 : 0;
+              SK.piece($('c' + i), { x: 0, y: -240 * k, r: [-2, 1.5, -1][i], o: on }, 240 + i, t, { amp: 0.8 });
+              SK.piece($('n' + i), { x: 0, y: -240 * k, o: on }, 250 + i, t, { amp: 0.5 });
+              SK.enter($('d' + i), t - at - 0.2, 'rise');
+              // pinned-source: the source line stays readable for at least 1.5 s
+              SK.enter($('s' + i), t - at - 0.5, 'fade');
+            });
+            SK.grain($('grain'), t, 2);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

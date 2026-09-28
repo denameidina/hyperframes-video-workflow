@@ -25,8 +25,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="style-examples-vox" data-start="0" data-width="1080" data-height="1920" data-duration="23">
-      <div id="base-video" class="clip" data-start="0" data-duration="23" data-track-index="1">
+    <div id="root" data-composition-id="style-examples-vox" data-start="0" data-width="1080" data-height="1920" data-duration="68.5">
+      <div id="base-video" class="clip" data-start="0" data-duration="68.5" data-track-index="1">
         <div id="face"></div>
         <div id="face-label">placeholder wajah</div>
       </div>
@@ -38,6 +38,20 @@
            data-start="12.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
       <div id="vx-04-clipping-panel-mount" class="broll" data-composition-id="vx-04-clipping-panel" data-composition-src="compositions/vx-04-clipping-panel.html"
            data-start="18" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-05-chat-redact-mount" class="broll" data-composition-id="vx-05-chat-redact" data-composition-src="compositions/vx-05-chat-redact.html"
+           data-start="23.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-06-cell-underline-mount" class="broll" data-composition-id="vx-06-cell-underline" data-composition-src="compositions/vx-06-cell-underline.html"
+           data-start="30" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-07-search-arrow-mount" class="broll" data-composition-id="vx-07-search-arrow" data-composition-src="compositions/vx-07-search-arrow.html"
+           data-start="36.5" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-08-timeline-pinned-mount" class="broll" data-composition-id="vx-08-timeline-pinned" data-composition-src="compositions/vx-08-timeline-pinned.html"
+           data-start="43" data-duration="6.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-09-loupe-before-after-mount" class="broll" data-composition-id="vx-09-loupe-before-after" data-composition-src="compositions/vx-09-loupe-before-after.html"
+           data-start="50" data-duration="6" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-10-quote-split-mount" class="broll" data-composition-id="vx-10-quote-split" data-composition-src="compositions/vx-10-quote-split.html"
+           data-start="56.5" data-duration="6.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="vx-11-archival-pan-mount" class="broll" data-composition-id="vx-11-archival-pan" data-composition-src="compositions/vx-11-archival-pan.html"
+           data-start="63.5" data-duration="5" data-track-index="4" data-width="1080" data-height="1920"></div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -45,6 +59,8 @@
       // Split treatment: slide the base video into the bottom half for the clip, then back.
       tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 6);
       tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 11.55);
+      tl.fromTo('#base-video', { y: 0 }, { y: 480, duration: 0.45, ease: 'power3.inOut' }, 30);
+      tl.to('#base-video', { y: 0, duration: 0.45, ease: 'power3.inOut' }, 35.55);
       // Collage and parallax-stage clips are opaque full-frame backdrops; never tween #base-video opacity.
       window.__timelines['style-examples-vox'] = tl;
     </script>
