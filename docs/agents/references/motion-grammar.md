@@ -126,7 +126,9 @@ Avoid:
 
 ## Motion Primitives
 
-Use these primitives as the base vocabulary.
+Use these primitives as the base vocabulary. Build may implement any of them
+with an optional craft-kit recipe (travel → overshoot → settle, anticipation,
+contact shadow, word mask, sheen): see [motion-craft.md](motion-craft.md).
 
 ### `caption-pop`
 

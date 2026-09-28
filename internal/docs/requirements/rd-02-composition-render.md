@@ -175,3 +175,4 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - Implementasi: [frontend/composition-implementation](../frontend/composition-implementation.md)
 - Visual: [design-system/visual-system](../design-system/visual-system.md)
 - Keputusan: [ADR-0001](../adr/0001-hyperframes-html-to-video.md)
+- Koreografi (opsional): [ADR-0021](../adr/0021-craft-kit-choreography.md), `docs/agents/references/motion-craft.md`, `vendor/craft-kit/`

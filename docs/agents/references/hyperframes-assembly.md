@@ -188,6 +188,11 @@ Good motion mapping:
 
 Do not add new motion because it looks interesting. Only implement motion that supports the approved plan.
 
+Optional: `vendor/craft-kit/` gives these primitives weight (overshoot, squash,
+anticipation, contact shadow, word mask, sheen) with one call per move, for both
+GSAP overlays (`CK.add`) and `update(t)` clips (`CK.at`). Loading, recipes, and
+rules: [motion-craft.md](motion-craft.md).
+
 ### 6a. Implement SFX Cues
 
 If `visual-plan.md` or `overlay-timeline.json` includes SFX cues, wire them as local audio assets or a prepared SFX stem.
