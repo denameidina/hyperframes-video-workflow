@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Login</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<main class="login">
+  <h1>Studio</h1>
+  <form id="login">
+    <label>Token <input name="token" type="password" required autocomplete="current-password"></label>
+    <p class="error" id="login-error"></p>
+    <button class="primary">Masuk</button>
+  </form>
+</main>
+<script>
+document.getElementById('login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const res = await fetch('/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token: e.target.token.value }) });
+  if (res.ok) location.href = '/';
+  else document.getElementById('login-error').textContent = 'Token salah';
+});
+</script>
+</body>
+</html>

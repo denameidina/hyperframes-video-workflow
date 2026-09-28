@@ -105,3 +105,11 @@ templates are this project's own work (MIT). Per-file sources are listed in
   (not a record of the original room).
 - `docs/agents/references/style-examples/assets/px-desk-*`: generated for this
   project with Codex image generation and editing.
+
+## xterm.js
+
+`vendor/xterm/xterm.js`, `vendor/xterm/xterm.css`, and `vendor/xterm/addon-fit.js`
+are unmodified builds of `@xterm/xterm@6.0.0` and `@xterm/addon-fit@0.11.0`,
+MIT License, copyright the xterm.js authors. Full texts:
+`vendor/xterm/LICENSE` and `vendor/xterm/LICENSE-addon-fit`. Used by the Studio
+web terminal (ADR-0020).
