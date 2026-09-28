@@ -2,10 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
 import { CLAUDE_MODELS, EFFORTS, agentCommand, buildPrompt, codexDefaults, paneCommand, suggestSlug } from './studio/agent.mjs';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { FORMAT, hasSession, interruptSession, killSession, listSessions, parseSessions, sessionName, startSession } from './studio/sessions.mjs';
+import { Readable } from 'node:stream';
+import { deletePlan, deleteRawCascade, linkedProjects, listRaw, projectRaw, rawPath, receiveUpload, rendersOf, safeUploadName } from './studio/raw.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -134,4 +136,69 @@ test('kill and interrupt target the exact session', async () => {
   assert.deepEqual(calls, [['tmux', 'kill-session', '-t', '=studio-a'], ['tmux', 'send-keys', '-t', '=studio-a:', 'Escape']]);
   assert.equal(sessionName('a'), 'studio-a');
   assert.equal(await hasSession('a', { run }), true);
+});
+
+function studioRoot() {
+  const root = mkdtempSync(join(tmpdir(), 'studio-'));
+  mkdirSync(join(root, 'raw'));
+  mkdirSync(join(root, 'videos'));
+  writeFileSync(join(root, 'raw/a.MP4'), 'A');
+  writeFileSync(join(root, 'raw/b.mov'), 'B');
+  writeFileSync(join(root, 'raw/.gitkeep'), '');
+  const project = (slug, raw, renders = []) => {
+    mkdirSync(join(root, 'videos', slug, 'renders'), { recursive: true });
+    symlinkSync(`../../raw/${raw}`, join(root, 'videos', slug, 'source.mp4'));
+    for (const r of renders) writeFileSync(join(root, 'videos', slug, 'renders', r), 'R');
+  };
+  project('vid-a', 'a.MP4', ['vid-a.mp4']);
+  project('vid-a2', 'a.MP4');
+  project('vid-b', 'b.mov');
+  return root;
+}
+
+test('safeUploadName keeps a basename with a video extension', () => {
+  assert.equal(safeUploadName('../../etc/DJI 01.MP4'), 'DJI_01.MP4');
+  assert.equal(safeUploadName('.hidden.mp4'), 'hidden.mp4');
+  assert.throws(() => safeUploadName('notes.txt'), { status: 400 });
+  assert.throws(() => safeUploadName(''), { status: 400 });
+});
+
+test('listRaw links projects through source.mp4', async () => {
+  const root = studioRoot();
+  const items = await listRaw(root, { probe: async () => 12.5 });
+  assert.deepEqual(items.map((r) => [r.name, r.duration, r.projects]), [['a.MP4', 12.5, ['vid-a', 'vid-a2']], ['b.mov', 12.5, ['vid-b']]]);
+  assert.equal(projectRaw(root, 'vid-b'), 'b.mov');
+  assert.deepEqual(rendersOf(root, 'vid-a'), ['vid-a.mp4']);
+});
+
+test('rawPath rejects traversal and unknown names', () => {
+  const root = studioRoot();
+  assert.throws(() => rawPath(root, '../raw/a.MP4'), { status: 400 });
+  assert.throws(() => rawPath(root, 'zzz.mp4'), { status: 404 });
+});
+
+test('deleteRawCascade removes the raw and only its projects', () => {
+  const root = studioRoot();
+  assert.deepEqual(deletePlan(root, 'a.MP4'), { raw: 'a.MP4', projects: [{ slug: 'vid-a', renders: ['vid-a.mp4'] }, { slug: 'vid-a2', renders: [] }] });
+  deleteRawCascade(root, 'a.MP4');
+  assert.equal(existsSync(join(root, 'raw/a.MP4')), false);
+  assert.equal(existsSync(join(root, 'videos/vid-a')), false);
+  assert.equal(existsSync(join(root, 'videos/vid-a2')), false);
+  assert.equal(existsSync(join(root, 'videos/vid-b')), true);
+  assert.deepEqual(linkedProjects(root, 'b.mov'), ['vid-b']);
+});
+
+test('receiveUpload streams to a .part file then renames', async () => {
+  const root = studioRoot();
+  assert.equal(await receiveUpload(root, 'new clip.mp4', Readable.from([Buffer.from('xy')])), 'new_clip.mp4');
+  assert.equal(readFileSync(join(root, 'raw/new_clip.mp4'), 'utf8'), 'xy');
+  await assert.rejects(receiveUpload(root, 'new_clip.mp4', Readable.from([])), { status: 409 });
+});
+
+test('receiveUpload removes the partial file when the stream fails', async () => {
+  const root = studioRoot();
+  const broken = new Readable({ read() { this.push('x'); this.destroy(new Error('client aborted')); } });
+  await assert.rejects(receiveUpload(root, 'c.mp4', broken), /client aborted/);
+  assert.equal(existsSync(join(root, 'raw/.c.mp4.part')), false);
+  assert.equal(existsSync(join(root, 'raw/c.mp4')), false);
 });
