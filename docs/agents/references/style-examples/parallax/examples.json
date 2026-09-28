@@ -4,6 +4,13 @@
     {"clip": "px-01-collage-dolly", "duration": 5, "treatment": "cutaway", "stills": [1.5, 4.7]},
     {"clip": "px-02-night-desk", "duration": 6, "treatment": "split", "stills": [1.8, 5.7]},
     {"clip": "px-03-archive-zoom", "duration": 5, "treatment": "panel", "stills": [1.2, 2.7, 4.7]},
-    {"clip": "px-04-stage", "duration": 6, "treatment": "parallax-stage", "stills": [2.0, 5.5], "cutout": true}
+    {"clip": "px-04-stage", "duration": 6, "treatment": "parallax-stage", "stills": [2.0, 5.5], "cutout": true},
+    {"clip": "px-05-push-headline", "duration": 6, "treatment": "parallax-stage", "stills": [0.3, 1.6, 4.8], "cutout": true},
+    {"clip": "px-06-peel-steps", "duration": 5.5, "treatment": "cutaway", "stills": [0.6, 1.3, 4.6]},
+    {"clip": "px-07-wipe-fog", "duration": 6, "treatment": "cutaway", "stills": [1.5, 3.8, 5.6]},
+    {"clip": "px-08-map-flyover", "duration": 6, "treatment": "cutaway", "stills": [0.4, 2.5, 5.6]},
+    {"clip": "px-09-photo-dust", "duration": 6, "treatment": "cutaway", "stills": [0.6, 5.4]},
+    {"clip": "px-10-tilt-light", "duration": 6, "treatment": "cutaway", "stills": [0.3, 2.4, 5.6]},
+    {"clip": "px-11-cards-float", "duration": 7, "treatment": "cutaway", "stills": [2.24, 3.84, 5.44]}
   ]
 }

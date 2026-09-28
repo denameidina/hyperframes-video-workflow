@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. The scene is the library kit scene.street-motor (Codex, not a real place). The camera tilts up from the street to the sky over the plate and mid planes; a band of morning light sweeps the planes, each at its own speed. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .beam { position: absolute; left: 0; top: -200px; width: 620px; height: 2400px; mix-blend-mode: screen; transform-origin: 50% 50%;
+          background: linear-gradient(90deg, rgba(255,226,170,0), rgba(255,226,170,.55) 50%, rgba(255,226,170,0)); }
+      </style>
+      <div id="root" data-composition-id="px-10-tilt-light" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="vendor/asset-lib/scenes/street-motor/plate.webp" alt="" /><div class="beam" id="b0"></div></div>
+            <div class="sk-ly" id="mid"><img class="sk-plate" src="vendor/asset-lib/scenes/street-motor/mid.png" alt="" /><div class="beam" id="b1"></div></div>
+          </div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-10-tilt-light';
+          const $ = SK.finder(ID);
+          // two planes only: in a big vertical tilt the kit's front scooter would lift off the street it stands on
+          const L = [{ el: $('back'), z: -1400 }, { el: $('mid'), z: -500 }];
+          // tall plates (fill 1.55) so the tilt never shows an edge
+          L.forEach(({ el, z }) => SK.layer(el, z, { fill: 1.55 }));
+          // tilt-reveal: start low on the street, tilt up to the sky and the mountain
+          const tilt = M.track(0, [[0.4, 1, [1.8, 1]]]);
+          // light-sweep: the band crosses the far plane slowly and the middle plane faster (depth)
+          const sweep = M.track(0, [[1.4, 1, [1.5, 1]]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            const u = tilt(t);
+            SK.camera($('world'), { y: 440 - 880 * u, rx: 3 - 6 * u });
+            const w = sweep(t);
+            $('b0').style.transform = `translateX(${(-700 + 1600 * w).toFixed(1)}px) rotate(18deg)`;
+            $('b1').style.transform = `translateX(${(-900 + 2300 * w).toFixed(1)}px) rotate(18deg)`;
+            $('b0').style.opacity = $('b1').style.opacity = (Math.sin(Math.PI * M.clamp(w)) * 0.9 + 0.1 * (w > 0 ? 1 : 0)).toFixed(3);
+            SK.dof(L, -500, { k: 160, max: 4 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

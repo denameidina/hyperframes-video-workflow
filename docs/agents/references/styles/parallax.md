@@ -10,7 +10,7 @@ step). Engine: `vendor/style-kit/` (`SK.layer`, `SK.camera`, `SK.dof`,
 `SK.dollyZoom`) on top of `vendor/motion-kit/`. Sources: `npm run video -- layers`
 (photo/frame + matted subject), Codex (plates and layered scenes), the paper
 pack. Worked examples: `docs/agents/references/style-examples/parallax/` (`px-01` …
-`px-04`, `npm run check:style-examples -- parallax`).
+`px-11`, `npm run check:style-examples -- parallax`).
 
 ## When To Use
 
@@ -138,6 +138,12 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | **stage-behind-speaker** | Dena stays still while a layered scene moves slowly behind her | Context behind what she says | Under the whole sentence, a little faster on the emphasis word | soft bed or none | Background faster than the speaker | treatment `parallax-stage` (host recipe below) |
 | **stepped-multiplane** | Layers move in held steps | Punchy lists, a handmade tone | A step on each stressed syllable | tick per step | Uneven steps that read as lag | camera curves wrapped in `SK.onTwos` |
 | **tilt-reveal** | The camera tilts up from the foreground to the sky or a headline | Scale, ambition, "gede banget" | The top is reached on the big word | rising whoosh | Tilting past the plate's top | `SK.camera(world, { y, rx })` |
+| **depth-headline** | Headline words sit on a plane between the scene's layers (behind the foreground) | Opening a topic with atmosphere | The words read once the camera clears the foreground | low swell | A headline in front of every layer (no depth) | a text plane via `SK.layer` between mid and front; size it for its scale at the end of the move |
+| **card-flythrough** | Cards at different depths; each flies out of the depth and past the lens | A list of steps with depth | One card past the lens per step | whoosh per card | More than 4 cards; unreadable while passing | cards in the world with a `translate3d` z that grows over time; the scene sits behind the nearest card |
+| **float-objects** | Library cut-outs float at different depths, bobbing slowly | Money, ideas, tools "scattered" | Each object appears on its word | soft chime | Objects nobody named; fast motion | `.sk-obj-*` with `translate3d(x, y, z)` + a slow sine bob; fade with opacity (never `SK.enter`, it replaces the transform) |
+| **light-sweep** | A band of light sweeps the planes at different speeds | A change of mood, "pagi hari…" | 1–2 s sweep starting on the time word | light swell | A glare over the subject | a `mix-blend-mode: screen` gradient per plane, offset by depth |
+| **dust-motes** | Seeded dust specks in the near plane | Archive or nostalgia mood | Constant, slow | room tone | Large, fast specks (reads as snow) | dots from `SK.rng` in a near `.sk-ly`, drifting and twinkling |
+| **handheld-drift** | The camera drifts like a hand-held shot | Making a still scene feel alive | Constant, ≤ 6–8 px | — | Big shake (reads as an earthquake) | `SK.handheld(t, seed, { amp })` into `SK.camera({ x, y, rx })` |
 
 ## References
 
@@ -273,6 +279,17 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   parallax clip. Never tween `#base-video` opacity.
 - Dolly-zoom: `const { P, d } = SK.dollyZoom(u, { z0: -400, d1: 250 });` then
   `$('view').style.perspective = P + 'px'` and `SK.camera(world, { z: d })`.
+- Push-through: put the planes behind far back (−1600 … −4000) so the camera can pass
+  the front plane (≈ 1150 px of travel) without blowing the others up; fade and blur
+  the front plane by its apparent scale (`px-05`).
+- Map flyover: tilt a large sea plane (`rotateX` ≈ 58°) with its pivot on the
+  screen, slide the map on it, and stand pins up with the opposite `rotateX`;
+  `overflow: hidden` on the plane would flatten the pins, so make the plane bigger
+  than the map's travel instead (`px-08`).
+- A big vertical tilt separates a kit's front props from the ground they stand on;
+  use the plate and mid planes only (`px-10`).
+- Planes that carry words are never blurred: leave `SK.dof` out when every plane
+  has text (`px-06`).
 
 ## SFX
 
@@ -283,6 +300,8 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | rack-focus | soft focus tick | 0.06–0.1 |
 | pan-reveal, push-through, foreground-wipe | soft or passing whoosh | 0.08–0.12 |
 | photo-2.5d | faint projector hum | 0.04–0.08 |
+| card-flythrough, float-objects | whoosh per card / soft chime | 0.06–0.1 |
+| light-sweep, multiplane-fog, depth-headline | light or low swell | 0.06–0.1 |
 
 ## Examples
 
@@ -292,6 +311,13 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | `style-examples/parallax/compositions/px-02-night-desk.html` | Codex layered scene (plate, keyed desk, chair) + pan-reveal + orbit-drift | split |
 | `style-examples/parallax/compositions/px-03-archive-zoom.html` | public-domain archival photo, subject vs reconstructed plate + dolly-zoom | panel |
 | `style-examples/parallax/compositions/px-04-stage.html` | stage-behind-speaker (Codex plate behind the placeholder cut-out) | parallax-stage |
+| `style-examples/parallax/compositions/px-05-push-headline.html` | push-through + depth-headline (scene.warung-counter) | parallax-stage |
+| `style-examples/parallax/compositions/px-06-peel-steps.html` | layer-peel + stepped-multiplane (paper planes) | cutaway |
+| `style-examples/parallax/compositions/px-07-wipe-fog.html` | foreground-wipe + multiplane-fog (scene.city-dusk) | cutaway |
+| `style-examples/parallax/compositions/px-08-map-flyover.html` | map-flyover over `SK.mapSvg('sea')` | cutaway |
+| `style-examples/parallax/compositions/px-09-photo-dust.html` | photo-2.5d + dust-motes (public-domain photo) | cutaway |
+| `style-examples/parallax/compositions/px-10-tilt-light.html` | tilt-reveal + light-sweep (scene.street-motor) | cutaway |
+| `style-examples/parallax/compositions/px-11-cards-float.html` | card-flythrough + float-objects + handheld-drift (scene.cafe-cowork) | cutaway |
 
 ## Anti-slop Checklist
 

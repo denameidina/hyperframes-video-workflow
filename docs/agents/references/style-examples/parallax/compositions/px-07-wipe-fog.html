@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only. The scene is the library kit scene.city-dusk (Codex, not a real place). Two soft fog banks drift between the planes at different speeds; a blurred paper parcel (library cut-out paper.parcel-box) sweeps across the lens as the wipe to the next line. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .fog { position: absolute; left: -400px; width: 1880px; height: 520px; border-radius: 50%; filter: blur(40px); }
+        #fogFar { top: 700px; background: radial-gradient(ellipse at 50% 50%, rgba(255,220,200,.85), rgba(255,220,200,0) 72%); }
+        #fogNear { top: 980px; background: radial-gradient(ellipse at 50% 50%, rgba(222,206,240,.8), rgba(222,206,240,0) 72%); }
+        #wipe { position: absolute; left: 0; top: 380px; width: 1500px; filter: blur(22px); }
+      </style>
+      <div id="root" data-composition-id="px-07-wipe-fog" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/plate.webp" alt="" /></div>
+            <div class="sk-ly" id="haze1"><div class="fog" id="fogFar"></div></div>
+            <div class="sk-ly" id="mid"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/mid.png" alt="" /></div>
+            <div class="sk-ly" id="haze2"><div class="fog" id="fogNear"></div></div>
+            <div class="sk-ly" id="front"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/front.png" alt="" /></div>
+          </div></div>
+          <div class="sk-obj-parcel-box" id="wipe"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-07-wipe-fog';
+          const $ = SK.finder(ID);
+          const L = [{ el: $('back'), z: -1400 }, { el: $('haze1'), z: -900 }, { el: $('mid'), z: -500 }, { el: $('haze2'), z: -300 }, { el: $('front'), z: -80 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { fill: i === 0 ? 1.2 : 1.06 }));
+          const push = M.track(0, [[0.2, 110, [1.4, 1]]]);
+          // foreground-wipe: a near object crosses the lens quickly, blurred, and hands over to the next shot
+          const wipe = M.track(1300, [[3.6, -1900, [7, 1]]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.camera($('world'), { z: push(t), x: -12 + 6 * t });
+            // multiplane-fog: the far bank drifts slowly, the near bank faster the other way
+            $('fogFar').style.transform = `translateX(${(-30 + 14 * t).toFixed(1)}px)`;
+            $('fogNear').style.transform = `translateX(${(40 - 34 * t).toFixed(1)}px)`;
+            $('wipe').style.transform = `translateX(${wipe(t).toFixed(1)}px) rotate(-8deg)`;
+            SK.dof(L.filter((l, i) => i % 2 === 0), -500, { k: 220, max: 3 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

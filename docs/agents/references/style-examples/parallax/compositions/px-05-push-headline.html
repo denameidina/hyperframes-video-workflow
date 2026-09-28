@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: the headline is invented. The scene is the library kit scene.warung-counter (Codex, not a real place); the speaker is the host's matted <video> (placeholder here) in front of it (parallax-stage). The camera pushes through the counter, then the headline sits between the planes. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        /* sized for the end of the push: the text plane grows ≈1.75× about the centre, so top 560 lands near y 250 */
+        #head { position: absolute; left: 0; right: 0; top: 560px; text-align: center; font-size: 96px; line-height: .95; color: #fff8ec; text-shadow: 0 6px 24px rgba(0,0,0,.35); }
+      </style>
+      <div id="root" data-composition-id="px-05-push-headline" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="vendor/asset-lib/scenes/warung-counter/plate.webp" alt="" /></div>
+            <div class="sk-ly" id="mid"><img class="sk-plate" src="vendor/asset-lib/scenes/warung-counter/mid.png" alt="" /></div>
+            <div class="sk-ly" id="txt"><div class="sk-display" id="head">mulai dari<br />warung</div></div>
+            <div class="sk-ly" id="front"><img class="sk-plate" src="vendor/asset-lib/scenes/warung-counter/front.png" alt="" /></div>
+          </div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-05-push-headline';
+          const $ = SK.finder(ID);
+          // far planes so the push can pass the front one without blowing the others up (scale ≤ 1.7)
+          const L = [{ el: $('back'), z: -4000 }, { el: $('mid'), z: -2400 }, { el: $('txt'), z: -1600 }, { el: $('front'), z: -100 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { fill: i === 0 ? 1.2 : i === 1 ? 1.08 : 1 }));
+          // push-through: the camera travels 1150 px in z; the counter passes the lens, blurs, and is gone
+          const push = M.track(0, [[0.6, 1150, [2.2, 1]]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            const z = push(t);
+            SK.camera($('world'), { z, y: -0.04 * z });
+            const near = (SK.P + 100) / (SK.P + 100 - z); // apparent scale of the front layer
+            $('front').style.opacity = M.clamp((4 - near) / 2).toFixed(4);
+            $('front').style.filter = `blur(${Math.min(16, (near - 1) * 5).toFixed(2)}px)`;
+            $('back').style.filter = 'blur(6px)';
+            $('mid').style.filter = `blur(${(3 * (1 - M.clamp(z / 1150))).toFixed(2)}px)`;
+            // depth-headline: the words wait behind the counter and read once the push has passed it
+            SK.enter($('head'), t - 2.6, 'rise', { dy: 40 });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

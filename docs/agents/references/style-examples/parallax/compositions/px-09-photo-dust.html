@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: a real public-domain archival photo ("Woman typist", c. 1900, Library of Congress; see THIRD_PARTY_NOTICES.md) split into a reconstructed plate and the cut-out subject, pushed slowly in 2.5D; seeded dust drifts in front. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .sk-ly > img.sk-plate { filter: sepia(.4) contrast(1.05); }
+        #dust i { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff4dc; filter: blur(1px); }
+        #src { left: 40px; top: 1810px; }
+      </style>
+      <div id="root" data-composition-id="px-09-photo-dust" data-width="1080" data-height="1920" data-duration="6">
+        <div class="sk-stage">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="assets/px-archive-plate.jpg" alt="" /></div>
+            <div class="sk-ly" id="subj"><img class="sk-plate" src="assets/px-archive-subject.png" alt="" /></div>
+            <div class="sk-ly" id="dust"></div>
+          </div></div>
+          <div class="sk-grain" id="grain"></div>
+          <div class="sk-source" id="src">Foto: "Woman typist", ±1900, Library of Congress (domain publik)</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-09-photo-dust';
+          const $ = SK.finder(ID);
+          const L = [{ el: $('back'), z: -700 }, { el: $('subj'), z: -200 }, { el: $('dust'), z: 150 }];
+          L.forEach(({ el, z }, i) => SK.layer(el, z, { fill: i === 0 ? 1.18 : i === 1 ? 1.06 : 1.1 }));
+          // dust-motes: small seeded specks in the near plane, drifting up slowly and twinkling
+          const r = SK.rng(360), N = 46;
+          const D = Array.from({ length: N }, () => ({ x: r() * 1080, y: r() * 1920, s: 3 + r() * 7, v: 6 + r() * 14, p: r() * 6.28 }));
+          $('dust').innerHTML = D.map(() => '<i></i>').join('');
+          const motes = [...$('dust').querySelectorAll('i')];
+          // photo-2.5d: a slow push and a small drift, inside the Depth Budget (scale ≤ 12%, drift ≤ 40 px)
+          const push = M.track(0, [[0.2, 130, [1.2, 1]]]);
+          SK.clip(ID, { T: 6, update: (t) => {
+            SK.camera($('world'), { z: push(t), x: -20 + 7 * t });
+            motes.forEach((m, i) => {
+              const d = D[i], y = ((d.y - d.v * t) % 1920 + 1920) % 1920;
+              m.style.width = m.style.height = `${d.s.toFixed(1)}px`;
+              m.style.transform = `translate(${(d.x + 8 * Math.sin(t * 0.6 + d.p)).toFixed(1)}px, ${y.toFixed(1)}px)`;
+              m.style.opacity = (0.45 + 0.5 * (0.5 + 0.5 * Math.sin(t * 1.3 + d.p))).toFixed(3);
+            });
+            SK.dof(L.slice(0, 2), -200, { k: 110, max: 5 });
+            SK.enter($('src'), t - 0.6, 'fade');
+            SK.grain($('grain'), t, 7);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
