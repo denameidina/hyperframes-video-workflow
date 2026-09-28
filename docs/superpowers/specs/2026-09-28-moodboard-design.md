@@ -19,7 +19,7 @@ atau dibuat sebagai "studi" buatan sendiri.
 - Bentuk: **studi buatan sendiri (di-commit) + still asli lokal (gitignored)**.
 - **6 studi per gaya** (42), masing-masing satu frame 9:16 penuh.
 - Pendekatan A: satu komposisi per studi; skrip merender dan menyusun satu sheet
-  2×3 per gaya.
+  3×2 (3 kolom, 2 baris) per gaya.
 - Studi meniru **teknik**, bukan karya: tanpa logo, judul, karakter, atau tata
   letak yang disalin; kata bertema Dena; setiap tile berlabel "studi".
 
@@ -45,7 +45,7 @@ docs/agents/references/moodboard/
     compositions/<id>.html       # 42 studi (id: tx-s1 … px-s6)
     index.html, snapshots.json   # DIHASILKAN (hostHtml yang sama dengan host contoh)
     hyperframes.json
-  sheets/<gaya>.webp             # DIHASILKAN, di-commit (2×3 + label)
+  sheets/<gaya>.webp             # DIHASILKAN, di-commit (3×2 + label)
   local/                         # GITIGNORED: still asli + <gaya>.webp lokal
 ```
 
@@ -77,8 +77,8 @@ Prefiks id studi sama dengan prefiks contoh (`tx`, `mg`, `wb`, `sm`, `vx`, `mm`,
 - `build`: dari manifest, tulis `studies/index.html` + `snapshots.json` dengan
   `hostHtml`/`snapshots` dari `scripts/lib/style-examples.mjs` (treatment
   `cutaway`, `stills: [at]`), gaya berurutan. `check` gagal bila basi.
-- `sheets [gaya]`: render host studi (lint, validate, snapshot — seperti
-  `check-broll-examples`), lalu per gaya buat halaman sheet 1080×1920 (6 tile 2×3,
+- `sheets [gaya]`: render studi gaya itu saja (lint, validate, snapshot — seperti
+  `check-broll-examples`), lalu per gaya buat halaman sheet 1080×1920 (6 tile 3×2,
   label "R1 · Saul Bass, North by Northwest — …", satu baris `steal`, tanda
   "studi, bukan karya asli"), render, dan simpan `sheets/<gaya>.webp` (cwebp).
 - `fetch [gaya]`: untuk setiap `refs` gaya itu, unduh `image` atau `og:image`
@@ -142,14 +142,14 @@ judul, karakter, atau komposisi karya asli; kata bertema Dena (UMKM, AI, uang).
 
 ## Urutan kerja
 
-1. Manifest, lib + CLI `build`/`check`, test manifest/host/gitignore, ADR-0018,
-   RD-03-59.
-2. Pipeline `sheets` (render + halaman sheet + webp), diuji dengan studi
-   pertama gaya broll-text.
-3–9. Studi per gaya (satu task per gaya: 6 studi + sheet).
-10. `fetch` + unit test.
-11. Workflow (Screen Plan, dokumen gaya, README, perintah), RD-03-58, verifikasi
-    penuh.
+1. Manifest (lengkap, 42 studi), lib + CLI `build`/`check`, test
+   manifest/host/gitignore, ADR-0018, RD-03-59.
+2. Pipeline `sheets` (render + halaman sheet + webp) bersama keenam studi
+   broll-text dan dokumen gayanya.
+3–8. Studi gaya lain (satu task per gaya: 6 studi + sheet + baris `Study:`/Kit).
+9. `fetch` + unit test.
+10. Workflow (Screen Plan, README, perintah), RD-03-58, test seluruh set,
+    verifikasi penuh.
 
 Dibangun dan diuji dulu di salinan scratch; plan dihasilkan dari operasi yang
 sama, di-replay di clone bersih, lalu dieksekusi di repo.
