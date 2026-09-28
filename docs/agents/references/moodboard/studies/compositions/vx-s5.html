@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Explained (Netflix / Vox Media) — evidence documents pinned to a board and linked with red string. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .dc { position: absolute; left: 0; top: 0; transform-origin: 50% 0; }
+        #str { position: absolute; left: 0; top: 0; }
+        .pn { position: absolute; width: 40px; }
+      </style>
+      <div id="root" data-composition-id="vx-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-vox sk-kraft">
+          <div class="dc sk-cut" id="d0"></div><div class="dc sk-cut" id="d1"></div><div class="dc sk-cut" id="d2"></div>
+          <svg class="sk-full" id="str" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="pn sk-pin" style="left:150px;top:330px"></div><div class="pn sk-pin" style="left:650px;top:760px"></div><div class="pn sk-pin" style="left:200px;top:1230px"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-s5';
+          const $ = SK.finder(ID);
+          $('d0').innerHTML = SK.doc('receipt', { title: 'STRUK', items: [{ name: 'kopi x2', price: '36.000' }, { name: 'roti', price: '18.000' }], total: '54.000' }, { w: 420 });
+          $('d1').innerHTML = SK.doc('chat-thread', { messages: [{ from: 'Pelanggan', text: 'Kok belum dikirim?' }] }, { w: 440 });
+          $('d2').innerHTML = SK.doc('spreadsheet', { columns: ['Hari', 'Order'], rows: [['Sen', '12'], ['Sel', '0'], ['Rab', '31']] }, { w: 420 });
+          [['d0', 80, 350, -4], ['d1', 580, 780, 3], ['d2', 130, 1250, -2]].forEach(([id, x, y, r]) => ($(id).style.transform = `translate(${x}px, ${y}px) rotate(${r}deg)`));
+          const H = [{ x: 170, y: 345 }, { x: 670, y: 775 }, { x: 220, y: 1245 }];
+          $('str').innerHTML = [[0, 1], [1, 2]].map(([a, b], i) => `<path id="s${i}" d="${SK.sagPath(H[a], H[b], 0.08)}" fill="none" stroke="#b3141f" stroke-width="6"/>`).join('');
+          SK.clip(ID, { T: 3, update: (t) => [0, 1].forEach((i) => SK.draw($('s' + i), M.clamp((t - 0.8 - i * 0.6) / 0.5))) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

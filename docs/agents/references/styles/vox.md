@@ -108,6 +108,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Maps | `map.indonesia`, `map.id-provinces`, `map.java`, `map.sea`, `map.world` | `../asset-catalog/sheets/map.webp` |
 | Desk | `texture.cork`, `texture.paper-tan`, `paper.washi-grid`, `paper.tape-clear`, `paper.binder-clip` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/paper-1.webp` |
 | Type | `font.dm-serif-display`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `vx-s1` … `vx-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/vox.webp` |
 
 ## Timing
 
@@ -156,6 +157,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   with blur to hide cuts; layered textures that move slightly.
 - 9:16: step the graphic layer (`SK.onTwos`) while Dena stays at 30 fps; a short
   stepped push into the next document replaces a transition.
+- Study: moodboard `vx-s1` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ### R2 — "How Vox uses animation to make complicated topics digestible for everyone" (Storybench, 2024)
 - Source: https://www.storybench.org/how-vox-uses-animation-to-make-complicated-topics-digestible-for-everyone/
@@ -184,6 +186,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   illustrations are illustrations.
 - 9:16: 1–2 s of setup, then the proof document with its label on the payoff word;
   the "Ilustrasi" tag is the same honesty.
+- Study: moodboard `vx-s2` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ### R6 — "Behind the scenes of the Vox web series 'Borders'" (Storybench, 2020)
 - Source: https://www.storybench.org/behind-the-scenes-of-the-vox-web-series-borders/
@@ -198,6 +201,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   grade, drop to ~10 fps, add low-opacity grain.
 - 9:16: 3–5 s zoom from the country to the city with `SK.geo`, the pin landing on
   the place name.
+- Study: moodboard `vx-s3` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ### R8 — "How I Got a Gig Making Maps for Johnny Harris" (PremiumBeat, 2022)
 - Source: https://www.premiumbeat.com/blog/making-maps-for-johnny-harris/
@@ -212,18 +216,21 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   Burns cites *City of Gold* as the inspiration.
 - 9:16: `archival-pan` — one direction, 3–6% over the shot, ending on the detail
   the line names.
+- Study: moodboard `vx-s4` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ### R10 — *Explained* (Netflix / Vox Media) and a Jasper Pictures case study
 - Source: https://en.wikipedia.org/wiki/Explained_(TV_series) and
   https://jasperpictures.com.au/blog/vox-explained-a-case-study/
 - Steal: the "trademark yellow highlighting" as a series signature.
 - 9:16: one highlighter colour for the whole video (`--sk-hl-color` stays the same).
+- Study: moodboard `vx-s5` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ### R11 — "How Vox-Style Edits Are Built" (EarnEdits, secondary source)
 - Source: https://earnedits.com/how-vox-style-edits-are-built/?v=0b3b97fa6688
 - Steal: "a professional Vox edit uses motion to carry information, and an amateur
   imitation adds motion for decoration."
 - 9:16: the QA rule — any move not tied to a spoken word is cut.
+- Study: moodboard `vx-s6` — a self-made study of the technique, on `../moodboard/sheets/vox.webp`
 
 ## Build Recipe
 

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: the Vox explainer look (PremiumBeat breakdown) — textured paper, a big serif, a yellow highlighter pass. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #2f3b45; }
+        #sheet { position: absolute; left: 80px; top: 420px; width: 920px; padding: 70px; box-sizing: border-box; }
+        #k { font-size: 30px; font-weight: 700; letter-spacing: .14em; color: #8c8577; }
+        #h { position: relative; margin-top: 24px; font-size: 104px; line-height: 1.02; color: #1b1b1b; }
+        .hlw { position: relative; }
+        #hl { left: -10px; right: -10px; top: 18%; bottom: 4%; }
+        .ln { height: 16px; margin-top: 26px; background: #d8d1c2; border-radius: 3px; }
+        #tag { right: 30px; top: 30px; }
+      </style>
+      <div id="root" data-composition-id="vx-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-vox">
+          <div id="bg"></div>
+          <div class="sk-cut" id="sheet"><div id="paper" class="sk-paper-white" style="position:absolute;inset:0;z-index:-1"></div>
+            <div id="k" class="sk-sans">CATATAN KERJA</div>
+            <div id="h" class="sk-serif">Yang mahal itu <span class="hlw"><span class="sk-hl" id="hl"></span>waktu admin</span>, bukan aplikasinya</div>
+            <div class="ln" style="width:94%;margin-top:60px"></div><div class="ln" style="width:86%"></div><div class="ln" style="width:70%"></div>
+            <div class="sk-tag" id="tag">Ilustrasi</div>
+          </div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-s1';
+          const $ = SK.finder(ID);
+          $('paper').style.clipPath = SK.torn(920, 900, 801, { edges: 'b', amp: 12 });
+          SK.clip(ID, { T: 3, update: (t) => { SK.highlight($('hl'), SK.smooth((t - 1.2) / 0.5)); SK.grain($('grain'), t, 2); } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

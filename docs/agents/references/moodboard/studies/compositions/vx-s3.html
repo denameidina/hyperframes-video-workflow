@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Vox-style maps (No Film School, Johnny Harris) — a desaturated map, one highlighted region, a pin. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #e9e4d8; }
+        #mapw { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        #pin { position: absolute; width: 44px; }
+        #lab { position: absolute; font-size: 44px; font-weight: 800; color: #1b1b1b; background: #fff; padding: 6px 14px; }
+        #t { position: absolute; left: 90px; top: 300px; font-size: 70px; color: #1b1b1b; }
+        #src { left: 90px; top: 1760px; }
+      </style>
+      <div id="root" data-composition-id="vx-s3" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-vox">
+          <div id="bg"></div>
+          <div id="mapw"></div>
+          <div class="sk-serif" id="t">Pelanggan terbanyak</div>
+          <div id="pinw" style="position:absolute;left:0;top:0"><div class="sk-pin" id="pin"></div></div><div id="labw" style="position:absolute;left:0;top:0"><div class="sk-sans" id="lab">Jawa Timur</div></div>
+          <div class="sk-source" id="src">Peta: Natural Earth (domain publik)</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'vx-s3';
+          const $ = SK.finder(ID);
+          // zoom on Java: the province map, greyed, one province in the accent
+          const ids = Object.keys(SK.LIB.regions['id-provinces'].regions), jt = ids.find((k) => /jawa-timur|east-java/i.test(k)) || ids[0];
+          $('mapw').innerHTML = SK.mapSvg('id-provinces', { fill: '#c9c3b5', stroke: '#f4f1ea', strokeWidth: 2, regions: { [jt]: '#d7263d' } });
+          const S = 3.2, X = 540 - (112.5 - 94) * 50 * S, Y = 1000 - (7.5 + 7.6) * 50 * S;
+          $('mapw').style.transform = `translate(${X}px, ${Y}px) scale(${S})`;
+          const p = SK.geo(-7.6, 112.5, 'indonesia');
+          $('pinw').style.transform = `translate(${(X + p.x * S - 22).toFixed(1)}px, ${(Y + p.y * S - 70).toFixed(1)}px)`;
+          $('labw').style.transform = `translate(${(X + p.x * S + 40).toFixed(1)}px, ${(Y + p.y * S - 120).toFixed(1)}px)`;
+          SK.clip(ID, { T: 3, update: (t) => { SK.enter($('pin'), t - 1.0, 'drop'); SK.enter($('lab'), t - 1.3, 'fade'); } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
