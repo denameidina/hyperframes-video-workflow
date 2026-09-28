@@ -79,6 +79,7 @@ npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slu
 ```bash
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
+npm run test:craft-kit       # node --test scripts/craft-kit.test.mjs (resep koreografi craft-kit, paritas CK.add/CK.at)
 npm run test:style-kit       # node --test scripts/style-kit.test.mjs scripts/style-docs.test.mjs scripts/paper-pack.test.mjs
 npm run test:asset-lib       # node --test scripts/asset-lib.test.mjs (pustaka aset: build, katalog, lisensi, anggaran, preset, runtime)
 npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (offline)

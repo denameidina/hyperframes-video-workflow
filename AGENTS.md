@@ -169,6 +169,7 @@ npm run render       # render to MP4
 npm run publish      # publish and get a shareable link
 npm run test:repliz  # unit test R2/Repliz CLI without real network
 npm run test:motion-kit        # unit test motion b-roll engine
+npm run test:craft-kit         # unit test craft-kit choreography recipes (CK.add/CK.at parity)
 npm run test:style-kit         # unit test style-kit engine + style reference richness + paper pack licenses
 npm run test:asset-lib         # asset library: build up to date, catalog/licenses/budget, presets contrast, SK runtime
 npm run asset-lib -- build     # rebuild vendor/asset-lib outputs from vendor/asset-lib/src (offline)

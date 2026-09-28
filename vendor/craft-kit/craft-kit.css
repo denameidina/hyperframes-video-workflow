@@ -1,0 +1,27 @@
+/* craft-kit structural classes. Colour-neutral: colours come from custom properties.
+   Spec: docs/superpowers/specs/2026-09-28-craft-kit-design.md */
+
+/* CK.split output: each word rises inside its own clipping mask */
+.ck-mask { display: inline-block; overflow: hidden; padding: .12em .02em .16em; vertical-align: bottom; }
+.ck-word { display: inline-block; will-change: transform, opacity, filter; }
+
+/* a light strip for the sheen recipe; the parent needs position: relative and overflow: hidden */
+.ck-sheen {
+  position: absolute; top: -20%; bottom: -20%; left: var(--ck-sheen, -40%); width: 30%;
+  opacity: 0; pointer-events: none; transform: skewX(-16deg);
+  background: linear-gradient(105deg, transparent, var(--ck-sheen-color, rgba(255,255,255,.55)) 50%, transparent);
+}
+
+/* a contact shadow under a moving object (shadow recipe) */
+.ck-shadow {
+  position: absolute; height: 56px; border-radius: 50%; opacity: 0; pointer-events: none;
+  background: var(--ck-shadow-color, rgba(0,0,0,.42)); filter: blur(var(--ck-shadow-blur, 24px));
+  transform-origin: 50% 50%;
+}
+
+/* two faces of a flip card; the flip recipe moves --ck-face from 0 (front) to 1 (back) */
+.ck-face-front, .ck-face-back {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.ck-face-front { opacity: calc(1 - var(--ck-face, 0)); }
+.ck-face-back { opacity: var(--ck-face, 0); }
