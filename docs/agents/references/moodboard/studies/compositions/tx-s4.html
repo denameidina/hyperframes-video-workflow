@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Kuntzel + Deygas, Catch Me If You Can titles (2002) — flat colour shapes slide in, small witty type. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #efe3c8; }
+        .b { position: absolute; }
+        #t1 { position: absolute; left: 110px; top: 330px; font-size: 64px; letter-spacing: .12em; color: #1f3a44; }
+        #t2 { position: absolute; left: 110px; top: 1480px; font-size: 46px; color: #1f3a44; }
+      </style>
+      <div id="root" data-composition-id="tx-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-text">
+          <div id="bg"></div>
+          <div class="b" id="k0" style="left:110px;top:520px;width:520px;height:640px;background:#d8a23a"></div>
+          <div class="b" id="k1" style="left:470px;top:760px;width:500px;height:520px;background:#2f7f86"></div>
+          <div class="b" id="k2" style="left:300px;top:640px;width:220px;height:220px;border-radius:50%;background:#1f3a44"></div>
+          <div class="b" id="k3" style="left:560px;top:1040px;width:300px;height:36px;background:#efe3c8"></div>
+          <div class="sk-serif" id="t1">KISAH OMZET</div>
+          <div class="sk-serif" id="t2">yang naik diam-diam.</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-s4';
+          const $ = SK.finder(ID);
+          const K = [['k0', 0.1, -700, 0], ['k1', 0.4, 700, 0], ['k2', 0.7, 0, -900], ['k3', 1.0, 900, 0]];
+          SK.clip(ID, { T: 3, update: (t) => {
+            K.forEach(([id, at, dx, dy]) => { const u = 1 - M.eo(M.clamp((t - at) / 0.6)); $(id).style.transform = `translate(${(dx * u).toFixed(1)}px, ${(dy * u).toFixed(1)}px)`; });
+            SK.enter($('t1'), t - 0.3, 'fade'); SK.enter($('t2'), t - 1.5, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

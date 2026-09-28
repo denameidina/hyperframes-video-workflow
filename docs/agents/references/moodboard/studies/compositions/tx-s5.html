@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Imaginary Forces, Stranger Things titles (2016) — a glowing red outline serif closing in on black. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, #1a0606, #020202 70%); }
+        #w { position: absolute; left: 0; right: 0; top: 820px; text-align: center; font-size: 230px; line-height: 1; letter-spacing: .02em;
+          color: transparent; -webkit-text-stroke: 5px #ff2a1a; text-shadow: 0 0 18px rgba(255,42,26,.85), 0 0 60px rgba(255,42,26,.45); }
+        #rule { position: absolute; left: 150px; right: 150px; top: 1080px; height: 6px; background: #ff2a1a; box-shadow: 0 0 20px rgba(255,42,26,.8); }
+      </style>
+      <div id="root" data-composition-id="tx-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-text">
+          <div id="bg"></div>
+          <div class="sk-serif" id="w">BOCOR</div>
+          <div id="rule"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-s5';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 3, update: (t) => {
+            const u = M.eo(M.clamp(t / 2.6));
+            $('w').style.transform = `scale(${(1.35 - 0.35 * u).toFixed(4)})`;
+            $('w').style.letterSpacing = `${(0.3 - 0.28 * u).toFixed(3)}em`;
+            $('w').style.opacity = M.clamp(t / 0.6).toFixed(3);
+            $('rule').style.transform = `scaleX(${M.eo(M.clamp((t - 1.2) / 1)).toFixed(4)})`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

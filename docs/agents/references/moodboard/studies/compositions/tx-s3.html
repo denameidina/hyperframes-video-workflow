@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Kyle Cooper, Se7en titles (1995) — scratched, jittering, re-photocopied type on black. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #070707; }
+        .ln { position: absolute; left: 120px; font-size: 84px; line-height: 1; color: #e8e2d6; white-space: nowrap; filter: blur(.6px); }
+        .gh { position: absolute; left: 120px; font-size: 84px; line-height: 1; color: rgba(232,226,214,.35); white-space: nowrap; }
+        #scr { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="tx-s3" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-text">
+          <div id="bg"></div>
+          <div class="gh sk-mono" id="g0" style="top:760px">stok habis</div><div class="ln sk-mono" id="l0" style="top:760px">stok habis</div>
+          <div class="gh sk-mono" id="g1" style="top:880px">lagi.</div><div class="ln sk-mono" id="l1" style="top:880px">lagi.</div>
+          <div class="gh sk-mono" id="g2" style="top:1000px">catatan hilang.</div><div class="ln sk-mono" id="l2" style="top:1000px">catatan hilang.</div>
+          <svg class="sk-full" id="scr" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-s3';
+          const $ = SK.finder(ID);
+          const r = SK.rng(401);
+          $('scr').innerHTML = Array.from({ length: 26 }, () => { const x = r() * 1080, y = 600 + r() * 700, l = 40 + r() * 260, a = (r() - 0.5) * 0.6;
+            return `<line x1="${x.toFixed(0)}" y1="${y.toFixed(0)}" x2="${(x + l * Math.cos(a)).toFixed(0)}" y2="${(y + l * Math.sin(a)).toFixed(0)}" stroke="rgba(232,226,214,.28)" stroke-width="${(1 + r() * 2).toFixed(1)}"/>`; }).join('');
+          SK.clip(ID, { T: 3, update: (t) => [0, 1, 2].forEach((i) => {
+            const b = SK.boil(410 + i, t, 6, 12), on = t >= 0.2 + i * 0.4;
+            $('l' + i).style.opacity = $('g' + i).style.opacity = on ? '1' : '0';
+            $('l' + i).style.transform = `translate(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px)`;
+            $('g' + i).style.transform = `translate(${(b.x * -2 + 8).toFixed(1)}px, ${(b.y * -1.5 - 5).toFixed(1)}px)`;
+          }) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

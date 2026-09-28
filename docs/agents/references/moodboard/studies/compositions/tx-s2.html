@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Saul Bass, Psycho titles (1960) — bars slice a word into offset strips. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #0b0b0b; }
+        #word { position: absolute; left: 0; top: 760px; width: 1080px; height: 400px; }
+        .st { position: absolute; left: 0; width: 1080px; height: 80px; overflow: hidden; }
+        .wd { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 330px; line-height: 400px; color: #f2f2f2; }
+        .bar { position: absolute; left: 0; width: 1080px; height: 26px; background: #9a9a9a; }
+      </style>
+      <div id="root" data-composition-id="tx-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-text">
+          <div id="bg"></div>
+          <div id="word"><div class="st" id="s0" style="top:0px"><div class="wd sk-display" style="top:0px">SISTEM</div></div><div class="st" id="s1" style="top:80px"><div class="wd sk-display" style="top:-80px">SISTEM</div></div><div class="st" id="s2" style="top:160px"><div class="wd sk-display" style="top:-160px">SISTEM</div></div><div class="st" id="s3" style="top:240px"><div class="wd sk-display" style="top:-240px">SISTEM</div></div><div class="st" id="s4" style="top:320px"><div class="wd sk-display" style="top:-320px">SISTEM</div></div></div>
+          <div class="bar" id="b0" style="top:700px"></div><div class="bar" id="b1" style="top:1200px"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-s2';
+          const $ = SK.finder(ID);
+          const OFF = [-160, 120, -60, 190, -110];
+          SK.clip(ID, { T: 3, update: (t) => {
+            const u = M.eo(M.clamp((t - 0.4) / 1.6));
+            OFF.forEach((o, i) => ($('s' + i).style.transform = `translateX(${(o * (1 - u) + (i % 2 ? 18 : -18) * u).toFixed(1)}px)`));
+            $('b0').style.transform = `translateX(${(-1080 + 1080 * M.eo(M.clamp(t / 0.8))).toFixed(1)}px)`;
+            $('b1').style.transform = `translateX(${(1080 - 1080 * M.eo(M.clamp((t - 0.2) / 0.8))).toFixed(1)}px)`;
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

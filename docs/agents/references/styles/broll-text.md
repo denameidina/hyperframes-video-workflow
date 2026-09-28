@@ -76,6 +76,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Display type | `font.anton`, `font.bebas-neue`, `font.archivo-black`, `font.instrument-serif`, `font.jetbrains-mono`, `font.space-grotesk` | `../asset-catalog/sheets/font.webp` |
 | Texture and overlay | `texture.halftone`, `texture.riso`, `texture.concrete-light`, `texture.plaster` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
 | Marks on words | `frame.swash-1`, `frame.swash-2`, `frame.swash-3`, `frame.swash-4`, `doodle.burst`, `doodle.circle-loose`, `doodle.underline-wave` | `../asset-catalog/sheets/frame-1.webp`, `../asset-catalog/sheets/frame-2.webp`, `../asset-catalog/sheets/doodle-1.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `tx-s1` … `tx-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/broll-text.webp` |
 
 ## Timing
 
@@ -118,6 +119,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   grid dissolves into the building's facade, so type lives inside the scene.
 - 9:16: draw thin grid lines first (~0.2 s), slide the keyword along one column
   onto the stressed syllable, match-cut back to the face.
+- Study: moodboard `tx-s1` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R2 — Saul Bass, *Psycho* titles (1960)
 - Source: https://www.artofthetitle.com/title/psycho/
@@ -125,6 +127,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   type, cut to a jagged score.
 - 9:16: two horizontal bars wipe in, split the word, and the halves slide apart on
   its final consonant (`split-word`). Black and white only.
+- Study: moodboard `tx-s2` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R3 — Saul Bass, *Anatomy of a Murder* titles (1959)
 - Source: https://www.artofthetitle.com/title/anatomy-of-a-murder/
@@ -139,6 +142,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   comes from the story, not a preset.
 - 9:16: only for dark "problem" beats — a 2–4 frame `jitter-flash`, then the clean
   word on the payoff.
+- Study: moodboard `tx-s3` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R5 — Pablo Ferro, *Dr. Strangelove* titles (1964)
 - Source: https://www.artofthetitle.com/title/dr-strangelove-or-how-i-learned-to-stop-worrying/
@@ -153,6 +157,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   place and time.
 - 9:16: give each story section its own flat background colour; slide type in on
   a path instead of popping it.
+- Study: moodboard `tx-s4` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R7 — Imaginary Forces, *Stranger Things* titles (2016)
 - Source: https://www.artofthetitle.com/title/stranger-things/
@@ -160,6 +165,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   imperfections.
 - 9:16: `zoom-assemble` — start on a letter crop at ~400% and ease back over
   1.5–2 s so the word settles as it is spoken.
+- Study: moodboard `tx-s5` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R8 — Prince, "Sign o' the Times" lyric video (1987)
 - Source: https://en.wikipedia.org/wiki/Sign_o%27_the_Times_(song)
@@ -179,6 +185,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Steal: one or two huge words per slide, many fast slides; popular in developer
   talks.
 - 9:16: one word fills the frame, hard cuts at speech pace, no decoration.
+- Study: moodboard `tx-s6` — a self-made study of the technique, on `../moodboard/sheets/broll-text.webp`
 
 ### R11 — Steve Jobs keynote slides (Carmine Gallo)
 - Source: https://www.carminegallo.com/auto-draft-21/

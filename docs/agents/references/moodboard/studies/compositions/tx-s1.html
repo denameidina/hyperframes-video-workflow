@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Saul Bass, North by Northwest titles (1959) — words move in the columns of a slanted grid. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #c9dd5f; }
+        #grid { position: absolute; left: -300px; top: -200px; width: 1700px; height: 2400px; transform: skewY(-14deg);
+          background-image: repeating-linear-gradient(90deg, rgba(20,40,60,.8) 0 4px, transparent 4px 190px), repeating-linear-gradient(0deg, rgba(20,40,60,.8) 0 4px, transparent 4px 150px); }
+        .w { position: absolute; font-size: 104px; line-height: 1; color: #122436; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="tx-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-text">
+          <div id="bg"></div><div id="grid"></div>
+          <div class="w sk-display" id="w0" style="left:96px">catat</div>
+          <div class="w sk-display" id="w1" style="left:476px">rapikan</div>
+          <div class="w sk-display" id="w2" style="left:286px">otomatis</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'tx-s1';
+          const $ = SK.finder(ID);
+          const Y = [[1800, 690], [2000, 1012], [2200, 1330]];
+          SK.clip(ID, { T: 3, update: (t) => Y.forEach(([y0, y1], i) => {
+            const u = M.eo(M.clamp((t - 0.2 - i * 0.35) / 1.2));
+            $('w' + i).style.transform = `skewY(-14deg) translateY(${(y0 + (y1 - y0) * u).toFixed(1)}px)`;
+          }) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

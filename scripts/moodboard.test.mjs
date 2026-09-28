@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkMoodboard, LOCAL, MB, readMoodboard, studiesHost } from './lib/moodboard.mjs';
+import { checkMoodboard, LOCAL, MB, ordered, readMoodboard, sheetHtml, studiesHost } from './lib/moodboard.mjs';
 import { STYLES } from './lib/style-examples.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -39,5 +39,18 @@ test('real stills stay local: local/ is gitignored, nothing under it is tracked,
   assert.deepEqual([...tracked()].filter((f) => f.startsWith(LOCAL + '/')), []);
   const dir = join(ROOT, MB, 'studies/compositions');
   for (const f of existsSync(dir) ? readdirSync(dir) : []) assert.doesNotMatch(read(`${MB}/studies/compositions/${f}`), /local\//, f);
+});
+
+test('a sheet page lists its six studies in order with reference, title, and what they steal', () => {
+  const list = ordered(m).filter((s) => s.style === 'vox');
+  const html = sheetHtml('vox', list);
+  let at = 0;
+  for (const s of list) {
+    const i = html.indexOf(`frames/${s.id}.png`);
+    assert.ok(i > at, `${s.id} out of order`);
+    at = i;
+    assert.ok(html.includes(`${s.ref} · ${s.id}`));
+  }
+  assert.match(html, /not the original works/);
 });
 
