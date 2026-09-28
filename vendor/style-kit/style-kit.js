@@ -355,4 +355,12 @@ SK.sagPath = (p0,p1,sag=0.12)=>{
   const cx=(p0.x+p1.x)/2, cy=(p0.y+p1.y)/2+Math.hypot(p1.x-p0.x,p1.y-p0.y)*sag*2;
   return `M${f2(p0.x)} ${f2(p0.y)} Q${f2(cx)} ${f2(cy)} ${f2(p1.x)} ${f2(p1.y)}`;
 };
+/* handheld: a smooth camera drift like a hand-held shot — three seeded sines per axis (0.2–0.9 Hz),
+   |x|, |y| ≤ amp px and |r| ≤ amp × 0.05 deg. Unlike SK.boil it never jumps; same seed, same drift. */
+SK.handheld = (t,seed=1,o={})=>{
+  const amp=o.amp??6, r=SK.rng(mix(seed,41)), w=()=>({f:0.2+r()*0.7, p:r()*6.2832});
+  const W=[[w(),w(),w()],[w(),w(),w()],[w(),w(),w()]], k=[0.5,0.3,0.2];
+  const s=(ax)=>ax.reduce((v,{f,p},i)=>v+k[i]*Math.sin(t*f*6.2832+p),0);
+  return {x:amp*s(W[0]), y:amp*s(W[1]), r:amp*0.05*s(W[2])};
+};
 })();

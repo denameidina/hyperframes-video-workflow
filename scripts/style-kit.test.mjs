@@ -522,3 +522,19 @@ test('sagPath hangs below the chord in either direction and is straight at sag 0
   assert.equal(SK.sagPath({ x: 0, y: 0 }, { x: 100, y: 0 }, 0), 'M0.0 0.0 Q50.0 0.0 100.0 0.0');
   assert.equal(SK.sagPath({ x: 3, y: 4 }, { x: 90, y: 20 }), SK.sagPath({ x: 3, y: 4 }, { x: 90, y: 20 }));
 });
+
+test('handheld drifts smoothly within amp, the same for a seed and different across seeds', () => {
+  const { SK } = load();
+  const plain = (o) => JSON.parse(JSON.stringify(o));
+  assert.deepEqual(plain(SK.handheld(2.5, 7)), plain(SK.handheld(2.5, 7)));
+  assert.notDeepEqual(plain(SK.handheld(2.5, 7)), plain(SK.handheld(2.5, 8)));
+  let prev = SK.handheld(0, 3, { amp: 10 }), moved = 0;
+  for (let i = 1; i <= 300; i++) {
+    const p = SK.handheld(i / 30, 3, { amp: 10 });
+    assert.ok(Math.abs(p.x) <= 10 && Math.abs(p.y) <= 10 && Math.abs(p.r) <= 0.5, `frame ${i} out of range`);
+    assert.ok(Math.hypot(p.x - prev.x, p.y - prev.y) < 2, `frame ${i} jumps`);
+    moved = Math.max(moved, Math.hypot(p.x, p.y));
+    prev = p;
+  }
+  assert.ok(moved > 3, 'it actually drifts');
+});
