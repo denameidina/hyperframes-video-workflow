@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: exit. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: update(t) inside SK.clip (CK.at). -->
+    <template>
+      <div id="root" data-composition-id="ck-02-exit" data-width="1080" data-height="1920" data-duration="2.4">
+        <div class="sk-stage cx-stage sk-sans">
+          <div class="cx-label">exit</div>
+          <div class="cx-card" id="card"><span>Invoice terkirim</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-02-exit';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 2.4, bg: null, update: (t) => {
+            CK.at($('card'), 'exit', t - 0.6);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

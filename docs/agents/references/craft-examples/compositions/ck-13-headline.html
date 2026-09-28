@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: headline card. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: GSAP timeline (CK.add). -->
+    <template>
+      <div id="root" data-composition-id="ck-13-headline" data-width="1080" data-height="1920" data-duration="4.5">
+        <div class="cx-stage sk-sans">
+          <div class="cx-label">headline card</div>
+          <div class="ck-shadow cx-shadow cx-hshadow" id="shadow"></div>
+          <div class="cx-hcard" id="hcard">
+            <div class="cx-headline cx-small" id="head">Semua klien dalam satu layar</div>
+            <div class="cx-rule cx-rule-in" id="rule"></div>
+            <div class="cx-pill cx-pill-sm" id="pill">Lihat caranya<span class="ck-sheen" id="sheen"></span></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-13-headline';
+          const root = document.querySelector('[data-composition-id="ck-13-headline"]');
+          const $ = (sel) => root.querySelector(sel);
+          const tl = gsap.timeline({ paused: true });
+          CK.add(tl, $('#hcard'), 'arrive', 0.1, { dist: 900 });
+          CK.add(tl, $('#shadow'), 'shadow', 0.1);
+          CK.add(tl, CK.split($('#head')), 'wordMask', 0.45);
+          CK.add(tl, $('#rule'), 'rubber', 1.0);
+          CK.add(tl, $('#hcard'), 'recoil', 1.4);
+          CK.add(tl, $('#pill'), 'squash', 1.3);
+          CK.add(tl, $('#sheen'), 'sheen', 2.1);
+          CK.add(tl, $('#hcard'), 'bob', 2.2, { amp: 6, cycles: 1, period: 1.1 });
+          CK.add(tl, $('#hcard'), 'exit', 3.5);
+          CK.add(tl, $('#shadow'), 'shadow', 3.5, { phase: 'exit' });
+          tl.to({}, { duration: 4.5 }, 0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines[ID] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

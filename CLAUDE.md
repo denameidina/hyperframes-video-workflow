@@ -184,6 +184,7 @@ npm run asset-lib -- sheets    # render the contact sheets agents look at (docs/
 npm run test:render-blur       # unit test motion-blur pass
 npm run check:broll-examples   # lint + validate + snapshot motion b-roll examples
 npm run check:style-examples   # lint + validate + snapshot style b-roll examples (all 7 hosts; -- <style> for one)
+npm run check:craft-examples   # lint + validate + snapshot craft-kit recipe examples
 npm run style-examples -- build # regenerate example hosts from each style's examples.json
 npm run moodboard -- build     # regenerate the moodboard studies host from moodboard.json
 npm run moodboard -- sheets [style]  # render the per-style moodboard sheets (docs/agents/references/moodboard/sheets/)

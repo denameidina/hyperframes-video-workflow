@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: flip. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: GSAP timeline (CK.add). -->
+    <template>
+      <div id="root" data-composition-id="ck-11-flip" data-width="1080" data-height="1920" data-duration="2.4">
+        <div class="cx-stage sk-sans">
+          <div class="cx-label">flip</div>
+          <div class="cx-card cx-flip" id="card"><div class="ck-face-front cx-face">Sebelum</div><div class="ck-face-back cx-face cx-face-b">Sesudah</div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-11-flip';
+          const root = document.querySelector('[data-composition-id="ck-11-flip"]');
+          const $ = (sel) => root.querySelector(sel);
+          const tl = gsap.timeline({ paused: true });
+          CK.add(tl, $('#card'), 'flip', 0.5);
+          tl.to({}, { duration: 2.4 }, 0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines[ID] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

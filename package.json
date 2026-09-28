@@ -20,6 +20,7 @@
     "asset-lib": "node scripts/asset-lib.mjs",
     "check:broll-examples": "node scripts/check-broll-examples.mjs",
     "check:style-examples": "node scripts/check-style-examples.mjs",
+    "check:craft-examples": "node scripts/check-broll-examples.mjs docs/agents/references/craft-examples craft-examples",
     "test:render-blur": "node --test scripts/render-blur.test.mjs",
     "render:blur": "node scripts/render-blur.mjs",
     "video": "node scripts/video.mjs",

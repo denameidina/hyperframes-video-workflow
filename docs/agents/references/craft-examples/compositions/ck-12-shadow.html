@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: shadow. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: update(t) inside SK.clip (CK.at). -->
+    <template>
+      <div id="root" data-composition-id="ck-12-shadow" data-width="1080" data-height="1920" data-duration="2.4">
+        <div class="sk-stage cx-stage sk-sans">
+          <div class="cx-label">shadow</div>
+          <div class="ck-shadow cx-shadow" id="shadow"></div>
+          <div class="cx-card" id="card"><span>Invoice terkirim</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-12-shadow';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 2.4, bg: null, update: (t) => {
+            CK.at($('card'), 'arrive', t - 0.1);
+            CK.at($('shadow'), 'shadow', t - 0.1);
+            CK.at($('card'), 'exit', t - 1.6);
+            CK.at($('shadow'), 'shadow', t - 1.6, { phase: 'exit' });
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

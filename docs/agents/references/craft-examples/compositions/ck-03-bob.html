@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: bob. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: GSAP timeline (CK.add). -->
+    <template>
+      <div id="root" data-composition-id="ck-03-bob" data-width="1080" data-height="1920" data-duration="2.4">
+        <div class="cx-stage sk-sans">
+          <div class="cx-label">bob</div>
+          <div class="cx-card" id="card"><span>Invoice terkirim</span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-03-bob';
+          const root = document.querySelector('[data-composition-id="ck-03-bob"]');
+          const $ = (sel) => root.querySelector(sel);
+          const tl = gsap.timeline({ paused: true });
+          CK.add(tl, $('#card'), 'bob', 0, { amp: 14, period: 1.1 });
+          tl.to({}, { duration: 2.4 }, 0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines[ID] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

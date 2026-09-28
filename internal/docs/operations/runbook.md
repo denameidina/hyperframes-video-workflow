@@ -88,6 +88,7 @@ npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 npm run check:style-examples # lint + validate + snapshot contoh style b-roll, satu host per gaya → renders/style-examples/<gaya>/ (-- <gaya> untuk satu)
+npm run check:craft-examples # lint + validate + snapshot contoh resep craft-kit → renders/craft-examples/
 npm run style-examples -- build # hasilkan ulang index.html + snapshots.json tiap host dari examples.json
 npm run moodboard -- build     # hasilkan ulang host studi moodboard dari moodboard.json
 npm run moodboard -- sheets [gaya]  # render sheet moodboard per gaya → docs/agents/references/moodboard/sheets/*.webp

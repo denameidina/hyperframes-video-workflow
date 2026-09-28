@@ -3,7 +3,8 @@
 // argv[2]) in a temp dir, then lint, validate, and snapshot it at the key-word
 // times listed in its snapshots.json; argv[3] names the folder under renders/.
 // Specs: docs/superpowers/specs/2026-09-26-motion-broll-design.md ("Pengujian"),
-// docs/superpowers/specs/2026-09-27-style-kit-design.md ("Pengujian").
+// docs/superpowers/specs/2026-09-27-style-kit-design.md ("Pengujian"),
+// docs/superpowers/specs/2026-09-28-craft-kit-design.md ("Pengujian").
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
@@ -29,6 +30,7 @@ try {
   cpSync('vendor/gsap.min.js', join(dir, 'vendor/gsap.min.js'));
   cpSync('vendor/motion-kit', join(dir, 'vendor/motion-kit'), { recursive: true });
   cpSync('vendor/style-kit', join(dir, 'vendor/style-kit'), { recursive: true });
+  cpSync('vendor/craft-kit', join(dir, 'vendor/craft-kit'), { recursive: true });
   cpSync('vendor/paper-pack', join(dir, 'vendor/paper-pack'), { recursive: true });
   cpSync('vendor/asset-lib', join(dir, 'vendor/asset-lib'), { recursive: true, filter: (f) => !f.includes('/src') });
   // per-style example hosts share one assets/ folder next to them (docs/agents/references/style-examples/assets)

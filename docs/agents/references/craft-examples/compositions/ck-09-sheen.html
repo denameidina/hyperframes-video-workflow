@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Example only: sheen. Text is invented to show the mechanism; in a real clip every word comes from the transcript (Gate 2 R1). Mode: GSAP timeline (CK.add). -->
+    <template>
+      <div id="root" data-composition-id="ck-09-sheen" data-width="1080" data-height="1920" data-duration="2.4">
+        <div class="cx-stage sk-sans">
+          <div class="cx-label">sheen</div>
+          <div class="cx-pill" id="pill">Coba gratis<span class="ck-sheen" id="sheen"></span></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'ck-09-sheen';
+          const root = document.querySelector('[data-composition-id="ck-09-sheen"]');
+          const $ = (sel) => root.querySelector(sel);
+          const tl = gsap.timeline({ paused: true });
+          CK.add(tl, $('#sheen'), 'sheen', 0.4);
+          CK.add(tl, $('#sheen'), 'sheen', 1.4);
+          tl.to({}, { duration: 2.4 }, 0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines[ID] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

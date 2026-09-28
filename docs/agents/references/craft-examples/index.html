@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <!-- vendor/ is copied in by scripts/check-broll-examples.mjs; this folder has no vendor/ of its own.
+         One clip per craft-kit recipe plus one headline card that chains them. Odd clips use CK.add on a
+         GSAP timeline, even clips CK.at inside SK.clip. Spec: docs/superpowers/specs/2026-09-28-craft-kit-design.md -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/motion-kit/motion-kit.js"></script>
+    <script src="vendor/style-kit/style-kit.js"></script>
+    <script src="vendor/craft-kit/craft-kit.js"></script>
+    <link rel="stylesheet" href="vendor/motion-kit/motion-kit.css" />
+    <link rel="stylesheet" href="vendor/style-kit/style-kit.css" />
+    <link rel="stylesheet" href="vendor/craft-kit/craft-kit.css" />
+    <style>
+      body { margin: 0; background: #3f3f46; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #3f3f46; }
+      .broll { position: absolute; inset: 0; z-index: 22; }
+      .cx-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; color: #f4f4f6; perspective: 1500px; }
+      .cx-label { position: absolute; left: 0; right: 0; top: 150px; text-align: center; font-size: 34px; letter-spacing: .2em; text-transform: uppercase; color: #e4e4e7; }
+      .cx-card { position: absolute; left: 190px; top: 800px; width: 700px; height: 300px; border-radius: 48px; display: grid; place-items: center;
+        background: linear-gradient(145deg, #fafafd, #e4e4ea); color: #111114; font-size: 56px; font-weight: 600; }
+      .cx-shadow { left: 290px; top: 1080px; width: 500px; }
+      .cx-pill { position: absolute; left: 50%; top: 900px; margin-left: -330px; width: 660px; height: 150px; border-radius: 999px; overflow: hidden;
+        display: grid; place-items: center; font-size: 54px; font-weight: 600;
+        background: linear-gradient(180deg, #2b2b2e, #0a0a0b); border: 1px solid rgba(255,255,255,.14); }
+      .cx-headline { position: absolute; left: 90px; right: 90px; top: 760px; text-align: center; font-size: 110px; font-weight: 700; line-height: 1.02; }
+      .cx-bars { position: absolute; left: 240px; right: 240px; bottom: 560px; height: 700px; display: flex; align-items: flex-end; justify-content: space-between; }
+      .cx-bars i { display: block; width: 150px; border-radius: 18px 18px 6px 6px; background: linear-gradient(180deg, #f2f2f2, #8c8c90); }
+      .cx-rule { position: absolute; left: 140px; right: 140px; top: 1400px; height: 6px; border-radius: 3px; background: #facc15; }
+      .cx-panel { position: absolute; left: 190px; width: 700px; height: 300px; border-radius: 40px; display: grid; place-items: center;
+        background: #2563eb; font-size: 50px; font-weight: 600; }
+      .cx-flip .cx-face { display: grid; place-items: center; border-radius: 48px; background: linear-gradient(145deg, #fafafd, #e4e4ea); }
+      .cx-flip .cx-face-b { background: #22c55e; color: #fff; }
+      .cx-hshadow { left: 190px; top: 1215px; width: 700px; }
+      .cx-hcard { position: absolute; left: 100px; top: 620px; width: 880px; height: 620px; border-radius: 56px;
+        background: linear-gradient(180deg, #1b1b1f, #0a0a0b); border: 1px solid rgba(255,255,255,.1); }
+      .cx-hcard .cx-small { left: 60px; right: 60px; top: 80px; font-size: 84px; }
+      .cx-hcard .cx-rule-in { left: 180px; right: 180px; top: 380px; }
+      .cx-hcard .cx-pill-sm { top: 430px; width: 520px; height: 120px; margin-left: -260px; font-size: 42px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="craft-examples" data-start="0" data-width="1080" data-height="1920" data-duration="36.7">
+      <div id="ck-01-arrive-mount" class="broll" data-composition-id="ck-01-arrive" data-composition-src="compositions/ck-01-arrive.html"
+           data-start="0.5" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-02-exit-mount" class="broll" data-composition-id="ck-02-exit" data-composition-src="compositions/ck-02-exit.html"
+           data-start="3.1" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-03-bob-mount" class="broll" data-composition-id="ck-03-bob" data-composition-src="compositions/ck-03-bob.html"
+           data-start="5.7" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-04-rubber-mount" class="broll" data-composition-id="ck-04-rubber" data-composition-src="compositions/ck-04-rubber.html"
+           data-start="8.3" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-05-squash-mount" class="broll" data-composition-id="ck-05-squash" data-composition-src="compositions/ck-05-squash.html"
+           data-start="10.9" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-06-recoil-mount" class="broll" data-composition-id="ck-06-recoil" data-composition-src="compositions/ck-06-recoil.html"
+           data-start="13.5" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-07-wordmask-mount" class="broll" data-composition-id="ck-07-wordmask" data-composition-src="compositions/ck-07-wordmask.html"
+           data-start="16.1" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-08-sharpen-mount" class="broll" data-composition-id="ck-08-sharpen" data-composition-src="compositions/ck-08-sharpen.html"
+           data-start="18.7" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-09-sheen-mount" class="broll" data-composition-id="ck-09-sheen" data-composition-src="compositions/ck-09-sheen.html"
+           data-start="21.3" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-10-clip-mount" class="broll" data-composition-id="ck-10-clip" data-composition-src="compositions/ck-10-clip.html"
+           data-start="23.9" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-11-flip-mount" class="broll" data-composition-id="ck-11-flip" data-composition-src="compositions/ck-11-flip.html"
+           data-start="26.5" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-12-shadow-mount" class="broll" data-composition-id="ck-12-shadow" data-composition-src="compositions/ck-12-shadow.html"
+           data-start="29.1" data-duration="2.4" data-track-index="4" data-width="1080" data-height="1920"></div>
+      <div id="ck-13-headline-mount" class="broll" data-composition-id="ck-13-headline" data-composition-src="compositions/ck-13-headline.html"
+           data-start="31.7" data-duration="4.5" data-track-index="4" data-width="1080" data-height="1920"></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines['craft-examples'] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>
