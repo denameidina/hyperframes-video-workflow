@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: the UPS "Whiteboard" campaign (The Martin Agency, drawn by Andy Azula) — a few strokes turn one drawing into another. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ink { position: absolute; left: 0; top: 0; }
+        .h { position: absolute; font-size: 70px; font-weight: 700; color: #151515; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-wb">
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="h" id="h0" style="left:170px;top:1400px">paket biasa...</div>
+          <div class="h" id="h1" style="left:430px;top:1500px;color:#dc2626">...jadi terbang</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-s2';
+          const $ = SK.finder(ID);
+          const L = (a, b, c, d, s) => SK.line(a, b, c, d, s, 5);
+          const box = [SK.rect(330, 780, 420, 300, 601), L(330, 880, 750, 880, 602), L(540, 780, 540, 1080, 603)];
+          const plane = [L(330, 930, 60, 1130, 604) + ' ' + L(60, 1130, 330, 1030, 605), L(750, 930, 1020, 1130, 606) + ' ' + L(1020, 1130, 750, 1030, 607), L(480, 780, 540, 560, 608) + ' ' + L(540, 560, 600, 780, 609)];
+          $('ink').innerHTML = box.map((d) => `<path class="sk-stroke" d="${d}"/>`).join('') + plane.map((d) => `<path class="sk-stroke" d="${d}" style="stroke:#dc2626"/>`).join('');
+          const P = [...$('ink').querySelectorAll('path')];
+          SK.clip(ID, { T: 3, update: (t) => {
+            P.forEach((p, i) => SK.draw(p, M.clamp((t - (i < 3 ? 0.1 + i * 0.25 : 1.2 + (i - 3) * 0.3)) / 0.35)));
+            SK.write($('h0'), M.clamp((t - 0.8) / 0.4)); SK.write($('h1'), M.clamp((t - 2.1) / 0.4));
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

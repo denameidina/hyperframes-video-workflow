@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Mike Rohde sketchnotes — a lettered banner title, icons, a box, bullets, and an arrow. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ink { position: absolute; left: 0; top: 0; }
+        .d { position: absolute; color: #151515; }
+        .h { position: absolute; font-size: 54px; font-weight: 700; color: #151515; white-space: nowrap; }
+        #ttl { position: absolute; left: 0; right: 0; top: 285px; text-align: center; font-size: 84px; font-weight: 700; color: #ffffff; }
+      </style>
+      <div id="root" data-composition-id="wb-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-wb">
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div id="ttl">RAPAT TIM 5 MENIT</div>
+          <div class="d" id="d0" style="left:110px;top:560px"></div><div class="h" style="left:330px;top:620px">• target minggu ini</div>
+          <div class="d" id="d1" style="left:110px;top:860px"></div><div class="h" style="left:330px;top:920px">• yang macet</div>
+          <div class="d" id="d2" style="left:110px;top:1160px"></div><div class="h" style="left:330px;top:1220px">• siapa bantu siapa</div>
+          <div class="h" style="left:560px;top:1480px;color:#dc2626">selesai!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-s5';
+          const $ = SK.finder(ID);
+          [['star-hand', 190], ['exclaim', 190], ['heart-hand', 190]].forEach(([d, s], i) => ($('d' + i).innerHTML = SK.doodle(d, { size: s, sw: 6 })));
+          $('ink').innerHTML = `<path d="M110 250 L970 250 L940 330 L970 410 L110 410 L140 330 Z" fill="#2563eb"/>` +
+            [SK.rect(80, 520, 920, 860, 631), SK.arrow(450, 1460, 540, 1510, 632).shaft, SK.arrow(450, 1460, 540, 1510, 632).head].map((d) => `<path class="sk-stroke" d="${d}"/>`).join('');
+          const P = [...SK.stageOf(ID).querySelectorAll('svg path.sk-stroke, .d svg path')];
+          SK.clip(ID, { T: 3, update: (t) => P.forEach((p, i) => SK.draw(p, M.clamp((t - 0.2 - i * 0.12) / 0.3))) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

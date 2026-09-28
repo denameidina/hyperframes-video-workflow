@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: RSA Animate (drawn by Andrew Park / Cognitive) — a dense board of quick sketches and handwriting. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        .d { position: absolute; color: #151515; }
+        .h { position: absolute; font-size: 64px; font-weight: 700; line-height: 1; color: #151515; white-space: nowrap; }
+        .r { color: #dc2626; }
+      </style>
+      <div id="root" data-composition-id="wb-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-wb">
+          <div class="d" id="d0" style="left:70px;top:260px"></div><div class="h" style="left:360px;top:300px">kenapa UMKM</div><div class="h r" style="left:360px;top:380px">susah naik kelas?</div>
+          <div class="d" id="d1" style="left:620px;top:560px"></div><div class="h" style="left:80px;top:640px">catatan</div><div class="h" style="left:80px;top:720px">di mana-mana</div>
+          <div class="d" id="d2" style="left:90px;top:900px"></div><div class="h r" style="left:470px;top:1000px">3 jam/hari</div><div class="h" style="left:470px;top:1080px">habis balas chat</div>
+          <div class="d" id="d3" style="left:640px;top:1280px"></div><div class="h" style="left:90px;top:1360px">padahal...</div>
+          <div class="d" id="d4" style="left:120px;top:1480px"></div><div class="h r" style="left:420px;top:1620px">sistem!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-s1';
+          const $ = SK.finder(ID);
+          [['think', 250], ['phone-hand', 300], ['money-hand', 320], ['lightbulb-hand', 300], ['arrow-curve', 260]].forEach(([d, s], i) => ($('d' + i).innerHTML = SK.doodle(d, { size: s, sw: 6 })));
+          const paths = [...SK.stageOf(ID).querySelectorAll('svg path')];
+          const seq = (t, a, b) => paths.forEach((p, i) => SK.draw(p, M.clamp((t - a - (b - a) * i / paths.length) / ((b - a) / paths.length * 1.6))));
+          SK.clip(ID, { T: 3, update: (t) => seq(t, 0.1, 2.3) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

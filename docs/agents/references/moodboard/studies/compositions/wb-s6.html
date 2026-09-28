@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: xkcd (via matplotlib xkcd mode) — a wobbly hand-drawn chart annotated by a stick figure. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #ink { position: absolute; left: 0; top: 0; }
+        #fig { position: absolute; left: 150px; top: 1040px; color: #151515; }
+        .h { position: absolute; font-size: 50px; font-weight: 700; color: #151515; white-space: nowrap; }
+      </style>
+      <div id="root" data-composition-id="wb-s6" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-wb">
+          <svg class="sk-full" id="ink" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div id="fig"></div>
+          <div class="h" style="left:120px;top:420px">WAKTU UNTUK ADMIN</div>
+          <div class="h" style="left:560px;top:1540px">"sejak pakai sistem"</div>
+          <div class="h" style="left:600px;top:940px;color:#dc2626">turun drastis!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-s6';
+          const $ = SK.finder(ID);
+          $('fig').innerHTML = SK.doodle('point', { size: 300, sw: 6 });
+          const pts = [[160, 700], [260, 720], [360, 690], [460, 740], [520, 1080], [640, 1120], [760, 1110], [880, 1130]];
+          const line = pts.slice(1).map(([x, y], i) => SK.line(pts[i][0], pts[i][1], x, y, 640 + i, 7)).join(' ');
+          $('ink').innerHTML = [SK.line(120, 520, 120, 1380, 641, 8), SK.line(120, 1380, 980, 1380, 642, 8)].map((d) => `<path class="sk-stroke" d="${d}"/>`).join('') +
+            `<path class="sk-stroke" d="${line}" style="stroke:#2563eb;stroke-width:8"/>`;
+          const P = [...SK.stageOf(ID).querySelectorAll('svg path')];
+          SK.clip(ID, { T: 3, update: (t) => P.forEach((p, i) => SK.draw(p, M.clamp((t - 0.1 - i * 0.2) / 0.5))) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -83,6 +83,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Boards | `texture.whiteboard`, `texture.blackboard`, `texture.graph` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
 | Hands | `hand.write`, `hand.point`, `hand.erase`, `hand.hold-highlighter`, `hand.hold-card` | `../asset-catalog/sheets/hand.webp` |
 | Lettering | `font.kalam`, `font.patrick-hand`, `font.permanent-marker` | `../asset-catalog/sheets/font.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `wb-s1` … `wb-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/whiteboard.webp` |
 
 ## Timing
 
@@ -130,6 +131,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   drawn instead of wiping; black line art with one or two accents.
 - 9:16: one tall board per idea; each spoken keyword adds a label and an icon
   (1.5–2.5 s each), stacking downward so the whole board reads by 6–8 s.
+- Study: moodboard `wb-s1` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R2 — UPS "Whiteboard" campaign (2007), The Martin Agency, drawn by Andy Azula
 - Source: https://slate.com/business/2007/04/the-mesmerizing-ups-whiteboard-ads.html and
@@ -138,6 +140,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   becomes a plane) create suspense; presenter and board share the frame.
 - 9:16: `transform-reveal` — draw shape A, then 3–4 strokes on the payoff word turn
   it into B.
+- Study: moodboard `wb-s2` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R3 — Common Craft "Paperworks", "Twitter in Plain English" (2008)
 - Source: https://en.wikipedia.org/wiki/Common_Craft
@@ -145,6 +148,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   one concept per board, plain language.
 - 9:16: bring a pre-drawn icon in within 0.15–0.2 s on its noun (`'drop'`), and
   hand-draw only the connecting arrows.
+- Study: moodboard `wb-s3` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R4 — MinutePhysics (Henry Reich)
 - Source: https://en.wikipedia.org/wiki/MinutePhysics and
@@ -160,6 +164,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   type to the question (6 Ws); the SQVID choices before drawing.
 - 9:16: tag each line with its question in the brief, then choose the pattern
   (the "Pick the drawing" rule above).
+- Study: moodboard `wb-s4` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R6 — Mike Rohde, sketchnotes and *The Sketchnote Handbook*
 - Source: https://rohdesign.com/sketchnotes
@@ -167,6 +172,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   repeatable vocabulary of bullets, arrows, boxes, and people.
 - 9:16: three lettering sizes on 1080 px (~110 / 84 / 44) and one container type
   per video.
+- Study: moodboard `wb-s5` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R7 — Rough.js (Preet Shihn) and Excalidraw
 - Source: https://shihn.ca/posts/2020/roughjs-algorithms/ ,
@@ -183,6 +189,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   keeps labels legible.
 - 9:16: `sketch-chart` — wobbly axes, then the line, then circle the one number
   that matters.
+- Study: moodboard `wb-s6` — a self-made study of the technique, on `../moodboard/sheets/whiteboard.webp`
 
 ### R9 — Line boil (PremiumBeat)
 - Source: https://www.premiumbeat.com/blog/how-to-create-line-boil-animations/

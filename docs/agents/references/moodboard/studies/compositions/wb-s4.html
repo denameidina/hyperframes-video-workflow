@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Dan Roam, The Back of the Napkin (2008) — a six-part visual framework drawn on a napkin. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #nap { position: absolute; left: 90px; top: 380px; width: 900px; height: 1160px; background: #fbf8f1; box-shadow: 0 16px 40px rgba(0,0,0,.15); }
+        #ink { position: absolute; left: 0; top: 0; }
+        .c { position: absolute; width: 400px; text-align: center; font-size: 58px; font-weight: 700; color: #151515; }
+        #t { position: absolute; left: 90px; top: 250px; font-size: 64px; font-weight: 700; color: #2563eb; }
+      </style>
+      <div id="root" data-composition-id="wb-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-wb">
+          <div id="t">6 cara melihat masalah</div>
+          <div id="nap"><svg id="ink" viewBox="0 0 900 1160" width="900" height="1160"></svg>
+          <div class="c" id="c0" style="left:50px;top:280px">siapa</div><div class="c" id="c1" style="left:450px;top:280px">berapa</div><div class="c" id="c2" style="left:50px;top:620px">di mana</div><div class="c" id="c3" style="left:450px;top:620px">kapan</div><div class="c" id="c4" style="left:50px;top:960px">bagaimana</div><div class="c" id="c5" style="left:450px;top:960px">kenapa</div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'wb-s4';
+          const $ = SK.finder(ID);
+          const icons = [SK.ellipse(250, 170, 60, 60, 621), SK.rect(610, 110, 120, 120, 622), SK.ellipse(250, 510, 70, 50, 623), SK.ellipse(650, 510, 60, 60, 624) + ' ' + SK.line(650, 510, 650, 470, 625, 2), SK.arrow(190, 850, 310, 850, 626).shaft, SK.line(620, 820, 680, 880, 627, 3)];
+          $('ink').innerHTML = [SK.line(450, 60, 450, 1100, 620, 6), SK.line(40, 390, 860, 390, 628, 6), SK.line(40, 730, 860, 730, 629, 6)].map((d) => `<path class="sk-stroke" d="${d}"/>`).join('') + icons.map((d) => `<path class="sk-stroke" d="${d}" style="stroke:#dc2626"/>`).join('');
+          const P = [...$('ink').querySelectorAll('path')];
+          SK.clip(ID, { T: 3, update: (t) => {
+            P.forEach((p, i) => SK.draw(p, M.clamp((t - 0.1 - i * 0.15) / 0.3)));
+            [0, 1, 2, 3, 4, 5].forEach((i) => SK.write($('c' + i), M.clamp((t - 0.8 - i * 0.2) / 0.3)));
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
