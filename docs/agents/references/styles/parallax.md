@@ -108,6 +108,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Memory frame | `frame.polaroid`, `frame.polaroid-tilt` | `../asset-catalog/sheets/frame-1.webp` |
 | Collage layers | `paper.lightbulb`, `paper.parcel-box`, `texture.linen` | `../asset-catalog/sheets/paper-2.webp`, `../asset-catalog/sheets/texture-2.webp` |
 | Type | `font.instrument-serif` | `../asset-catalog/sheets/font.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `px-s1` … `px-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/parallax.webp` |
 
 ## Timing
 
@@ -153,12 +154,14 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Steal: silhouettes on stacked, backlit glass planes; soft tinted backgrounds
   behind hard black cut-outs.
 - 9:16: a dark, rim-lit cut-out over a soft gradient plate that drifts 2–3% over 4 s.
+- Study: moodboard `px-s1` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R2 — Ub Iwerks' multiplane camera (1933)
 - Source: https://en.wikipedia.org/wiki/Multiplane_camera
 - Steal: built partly from salvaged car parts; the core rule — distant layers move
   slower — sells depth even on a cheap rig.
 - 9:16: a three-layer "poor man's multiplane" with speed ratios near 1.0 / 0.5 / 0.15.
+- Study: moodboard `px-s2` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R3 — Disney, *The Old Mill* (1937)
 - Source: https://d23.com/a-to-z/old-mill-the-film/ and
@@ -176,6 +179,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   as tracing paper lifted toward the camera until the subject fades.
 - 9:16: `multiplane-fog` — a translucent layer that slides between subject and
   camera to fade a detail on "hilang".
+- Study: moodboard `px-s3` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R5 — *The Kid Stays in the Picture* (2002)
 - Source: https://en.wikipedia.org/wiki/The_Kid_Stays_in_the_Picture and
@@ -184,6 +188,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   Z; each move timed to the narrator's story.
 - 9:16: `photo-2.5d` — one photo per beat, a slow push that lands on the name or
   year being said.
+- Study: moodboard `px-s4` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R6 — Ken Burns effect (*The Civil War*, 1990; roots in NFB's *City of Gold*, 1957)
 - Source: https://en.wikipedia.org/wiki/Ken_Burns_effect
@@ -223,12 +228,14 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 - Steal: defocus as offset colour plates instead of lens blur; motion on twos.
 - 9:16: for a punchy tech tone, a 3–6 px RGB offset on back layers instead of blur,
   and `stepped-multiplane`.
+- Study: moodboard `px-s5` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R12 — *Vertigo* (1958) and the dolly zoom
 - Source: https://en.wikipedia.org/wiki/Dolly_zoom
 - Steal: the camera moves one way while the lens zooms the other — the subject
   holds its size and the background stretches; dizziness or sudden realization.
 - 9:16: `SK.dollyZoom` once, 1–1.5 s, on the realization word.
+- Study: moodboard `px-s6` — a self-made study of the technique, on `../moodboard/sheets/parallax.webp`
 
 ### R13 — Apple iOS 26 Spatial Scenes
 - Source: https://www.macrumors.com/how-to/ios-3d-lock-screen-effect-spatial-scenes/

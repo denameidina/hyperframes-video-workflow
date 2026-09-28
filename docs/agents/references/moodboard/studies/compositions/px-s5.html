@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Spider-Man: Into the Spider-Verse (2018) — far planes printed off-register with halftone dots, the near plane sharp, on twos. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #back img, #mid img { filter: drop-shadow(10px 0 0 rgba(255,40,120,.55)) drop-shadow(-10px 0 0 rgba(0,190,255,.55)) saturate(1.4); }
+        #dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(20,10,40,.28) 4px, transparent 5px); background-size: 16px 16px; mix-blend-mode: multiply;
+          -webkit-mask-image: linear-gradient(transparent 0%, #000 30%, #000 60%, transparent 90%); mask-image: linear-gradient(transparent 0%, #000 30%, #000 60%, transparent 90%); }
+        #w { position: absolute; left: 70px; top: 300px; font-size: 150px; line-height: .9; color: #fff; -webkit-text-stroke: 6px #111; transform: rotate(-4deg); }
+      </style>
+      <div id="root" data-composition-id="px-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/plate.webp" alt="" /></div>
+            <div class="sk-ly" id="mid"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/mid.png" alt="" /></div>
+            <div class="sk-ly" id="dl"><div id="dots"></div></div>
+            <div class="sk-ly" id="front"><img class="sk-plate" src="vendor/asset-lib/scenes/city-dusk/front.png" alt="" /></div>
+          </div></div>
+          <div class="sk-display" id="w">LANJUT<br>NAIK!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-s5';
+          const $ = SK.finder(ID);
+          const L = [['back', -1400, 1.2], ['mid', -500, 1.06], ['dl', -300, 1.06], ['front', -80, 1.06]];
+          L.forEach(([id, z, f]) => SK.layer($(id), z, { fill: f }));
+          SK.clip(ID, { T: 3, update: (t) => {
+            const tt = SK.stepTime(t, 12);
+            SK.camera($('world'), { x: -40 + 30 * tt, z: 20 * tt });
+            SK.enter($('w'), t - 0.6, 'slam');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

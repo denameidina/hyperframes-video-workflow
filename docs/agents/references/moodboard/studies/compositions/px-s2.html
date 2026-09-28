@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: the multiplane camera (Disney / Iwerks, 1930s) — four painted glass panes at different distances; the camera swings round to show them apart. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #1a1a22; }
+        .gl { position: absolute; left: 90px; top: 300px; width: 900px; height: 1320px; border: 3px solid rgba(220,235,255,.55); box-sizing: border-box; background: rgba(200,220,255,.05); }
+        .gl svg { position: absolute; left: 0; top: 0; }
+        #lab { position: absolute; left: 90px; top: 160px; font-size: 44px; color: #cfd8e8; }
+      </style>
+      <div id="root" data-composition-id="px-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="g0"><div class="gl"><svg width="894" height="1314"><rect width="894" height="1314" fill="#9ec9e6"/><circle cx="640" cy="340" r="110" fill="#fff3c4"/></svg></div></div>
+            <div class="sk-ly" id="g1"><div class="gl"><svg width="894" height="1314"><path d="M0 820 Q220 620 440 780 T894 700 V1314 H0Z" fill="#7aa38a"/></svg></div></div>
+            <div class="sk-ly" id="g2"><div class="gl"><svg width="894" height="1314"><path d="M0 1010 Q300 900 560 1000 T894 960 V1314 H0Z" fill="#3f6b4f"/><rect x="520" y="760" width="210" height="190" fill="#c65b3a"/><path d="M500 770 L625 670 L750 770Z" fill="#7a2f1e"/></svg></div></div>
+            <div class="sk-ly" id="g3"><div class="gl"><svg width="894" height="1314"><path d="M-20 1314 C40 900 120 700 60 420 C160 660 200 980 230 1314Z M894 1314 C860 1000 780 820 840 560 C740 820 700 1060 690 1314Z" fill="#14281c"/></svg></div></div>
+          </div></div>
+          <div class="sk-sans" id="lab">4 lapis kaca, jarak berbeda</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-s2';
+          const $ = SK.finder(ID);
+          // panes are not size-compensated here, so the farther glass reads smaller, as on the rig
+          const Z = [-900, -600, -300, 0];
+          Z.forEach((z, i) => ($('g' + i).style.transform = `translateZ(${z}px)`));
+          SK.clip(ID, { T: 3, update: (t) => {
+            const u = M.eio(M.clamp((t - 0.3) / 2.4));
+            SK.camera($('world'), { ry: 50 * u, x: -400 * u, z: -250 * u });
+            $('lab').style.opacity = u.toFixed(3);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

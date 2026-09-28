@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: The Kid Stays in the Picture (2002) — one archival photo cut apart; the subject floats off its background as the camera drifts. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #vig { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,0,0,.7)); }
+        #subj img { filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
+        #src { left: 90px; top: 1760px; }
+      </style>
+      <div id="root" data-composition-id="px-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop sk-grade-px-mono-archive">
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="back"><img class="sk-plate" src="assets/px-archive-plate.jpg" alt="" /></div>
+            <div class="sk-ly" id="subj"><img class="sk-plate" src="assets/px-archive-subject.png" alt="" /></div>
+          </div></div>
+          <div id="vig"></div>
+          <div class="sk-source" id="src">Foto: "Woman typist", ±1900, Library of Congress (domain publik)</div>
+          <div class="sk-grain" id="grain"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-s4';
+          const $ = SK.finder(ID);
+          SK.layer($('back'), -1100, { fill: 1.25 });
+          SK.layer($('subj'), -160, { ox: 760, oy: 900 });
+          SK.clip(ID, { T: 3, update: (t) => {
+            const u = M.eio(M.clamp(t / 3));
+            SK.camera($('world'), { z: 30 + 90 * u, x: 90 - 150 * u }, { ox: 760, oy: 900 });
+            SK.grain($('grain'), t, 5);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

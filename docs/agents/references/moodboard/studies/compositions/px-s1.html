@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Lotte Reiniger, multiplane silhouettes (1920s) — black silhouette planes, farther ones paler, the camera slides. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: linear-gradient(#f7c27a, #e7864a 55%, #7a3a5e); }
+        .s { position: absolute; }
+        .hill { position: absolute; left: -300px; width: 1700px; border-radius: 50% 50% 0 0; }
+      </style>
+      <div id="root" data-composition-id="px-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="sk-view" id="view"><div class="sk-world" id="world">
+            <div class="sk-ly" id="l0"><div class="hill" style="top:1180px;height:900px;background:#c77a6a"></div><div class="s" id="p0" style="left:620px;top:800px"></div></div>
+            <div class="sk-ly" id="l1"><div class="hill" style="top:1400px;height:800px;background:#7e4058;left:-600px"></div><div class="s" id="p1" style="left:80px;top:900px"></div></div>
+            <div class="sk-ly" id="l2"><div class="hill" style="top:1620px;height:700px;background:#0b0b0b"></div><div class="s" id="p2" style="left:560px;top:1250px"></div><div class="s" id="p3" style="left:-430px;top:760px"></div></div>
+          </div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'px-s1';
+          const $ = SK.finder(ID);
+          $('p0').innerHTML = SK.pict('storefront', { size: 420, color: '#c77a6a' });
+          $('p1').innerHTML = SK.pict('tree', { size: 620, color: '#7e4058' });
+          $('p2').innerHTML = SK.pict('person', { size: 400, color: '#0b0b0b' });
+          $('p3').innerHTML = SK.pict('tree', { size: 900, color: '#0b0b0b' });
+          const L = [['l0', -1200], ['l1', -600], ['l2', -120]];
+          L.forEach(([id, z]) => SK.layer($(id), z, { fill: 1.1 }));
+          SK.clip(ID, { T: 3, update: (t) => SK.camera($('world'), { x: -60 + 50 * M.eio(M.clamp(t / 3)) }) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
