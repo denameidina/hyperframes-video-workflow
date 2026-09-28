@@ -203,9 +203,9 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-55** (Unwanted) — If sebuah aset per video menduplikasi aset yang
   sudah ada di pustaka, then fase Build shall memakai aset pustaka, kecuali
   brief mencatat alasannya.
-- **RD-03-56** (Ubiquitous) — Untuk setiap gaya yang tercakup (`COVERED` di
-  `scripts/style-docs.test.mjs`), setiap pola di tabel Patterns referensi gaya
-  shall punya minimal satu contoh yang bisa dirender di tabel Examples.
+- **RD-03-56** (Ubiquitous) — Setiap pola di tabel Patterns setiap referensi
+  gaya shall punya minimal satu contoh yang bisa dirender di tabel Examples
+  (`COVERED` di `scripts/style-docs.test.mjs` = semua gaya).
 - **RD-03-57** (Ubiquitous) — Contoh gaya shall ditambahkan lewat
   `style-examples/<gaya>/examples.json`; `index.html` dan `snapshots.json` host
   shall dihasilkan oleh `npm run style-examples -- build`, tidak ditulis tangan

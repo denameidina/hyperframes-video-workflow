@@ -100,8 +100,8 @@ test('styles/README.md lists every available style and its reference file', () =
 });
 
 // Sub-project 2 coverage: in these styles every pattern has at least one rendered example
-// (specs: docs/superpowers/specs/2026-09-28-pattern-examples-2a-design.md, …-2b-design.md). 2c adds the rest.
-const COVERED = ['broll-text.md', 'motion-graphic.md', 'whiteboard.md', 'stop-motion.md'];
+// (specs: docs/superpowers/specs/2026-09-28-pattern-examples-2a/2b/2c-design.md). Every style is covered (RD-03-56).
+const COVERED = STYLES.map((s) => s.file);
 for (const file of COVERED) {
   test(`${file}: every pattern has an example`, () => {
     const md = readFileSync(new URL('styles/' + file, REF), 'utf8');
