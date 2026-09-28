@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: the Isotype method (Otto and Marie Neurath, Gerd Arntz) — counting with repeated identical pictograms. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #f1ead8; }
+        #t { position: absolute; left: 90px; top: 300px; font-size: 64px; font-weight: 800; color: #1b1b1b; }
+        #k { position: absolute; left: 90px; top: 390px; font-size: 32px; color: #6b6150; }
+        .row { position: absolute; left: 90px; display: flex; gap: 10px; align-items: flex-end; }
+        .yr { position: absolute; left: 90px; font-size: 44px; font-weight: 800; color: #c0392b; }
+        .row i { display: block; color: #1b1b1b; }
+      </style>
+      <div id="root" data-composition-id="mg-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div>
+          <div class="sk-sans" id="t">Pelanggan tetap</div>
+          <div class="sk-sans" id="k">satu figur = 10 pelanggan</div>
+          <div class="yr sk-sans" style="top:620px">2022</div><div class="row" id="r0" style="top:690px"></div>
+          <div class="yr sk-sans" style="top:950px">2023</div><div class="row" id="r1" style="top:1020px"></div>
+          <div class="yr sk-sans" style="top:1280px">2024</div><div class="row" id="r2" style="top:1350px"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s2';
+          const $ = SK.finder(ID);
+          const N = [4, 7, 10];
+          N.forEach((n, k) => { $('r' + k).innerHTML = Array.from({ length: n }, () => `<i>${SK.pict('person', { size: 82, color: '#1b1b1b' })}</i>`).join(''); });
+          const figs = N.map((_, k) => [...$('r' + k).querySelectorAll('i')]);
+          SK.clip(ID, { T: 3, update: (t) => figs.forEach((row, k) => row.forEach((el, i) => SK.enter(el, t - 0.2 - k * 0.3 - i * 0.05, 'pop'))) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Hans Rosling and Gapminder — bubbles travel across two labelled axes with the year behind them. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #fdfdfb; }
+        #yr { position: absolute; left: 0; right: 0; top: 720px; text-align: center; font-size: 300px; font-weight: 800; color: #ececec; }
+        #ax { position: absolute; left: 0; top: 0; }
+        .bb { position: absolute; border-radius: 50%; opacity: .85; border: 3px solid rgba(0,0,0,.25); }
+        .lb { position: absolute; font-size: 30px; color: #444; }
+      </style>
+      <div id="root" data-composition-id="mg-s3" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div>
+          <div class="sk-sans" id="yr">2024</div>
+          <svg class="sk-full" id="ax" viewBox="0 0 1080 1920" width="1080" height="1920"><path d="M140 420 V1500 H980" fill="none" stroke="#999" stroke-width="4"/></svg>
+          <div class="lb sk-sans" style="left:150px;top:370px">omzet ↑</div><div class="lb sk-sans" style="left:780px;top:1520px">pelanggan →</div>
+          <div class="bb" id="b0" style="background:#3cb371"></div><div class="bb" id="b1" style="background:#f4b400"></div>
+          <div class="bb" id="b2" style="background:#4285f4"></div><div class="bb" id="b3" style="background:#e94235"></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s3';
+          const $ = SK.finder(ID);
+          const B = [[260, 1300, 540, 780, 120], [420, 1380, 700, 900, 170], [320, 1150, 860, 560, 220], [600, 1420, 620, 1100, 90]];
+          SK.clip(ID, { T: 3, update: (t) => B.forEach(([x0, y0, x1, y1, d], i) => {
+            const u = M.eio(M.clamp((t - 0.2) / 2.2)), x = x0 + (x1 - x0) * u, y = y0 + (y1 - y0) * u;
+            Object.assign($('b' + i).style, { width: `${d}px`, height: `${d}px`, transform: `translate(${(x - d / 2).toFixed(1)}px, ${(y - d / 2).toFixed(1)}px)` });
+          }) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

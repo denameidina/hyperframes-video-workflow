@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Kurzgesagt – In a Nutshell — flat bright icons with long soft shadows on a deep background. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: linear-gradient(#17214a, #0e1535); }
+        .ic { position: absolute; width: 300px; height: 300px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .sh { position: absolute; left: 0; top: 0; z-index: -1; width: 300px; height: 900px; transform-origin: 150px 150px; transform: rotate(-45deg); background: linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,0)); border-radius: 150px; }
+        #t { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 76px; font-weight: 800; color: #ffffff; }
+        .star { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: #c9d6ff; }
+      </style>
+      <div id="root" data-composition-id="mg-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div><div id="stars"></div>
+          <div class="sk-sans" id="t">uang · data · waktu</div>
+          <div class="ic" id="i0" style="left:110px;top:700px;background:#ffb627"><div class="sh"></div></div>
+          <div class="ic" id="i1" style="left:670px;top:780px;background:#27c6ff"><div class="sh"></div></div>
+          <div class="ic" id="i2" style="left:390px;top:1180px;background:#ff5c8a"><div class="sh"></div></div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s1';
+          const $ = SK.finder(ID);
+          const r = SK.rng(501);
+          $('stars').innerHTML = Array.from({ length: 40 }, () => `<i class="star" style="left:${(r() * 1080).toFixed(0)}px;top:${(r() * 1920).toFixed(0)}px;opacity:${(0.3 + r() * 0.6).toFixed(2)}"></i>`).join('');
+          ['coins', 'chart-bar', 'clock'].forEach((p, i) => $('i' + i).insertAdjacentHTML('beforeend', `<div style="position:relative">${SK.pict(p, { size: 170, color: '#ffffff' })}</div>`));
+          SK.clip(ID, { T: 3, update: (t) => [0, 1, 2].forEach((i) => SK.enter($('i' + i), t - 0.2 - i * 0.3, 'pop')) });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

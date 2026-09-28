@@ -79,6 +79,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Maps behind data | `map.world`, `map.sea`, `map.id-provinces` | `../asset-catalog/sheets/map.webp` |
 | Type | `font.plus-jakarta-sans`, `font.bricolage-grotesque`, `font.space-grotesk` | `../asset-catalog/sheets/font.webp` |
 | Ground | `texture.dots` | `../asset-catalog/sheets/texture-1.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `mg-s1` … `mg-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/motion-graphic.webp` |
 
 ## Timing
 
@@ -125,6 +126,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   deep booms on key words.
 - 9:16: one saturated object on a flat field, built from separately animated
   parts; the main shape lands on the stressed word with a low soft thump.
+- Study: moodboard `mg-s1` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ### R2 — Isotype (Otto Neurath, Marie Neurath, Gerd Arntz)
 - Source: https://en.wikipedia.org/wiki/Isotype_(picture_language) and
@@ -133,6 +135,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   bigger pictogram; flat, no perspective; a fixed counting unit with a legend.
 - 9:16: `icon-grid` of 5 per row, filling row by row on the spoken number, with a
   legend line on top ("1 ikon = 1 klien").
+- Study: moodboard `mg-s2` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ### R3 — Hans Rosling, "The best stats you've ever seen" (TED 2006) and Gapminder
 - Source: https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen and
@@ -141,6 +144,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   drives the motion like sports commentary.
 - 9:16: `bubble-move` with at most 2–3 bubbles and a big year counter behind;
   move one bubble while Dena says "dari … ke …".
+- Study: moodboard `mg-s3` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ### R4 — Hans Rosling, *200 Countries, 200 Years, 4 Minutes* (BBC Four, 2010)
 - Source: https://www.themarginalian.org/2010/12/03/hans-rosling-bbc/
@@ -156,6 +160,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   misleading, confusing, failing to make a point.
 - 9:16: one accent for the value Dena names; everything else muted; the title is
   the spoken claim (palette "economist" above).
+- Study: moodboard `mg-s4` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ### R6 — Vox explainers (Joss Fong; PremiumBeat breakdown)
 - Source: https://www.theopennotebook.com/2020/01/07/videogram-how-a-vox-video-explains-the-science-behind-the-first-photo-of-a-black-hole/ and
@@ -192,6 +197,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   show absolute change.
 - 9:16: `bar-race` with at most 5 horizontal bars, only when the speaker lists a
   ranking that changes over time.
+- Study: moodboard `mg-s5` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ### R11 — Datawrapper Academy, "Why our column and bar charts start at zero"
 - Source: https://www.datawrapper.de/academy/why-our-column-and-bar-charts-start-at-zero
@@ -205,6 +211,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   before animation starts.
 - 9:16: the Style Brief is the style frame — palette, pattern, and layout are
   decided in Screen Plan, not improvised in Build.
+- Study: moodboard `mg-s6` — a self-made study of the technique, on `../moodboard/sheets/motion-graphic.webp`
 
 ## Build Recipe
 

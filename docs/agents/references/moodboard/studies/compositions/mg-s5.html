@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: bar chart races (Flourish) — ranked bars re-order under a big counter. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #111827; }
+        .bar { position: absolute; left: 90px; height: 120px; border-radius: 6px; }
+        .bl { position: absolute; left: 110px; font-size: 44px; font-weight: 700; color: #111; line-height: 120px; white-space: nowrap; }
+        #yr { position: absolute; right: 90px; top: 1420px; font-size: 200px; font-weight: 800; color: rgba(255,255,255,.18); }
+        #t { position: absolute; left: 90px; top: 330px; font-size: 60px; font-weight: 800; color: #fff; }
+      </style>
+      <div id="root" data-composition-id="mg-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div>
+          <div class="sk-sans" id="t">Kanal paling ramai</div>
+          <div class="bar" id="b0" style="background:#34d399"></div><div class="bl sk-sans" id="l0">WhatsApp</div>
+          <div class="bar" id="b1" style="background:#60a5fa"></div><div class="bl sk-sans" id="l1">Marketplace</div>
+          <div class="bar" id="b2" style="background:#fbbf24"></div><div class="bl sk-sans" id="l2">Instagram</div>
+          <div class="bar" id="b3" style="background:#f472b6"></div><div class="bl sk-sans" id="l3">Toko fisik</div>
+          <div class="sk-sans" id="yr">2024</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s5';
+          const $ = SK.finder(ID);
+          // value at the start and the end, then rank by the current value
+          const V = [[40, 90], [70, 76], [55, 60], [80, 38]];
+          SK.clip(ID, { T: 3, update: (t) => {
+            const u = M.eio(M.clamp((t - 0.3) / 2));
+            const cur = V.map(([a, b]) => a + (b - a) * u), rank = cur.map((v, i) => cur.filter((w) => w > v).length);
+            cur.forEach((v, i) => {
+              const y = 560 + rank[i] * 160;
+              Object.assign($('b' + i).style, { width: `${(v * 9).toFixed(1)}px`, top: `${y}px` });
+              $('l' + i).style.top = `${y}px`;
+            });
+            $('yr').textContent = u < 0.5 ? '2023' : '2024';
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

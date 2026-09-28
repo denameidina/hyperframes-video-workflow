@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Giant Ant — soft geometric shapes with gentle gradients and calm motion. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #f3ede6; }
+        .sh { position: absolute; }
+        #t { position: absolute; left: 90px; top: 1540px; font-size: 58px; font-weight: 700; color: #3b2f2a; }
+      </style>
+      <div id="root" data-composition-id="mg-s6" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div>
+          <div class="sh" id="s0" style="left:160px;top:520px;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg,#ffb4a2,#e5989b)"></div>
+          <div class="sh" id="s1" style="left:460px;top:760px;width:460px;height:460px;border-radius:120px;background:linear-gradient(160deg,#9bd0c5,#6fb3a8)"></div>
+          <div class="sh" id="s2" style="left:260px;top:1080px;width:360px;height:180px;border-radius:180px 180px 0 0;background:linear-gradient(#f6c177,#e9a860)"></div>
+          <div class="sh" id="s3" style="left:700px;top:560px;width:120px;height:120px;border-radius:50%;background:#3b2f2a"></div>
+          <div class="sk-sans" id="t">tumbuh pelan, tapi pasti</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s6';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 3, update: (t) => {
+            [0, 1, 2, 3].forEach((i) => { const u = M.eo(M.clamp((t - 0.1 - i * 0.25) / 0.9)); $('s' + i).style.transform = `scale(${(0.6 + 0.4 * u).toFixed(4)}) rotate(${((1 - u) * (i % 2 ? 20 : -20)).toFixed(2)}deg)`; $('s' + i).style.opacity = u.toFixed(3); });
+            SK.enter($('t'), t - 1.4, 'rise');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: The Economist chart style — a thin, tidy line chart with one red accent. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #f7f7f2; }
+        #rule { position: absolute; left: 90px; top: 420px; width: 120px; height: 14px; background: #d42a1e; }
+        #t { position: absolute; left: 90px; top: 460px; font-size: 64px; font-weight: 700; color: #111; }
+        #s { position: absolute; left: 90px; top: 545px; font-size: 34px; color: #555; }
+        #ch { position: absolute; left: 0; top: 0; }
+        #src { position: absolute; left: 90px; top: 1420px; font-size: 26px; color: #777; }
+      </style>
+      <div id="root" data-composition-id="mg-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-mg">
+          <div id="bg"></div><div id="rule"></div>
+          <div class="sk-serif" id="t">Pesanan online</div>
+          <div class="sk-sans" id="s">pesanan per minggu, ilustrasi</div>
+          <svg class="sk-full" id="ch" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="sk-sans" id="src">Sumber: contoh karangan</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'mg-s4';
+          const $ = SK.finder(ID);
+          const X = (i) => 110 + i * 78, Y = (v) => 1340 - v * 6.2;
+          const V = [18, 22, 21, 30, 34, 33, 45, 52, 60, 58, 75, 96];
+          const grid = [0, 25, 50, 75, 100].map((v) => `<line x1="90" x2="990" y1="${Y(v)}" y2="${Y(v)}" stroke="#d6d6d0" stroke-width="2"/><text x="990" y="${Y(v) - 10}" text-anchor="end" font-size="26" fill="#777" font-family="sans-serif">${v}</text>`).join('');
+          const d = V.map((v, i) => `${i ? 'L' : 'M'}${X(i)} ${Y(v).toFixed(1)}`).join(' ');
+          $('ch').innerHTML = grid + `<path id="ln" d="${d}" fill="none" stroke="#1f5c99" stroke-width="7" stroke-linejoin="round"/><circle id="dot" cx="${X(11)}" cy="${Y(96)}" r="14" fill="#d42a1e"/>`;
+          SK.clip(ID, { T: 3, update: (t) => { SK.draw($('ln'), M.eo(M.clamp((t - 0.2) / 1.8))); $('dot').style.opacity = t >= 2.0 ? '1' : '0'; } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
