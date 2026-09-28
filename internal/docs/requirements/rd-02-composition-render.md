@@ -134,6 +134,33 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-38** (Ubiquitous) — Setiap file yang dirujuk contoh di
   `docs/agents/references/style-examples/` shall ter-track di git.
 
+## Craft-kit
+
+- **RD-02-39** (Ubiquitous) — The craft-kit shall produce, for every recipe,
+  `CK.at` values equal to the values GSAP renders from `CK.add` at the same local
+  time, within 0,01 (px, derajat, rasio) at 30 fps samples.
+- **RD-02-40** (Ubiquitous) — The craft-kit shall end every non-exit recipe in
+  the final state listed in `docs/agents/references/motion-craft.md`, within 0,001.
+- **RD-02-41** (Event-driven) — When `exit` runs, the craft-kit shall keep
+  opacity ≥ 0,5 until the element has travelled at least 80% of `dist` in the
+  `dir` direction.
+- **RD-02-42** (Ubiquitous) — The craft-kit shall return identical `CK.sample`
+  output for identical `(name, t, opts)` across calls and loads, and shall not
+  read clocks or `Math.random`.
+- **RD-02-43** (Unwanted) — If a recipe name, `dir`, or clip `shape` is unknown,
+  then the craft-kit shall throw `craft-kit: unknown recipe|dir|clip shape "<x>"`.
+- **RD-02-44** (Unwanted) — If `craft-kit.js` loads before GSAP, then it shall
+  throw `craft-kit: load gsap before craft-kit.js`.
+- **RD-02-45** (Optional) — Where `opts.stagger` is set with N targets, the
+  craft-kit shall start target *i* exactly `i × stagger` seconds after target 0
+  in both modes.
+- **RD-02-46** (Ubiquitous) — The craft examples host
+  (`docs/agents/references/craft-examples/`) shall pass `lint`, `validate`, and
+  snapshot rendering with one clip per recipe.
+- **RD-02-47** (Event-driven) — When `CK.add` places a recipe at time 0, or places
+  an entrance recipe at any time, the craft-kit shall render that recipe's first
+  frame at frame 0, including after seeking back to 0.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system

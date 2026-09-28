@@ -1,6 +1,6 @@
 # Craft-kit (koreografi motion ala NullMotion) — Design
 
-Status: approved (brainstorming 2026-09-28), belum diimplementasi
+Status: approved (brainstorming 2026-09-28), implementasi: docs/superpowers/plans/2026-09-28-craft-kit.md
 Date: 2026-09-28
 Dibangun di atas: HyperFrames (ADR-0001), motion-kit (ADR-0009), style-kit
 (ADR-0012). Tidak menggantikan keduanya.
@@ -103,10 +103,13 @@ diterapkan sekali di awal.
   `craft-kit: unknown recipe "<name>"`.
 - `CK.sample(name, t, opts)` — objek nilai properti pada waktu lokal `t`
   (sebelum 0 = nilai awal, setelah `duration` = nilai akhir). Murni, untuk tes.
-- `CK.add(tl, targets, name, at, opts)` — menulis resep ke timeline GSAP:
-  `tl.set(target, {...set, ...nilaiAwal}, at)` lalu satu `tl.to` per segmen
-  dengan `ease` segmen itu. `targets` bisa elemen, selector, atau array;
-  `opts.stagger` (detik) menggeser tiap target berikutnya. Mengembalikan `tl`.
+- `CK.add(tl, targets, name, at, opts)` — menulis resep ke timeline GSAP: frame
+  pertama lewat `tl.set` di `at`, lalu satu `tl.fromTo` eksplisit per segmen
+  (`immediateRender: false`, ease segmen itu; dua keyframe dengan waktu sama =
+  `tl.set`). Resep entrance, dan resep apa pun di posisi 0, juga memasang frame
+  pertamanya di posisi 0 dengan `immediateRender: true` agar frame 0 benar
+  (RD-02-47). `targets` bisa elemen, selector, atau array; `opts.stagger`
+  (detik) menggeser tiap target berikutnya. Mengembalikan `tl`.
 - `CK.at(targets, name, t, opts)` — untuk `update(t)`: mengambil sampel pada
   `t - i*stagger` per target dan menerapkannya dengan `gsap.set`.
 - `CK.duration(name, opts)` — panjang resep (detik), termasuk stagger bila
@@ -172,8 +175,10 @@ SK.clip(id, { T: 3, update: t => {
 }});
 ```
 
-Proyek per video menyalin `vendor/craft-kit` hanya bila dipakai (lihat
-`hyperframes-assembly.md`); template `dena-video` tidak memuatnya secara default.
+Proyek per video sudah menautkan `vendor/` repo (`videos/<slug>/vendor →
+../../vendor`), jadi kit tersedia tanpa disalin; template `dena-video` tidak
+memuatnya secara default — klip yang memakainya menambah dua baris `<script>`/`<link>`
+di `index.html` video (lihat `motion-craft.md`).
 
 ## Acceptance criteria (EARS, ditambahkan ke RD-02 bagian "Craft-kit")
 
@@ -195,6 +200,9 @@ Proyek per video menyalin `vendor/craft-kit` hanya bila dipakai (lihat
   start target *i* exactly `i × stagger` seconds after target 0 in both modes.
 - **RD-02-46** — The craft examples host shall pass `lint`, `validate`, and
   snapshot rendering with one clip per recipe.
+- **RD-02-47** — When `CK.add` places a recipe at time 0, or places an entrance
+  recipe at any time, the craft-kit shall render that recipe's first frame at
+  frame 0, including after seeking back to 0.
 
 ## Contoh
 

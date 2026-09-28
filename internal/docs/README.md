@@ -65,22 +65,23 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 41. [adr/0018-moodboard-studies.md](adr/0018-moodboard-studies.md) - Moodboard per gaya: 42 studi teknik buatan sendiri + sheet per gaya; still asli hanya di `moodboard/local/` (gitignored).
 42. [adr/0019-story-decides-hook-length.md](adr/0019-story-decides-hook-length.md) - Panjang hook diputuskan Story (`hook_end`), bukan dikunci 3 detik; jendela hook dipakai hook card dan R4.
 43. [adr/0020-studio-web-ui.md](adr/0020-studio-web-ui.md) - Studio: web UI lokal tanpa dependency (localhost + Tailscale), sesi agen tmux + terminal xterm.js, cascade delete, publish dari UI.
+44. [adr/0021-craft-kit-choreography.md](adr/0021-craft-kit-choreography.md) - Koreografi motion ala NullMotion lewat `vendor/craft-kit/` (resep data keyframe, `CK.add` GSAP + `CK.at` update(t)); opsional, reference `motion-craft.md`.
 
 ### Design System & Frontend
-44. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-45. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+45. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+46. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-46. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-47. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-48. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-49. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-50. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-51. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+47. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+48. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+49. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+50. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+51. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+52. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-52. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-53. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+53. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+54. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
