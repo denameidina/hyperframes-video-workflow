@@ -11,6 +11,9 @@ import { deletePlan, deleteRawCascade, linkedProjects, listRaw, projectRaw, rawP
 import { EventEmitter } from 'node:events';
 import { Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
 import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
+import { createServer } from 'node:http';
+import { createApp } from './studio/app.mjs';
+import { parseTailscaleStatus } from './studio.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -289,4 +292,100 @@ test('Terminals relays data, writes input, and kills the process group on close'
   assert.deepEqual(kills, [[5000, 'SIGTERM'], [5001, 'SIGTERM']]);
   assert.throws(() => t.write('viewer-0001', 'x'), { status: 404 });
   assert.equal(VIEWER_RE.test('bad id'), false);
+});
+
+async function startApp(root, overrides = {}) {
+  const fake = fakeRun({
+    'list-panes': { code: 0, stdout: 'studio-vid-b\t0\t0\tclaude\topus\thigh\tb.mov\t1\n', stderr: '' },
+    'has-session': { code: 1, stdout: '', stderr: '' },
+  });
+  const server = createServer();
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const { port } = server.address();
+  const base = `http://127.0.0.1:${port}`;
+  server.on('request', createApp({
+    root,
+    env: {},
+    hosts: allowedHosts({ addresses: ['127.0.0.1'], port }),
+    token: '',
+    tools: { tmux: true, claude: true, codex: true, ffprobe: true },
+    codex: { model: 'gpt-6-sol', effort: 'xhigh' },
+    run: fake.run,
+    terminals: new Terminals({ spawnImpl: () => fakeChild(), killImpl: () => {} }),
+    publisher: new Publisher({ root, env: {}, spawnImpl: () => fakeChild() }),
+    ...overrides,
+  }));
+  const call = async (method, path, body, headers = {}) => {
+    const res = await fetch(base + path, { method, headers: { origin: base, 'content-type': 'application/json', ...headers }, body: body === undefined ? undefined : JSON.stringify(body) });
+    return { status: res.status, body: await res.json().catch(() => null), headers: res.headers };
+  };
+  return { server, call, calls: fake.calls, base };
+}
+
+test('app lists raw and blocks cross-origin mutations', async (t) => {
+  const root = studioRoot();
+  const { server, call } = await startApp(root);
+  t.after(() => server.close());
+  const raw = await call('GET', '/api/raw');
+  assert.equal(raw.status, 200);
+  assert.deepEqual(raw.body.map((r) => r.name), ['a.MP4', 'b.mov']);
+  assert.equal((await call('DELETE', '/api/raw/a.MP4', undefined, { origin: 'http://evil.example' })).status, 403);
+  assert.equal(existsSync(join(root, 'raw/a.MP4')), true);
+  assert.equal((await call('GET', '/api/nope')).status, 404);
+});
+
+test('app edit-plan and session start', async (t) => {
+  const root = studioRoot();
+  const { server, call, calls } = await startApp(root);
+  t.after(() => server.close());
+  assert.deepEqual((await call('GET', '/api/raw/b.mov/edit-plan')).body, { mode: 'open', slug: 'vid-b' });
+  assert.deepEqual((await call('GET', '/api/raw/a.MP4/edit-plan')).body, { mode: 'continue', slug: 'vid-a' });
+  writeFileSync(join(root, 'raw/c.mp4'), 'C');
+  assert.deepEqual((await call('GET', '/api/raw/c.mp4/edit-plan')).body, { mode: 'new', slug: 'c' });
+  assert.equal((await call('POST', '/api/sessions', { raw: 'c.mp4', slug: 'vid-a', runtime: 'claude', model: 'opus', effort: 'high' })).status, 409);
+  assert.equal((await call('POST', '/api/sessions', { raw: 'c.mp4', slug: 'Bad', runtime: 'claude', model: 'opus', effort: 'high' })).status, 400);
+  const ok = await call('POST', '/api/sessions', { raw: 'c.mp4', slug: 'c', runtime: 'claude', model: 'opus', effort: 'high', notes: 'fokus hook' });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.body.slug, 'c');
+  assert.match(readFileSync(join(root, '.studio/prompts/c.md'), 'utf8'), /^Edit raw video `raw\/c\.mp4`[\s\S]*fokus hook/);
+  assert.ok(calls.some((c) => c[1] === 'new-session' && c.includes('studio-c')));
+});
+
+test('app cascade delete kills linked sessions and removes projects', async (t) => {
+  const root = studioRoot();
+  const { server, call, calls } = await startApp(root);
+  t.after(() => server.close());
+  assert.deepEqual((await call('GET', '/api/raw/b.mov/delete-plan')).body, { raw: 'b.mov', projects: [{ slug: 'vid-b', renders: [] }], sessions: ['vid-b'] });
+  assert.equal((await call('DELETE', '/api/raw/b.mov')).status, 200);
+  assert.ok(calls.some((c) => c.join(' ') === 'tmux kill-session -t =studio-vid-b'));
+  assert.equal(existsSync(join(root, 'raw/b.mov')), false);
+  assert.equal(existsSync(join(root, 'videos/vid-b')), false);
+  assert.equal(existsSync(join(root, 'videos/vid-a')), true);
+});
+
+test('app token gate', async (t) => {
+  const root = studioRoot();
+  const { server, call } = await startApp(root, { token: 's3cret' });
+  t.after(() => server.close());
+  assert.equal((await call('GET', '/api/raw')).status, 401);
+  assert.equal((await call('POST', '/login', { token: 'wrong' })).status, 401);
+  const login = await call('POST', '/login', { token: 's3cret' });
+  assert.equal(login.status, 200);
+  const cookie = login.headers.get('set-cookie').split(';')[0];
+  assert.equal((await call('GET', '/api/raw', undefined, { cookie })).status, 200);
+});
+
+test('app publish rejects a second run for the same slug', async (t) => {
+  const root = studioRoot();
+  const { server, call } = await startApp(root);
+  t.after(() => server.close());
+  assert.equal((await call('POST', '/api/results/vid-a/publish', { file: 'vid-a.mp4' })).status, 200);
+  assert.equal((await call('POST', '/api/results/vid-a/publish', { file: 'vid-a.mp4' })).status, 409);
+});
+
+test('parseTailscaleStatus needs a running backend', () => {
+  const self = { TailscaleIPs: ['100.76.52.99', 'fd7a::1'], DNSName: 'mac.tail.ts.net.' };
+  assert.deepEqual(parseTailscaleStatus(JSON.stringify({ BackendState: 'Running', Self: self })), { ip: '100.76.52.99', names: ['mac.tail.ts.net', 'mac'] });
+  assert.equal(parseTailscaleStatus(JSON.stringify({ BackendState: 'Stopped', Self: self })), null);
+  assert.equal(parseTailscaleStatus(''), null);
 });

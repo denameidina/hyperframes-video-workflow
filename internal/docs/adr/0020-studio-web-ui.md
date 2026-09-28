@@ -14,7 +14,9 @@ terminalnya, melihat render, dan publish ke Repliz.
 
 - `npm run studio` menjalankan `scripts/studio.mjs`: server `node:http` bawaan,
   tanpa dependency npm (ADR-0007 tetap berlaku).
-- Listen hanya di `127.0.0.1` dan IPv4 Tailscale; port default 4777. Setiap
+- Listen hanya di `127.0.0.1` dan IPv4 Tailscale (hanya bila `tailscale status`
+  melaporkan `BackendState: Running`; bila bind gagal, Studio tetap jalan di
+  localhost); port default 4777. Setiap
   request dicek `Host`; request mutasi wajib `Origin` yang sama. `STUDIO_TOKEN`
   opsional mengaktifkan login cookie.
 - State hanya filesystem (`raw/`, `videos/<slug>/`) dan tmux: sesi

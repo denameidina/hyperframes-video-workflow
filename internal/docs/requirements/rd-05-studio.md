@@ -6,8 +6,9 @@ Domain: web UI lokal untuk raw video, sesi agen tmux, dan publish. Owner:
 `scripts/studio.mjs`, `scripts/studio/`. Keputusan:
 [ADR-0020](../adr/0020-studio-web-ui.md).
 
-- **RD-05-01** (Ubiquitous) — Studio shall listen only on `127.0.0.1` and the
-  host's Tailscale IPv4 address.
+- **RD-05-01** (Ubiquitous) — Studio shall listen only on `127.0.0.1` and, while
+  Tailscale reports `BackendState: Running` at startup, the host's Tailscale
+  IPv4 address.
 - **RD-05-02** (Unwanted) — If a request's `Host` is not a listen address, or a
   mutating request's `Origin` does not match, then Studio shall reject it with 403.
 - **RD-05-03** (Optional) — Where `STUDIO_TOKEN` is set, Studio shall require a
