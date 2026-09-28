@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: the South Park pilot (1997) — plain construction-paper shapes with hard edges and a swapped mouth. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #6cb6e8; }
+        #hill { position: absolute; left: -100px; top: 1300px; width: 1300px; height: 900px; border-radius: 50% 50% 0 0; background: #6ab04c; }
+        .p { position: absolute; box-shadow: 3px 4px 0 rgba(0,0,0,.25); }
+        #t { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 80px; font-weight: 800; color: #fff; text-shadow: 3px 4px 0 rgba(0,0,0,.25); }
+      </style>
+      <div id="root" data-composition-id="sm-s3" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div><div id="hill"></div>
+          <div class="sk-hand" id="t">"stok gue habis lagi"</div>
+          <div id="kid">
+            <div class="p" style="left:390px;top:1300px;width:300px;height:280px;border-radius:40px 40px 10px 10px;background:#f39c12"></div>
+            <div class="p" style="left:340px;top:840px;width:400px;height:420px;border-radius:50%;background:#f5cba7"></div>
+            <div class="p" style="left:350px;top:815px;width:380px;height:130px;border-radius:190px 190px 60px 60px;background:#3b2a20"></div>
+            <div class="p" style="left:420px;top:1010px;width:110px;height:120px;border-radius:50%;background:#fff"></div>
+            <div class="p" style="left:550px;top:1010px;width:110px;height:120px;border-radius:50%;background:#fff"></div>
+            <div class="p" style="left:465px;top:1060px;width:26px;height:26px;border-radius:50%;background:#111"></div>
+            <div class="p" style="left:590px;top:1060px;width:26px;height:26px;border-radius:50%;background:#111"></div>
+            <div class="p" id="mouth" style="left:490px;top:1180px;width:100px;height:26px;border-radius:13px;background:#6e2c00"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s3';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 3, update: (t) => {
+            SK.piece($('kid'), { x: 0, y: SK.cycle(t, 4) % 2 ? -6 : 0 }, 721, t, { amp: 1 });
+            $('mouth').style.height = SK.cycle(t, 2) ? '44px' : '22px';
+            SK.enter($('t'), t - 0.4, 'fade');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

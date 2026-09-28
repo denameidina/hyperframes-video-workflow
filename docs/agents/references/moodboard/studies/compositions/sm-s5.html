@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Jan Lenica, Labirynt (1962) — bold linocut-like black shapes, hatching, and a single red. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #efe6d2; }
+        #hatch { position: absolute; left: 90px; top: 1340px; width: 900px; height: 360px; background: repeating-linear-gradient(-35deg, #111 0 10px, transparent 10px 26px); }
+        #sun { position: absolute; left: 560px; top: 380px; width: 360px; height: 360px; border-radius: 50%; background: #c0392b; }
+        .b { position: absolute; background: #111; }
+        #t { position: absolute; left: 90px; top: 1760px; font-size: 56px; font-weight: 800; letter-spacing: .1em; color: #111; }
+      </style>
+      <div id="root" data-composition-id="sm-s5" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div><div id="sun"></div><div id="hatch"></div>
+          <div class="b" style="left:150px;top:620px;width:120px;height:720px"></div>
+          <div class="b" style="left:150px;top:520px;width:420px;height:120px;border-radius:0 60px 60px 0"></div>
+          <div class="b" id="eye" style="left:640px;top:760px;width:260px;height:260px;border-radius:50%;background:#111"></div>
+          <div class="b" style="left:700px;top:820px;width:140px;height:140px;border-radius:50%;background:#efe6d2"></div>
+          <div class="b" style="left:740px;top:860px;width:60px;height:60px;border-radius:50%;background:#c0392b"></div>
+          <div class="b" style="left:340px;top:1060px;width:560px;height:90px"></div>
+          <div class="sk-display" id="t">DIAWASI ANGKA</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s5';
+          const $ = SK.finder(ID);
+          SK.clip(ID, { T: 3, update: (t) => { $('sun').style.transform = `translateY(${(-60 + 60 * M.eo(M.clamp(t / 2))).toFixed(1)}px)`; SK.enter($('t'), t - 1, 'fade'); } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

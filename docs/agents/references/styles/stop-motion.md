@@ -91,6 +91,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Grounds | `texture.cardboard`, `texture.wood-desk`, `texture.kraft` | `../asset-catalog/sheets/texture-1.webp`, `../asset-catalog/sheets/texture-2.webp` |
 | Torn edges | `frame.torn-all`, `frame.torn-rough` | `../asset-catalog/sheets/frame-1.webp` |
 | Labels | `pict.coins`, `font.patrick-hand`, `font.archivo-black` | `../asset-catalog/sheets/pictogram.webp`, `../asset-catalog/sheets/font.webp` |
+| Moodboard: six technique studies of the references (look first, then pick a direction) | `sm-s1` … `sm-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/stop-motion.webp` |
 
 ## Timing
 
@@ -142,6 +143,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   through glass planes.
 - 9:16: a black silhouette of the concept against one tinted panel; its jointed
   limb moves on the stressed verb (`hinge-limb`).
+- Study: moodboard `sm-s1` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R2 — Terry Gilliam, *Monty Python's Flying Circus* animations (1969–74)
 - Source: https://www.openculture.com/2014/07/terry-gilliam-reveals-the-secrets-of-monty-python-animations.html and
@@ -151,6 +153,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   sudden moves are easy — build on snaps.
 - 9:16: a cut-out with a hinged jaw that flaps on the quoted words, then one
   sudden snap on the punchline.
+- Study: moodboard `sm-s2` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R3 — *South Park* pilot, "Cartman Gets an Anal Probe" (1997)
 - Source: https://en.wikipedia.org/wiki/Cartman_Gets_an_Anal_Probe
@@ -158,6 +161,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   pre-recorded dialogue; only the speaker moves; backlit holes for stars.
 - 9:16: lock the words first, swap mouth drawings per step while the quote runs,
   keep everything else still (`replacement-face`).
+- Study: moodboard `sm-s3` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R4 — Yuri Norstein, *Hedgehog in the Fog* (1975)
 - Source: https://en.wikipedia.org/wiki/Hedgehog_in_the_Fog and
@@ -166,6 +170,7 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   tracing paper lifted toward the camera frame by frame.
 - 9:16: `multiplane-depth` — 3–4 layers and a tissue veil that lifts to reveal the
   key noun or drops to fade a rejected idea.
+- Study: moodboard `sm-s4` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R5 — Smallfilms (Oliver Postgate, Peter Firmin), *Ivor the Engine*
 - Source: https://en.wikipedia.org/wiki/Ivor_the_Engine and
@@ -196,12 +201,14 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
   motion; cut-outs mixed with live action and pixilation.
 - 9:16: a desaturated, tinted collage with a 4–6-step loop behind a static label;
   this leads into the mix-media style (sub-project 2b).
+- Study: moodboard `sm-s5` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R9 — *Charlie and Lola* (Tiger Aspect, 2005–08)
 - Source: https://en.wikipedia.org/wiki/Charlie_and_Lola_(TV_series)
 - Steal: paper cut-outs mixed with fabric, real textures, and photomontage.
 - 9:16: give each piece its own scanned material (kraft, lined, crumpled, sticky
   note); mixed materials read handmade faster than one texture.
+- Study: moodboard `sm-s6` — a self-made study of the technique, on `../moodboard/sheets/stop-motion.webp`
 
 ### R10 — Common Craft, "Twitter in Plain English" (2008)
 - Source: https://en.wikipedia.org/wiki/Common_Craft

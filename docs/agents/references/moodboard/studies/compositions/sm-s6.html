@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Charlie and Lola (Tiger Aspect, 2005–08) — fabric and photo textures with bold crayon lines. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #fff6e8; }
+        #fab { position: absolute; left: 0; top: 1300px; width: 1080px; height: 620px;
+          background: repeating-linear-gradient(0deg, rgba(231,111,81,.35) 0 30px, transparent 30px 60px), repeating-linear-gradient(90deg, rgba(231,111,81,.35) 0 30px, transparent 30px 60px), #fde2cf; }
+        #cr { position: absolute; left: 0; top: 0; }
+        .o { position: absolute; left: 0; top: 0; }
+        #t { position: absolute; left: 110px; top: 330px; font-size: 84px; font-weight: 700; color: #264653; }
+      </style>
+      <div id="root" data-composition-id="sm-s6" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div><div id="fab"></div>
+          <svg class="sk-full" id="cr" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+          <div class="o sk-cut sk-obj-shopping-bag" id="bag" style="width:340px"></div>
+          <div class="o sk-cut sk-obj-coin-stack" id="coin" style="width:240px"></div>
+          <div class="sk-hand" id="t">aku JUAL kue!</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s6';
+          const $ = SK.finder(ID);
+          const r = SK.rng(741);
+          const scrib = (x, y, w, c, s) => `<path d="${Array.from({ length: 9 }, (_, i) => `${i ? 'L' : 'M'}${(x + (i % 2) * w).toFixed(0)} ${(y + i * 14 + r() * 8).toFixed(0)}`).join(' ')}" fill="none" stroke="${c}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>`;
+          $('cr').innerHTML = scrib(120, 520, 820, '#f4a261', 1) + `<path d="M160 720 Q540 600 920 720" fill="none" stroke="#2a9d8f" stroke-width="14" stroke-linecap="round" stroke-dasharray="4 26"/>` + scrib(640, 1120, 280, '#e76f51', 2);
+          SK.clip(ID, { T: 3, update: (t) => {
+            SK.piece($('bag'), { x: 160, y: 900, r: -6 }, 742, t);
+            SK.piece($('coin'), { x: 620, y: 960, r: 8 }, 743, t);
+            SK.enter($('t'), t - 0.3, 'pop');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

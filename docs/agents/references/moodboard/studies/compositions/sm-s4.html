@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Yuri Norstein, Hedgehog in the Fog (1975) — thin tissue fog drifting between paper planes. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: linear-gradient(#27364a, #121a26); }
+        .pl { position: absolute; left: -40px; width: 1160px; }
+        .fog { position: absolute; left: -100px; width: 1300px; height: 700px; filter: blur(24px); }
+        #fig { position: absolute; left: 380px; top: 1000px; }
+        #t { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 60px; color: #d9e2ec; }
+      </style>
+      <div id="root" data-composition-id="sm-s4" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="pl" id="far" style="top:900px;height:1100px;background:#3b4c63"></div>
+          <div class="fog" id="f0" style="top:760px;background:radial-gradient(ellipse at 50% 50%, rgba(226,232,240,.75), rgba(226,232,240,0) 70%)"></div>
+          <div id="fig"></div>
+          <div class="fog" id="f1" style="top:1160px;background:radial-gradient(ellipse at 50% 50%, rgba(226,232,240,.6), rgba(226,232,240,0) 70%)"></div>
+          <div class="pl" id="near" style="top:1480px;height:520px;background:#0e141d"></div>
+          <div class="sk-serif" id="t">tersesat di data sendiri</div>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s4';
+          const $ = SK.finder(ID);
+          $('fig').innerHTML = SK.pict('person', { size: 320, color: '#1b2533' });
+          $('far').style.clipPath = SK.torn(1160, 1100, 731, { edges: 't', amp: 40, step: 60 });
+          $('near').style.clipPath = SK.torn(1160, 520, 732, { edges: 't', amp: 30, step: 40 });
+          SK.clip(ID, { T: 3, update: (t) => {
+            $('f0').style.transform = `translateX(${(-40 + 18 * t).toFixed(1)}px)`;
+            $('f1').style.transform = `translateX(${(50 - 30 * t).toFixed(1)}px)`;
+            $('fig').style.opacity = (0.55 + 0.1 * Math.sin(t * 2)).toFixed(3);
+            SK.enter($('t'), t - 0.3, 'fade');
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

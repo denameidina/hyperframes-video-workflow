@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Terry Gilliam, Monty Python animations (1969–74) — cut photo pieces, flat colour, a giant hand from above. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: #7fb3c9; }
+        #sun { position: absolute; left: 620px; top: 260px; width: 300px; height: 300px; border-radius: 50%; background: #f6c945; }
+        .ph { position: absolute; left: 0; top: 0; background-size: cover; }
+        #hand { position: absolute; left: 0; top: 0; width: 760px; transform-origin: 20% 90%; }
+        #shop { position: absolute; left: 0; top: 0; width: 620px; }
+      </style>
+      <div id="root" data-composition-id="sm-s2" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div><div id="sun"></div>
+          <div class="ph sk-cut" id="p0" style="width:1100px;height:700px;background-image:url(vendor/asset-lib/scenes/city-dusk/plate.webp);background-position:50% 30%"></div>
+          <div class="ph sk-cut" id="p1" style="width:1100px;height:600px;background-image:url(vendor/asset-lib/scenes/street-motor/plate.webp);background-position:50% 80%"></div>
+          <div class="sk-cut sk-obj-warung-front" id="shop"></div>
+          <img class="sk-cut" id="hand" src="vendor/paper-pack/hand-point.png" alt="" />
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s2';
+          const $ = SK.finder(ID);
+          $('p0').style.clipPath = SK.torn(1100, 700, 711, { edges: 'b', amp: 22 });
+          $('p1').style.clipPath = SK.torn(1100, 600, 712, { edges: 't', amp: 22 });
+          const drop = SK.onTwos(M.track(1, [[0.6, 0, [20, 0.6]]]));
+          SK.clip(ID, { T: 3, update: (t) => {
+            SK.piece($('p0'), { x: -10, y: 620, r: -2 }, 713, t);
+            SK.piece($('p1'), { x: -10, y: 1320, r: 1.5 }, 714, t);
+            SK.piece($('shop'), { x: 240, y: 1000, r: 0 }, 715, t);
+            SK.piece($('hand'), { x: 200, y: -420 - 500 * drop(t), r: 205 }, 716, t);
+          } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>

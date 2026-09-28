@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <!-- Study only: Lotte Reiniger, The Adventures of Prince Achmed (1926) — black paper silhouettes against coloured light. Self-made with the kit to show the technique; not a copy of the original work, and the words are invented. -->
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 38%, #ffd37a, #e7864a 45%, #5b2a4e 100%); }
+        .s { position: absolute; color: #0b0b0b; }
+        #ground { position: absolute; left: -40px; top: 1520px; width: 1160px; height: 460px; background: #0b0b0b; }
+        #lace { position: absolute; left: 0; top: 0; }
+      </style>
+      <div id="root" data-composition-id="sm-s1" data-width="1080" data-height="1920" data-duration="3">
+        <div class="sk-stage sk-stop">
+          <div id="bg"></div>
+          <div class="s" id="tree" style="left:-60px;top:760px"></div>
+          <div class="s" id="shop" style="left:430px;top:900px"></div>
+          <div class="s" id="fig" style="left:250px;top:1180px"></div>
+          <div id="ground"></div>
+          <svg class="sk-full" id="lace" viewBox="0 0 1080 1920" width="1080" height="1920"></svg>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const ID = 'sm-s1';
+          const $ = SK.finder(ID);
+          $('tree').innerHTML = SK.pict('tree', { size: 820, color: '#0b0b0b' });
+          $('shop').innerHTML = SK.pict('storefront', { size: 640, color: '#0b0b0b' });
+          $('fig').innerHTML = SK.pict('person', { size: 380, color: '#0b0b0b' });
+          // lace edge along the ground, cut like paper
+          const r = SK.rng(701);
+          $('lace').innerHTML = `<path d="M0 1530 ${Array.from({ length: 36 }, (_, i) => `Q${i * 30 + 15} ${1500 - r() * 30} ${i * 30 + 30} 1530`).join(' ')} V1560 H0Z" fill="#0b0b0b"/>`;
+          SK.clip(ID, { T: 3, update: (t) => { SK.piece($('fig'), { x: -120 + 120 * M.eo(M.clamp((t - 0.3) / 1.6)), y: 0 }, 702, t, { amp: 1 }); } });
+        })();
+      </script>
+    </template>
+  </body>
+</html>
