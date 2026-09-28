@@ -40,3 +40,6 @@ vendor/whisper.cpp
 
 # moodboard: real stills of other people's work stay local (RD-03-59, ADR-0018)
 docs/agents/references/moodboard/local/
+
+# Studio agent prompts (ADR-0020)
+.studio/

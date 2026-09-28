@@ -36,49 +36,51 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 16. [requirements/rd-02-composition-render.md](requirements/rd-02-composition-render.md) - EARS kontrak komposisi HyperFrames + render deterministik.
 17. [requirements/rd-03-video-editing-workflow.md](requirements/rd-03-video-editing-workflow.md) - EARS workflow 4 fase + gate + non-negotiable konten.
 18. [requirements/rd-04-transcription-setup.md](requirements/rd-04-transcription-setup.md) - EARS setup lingkungan + transkripsi whisper lokal.
+19. [requirements/rd-05-studio.md](requirements/rd-05-studio.md) - EARS Studio web UI: bind, guard, upload, cascade delete, sesi tmux, publish.
 
 ### Architecture
-19. [architecture/stack.md](architecture/stack.md) - Stack: Node 22+, HyperFrames npx, GSAP, whisper.cpp, R2/Wrangler, Repliz.
-20. [architecture/data-model.md](architecture/data-model.md) - Semua entitas data & bentuk JSON (receipt, caption-beats, dst.).
-21. [architecture/api-contract.md](architecture/api-contract.md) - Kontrak R2 (Wrangler) + Repliz (3 endpoint) + surface fungsi CLI.
-22. [architecture/nfr.md](architecture/nfr.md) - NFR terukur: determinisme, keamanan, audio/caption, timeout, idempotensi.
+20. [architecture/stack.md](architecture/stack.md) - Stack: Node 22+, HyperFrames npx, GSAP, whisper.cpp, R2/Wrangler, Repliz.
+21. [architecture/data-model.md](architecture/data-model.md) - Semua entitas data & bentuk JSON (receipt, caption-beats, dst.).
+22. [architecture/api-contract.md](architecture/api-contract.md) - Kontrak R2 (Wrangler) + Repliz (3 endpoint) + surface fungsi CLI.
+23. [architecture/nfr.md](architecture/nfr.md) - NFR terukur: determinisme, keamanan, audio/caption, timeout, idempotensi.
 
 ### ADR (accepted, reverse-engineered)
-23. [adr/0001-hyperframes-html-to-video.md](adr/0001-hyperframes-html-to-video.md) - Pilih HyperFrames HTML→video sebagai engine komposisi.
-24. [adr/0002-repliz-r2-publish-via-wrangler.md](adr/0002-repliz-r2-publish-via-wrangler.md) - Publish via R2 (Wrangler) + Repliz, tanpa S3 key.
-25. [adr/0003-approval-gated-publish.md](adr/0003-approval-gated-publish.md) - Publish di-gate flag `--approved`.
-26. [adr/0004-local-whisper-transcription.md](adr/0004-local-whisper-transcription.md) - Transkripsi lokal via whisper.cpp submodule.
-27. [adr/0005-seven-agent-workflow-discipline.md](adr/0005-seven-agent-workflow-discipline.md) - (Superseded oleh 0008) Produksi dibagi 7 peran agent berbasis dokumen.
-28. [adr/0006-idempotent-publish-receipts.md](adr/0006-idempotent-publish-receipts.md) - Idempotensi publish via receipt + publishKey.
-29. [adr/0007-no-local-npm-deps-pinned-npx.md](adr/0007-no-local-npm-deps-pinned-npx.md) - Tanpa deps npm lokal; HyperFrames via npx ter-pin.
-30. [adr/0008-four-phase-workflow.md](adr/0008-four-phase-workflow.md) - Produksi 4 fase (Story, Screen Plan, Build, QA opsional) dengan gate.
-31. [adr/0009-motion-broll-motion-kit.md](adr/0009-motion-broll-motion-kit.md) - Motion b-roll lewat engine motion-kit + sub-composition HyperFrames.
-32. [adr/0010-per-video-hyperframes-projects.md](adr/0010-per-video-hyperframes-projects.md) - Komposisi per video di `videos/<slug>/`; root `index.html` hanya template.
-33. [adr/0011-per-target-publish-idempotency.md](adr/0011-per-target-publish-idempotency.md) - Idempotensi publish per target account (amends 0006); aman menambah platform baru.
-34. [adr/0012-style-broll-style-kit.md](adr/0012-style-broll-style-kit.md) - Style b-roll (broll-text, motion-graphic, whiteboard) lewat style-kit; 7 gaya dalam 3 sub-proyek.
-35. [adr/0013-paper-pack-bitmap-assets.md](adr/0013-paper-pack-bitmap-assets.md) - Paper pack (tekstur CC0 + objek Codex) dan aset bitmap per video; stop-motion + tangan whiteboard.
-36. [adr/0014-vox-mix-media.md](adr/0014-vox-mix-media.md) - VOX (capture/ilustrasi + highlighter, peta) dan mix-media (Dena di atas kolase via `video cutout`).
-37. [adr/0015-parallax-css-3d.md](adr/0015-parallax-css-3d.md) - 2.5D parallax lewat multiplane CSS 3D, `parallax-stage`, dan `video layers`; ketujuh gaya lengkap.
-38. [adr/0016-shared-asset-library.md](adr/0016-shared-asset-library.md) - Pustaka aset bersama `vendor/asset-lib/` (ikon, doodle, kertas, peta, tekstur, scene, font), preset palet/tipografi, dan contact sheet.
-39. [adr/0017-per-style-example-hosts.md](adr/0017-per-style-example-hosts.md) - Satu host contoh per gaya di `style-examples/<gaya>/`, `index.html` + `snapshots.json` dihasilkan dari `examples.json`; tes cakupan pola.
-40. [adr/0018-moodboard-studies.md](adr/0018-moodboard-studies.md) - Moodboard per gaya: 42 studi teknik buatan sendiri + sheet per gaya; still asli hanya di `moodboard/local/` (gitignored).
-41. [adr/0019-story-decides-hook-length.md](adr/0019-story-decides-hook-length.md) - Panjang hook diputuskan Story (`hook_end`), bukan dikunci 3 detik; jendela hook dipakai hook card dan R4.
+24. [adr/0001-hyperframes-html-to-video.md](adr/0001-hyperframes-html-to-video.md) - Pilih HyperFrames HTML→video sebagai engine komposisi.
+25. [adr/0002-repliz-r2-publish-via-wrangler.md](adr/0002-repliz-r2-publish-via-wrangler.md) - Publish via R2 (Wrangler) + Repliz, tanpa S3 key.
+26. [adr/0003-approval-gated-publish.md](adr/0003-approval-gated-publish.md) - Publish di-gate flag `--approved`.
+27. [adr/0004-local-whisper-transcription.md](adr/0004-local-whisper-transcription.md) - Transkripsi lokal via whisper.cpp submodule.
+28. [adr/0005-seven-agent-workflow-discipline.md](adr/0005-seven-agent-workflow-discipline.md) - (Superseded oleh 0008) Produksi dibagi 7 peran agent berbasis dokumen.
+29. [adr/0006-idempotent-publish-receipts.md](adr/0006-idempotent-publish-receipts.md) - Idempotensi publish via receipt + publishKey.
+30. [adr/0007-no-local-npm-deps-pinned-npx.md](adr/0007-no-local-npm-deps-pinned-npx.md) - Tanpa deps npm lokal; HyperFrames via npx ter-pin.
+31. [adr/0008-four-phase-workflow.md](adr/0008-four-phase-workflow.md) - Produksi 4 fase (Story, Screen Plan, Build, QA opsional) dengan gate.
+32. [adr/0009-motion-broll-motion-kit.md](adr/0009-motion-broll-motion-kit.md) - Motion b-roll lewat engine motion-kit + sub-composition HyperFrames.
+33. [adr/0010-per-video-hyperframes-projects.md](adr/0010-per-video-hyperframes-projects.md) - Komposisi per video di `videos/<slug>/`; root `index.html` hanya template.
+34. [adr/0011-per-target-publish-idempotency.md](adr/0011-per-target-publish-idempotency.md) - Idempotensi publish per target account (amends 0006); aman menambah platform baru.
+35. [adr/0012-style-broll-style-kit.md](adr/0012-style-broll-style-kit.md) - Style b-roll (broll-text, motion-graphic, whiteboard) lewat style-kit; 7 gaya dalam 3 sub-proyek.
+36. [adr/0013-paper-pack-bitmap-assets.md](adr/0013-paper-pack-bitmap-assets.md) - Paper pack (tekstur CC0 + objek Codex) dan aset bitmap per video; stop-motion + tangan whiteboard.
+37. [adr/0014-vox-mix-media.md](adr/0014-vox-mix-media.md) - VOX (capture/ilustrasi + highlighter, peta) dan mix-media (Dena di atas kolase via `video cutout`).
+38. [adr/0015-parallax-css-3d.md](adr/0015-parallax-css-3d.md) - 2.5D parallax lewat multiplane CSS 3D, `parallax-stage`, dan `video layers`; ketujuh gaya lengkap.
+39. [adr/0016-shared-asset-library.md](adr/0016-shared-asset-library.md) - Pustaka aset bersama `vendor/asset-lib/` (ikon, doodle, kertas, peta, tekstur, scene, font), preset palet/tipografi, dan contact sheet.
+40. [adr/0017-per-style-example-hosts.md](adr/0017-per-style-example-hosts.md) - Satu host contoh per gaya di `style-examples/<gaya>/`, `index.html` + `snapshots.json` dihasilkan dari `examples.json`; tes cakupan pola.
+41. [adr/0018-moodboard-studies.md](adr/0018-moodboard-studies.md) - Moodboard per gaya: 42 studi teknik buatan sendiri + sheet per gaya; still asli hanya di `moodboard/local/` (gitignored).
+42. [adr/0019-story-decides-hook-length.md](adr/0019-story-decides-hook-length.md) - Panjang hook diputuskan Story (`hook_end`), bukan dikunci 3 detik; jendela hook dipakai hook card dan R4.
+43. [adr/0020-studio-web-ui.md](adr/0020-studio-web-ui.md) - Studio: web UI lokal tanpa dependency (localhost + Tailscale), sesi agen tmux + terminal xterm.js, cascade delete, publish dari UI.
 
 ### Design System & Frontend
-42. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-43. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+44. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+45. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-44. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-45. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-46. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-47. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-48. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-49. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+46. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+47. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+48. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+49. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+50. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+51. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-50. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-51. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+52. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+53. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
@@ -94,7 +96,8 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0019) |
+| Studio web UI (EARS) | [requirements/rd-05-studio](requirements/rd-05-studio.md) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0020) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
