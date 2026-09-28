@@ -99,8 +99,9 @@ unobstructed, use only project-local assets).
 2. **Write caption beats.** Follow `docs/agents/references/captions.md` (caption
    types, mode selection, running word coverage, style, highlights, grouping,
    timing, safe area, language, ASR corrections, hook and CTA caption rules).
-   The hook card uses the exact words of the locked hook for
-   `00:00.00-00:03.00`.
+   The hook card uses the exact words of the locked hook for the hook window
+   `00:00.00-<hook_end>` from `cut-list.json` `primaryHook.outputEnd`; do not
+   shorten or stretch it.
 3. **Write caption artifacts.** Use `docs/agents/references/caption-artifacts.md`
    for `caption-beats.json` (Caption Data Format), `caption-plan.md` (Caption
    Plan Template), and `publish-captions.md` (Platform Publish Caption Rules).
@@ -170,7 +171,7 @@ the matching trigger IDs in the row's `Gate 2 trigger` column (`-` when none):
 | R1 | A number, price, percentage, result, client name, or quote on screen (a Timeline row's On-screen text or a caption beat) that is not verbatim from the transcript and was not given by the user. Digits and words for the same number match (`3 kali` = `tiga kali`); a changed form or unit (`3X`, `300%`) does not |
 | R2 | A screenshot or recording that shows real client or product data, or private information |
 | R3 | A visual that covers Dena's face completely for more than 10 seconds, or covers a personal, emotional, or opinion line |
-| R4 | A visual that covers Dena's face in `00:00.00-00:03.00`, unless `## User Approvals` in `creative-brief.md` allows that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
+| R4 | A visual that covers Dena's face in the hook window `00:00.00-<hook_end>`, unless `## User Approvals` in `creative-brief.md` allows that hook visual (for example a manifesto background still). Hook card, captions, progress bar, punch zoom, and flash do not cover the face and do not trigger R4 |
 | R5 | A CTA that implies a promise ("nanti gue share/kirim/bahas…") without the user's explicit approval |
 | R6 | Generated image or video that depicts a real person or a real brand, or an illustrative (VOX) document that imitates a real outlet's masthead, layout, or logo |
 

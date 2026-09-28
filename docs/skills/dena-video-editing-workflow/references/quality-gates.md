@@ -8,7 +8,7 @@ The edit must:
 
 - use Indonesian by default
 - preserve Dena's natural voice: `gue`, `lo`, direct, practical, founder/developer tone
-- create a strong first `0-3s` hook
+- create a strong verbatim hook that opens at `00:00.00` and ends where its decision lands (`hook_end`, decided by Story)
 - avoid generic motivational language
 - avoid random sticker/meme clutter
 - use reference videos as mechanics, not identity copying

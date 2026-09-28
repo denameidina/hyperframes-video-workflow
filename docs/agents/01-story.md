@@ -6,7 +6,7 @@ The Story phase decides what the video should become and produces the base cut
 that every later phase builds on.
 
 It inspects the source, transcribes it, chooses the angle, locks a verbatim
-three-second hook from the transcript, removes dead air and redundant speech,
+hook from the transcript (and decides where it ends), removes dead air and redundant speech,
 applies the default `1.2x` speed, and writes `processed.mp4` with a cut plan that
 later phases can trust.
 
@@ -100,10 +100,15 @@ A bad cut creates:
    Choose content lane, premise, audience, emotional promise, retention spine,
    format, visual grammar, visual direction notes, and CTA from the transcript.
 4. **Lock the hook.** Read `docs/agents/references/hook-and-angle.md` sections
-   Three-Second Transcript Hook and Hook Extraction. Rank at least three hook
-   candidates and lock one verbatim excerpt for processed output
-   `00:00.00-00:03.00`. If no intact phrase fits, stop and ask the user; never
-   fabricate or splice speech.
+   Transcript Hook and Hook Extraction. Rank at least three hook candidates and
+   lock one verbatim excerpt starting at processed output `00:00.00`. You decide
+   `hook_end`: the point where the hook's decision (tension, peak problem,
+   contradiction, curiosity gap) lands. There is no fixed 3-second cap; take the
+   shortest intact span that carries that decision, and write why it needs that
+   length. The hook must pass the stop-scroll test (opening words grab muted)
+   and the watch-to-end test (it opens a loop whose payoff lands late in the
+   cut); record the open loop and payoff. If no intact phrase carries it, stop
+   and ask the user; never fabricate or splice speech.
 5. **Write the brief.** Use the Output Template in
    `docs/agents/references/hook-and-angle.md` to write `creative-brief.md`,
    including Workflow Settings `visual_density` and `gate_cut`. Check it against
@@ -125,7 +130,7 @@ A bad cut creates:
 
 All in `videos/<slug>/`:
 
-- `creative-brief.md` (hook `locked-from-transcript`, `visual_density`, `gate_cut`)
+- `creative-brief.md` (hook `locked-from-transcript` with `hook_end`, `visual_density`, `gate_cut`)
 - `metadata.json`
 - `transcript.json` (raw timeline)
 - `processed-transcript.json` (processed timeline)
@@ -144,7 +149,9 @@ Append to `edit-decision-notes.md`:
 ```md
 ## Cut Summary
 
-- Hook (output 00:00.00-00:03.00): "<exact spoken quote>" (source <mm:ss.s-mm:ss.s>)
+- Hook (output 00:00.00-<hook_end>): "<exact spoken quote>" (source <mm:ss.s-mm:ss.s>)
+- Hook length: <why the hook ends here: the decision it completes>
+- Open loop -> payoff: <question the hook leaves open> -> <output mm:ss.s, line that closes it>
 - Duration: <raw mm:ss> -> <processed mm:ss> at <speed>x
 - Removed:
   - <source range>: <what was removed> - <why>
@@ -181,8 +188,8 @@ visual work:
 - processed-timeline word-level transcript path (`processed-transcript.json`)
 - cut-list path
 - three hook candidate timestamps
-- locked three-second hook quote, source timing, output timing, transition, and
-  original-occurrence handling
+- locked hook quote, source timing, output timing (`hook_end`), length reason,
+  transition, and original-occurrence handling
 - key quote timestamps
 - sections where captions need extra care
 - sections where visuals should support meaning

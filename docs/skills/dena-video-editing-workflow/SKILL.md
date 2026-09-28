@@ -29,7 +29,7 @@ For validation, QA, and render gates, read `references/quality-gates.md`.
 
 | User need | Phase |
 | --- | --- |
-| New raw/reference video, angle, hook, format, style adaptation, transcript, three-second spoken hook, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
+| New raw/reference video, angle, hook, format, style adaptation, transcript, verbatim spoken hook and its length, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
 | Captions, subtitles, verbatim hook card, phrase grouping, ASR correction, CTA text, publish captions | `docs/agents/02-screen-plan.md` (captions step) |
 | Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
 | Capturing/generating asset files, `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
@@ -72,8 +72,9 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Treat reference videos as ingredients, not costumes.
 - Keep Dena positioned as a credible AI systems builder, senior developer, founder/operator.
 - Every edited video opens with a contiguous, verbatim transcript excerpt that
-  carries the core tension or peak problem at `00:00.00-00:03.00`, followed by
-  the explanation; the Story phase documents the source move and the Screen Plan
+  carries the core tension or peak problem at `00:00.00-<hook_end>`, followed by
+  the explanation. The Story phase decides `hook_end` (where the hook's decision
+  lands, no fixed 3-second cap) and documents the source move; the Screen Plan
   phase captions the same words for muted viewing.
 - Default Dena storytelling/talking-head videos require running captions that cover every spoken word surviving the cut, not only highlight phrases.
 - Default processed speed is `1.2x`; any lower speed needs a documented clarity/emotion exception.

@@ -299,7 +299,7 @@ Do not show: names, email, revenue, tokens
 ```md
 Asset: Cinematic operator still
 Purpose: background
-Timestamp: 0-3s
+Timestamp: 0-hook_end
 Content: abstract founder/operator desk, low light, yellow accent, no face
 Style: cinematic but credible
 Required: optional
@@ -385,7 +385,7 @@ replace the generic brief below.
 
 | Time | Line | Purpose | Best real asset | Simple asset option | Imagegen candidate | Decision | Reason |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.0-3.0 | "<hook words>" | reset-attention | none | hook text card | yes | generate | The hook needs a grounded visual plate, and a static text card would feel stiff. |
+| 0.0-hook_end | "<hook words>" | reset-attention | none | hook text card | yes | generate | The hook needs a grounded visual plate, and a static text card would feel stiff. |
 
 ## Timeline
 

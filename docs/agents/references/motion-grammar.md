@@ -148,7 +148,7 @@ Default:
 
 - enter: y `-24 -> 0`, opacity `0 -> 1`
 - duration: `0.2-0.35s`
-- hold through first `2-3s`
+- hold through the hook window (`00:00.00` to `hook_end`)
 - exit before the next major visual beat
 
 Use for first-frame hook cards.
@@ -393,7 +393,7 @@ Create `overlay-timeline.json`.
       "type": "hook-card",
       "track": 5,
       "start": 0.0,
-      "duration": 3.0,
+      "duration": 2.6,
       "contentRef": "caption:hook-primary",
       "assetRef": null,
       "placement": "top-card",

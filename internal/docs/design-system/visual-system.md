@@ -80,7 +80,7 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 ## Motion primitives (default, fase Screen Plan)
 
 - `caption-pop` (scale 0.96→1, opacity 0→1, 0.12–0.2s) — dipakai di loop caption.
-- `hook-card-snap` (y −24→0, 0.2–0.35s, hold 2–3s).
+- `hook-card-snap` (y −24→0, 0.2–0.35s, hold sepanjang jendela hook `00:00.00`–`hook_end`).
 - `proof-card-slide` (0.25–0.45s, track 4).
 - `punch-zoom` base video (scale 1.0→1.04–1.08, 0.2–0.4s).
 - `progress-bar` deterministik. `flash-cut` < 0.12s. `cta-morph` hold 2–4s.

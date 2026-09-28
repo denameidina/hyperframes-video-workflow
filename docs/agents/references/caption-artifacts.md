@@ -87,7 +87,7 @@ Locked transcript quote:
 
 Story phase source timestamp:
 
-Processed timing: <00:00.00-00:03.00 maximum>
+Processed timing: <00:00.00-hook_end from cut-list.json>
 
 Verbatim match: <pass|blocked>
 
@@ -219,7 +219,7 @@ Before handing off:
 - Yellow highlights mean something.
 - Hook text works without audio.
 - Hook-card wording matches Story phase's locked transcript quote verbatim and
-  covers every hook word from `00:00.00` through no later than `00:03.00`.
+  covers every hook word from `00:00.00` through `hook_end`.
 - CTA is one clear action.
 - Captions do not contradict the transcript.
 - Uncertain ASR words are marked.

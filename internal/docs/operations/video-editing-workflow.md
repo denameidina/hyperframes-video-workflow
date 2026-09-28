@@ -25,7 +25,8 @@ Audit media (`ffprobe`/`ffmpeg volumedetect`/`silencedetect=noise=-34dB:d=0.35`)
 `viral-character`), hook (`callout|contrast|mistake|proof|mission|plot-twist`)
 yang **selalu dikunci dari transkrip** → cut berbasis amplitudo → **kecepatan
 default 1.2x** (1.12–1.18x bila sumber cepat; lebih rendah wajib
-didokumentasikan). Hook verbatim dipindah ke output `00:00.00-00:03.00`, kemunculan
+didokumentasikan). Hook verbatim dipindah ke output `00:00.00-<hook_end>` (panjang
+diputuskan Story sampai keputusan hook tuntas, ADR-0019), kemunculan
 aslinya dihapus kecuali callback terdokumentasi. Base video 9:16 1080x1920 30fps
 tanpa caption/overlay burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true
 peak −1.5..−1.0 dBFS. **Output:** `creative-brief.md` (+ `visual_density`,

@@ -39,7 +39,7 @@ Top safe-area hook text.
 - Uses the same verbatim words as Story phase's locked transcript hook; line
   breaks, case, and one highlight may change, but the wording may not.
 - Covers every spoken word in the locked hook and works with sound off.
-- Starts at `00:00.00` and ends no later than `00:03.00`.
+- Starts at `00:00.00` and ends at the hook window end (`hook_end`).
 
 ### `editorial-title`
 
@@ -311,17 +311,20 @@ If uncertain, mark it in `caption-plan.md` instead of guessing.
 
 ## Hook Caption Rules
 
-The first three seconds need explicit screen text derived from Story phase's
-locked spoken hook. Use the exact surviving words so the audio hook and muted
+The hook window (`00:00.00` to Story's `hook_end`) needs explicit screen text
+derived from Story phase's locked spoken hook. Use the exact surviving words so the audio hook and muted
 hook make the same claim. You may change capitalization, line breaks, and
 highlighting for readability; do not paraphrase, add stakes, or reveal an
 answer that is absent from the spoken excerpt.
 
 The hook card must:
 
-- Start at `00:00.00` and end no later than `00:03.00`.
+- Start at `00:00.00` and end at `hook_end` (`cut-list.json`
+  `primaryHook.outputEnd`).
 - Cover every spoken word in the hook through `sourceWords`.
-- Remain readable in 2-4 lines without audio.
+- Remain readable in 2-4 lines without audio. When a longer hook does not fit
+  2-4 lines, split it into sequential hook-card pages timed to the spoken words;
+  the first page carries the opening words at `00:00.00`.
 - Hand off a `blocked` status to Story phase if the locked timing or wording is
   missing; do not invent replacement copy.
 

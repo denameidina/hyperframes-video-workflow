@@ -40,7 +40,8 @@ Decide per clip and write the reason in the brief.
 
 Rules:
 
-- No cutaway or split that covers Dena's face in `00:00.00–00:03.00` unless
+- No cutaway or split that covers Dena's face in the hook window
+  (`00:00.00–hook_end`) unless
   `## User Approvals` in `creative-brief.md` allows it (Gate 2 R4).
 - Leave at least 2 s of face between two cutaways.
 - A cutaway longer than 10 s trips Gate 2 R3.

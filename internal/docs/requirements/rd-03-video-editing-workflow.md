@@ -28,7 +28,7 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   mentranskripsi sumber sebelum memilih hook.
 - **RD-03-06** (State-driven) — While `gate_cut` bernilai `off` dan user tidak
   meminta review cut, fase Story shall menulis blok `## Cut Summary` di
-  `edit-decision-notes.md` (kutipan hook `00:00.00-00:03.00`, durasi awal →
+  `edit-decision-notes.md` (kutipan hook `00:00.00-<hook_end>`, durasi awal →
   akhir, bagian yang dibuang + alasan) lalu lanjut ke Screen Plan.
 - **RD-03-07** (Optional) — Where `gate_cut` bernilai `on` atau user meminta
   review cut, fase Story shall berhenti dan menunjukkan `processed.mp4` beserta
@@ -95,14 +95,19 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-23** (Ubiquitous) — Temuan review user atau QA shall dirutekan ke fase
   pemilik (Story, Screen Plan, atau Build), bukan menjadi "polish" kabur.
 
-## Hook transkrip tiga detik
+## Hook transkrip
 
 - **RD-03-24** (Event-driven) — When transkrip lengkap tersedia, fase Story shall
   memilih tepat satu potongan ucapan verbatim yang memuat intisari, puncak
-  masalah, kontradiksi, atau curiosity gap sebagai hook utama.
+  masalah, kontradiksi, atau curiosity gap sebagai hook utama, yang lolos uji
+  stop-scroll (kata pembuka menahan penonton, juga tanpa audio) dan uji tonton
+  sampai akhir (membuka loop yang baru dijawab di akhir video).
 - **RD-03-25** (Event-driven) — When hook utama dipindahkan ke awal, fase Story
-  shall menempatkan awal potongan pada output `00:00.00`, mengakhirinya paling
-  lambat `00:03.00` pada processed timeline, lalu melanjutkan ke penjelasan.
+  shall menempatkan awal potongan pada output `00:00.00`, mengakhirinya pada
+  `hook_end` — titik di processed timeline tempat keputusan hook (tension,
+  puncak masalah, kontradiksi, atau curiosity gap) tuntas — lalu melanjutkan ke
+  penjelasan. Panjang hook tidak dibatasi angka tetap
+  ([ADR-0019](../adr/0019-story-decides-hook-length.md)).
 - **RD-03-26** (Unwanted) — If pemendekan hook diperlukan, then fase Story shall
   hanya membuang jeda atau filler tanpa mengubah makna; fase Story shall tidak
   menyambung kata terpisah untuk membuat klaim yang tidak pernah diucapkan.
@@ -115,10 +120,13 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-29** (Event-driven) — When fase Screen Plan membuat caption hook, fase
   Screen Plan shall memakai kata ucapan yang sama, mencakup setiap kata pada
   hook, dan menayangkannya dalam hook card yang dapat dipahami tanpa audio
-  selama jendela `00:00.00`–`00:03.00`.
-- **RD-03-30** (Unwanted) — If tidak ada potongan ucapan yang muat dalam tiga
-  detik tanpa mengubah makna, then fase Story shall menandai blocker dan meminta
-  keputusan user, bukan mengarang atau memanipulasi ucapan.
+  selama jendela hook `00:00.00`–`hook_end`; bila hook tidak muat 2–4 baris,
+  hook card shall dibagi menjadi beberapa halaman berurutan yang mengikuti
+  ucapan.
+- **RD-03-30** (Unwanted) — If tidak ada potongan ucapan kontigu yang memuat
+  keputusan hook secara utuh tanpa mengubah makna, then fase Story shall
+  menandai blocker dan meminta keputusan user, bukan mengarang atau
+  memanipulasi ucapan.
 
 ## Motion b-roll
 
@@ -225,6 +233,23 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   (`text.paper`, `mg.default`, `mg.mint`), dicatat di `exceptions` dan dikunci
   oleh `scripts/asset-lib.test.mjs`
   ([ADR-0016](../adr/0016-shared-asset-library.md)).
+- **RD-03-61** (Ubiquitous) — Fase Story shall memilih span terpendek yang masih
+  memuat keputusan hook secara utuh (tanpa ikut membuka jawaban/penjelasan) dan
+  mencatat `hook_end` beserta alasan panjangnya di `creative-brief.md`,
+  `edit-decision-notes.md`, dan `cut-list.json` (`primaryHook.outputEnd`,
+  `primaryHook.lengthReason`).
+- **RD-03-62** (Ubiquitous) — Fase Screen Plan dan Build shall memakai jendela
+  hook `00:00.00`–`hook_end` dari Story untuk hook card dan aturan R4, dan shall
+  tidak memotong atau memperpanjang hook ke durasi tetap; perubahan panjang hook
+  dirutekan kembali ke Story.
+- **RD-03-63** (Ubiquitous) — Fase Story shall mencatat open loop hook dan
+  payoff-nya (timestamp output + kalimat) di `creative-brief.md`,
+  `edit-decision-notes.md`, dan `cut-list.json` (`primaryHook.openLoop`,
+  `primaryHook.payoff`), mempertahankan payoff itu di cut, dan tidak
+  menempatkan jawaban loop sebelum payoff.
+- **RD-03-64** (Unwanted) — If jawaban hook sudah jelas dari hook itu sendiri
+  atau terjawab di awal video, then fase Story shall memilih kandidat lain atau
+  menyusun ulang urutan cut, bukan mengunci hook tersebut.
 
 ## Referensi
 

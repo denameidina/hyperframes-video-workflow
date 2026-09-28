@@ -131,7 +131,7 @@ Use these categories:
 - `keep`: essential for story, proof, or emotion.
 - `tighten`: keep meaning but remove pauses/filler.
 - `move-to-hook`: the locked verbatim phrase moves to output `00:00.00` and
-  ends no later than `00:03.00`.
+  ends at the `hook_end` Story decided (no fixed 3-second cap).
 - `cut-silence`: dead air, long pause, empty thinking.
 - `cut-filler`: "eee", "um", "jadi", "kayak", "sebenernya" when not meaningful.
 - `cut-repeat`: repeated phrase or restarted sentence.
@@ -252,6 +252,9 @@ Recommended JSON shape:
     "outputStart": 0.0,
     "outputEnd": 2.6,
     "reason": "peak problem; creates curiosity before the explanation",
+    "lengthReason": "ends on 'belum jelas', where the problem is named",
+    "openLoop": "which part of the workflow is unclear, and how to fix it",
+    "payoff": { "outputStart": 41.2, "text": "jadi yang gue benerin duluan itu alurnya" },
     "transition": "resume the original setup immediately after the hook",
     "originalOccurrence": "removed"
   },
@@ -359,12 +362,15 @@ Use this template for `edit-decision-notes.md`.
    Text:
    Why:
 
-## Three-Second Transcript Hook
+## Transcript Hook
 
 - Status: <locked|blocked>
 - Exact spoken quote:
 - Source start/end:
-- Output start/end: <must begin 00:00.00 and end no later than 00:03.00>
+- Output start/end: <must begin 00:00.00; ends at hook_end>
+- Length reason: <the decision the hook completes at hook_end>
+- Open loop:
+- Payoff: <output timestamp + line; must survive the cut and land late>
 - Why this creates curiosity:
 - Transition into explanation:
 - Original occurrence: <removed|intentional-callback>
@@ -412,8 +418,10 @@ For QA phase:
 A good Transcript/Cut pass:
 
 - Makes the video shorter without losing context.
-- Opens at `00:00.00` with the locked verbatim hook, ends it by `00:03.00`,
-  then continues into the explanation.
+- Opens at `00:00.00` with the locked verbatim hook, ends it at the `hook_end`
+  where its decision lands, then continues into the explanation.
+- Keeps the hook's payoff and holds it late; nothing earlier in the cut
+  answers the hook's open loop.
 - Preserves Dena's natural voice.
 - Removes obvious dead air and repeated starts.
 - Leaves clean timing for captions.

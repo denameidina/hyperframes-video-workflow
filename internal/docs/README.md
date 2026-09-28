@@ -62,22 +62,23 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 38. [adr/0016-shared-asset-library.md](adr/0016-shared-asset-library.md) - Pustaka aset bersama `vendor/asset-lib/` (ikon, doodle, kertas, peta, tekstur, scene, font), preset palet/tipografi, dan contact sheet.
 39. [adr/0017-per-style-example-hosts.md](adr/0017-per-style-example-hosts.md) - Satu host contoh per gaya di `style-examples/<gaya>/`, `index.html` + `snapshots.json` dihasilkan dari `examples.json`; tes cakupan pola.
 40. [adr/0018-moodboard-studies.md](adr/0018-moodboard-studies.md) - Moodboard per gaya: 42 studi teknik buatan sendiri + sheet per gaya; still asli hanya di `moodboard/local/` (gitignored).
+41. [adr/0019-story-decides-hook-length.md](adr/0019-story-decides-hook-length.md) - Panjang hook diputuskan Story (`hook_end`), bukan dikunci 3 detik; jendela hook dipakai hook card dan R4.
 
 ### Design System & Frontend
-41. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-42. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+42. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+43. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-43. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-44. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-45. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-46. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-47. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-48. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+44. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+45. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+46. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+47. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+48. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+49. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-49. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-50. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+50. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+51. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 
@@ -93,7 +94,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Kontrak komposisi/render (EARS) | [requirements/rd-02-composition-render](requirements/rd-02-composition-render.md) |
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0018) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0019) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
@@ -118,10 +119,12 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - **slug** — nama direktori kerja satu video: `videos/<slug>/`.
 - **processed.mp4** — base video hasil cut (9:16, tanpa caption/overlay burned-in).
 - **beat / caption beat** — satu unit caption pendek (1–4 kata ideal).
-- **hook card** — kartu atas hitam pembuka (3 detik pertama, kerja tanpa audio).
-- **three-second transcript hook** — satu kutipan ucapan verbatim yang memuat
-  tension/puncak masalah, dipindahkan ke processed output `00:00.00-00:03.00`
+- **hook card** — kartu atas hitam pembuka selama jendela hook, kerja tanpa audio.
+- **transcript hook** — satu kutipan ucapan verbatim yang memuat
+  tension/puncak masalah, dipindahkan ke processed output `00:00.00-<hook_end>`
   sebelum alur penjelasan.
+- **hook_end / jendela hook** — akhir hook yang diputuskan Story (titik keputusan
+  hook tuntas, tanpa batas detik tetap); jendela hook = `00:00.00`–`hook_end`.
 - **track (data-track-index)** — layer tumpang-tindih **temporal**, bukan paint order.
 - **z-index** — urutan **paint** (siapa di atas siapa).
 - **clip** — kelas wajib (`class="clip"`) tiap elemen ber-waktu.

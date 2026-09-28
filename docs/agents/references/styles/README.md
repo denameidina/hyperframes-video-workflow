@@ -60,7 +60,7 @@ Match the line, not the topic:
   `visual-plan.md` under `## Motion Behaviours`.
 - Treatments, density, and face rules are the ones in `motion-broll-planning.md`
   (cutaway / split / panel, 2 s of face between cutaways, cutaway ≤ 10 s, no face
-  cover in `00:00.00–00:03.00` without approval). `mix-media` adds the `collage`
+  cover in the hook window `00:00.00–hook_end` without approval). `mix-media` adds the `collage`
   treatment: Dena stays visible, so it never trips R3 or R4.
 - `mix-media` is a peak: at most ~20% of the video, at most two collage clips in a
   row. `parallax` adds `parallax-stage` (the same host recipe, a parallax

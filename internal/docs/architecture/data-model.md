@@ -189,7 +189,10 @@ Caption final untuk IG.
 
 ## `cut-list.json` (Story)
 
-`{ source, targetDuration, speed, segments: [{ sourceStart, sourceEnd, action, reason }], notes: [] }`.
+`{ source, targetDuration, speed, primaryHook, segments: [{ sourceStart, sourceEnd, action, reason }], notes: [] }`.
+`primaryHook`: `text`, `sourceStart`, `sourceEnd`, `outputStart` (selalu `0`), `outputEnd` (= `hook_end`, diputuskan
+Story tanpa batas detik tetap), `reason`, `lengthReason`, `openLoop`, `payoff { outputStart, text }`, `transition`, `originalOccurrence` ∈ `removed | intentional-callback`.
+Jendela hook `0`–`outputEnd` dipakai hook card dan R4 (ADR-0019).
 `action` ∈ `keep | tighten | move-to-hook | cut-silence | cut-filler | cut-repeat | cut-tangent | cut-unclear | preserve-human`.
 `speed` default `1.2`.
 
@@ -214,7 +217,7 @@ Element: `id`, `type`, `track`, `start`, `duration`, `contentRef`, `assetRef`, `
 
 Bagian `## Workflow Settings`: `visual_density` ∈ `light | medium | heavy`
 (default `medium`), `gate_cut` ∈ `on | off` (default `off`). Hook `Status` selalu
-`locked-from-transcript`. Bagian `## User Approvals` mencatat fakta dari user,
+`locked-from-transcript` dan mencatat jendela hook `00:00.00-<hook_end>` + alasan panjangnya. Bagian `## User Approvals` mencatat fakta dari user,
 janji CTA yang disetujui, dan hook visual yang boleh menutup wajah (dipakai Gate 2).
 
 ## `visual-plan.md` (Screen Plan)

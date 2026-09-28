@@ -67,7 +67,7 @@ Default format:
   - Black rounded rectangle.
   - White text.
   - 2-4 lines max.
-  - Clear problem/curiosity in the first 3 seconds.
+  - Clear problem/curiosity from the first frame through the hook window.
 - Main captions:
   - Bold uppercase or title-case.
   - White text with heavy black stroke/shadow.
@@ -85,9 +85,10 @@ Observed strong hook style:
 
 Every edit should optimize for:
 
-- Stop scroll with a transcript-derived spoken hook in the first 3 seconds:
-  move the verbatim core tension or peak problem to `00:00.00`, end it by
-  `00:03.00`, then continue into the explanation.
+- Stop scroll with a transcript-derived spoken hook: move the verbatim core
+  tension or peak problem to `00:00.00`, end it where its decision lands
+  (`hook_end`, decided by Story; no fixed 3-second cap), then continue into the
+  explanation.
 - Remove dead air and repeated thinking.
 - Keep the authentic monologue.
 - Make captions easy to read without pausing.
@@ -111,7 +112,7 @@ When user provides a raw vlog/monologue video:
      visual density, and CTA.
    - From the complete transcript, rank at least three hook candidates and lock
      one verbatim excerpt containing the core tension or peak problem.
-   - Move the locked excerpt to processed output `00:00.00-00:03.00`, remove its
+   - Move the locked excerpt to processed output `00:00.00-<hook_end>`, remove its
      later duplicate unless it is an intentional callback, then continue with
      the explanation.
    - Cut silence/dead air.
@@ -215,16 +216,21 @@ Examples:
 
 ## Hook Rules
 
-First 3 seconds decide the video.
+The opening decides the video. The hook must make people stop scrolling and
+then watch to the end: the first words must pull, the hook runs until its
+decision lands, and it leaves a loop open that only the end of the video
+closes.
 
 Default editorial flow:
 
 1. Read the complete transcript before locking the opening audio.
 2. Select a contiguous, verbatim phrase that carries the core tension, peak
    problem, contradiction, proof, or curiosity gap without giving away the
-   answer.
-3. Place it at output `00:00.00` and end it no later than `00:03.00` after the
-   speed adjustment.
+   answer. Its opening words must grab a muted scroller, and it must open a
+   loop whose payoff lands late in the video.
+3. Place it at output `00:00.00` and end it at `hook_end`: the point (after the
+   speed adjustment) where the tension is complete. Story decides this length;
+   take the shortest intact span, with no fixed 3-second cap, and record why.
 4. Continue immediately with the original explanation/setup and remove the
    hook's later duplicate unless the brief calls for a documented callback.
 5. Use the same spoken words in the hook card so muted viewers receive the same
@@ -405,7 +411,7 @@ Recent AI/dev videos:
 - Topics: AI UI review, AI as co-pilot, AI slop, AI agent workflow.
 - Structure: reflective monologue, practical lesson, ending question.
 - Improvement opportunity:
-  - Stronger first 3-second hook.
+  - Stronger opening hook.
   - More pattern interrupts in the middle.
   - More visual overlays when mentioning tools, docs, agents, CRM/ERP.
   - Tighter cuts and less repeated setup.
@@ -455,7 +461,7 @@ An edit is not publishable just because it renders. After render, the user revie
 When the user chooses QA first:
 
 - `npm run video -- check <slug>` must pass after any video composition edit.
-- First frame and first 3 seconds must work without audio.
+- First frame and the hook window must work without audio.
 - Captions must be readable at phone size.
 - Storytelling captions must account for every spoken word in the locked processed transcript.
 - Speed must be `1.2x` unless a documented clarity/emotion exception exists.

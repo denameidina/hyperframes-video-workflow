@@ -1,6 +1,6 @@
 # Hook And Angle (Reference)
 
-Rules for choosing the angle, the three-second transcript hook, and writing
+Rules for choosing the angle, the transcript hook (and its length), and writing
 `creative-brief.md`. Loaded by `docs/agents/01-story.md` at the step that names
 it. Workflow order lives in the phase documents, not here.
 
@@ -67,7 +67,8 @@ Pick one hook type:
 - `plot-twist`: Starts ordinary, then flips.
   - Example: "Awalnya cuma mau review UI. Ujungnya ketahuan product thinking-nya bolong."
 
-The first 3 seconds must work with audio muted.
+The opening must work with audio muted: the hook card shows the hook's first
+words from `00:00.00`.
 
 The hook strategy starts here, and the final opening audio must be grounded in
 the transcript. The Story phase transcribes the source before this step, so
@@ -93,8 +94,8 @@ Every video needs a retention spine.
 
 Default structure for a 30-75 second Dena video:
 
-- `0-3s`: hook / enemy / contradiction
-- `3-10s`: identity or problem setup
+- `0-hook_end`: hook / enemy / contradiction (length decided in Transcript Hook)
+- `hook_end-10s`: identity or problem setup
 - `10-25s`: proof, example, or escalation
 - `25-45s`: insight, framework, or consequence
 - `45-60s`: takeaway
@@ -102,8 +103,8 @@ Default structure for a 30-75 second Dena video:
 
 Default structure for a 20-30 second character-led video:
 
-- `0-3s`: verbatim transcript hook + visual shock
-- `3-6s`: identity twist
+- `0-hook_end`: verbatim transcript hook + visual shock
+- next `3s`: identity twist
 - `6-12s`: mission or bold claim
 - `12-20s`: aura/proof montage
 - `20-25s`: humanizer CTA
@@ -194,35 +195,60 @@ Bad default CTA:
 - "Gue bakal breakdown lengkap di video berikutnya."
 - "DM gue, nanti gue share template."
 
-## Three-Second Transcript Hook
+## Transcript Hook
 
 After the full transcript and content map are available, lock exactly one
-spoken source excerpt as the opening hook. The Story phase owns both the hook
-strategy and selecting the real source moment that fulfills it.
+spoken source excerpt as the opening hook. The Story phase owns the hook
+strategy, selecting the real source moment that fulfills it, and deciding how
+long the hook runs (`hook_end`).
+
+The hook has one job: make a scrolling viewer stop, then keep watching to the
+end. It must pass both tests:
+
+1. **Stop-scroll test.** The opening words alone, read muted on the hook card,
+   interrupt the scroll: a specific pain, a contradiction, a surprising claim,
+   or a named viewer. A slow wind-up before the grabbing words fails.
+2. **Watch-to-end test.** The hook opens a loop (a question, a problem, a
+   promise, a "why/how") that only the rest of the video closes, and the
+   payoff lands late, ideally near the end before the CTA. If the answer is
+   already obvious from the hook, or the video resolves it in the first few
+   seconds, the viewer has no reason to stay.
 
 The selected excerpt must:
 
 - Contain the core tension, peak problem, contradiction, proof, or curiosity
-  gap that makes the viewer want the explanation.
+  gap that makes the viewer want the explanation, without giving away the
+  answer.
 - Use a contiguous, verbatim spoken phrase from the source.
-- Start at output `00:00.00` and end no later than output `00:03.00` after the
-  selected speed adjustment.
+- Start at output `00:00.00` and end at `hook_end`: the processed-timeline
+  point (after the speed adjustment) where the hook's decision is complete.
+  There is no fixed maximum such as 3 seconds. Take the shortest intact span
+  that still carries the whole decision; stop before the answer or the
+  explanation begins.
 - Preserve the original meaning. Shorten only by removing silence or filler;
   do not splice separate words into a claim Dena never made.
 - Lead directly into the explanation or setup after the hook.
 - Be removed from its original later position unless the Creative Brief asks
   for an intentional callback; document any retained repetition.
 
-If no source excerpt fits within three seconds without changing meaning, mark
-the hook as `blocked` and ask the user. Do not
-substitute fabricated dialogue.
+Decide the length by asking: at which word does a viewer feel the tension and
+need the rest of the video? End there. A hook that stops before that word is too
+short; a hook that keeps talking after it spends attention the explanation
+needs. Tighten silence and filler inside the hook either way.
+
+If no contiguous source excerpt carries the decision without changing meaning,
+mark the hook as `blocked` and ask the user. Do not substitute fabricated
+dialogue.
 
 Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
 
 - exact spoken quote
 - source start and end
-- processed output start and end
-- selection reason
+- processed output start and end (`hook_end`)
+- selection reason, stated against both tests
+- length reason: the decision the hook completes at `hook_end`
+- open loop: the question the hook leaves open
+- payoff: the output timestamp and line where the video closes that loop
 - transition into the explanation
 - original-occurrence handling: `removed` or `intentional-callback`
 
@@ -230,7 +256,7 @@ Record the locked hook in both `edit-decision-notes.md` and `cut-list.json`:
 
 Hook extraction does not invent the hook strategy. It must identify at least three
 source-grounded candidates, then lock exactly one candidate using the
-Three-Second Transcript Hook contract above.
+Transcript Hook contract above.
 
 Find:
 
@@ -241,9 +267,11 @@ Find:
 - Most emotional line
 - Best CTA line
 
-Return at least 3 hook candidate clips with timestamps. Every candidate should
-be evaluated against its processed duration; a candidate longer than three
-seconds may inform the choice but cannot become the locked opening unchanged.
+Return at least 3 hook candidate clips with timestamps and each candidate's
+processed duration. Score each candidate on the stop-scroll test, the
+watch-to-end test (what loop it opens and where the payoff lands), and whether
+the decision lands intact. Length is not a criterion by itself; when two
+candidates score equally, prefer the shorter.
 
 Example:
 
@@ -262,13 +290,17 @@ Example:
 After the candidates, add the locked decision:
 
 ```md
-## Three-Second Transcript Hook
+## Transcript Hook
 
 - Status: locked
 - Exact spoken quote: "Workflow bisnisnya yang belum jelas."
 - Source: 00:43.20-00:45.70
-- Output: 00:00.00-00:02.50
+- Output: 00:00.00-00:02.50 (hook_end 00:02.50)
 - Why: states the peak problem without revealing the explanation
+- Length: ends on "belum jelas", where the problem is named; the next words
+  start the explanation
+- Open loop: "which part of the workflow is unclear, and how do you fix it?"
+- Payoff: output 00:41.20, "jadi yang gue benerin duluan itu alurnya"
 - Transition: resume with the original setup at output 00:02.50
 - Original occurrence: removed
 ```
@@ -315,6 +347,16 @@ Exact spoken quote:
 
 Source timestamp:
 
+Hook window (output): 00:00.00-<hook_end>
+
+Length reason:
+
+Stop-scroll reason (opening words):
+
+Open loop:
+
+Payoff (output timestamp + line):
+
 Backup hooks:
 
 1.
@@ -325,8 +367,8 @@ Muted-viewer hook:
 
 ## Story Spine
 
-1. 0-3s:
-2. 3-10s:
+1. 0-hook_end:
+2. hook_end-10s:
 3. 10-25s:
 4. 25-45s:
 5. Final CTA:
@@ -345,7 +387,7 @@ Muted-viewer hook:
 
 - Facts, numbers, names, or quotes the user supplied for on-screen use:
 - CTA promise approved by the user: <no | exact promise>
-- Hook visual allowed to cover the face in 00:00.00-00:03.00: <no | description>
+- Hook visual allowed to cover the face in the hook window (00:00.00-<hook_end>): <no | description>
 
 ## Visual Direction
 
@@ -388,8 +430,8 @@ Backup CTA:
 
 For Screen Plan phase (captions step):
 
-- Required opening: verbatim source excerpt at 00:00.00-00:03.00, followed by
-  the explanation flow.
+- Required opening: verbatim source excerpt at 00:00.00-<hook_end>, followed by
+  the explanation flow. Do not change the hook length; route that to Story.
 
 For Screen Plan phase (visual step):
 

@@ -57,9 +57,13 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 ### Dena Social Video Non-Negotiables
 
 - Every edited video must open with a contiguous, verbatim transcript excerpt
-  that captures the core tension or peak problem at processed output
-  `00:00.00-00:03.00`, then continue into the explanation. The Story phase owns
-  the source move; the Screen Plan phase captions the same words for muted viewing.
+  that captures the core tension or peak problem, starting at processed output
+  `00:00.00` and ending at the `hook_end` the Story phase decides (where the hook's
+  decision lands; no fixed 3-second cap), then continue into the explanation.
+  The hook must make viewers stop scrolling and watch to the end: its opening
+  words grab muted viewers, and it opens a loop whose payoff lands late.
+  The Story phase owns the source move and hook length; the Screen Plan phase
+  captions the same words for muted viewing.
 - Most Dena videos are storytelling/talking-head content. Default captions must cover every spoken word that survives the cut, using short running beats so muted viewers can follow the full story.
 - Default processed speed is `1.2x`. If it is lowered, document the exact reason in `edit-decision-notes.md` and keep speech clarity as the only exception.
 - When a user provides a URL or the transcript mentions a tool/product/site, the Screen Plan phase must research or inspect it and plan captures timed to the transcript context; the Build phase captures local screenshots/screen recordings when useful.

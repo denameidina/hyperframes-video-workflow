@@ -36,7 +36,7 @@ The edit technically works but fails the brief, viewer experience, or Dena style
 
 Examples:
 
-- first 3 seconds do not stop scroll.
+- the hook window does not stop scroll.
 - captions are hard to read.
 - key hook text is too long.
 - overlay hides Dena's face or mouth too long.
@@ -75,7 +75,8 @@ Check:
 
 - The edit matches `creative-brief.md`.
 - The chosen content lane is clear.
-- The hook works in the first `0-3s`.
+- The hook works in its window (`00:00.00` to `hook_end`) and ends where its decision lands.
+- The hook's opening words stop the scroll muted, and its open loop is only paid off late in the video.
 - The story has tension, proof, insight, and CTA.
 - The ending feels intentional, not abrupt.
 - The edit still sounds like Dena.
@@ -212,7 +213,7 @@ If a rendered MP4 exists, review the rendered file separately from the HTML prev
 Check:
 
 - first frame
-- first 3 seconds
+- the hook window (`00:00.00` to `hook_end`)
 - every major caption style
 - every overlay type
 - every transition type
