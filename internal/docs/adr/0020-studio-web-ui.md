@@ -25,8 +25,8 @@ terminalnya, melihat render, dan publish ke Repliz.
   restart.
 - Agen jalan interaktif dengan izin bypass (`--dangerously-skip-permissions` /
   `--dangerously-bypass-approvals-and-sandbox`); prompt pertama dari
-  `.studio/prompts/<slug>.md` menyuruh mengikuti workflow Dena dan melarang
-  publish. Gate workflow tetap berhenti di terminal.
+  `.studio/prompts/<slug>.md` menyuruh memakai style yang sudah ada, menyerahkan
+  pemilihan dan mutu hasil ke agent Story, dan melarang publish. Gate workflow tetap berhenti di terminal.
 - Terminal browser: xterm.js (di-vendor di `vendor/xterm/`) menerima output lewat
   SSE; tiap viewer punya PTY dari `script(1)` macOS yang menjalankan
   `tmux attach` (stdin lewat `cat |` karena pipe Node di macOS adalah socket);

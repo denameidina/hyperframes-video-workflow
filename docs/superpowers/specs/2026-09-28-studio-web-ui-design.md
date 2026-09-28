@@ -159,8 +159,9 @@ Tiga tab.
 
 Baru:
 
-> Edit raw video `raw/<file>` sebagai proyek `videos/<slug>/`. Ikuti
-> `docs/skills/dena-video-editing-workflow/SKILL.md` mulai dari fase Story.
+> Edit raw video `raw/<file>` sebagai proyek `videos/<slug>/`. Gunakan style
+> yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil
+> editing videonya bagus.
 > Catatan dari Dena: <catatan>.
 > Jangan publish ke Repliz — publish dilakukan Dena dari Studio.
 

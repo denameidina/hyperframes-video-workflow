@@ -72,7 +72,8 @@ test('paneCommand quotes argv and reads the prompt file', () => {
 
 test('buildPrompt', () => {
   const p = buildPrompt({ mode: 'new', rawFile: 'a.mp4', slug: 'a', notes: '  hook soal token ' });
-  assert.match(p, /^Edit raw video `raw\/a\.mp4` sebagai proyek `videos\/a\/`/);
+  assert.equal(p.split('\n')[0], 'Edit raw video `raw/a.mp4` sebagai proyek `videos/a/`. Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.');
+  assert.doesNotMatch(p, /SKILL\.md/);
   assert.match(p, /Catatan dari Dena: hook soal token\n/);
   assert.match(p, /Jangan publish ke Repliz — publish dilakukan Dena dari Studio\.\n$/);
   const c = buildPrompt({ mode: 'continue', rawFile: 'a.mp4', slug: 'a' });

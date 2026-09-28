@@ -36,7 +36,7 @@ export function buildPrompt({ mode, rawFile, slug, notes }) {
   const note = String(notes ?? '').trim() || '-';
   const first = mode === 'continue'
     ? `Lanjutkan proyek \`videos/${slug}/\` (raw \`raw/${rawFile}\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`
-    : `Edit raw video \`raw/${rawFile}\` sebagai proyek \`videos/${slug}/\`. Ikuti ${SKILL} mulai dari fase Story.`;
+    : `Edit raw video \`raw/${rawFile}\` sebagai proyek \`videos/${slug}/\`. Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.`;
   return `${first}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
 }
 
