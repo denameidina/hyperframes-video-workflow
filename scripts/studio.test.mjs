@@ -8,6 +8,8 @@ import { join } from 'node:path';
 import { FORMAT, hasSession, interruptSession, killSession, listSessions, parseSessions, sessionName, startSession } from './studio/sessions.mjs';
 import { Readable } from 'node:stream';
 import { deletePlan, deleteRawCascade, linkedProjects, listRaw, projectRaw, rawPath, receiveUpload, rendersOf, safeUploadName } from './studio/raw.mjs';
+import { EventEmitter } from 'node:events';
+import { Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -201,4 +203,53 @@ test('receiveUpload removes the partial file when the stream fails', async () =>
   await assert.rejects(receiveUpload(root, 'c.mp4', broken), /client aborted/);
   assert.equal(existsSync(join(root, 'raw/.c.mp4.part')), false);
   assert.equal(existsSync(join(root, 'raw/c.mp4')), false);
+});
+
+function fakeChild() {
+  const c = new EventEmitter();
+  c.stdout = new EventEmitter();
+  c.stderr = new EventEmitter();
+  c.stdin = { writes: [], write(d) { this.writes.push(String(d)); } };
+  c.pid = 4242;
+  return c;
+}
+
+test('receiptStatus summarizes schedules', () => {
+  assert.equal(receiptStatus(null), null);
+  assert.deepEqual(
+    receiptStatus({ createdAt: 't', schedules: [{ platform: 'youtube', status: 'pending' }, { platform: 'tiktok' }] }),
+    { createdAt: 't', platforms: [{ platform: 'youtube', status: 'pending' }, { platform: 'tiktok', status: 'unknown' }] },
+  );
+});
+
+test('listResults and renderPath', () => {
+  const root = studioRoot();
+  writeFileSync(join(root, 'videos/vid-a/repliz-publish.json'), JSON.stringify({ createdAt: 't', schedules: [{ platform: 'youtube', status: 'published' }] }));
+  assert.deepEqual(listResults(root).map((r) => [r.slug, r.file, r.publish?.platforms[0].status]), [['vid-a', 'vid-a.mp4', 'published']]);
+  assert.throws(() => renderPath(root, 'vid-a', '../../raw/a.MP4'), { status: 404 });
+});
+
+test('publishPreview reads caption and configured targets', async () => {
+  const root = studioRoot();
+  writeFileSync(join(root, 'videos/vid-a/repliz-publish.json'), JSON.stringify({ post: { title: 'Judul', description: 'Deskripsi' } }));
+  assert.deepEqual(await publishPreview(root, 'vid-a', 'vid-a.mp4', { REPLIZ_YOUTUBE_ACCOUNT_ID: 'y1' }), { slug: 'vid-a', file: 'vid-a.mp4', title: 'Judul', description: 'Deskripsi', targets: ['youtube'] });
+});
+
+test('Publisher runs repliz-publish with --approved and locks per slug', () => {
+  const root = studioRoot();
+  const spawned = [];
+  const pub = new Publisher({ root, env: {}, spawnImpl: (cmd, args, opts) => { const c = fakeChild(); spawned.push({ cmd, args, opts, c }); return c; } });
+  pub.start('vid-a', 'vid-a.mp4');
+  assert.equal(spawned[0].cmd, process.execPath);
+  assert.deepEqual(spawned[0].args, ['scripts/repliz-publish.mjs', '--slug', 'videos/vid-a', '--file', 'videos/vid-a/renders/vid-a.mp4', '--approved']);
+  assert.equal(spawned[0].opts.cwd, root);
+  assert.throws(() => pub.start('vid-a', 'vid-a.mp4'), { status: 409 });
+  const seen = [];
+  spawned[0].c.stdout.emit('data', Buffer.from('uploading\n'));
+  pub.follow('vid-a', (event, data) => seen.push([event, data]));
+  spawned[0].c.emit('close', 0);
+  assert.deepEqual(seen, [['log', 'uploading\n'], ['done', { code: 0 }]]);
+  pub.start('vid-a', 'vid-a.mp4');
+  assert.equal(spawned.length, 2);
+  assert.throws(() => pub.start('vid-a', 'nope.mp4'), { status: 404 });
 });
