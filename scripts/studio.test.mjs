@@ -445,3 +445,58 @@ test('parseTailscaleStatus needs a running backend', () => {
   assert.equal(parseTailscaleStatus(JSON.stringify({ BackendState: 'Stopped', Self: self })), null);
   assert.equal(parseTailscaleStatus(''), null);
 });
+
+function audioRoot() {
+  const root = mkdtempSync(join(tmpdir(), 'studio-audio-'));
+  const dir = join(root, 'shared/voice-tests/20260929-1430');
+  mkdirSync(join(dir, 'samples'), { recursive: true });
+  writeFileSync(join(dir, 'key.json'), JSON.stringify({ version: 1, run: '20260929-1430', seed: 7, labels: { A: { name: 'dena-clone' }, B: { name: 'supertonic:F2' } } }));
+  writeFileSync(join(dir, 'samples/A.wav'), 'AAA');
+  writeFileSync(join(dir, 'samples/B.wav'), 'BBB');
+  writeFileSync(join(dir, 'ref.wav'), 'REF');
+  writeFileSync(join(dir, 'script.md'), 'Halo semua.\n');
+  mkdirSync(join(root, 'shared/voice-tests/not-a-run'), { recursive: true });
+  mkdirSync(join(root, 'shared/music/licenses'), { recursive: true });
+  writeFileSync(join(root, 'shared/music/m01-quiet.mp3'), 'MP3');
+  writeFileSync(join(root, 'shared/music/catalog.json'), JSON.stringify({ version: 1, tracks: [{ id: 'm01-quiet', file: 'm01-quiet.mp3', title: 'Quiet', author: 'X', sourceUrl: 'https://freesound.org/s/1/', license: 'cc0', mood: ['reflektif'], energy: 2, duration: 90, contentIdRisk: 'none', rejected: false, notes: '' }] }));
+  return root;
+}
+
+test('app voice-test routes serve samples and the reference only, and validate ratings', async (t) => {
+  const root = audioRoot();
+  const { server, call, base } = await startApp(root);
+  t.after(() => server.close());
+  const list = await call('GET', '/api/voice-tests');
+  assert.deepEqual(list.body, [{ id: '20260929-1430', labels: ['A', 'B'], hasRef: true, rated: false }]);
+  const run = await call('GET', '/api/voice-tests/20260929-1430');
+  assert.deepEqual([run.body.labels, run.body.script, run.body.ratings], [['A', 'B'], 'Halo semua.\n', null]);
+  assert.doesNotMatch(JSON.stringify(run.body), /dena-clone|supertonic/);
+  const a = await fetch(`${base}/api/voice-tests/20260929-1430/files/A.wav`);
+  assert.deepEqual([a.status, a.headers.get('content-type'), await a.text()], [200, 'audio/wav', 'AAA']);
+  assert.equal(await (await fetch(`${base}/api/voice-tests/20260929-1430/files/ref.wav`)).text(), 'REF');
+  assert.equal((await fetch(`${base}/api/voice-tests/20260929-1430/files/key.json`)).status, 404);
+  assert.equal((await fetch(`${base}/api/voice-tests/20260929-1430/files/Z.wav`)).status, 404);
+  assert.equal((await call('GET', '/api/voice-tests/..%2Fx')).status, 400);
+  assert.equal((await call('GET', '/api/voice-tests/20260101-0000')).status, 404);
+  const saved = await call('POST', '/api/voice-tests/20260929-1430/ratings', { ratings: { A: { natural: 4, note: 'hangat' }, B: { natural: 2 } } });
+  assert.equal(saved.status, 200);
+  assert.deepEqual(JSON.parse(readFileSync(join(root, 'shared/voice-tests/20260929-1430/ratings.json'), 'utf8')).ratings.A, { natural: 4, pronunciation: null, register: null, similarity: null, endurance: null, note: 'hangat' });
+  assert.equal((await call('GET', '/api/voice-tests')).body[0].rated, true);
+  assert.equal((await call('POST', '/api/voice-tests/20260929-1430/ratings', { ratings: { A: { natural: 6 } } })).status, 400);
+  assert.equal((await call('POST', '/api/voice-tests/20260929-1430/ratings', { ratings: { Z: {} } })).status, 400);
+  assert.equal((await call('POST', '/api/voice-tests/20260929-1430/ratings', { ratings: {} }, { origin: 'http://evil.example' })).status, 403);
+});
+
+test('app music routes list, serve, and reject tracks', async (t) => {
+  const root = audioRoot();
+  const { server, call, base } = await startApp(root);
+  t.after(() => server.close());
+  assert.deepEqual((await call('GET', '/api/music')).body.map((m) => [m.id, m.rejected]), [['m01-quiet', false]]);
+  const f = await fetch(`${base}/api/music/m01-quiet/file`);
+  assert.deepEqual([f.status, f.headers.get('content-type'), await f.text()], [200, 'audio/mpeg', 'MP3']);
+  assert.equal((await call('POST', '/api/music/m01-quiet/reject', { rejected: true })).body.rejected, true);
+  assert.equal(JSON.parse(readFileSync(join(root, 'shared/music/catalog.json'), 'utf8')).tracks[0].rejected, true);
+  assert.equal((await call('POST', '/api/music/m01-quiet/reject', { rejected: 'yes' })).status, 400);
+  assert.equal((await call('POST', '/api/music/nope/reject', { rejected: true })).status, 404);
+  assert.equal((await fetch(`${base}/api/music/nope/file`)).status, 404);
+});

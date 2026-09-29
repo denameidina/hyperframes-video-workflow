@@ -15,6 +15,8 @@
     <button data-tab="shared">Shared</button>
     <button data-tab="sessions">Sessions</button>
     <button data-tab="results">Results</button>
+    <button data-tab="voice">Suara</button>
+    <button data-tab="music">Musik</button>
   </nav>
 </header>
 <p id="banner" hidden></p>
@@ -51,6 +53,20 @@
   </section>
   <section id="tab-sessions" hidden><ul id="session-list" class="list"></ul></section>
   <section id="tab-results" hidden><ul id="result-list" class="list"></ul></section>
+  <section id="tab-voice" hidden>
+    <div id="voice-home"><ul id="voice-list" class="list"></ul></div>
+    <div id="voice-detail" hidden>
+      <div class="bar">
+        <button id="voice-back">← Uji dengar</button>
+        <strong id="voice-title"></strong>
+      </div>
+      <p class="muted">Dengarkan tiap sampel sekali lewat speaker HP dan sekali lewat headset. Nilai 1–5, kosongkan bila belum yakin. Nama suara baru dibuka setelah <code>npm run voice -- test reveal</code>.</p>
+      <div id="voice-ref"></div>
+      <ul id="voice-samples" class="list"></ul>
+      <div class="bar"><button id="voice-save" class="primary">Simpan penilaian</button><span id="voice-saved" class="muted"></span></div>
+    </div>
+  </section>
+  <section id="tab-music" hidden><ul id="music-list" class="list"></ul></section>
 </main>
 
 <dialog id="edit-dialog">

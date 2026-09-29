@@ -55,3 +55,7 @@ pre { margin: 0; white-space: pre-wrap; max-height: 30vh; overflow: auto; backgr
 .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; max-height: 50vh; overflow: auto; }
 .bar { flex-wrap: wrap; }
 .checks label { display: flex; gap: 8px; align-items: center; }
+audio { width: 100%; }
+.scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.list > li.rejected { opacity: .55; }
+code { font-size: 13px; }

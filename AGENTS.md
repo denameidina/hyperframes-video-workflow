@@ -195,7 +195,7 @@ npm run video -- render <slug> [--blur]      # render to videos/<slug>/renders/
 npm run video -- cutout <slug> --from 31.2 --dur 5 --name 07-dena  # matte a mix-media cut-out
 npm run video -- layers <slug> --at 12.4 --name 05-scene   # parallax source + matted subject (or --image <file>)
 npm run test:video             # unit test the video CLI
-npm run studio                 # web UI: projects (sources upload, shared library), tmux agent sessions + terminal, renders, publish (long-running)
+npm run studio                 # web UI: projects (sources upload, shared library), tmux agent sessions + terminal, renders, publish, voice test + music tabs (long-running)
 npm run test:studio            # unit test the Studio server
 npm run voice -- say --preset <p> --file <naskah.md> --out <dir>  # TTS voiceover + words.json (ADR-0023)
 npm run voice -- ref --from <file> --at <s> --dur <s>   # 10-30 s reference of Dena's voice -> shared/voices/dena/

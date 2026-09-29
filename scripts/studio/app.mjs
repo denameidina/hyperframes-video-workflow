@@ -1,4 +1,4 @@
-// Studio routes (ADR-0020, ADR-0022, RD-05). Filesystem + tmux are the only state.
+// Studio routes (ADR-0020, ADR-0022, ADR-0023, ADR-0024, RD-05). Filesystem + tmux are the only state.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
@@ -7,9 +7,11 @@ import { buildPrompt } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
+import { listMusic, musicFile, rejectMusic } from './music.mjs';
 import { deleteShared, listShared, receiveShared } from './shared.mjs';
 import { interruptSession, killSession, listSessions, startSession } from './sessions.mjs';
 import { VIEWER_RE } from './terminal.mjs';
+import { getVoiceTest, listVoiceTests, saveVoiceRatings, voiceTestFile } from './voice-tests.mjs';
 
 const PUBLIC = join(import.meta.dirname, 'public');
 const XTERM = join(import.meta.dirname, '..', '..', 'vendor', 'xterm');
@@ -104,6 +106,19 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       terminals.write(b.viewer, b.data);
       return { ok: true };
     }],
+    ['GET', /^\/api\/voice-tests$/, async () => listVoiceTests(root)],
+    ['GET', /^\/api\/voice-tests\/([^/]+)$/, async (req, url, [id]) => getVoiceTest(root, id)],
+    ['GET', /^\/api\/voice-tests\/([^/]+)\/files\/([^/]+)$/, async (req, url, [id, name], res) => {
+      sendFile(req, res, voiceTestFile(root, id, name));
+      return RAW;
+    }],
+    ['POST', /^\/api\/voice-tests\/([^/]+)\/ratings$/, async (req, url, [id]) => saveVoiceRatings(root, id, await readJson(req))],
+    ['GET', /^\/api\/music$/, async () => listMusic(root)],
+    ['GET', /^\/api\/music\/([^/]+)\/file$/, async (req, url, [id], res) => {
+      sendFile(req, res, musicFile(root, id));
+      return RAW;
+    }],
+    ['POST', /^\/api\/music\/([^/]+)\/reject$/, async (req, url, [id]) => rejectMusic(root, id, (await readJson(req)).rejected)],
     ['GET', /^\/api\/results$/, async () => listResults(root)],
     ['GET', /^\/media\/([^/]+)\/([^/]+)$/, async (req, url, [slug, file], res) => {
       sendFile(req, res, renderPath(root, slugParam(slug), file));

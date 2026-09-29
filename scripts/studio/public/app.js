@@ -23,6 +23,7 @@ const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(bo
 let state = { tools: {}, models: {} };
 let tab = 'projects';
 let openSlug = '';
+let openRun = '';
 
 function banner(msg) {
   $('#banner').textContent = msg || '';
@@ -31,9 +32,10 @@ function banner(msg) {
 
 function showTab(name) {
   if (name === 'projects' && tab === 'projects') openSlug = '';
+  if (name === 'voice' && tab === 'voice') openRun = '';
   tab = name;
   for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === name);
-  for (const t of ['projects', 'shared', 'sessions', 'results']) $(`#tab-${t}`).hidden = t !== name;
+  for (const t of ['projects', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== name;
   refresh();
 }
 document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
@@ -48,6 +50,11 @@ async function refresh() {
     if (tab === 'shared') renderShared(await api('/api/shared'));
     if (tab === 'sessions') renderSessions(await api('/api/sessions'));
     if (tab === 'results') renderResults(await api('/api/results'));
+    if (tab === 'voice') {
+      if (openRun) renderVoiceTest(await api(`/api/voice-tests/${enc(openRun)}`));
+      else renderVoiceTests(await api('/api/voice-tests'));
+    }
+    if (tab === 'music') renderMusic(await api('/api/music'));
   } catch (e) {
     banner(e.message);
   }
@@ -437,6 +444,97 @@ $('#publish-form').addEventListener('submit', async (e) => {
   } catch (err) {
     $('#publish-error').textContent = err.message;
     $('#publish-go').disabled = false;
+  }
+});
+
+// ---- Voice test (blind; ADR-0023) ----
+const CRITERIA = [
+  ['natural', 'Natural (tidak robotik)'],
+  ['pronunciation', 'Ucapan istilah Inggris & angka'],
+  ['register', 'Cocok gaya Dena'],
+  ['similarity', 'Mirip suara Dena'],
+  ['endurance', 'Betah didengar 60 detik'],
+];
+
+function renderVoiceTests(runs) {
+  $('#voice-home').hidden = false;
+  $('#voice-detail').hidden = true;
+  $('#voice-list').innerHTML = runs.length ? runs.map((r) => `
+    <li>
+      <div class="meta"><strong>${esc(r.id)}</strong><span class="muted">${r.labels.length} sampel${r.hasRef ? ' + referensi' : ''} · ${r.rated ? 'sudah dinilai' : 'belum dinilai'}</span></div>
+      <div class="actions"><button class="primary" data-run="${esc(r.id)}">Buka</button></div>
+    </li>`).join('') : '<li class="muted">Belum ada uji dengar. Jalankan <code>npm run voice -- test build</code>.</li>';
+}
+
+function scoreSelect(label, key, text, value) {
+  const opts = [1, 2, 3, 4, 5].map((n) => `<option value="${n}"${value === n ? ' selected' : ''}>${n}</option>`).join('');
+  return `<label>${esc(text)}<select data-label="${esc(label)}" data-key="${key}"><option value="">–</option>${opts}</select></label>`;
+}
+
+function renderVoiceTest(t) {
+  $('#voice-home').hidden = true;
+  $('#voice-detail').hidden = false;
+  $('#voice-title').textContent = t.id;
+  $('#voice-saved').textContent = t.savedAt ? `Tersimpan ${when(t.savedAt)}` : '';
+  const files = `/api/voice-tests/${enc(t.id)}/files`;
+  $('#voice-ref').innerHTML = t.hasRef ? `<p><strong>Referensi: suara asli Dena</strong></p><audio controls preload="none" src="${files}/ref.wav"></audio>` : '';
+  const r = t.ratings || {};
+  $('#voice-samples').innerHTML = t.labels.map((l) => `
+    <li>
+      <div class="meta"><strong>Sampel ${esc(l)}</strong></div>
+      <audio controls preload="none" src="${files}/${enc(l)}.wav"></audio>
+      <div class="scores">${CRITERIA.map(([k, text]) => scoreSelect(l, k, text, r[l]?.[k] ?? null)).join('')}</div>
+      <label>Catatan<textarea data-label="${esc(l)}" data-key="note" rows="2" maxlength="1000">${esc(r[l]?.note || '')}</textarea></label>
+    </li>`).join('');
+}
+
+$('#voice-list').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-run]');
+  if (!b) return;
+  openRun = b.dataset.run;
+  refresh();
+});
+$('#voice-back').addEventListener('click', () => {
+  openRun = '';
+  refresh();
+});
+$('#voice-save').addEventListener('click', async () => {
+  const ratings = {};
+  for (const el of document.querySelectorAll('#voice-samples [data-label]')) {
+    const row = (ratings[el.dataset.label] ||= {});
+    row[el.dataset.key] = el.dataset.key === 'note' ? el.value : (el.value ? Number(el.value) : null);
+  }
+  try {
+    const saved = await post(`/api/voice-tests/${enc(openRun)}/ratings`, { ratings });
+    $('#voice-saved').textContent = `Tersimpan ${when(saved.savedAt)}`;
+  } catch (err) {
+    banner(err.message);
+  }
+});
+
+// ---- Music (ADR-0024) ----
+function renderMusic(tracks) {
+  $('#music-list').innerHTML = tracks.length ? tracks.map((t) => `
+    <li class="${t.rejected ? 'rejected' : ''}">
+      <div class="meta"><strong>${esc(t.title)}</strong>
+        <span class="muted">${esc(t.author)} · ${esc(t.mood.join(', '))} · energi ${t.energy} · ${dur(t.duration)} · ${esc(t.license)}${t.contentIdRisk === 'none' ? '' : ` · Content ID: ${esc(t.contentIdRisk)}`}${t.rejected ? ' · ditolak' : ''}</span>
+        ${t.notes ? `<span class="muted">${esc(t.notes)}</span>` : ''}</div>
+      <audio controls preload="none" src="/api/music/${enc(t.id)}/file"></audio>
+      <div class="actions">
+        <button data-reject="${esc(t.id)}" data-value="${t.rejected ? 'false' : 'true'}" class="${t.rejected ? '' : 'danger'}">${t.rejected ? 'Batal tolak' : 'Tolak'}</button>
+        <a class="btn" href="${esc(t.sourceUrl)}" target="_blank" rel="noopener">Sumber</a>
+      </div>
+    </li>`).join('') : '<li class="muted">Pustaka musik kosong. Tambah dengan <code>npm run music -- add</code>.</li>';
+}
+
+$('#music-list').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-reject]');
+  if (!b) return;
+  try {
+    await post(`/api/music/${enc(b.dataset.reject)}/reject`, { rejected: b.dataset.value === 'true' });
+    refresh();
+  } catch (err) {
+    banner(err.message);
   }
 });
 
