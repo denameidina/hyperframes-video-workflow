@@ -36,7 +36,7 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 16. [requirements/rd-02-composition-render.md](requirements/rd-02-composition-render.md) - EARS kontrak komposisi HyperFrames + render deterministik.
 17. [requirements/rd-03-video-editing-workflow.md](requirements/rd-03-video-editing-workflow.md) - EARS workflow 4 fase + gate + non-negotiable konten.
 18. [requirements/rd-04-transcription-setup.md](requirements/rd-04-transcription-setup.md) - EARS setup lingkungan + transkripsi whisper lokal.
-19. [requirements/rd-05-studio.md](requirements/rd-05-studio.md) - EARS Studio web UI: bind, guard, upload, cascade delete, sesi tmux, publish.
+19. [requirements/rd-05-studio.md](requirements/rd-05-studio.md) - EARS Studio web UI: bind, guard, upload, cascade delete, sesi tmux, publish, tab Generate (form + panel review gate).
 20. [requirements/rd-06-audio.md](requirements/rd-06-audio.md) - EARS audio: adapter suara TTS, uji dengar blind, pustaka musik.
 
 ### Architecture
@@ -74,20 +74,20 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 50. [adr/0026-studio-generate.md](adr/0026-studio-generate.md) - Studio mode generate: form + panel review gate, `gates.json` + `video gate` (sidik jari artefak), keputusan diketik ke sesi tmux.
 
 ### Design System & Frontend
-50. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
-51. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
+51. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
+52. [frontend/composition-implementation.md](frontend/composition-implementation.md) - Starter Dena dan tata letak proyek per video.
 
 ### Operations
-52. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
-53. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
-54. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
-55. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
-56. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
-57. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
+53. [operations/runbook.md](operations/runbook.md) - Perintah harian: setup, dev, check, render, publish, transkripsi.
+54. [operations/publish-runbook.md](operations/publish-runbook.md) - Menjalankan auto-publish R2/Repliz + kegagalan umum.
+55. [operations/video-editing-workflow.md](operations/video-editing-workflow.md) - Operasional 4 fase + gate + ikhtisar per fase.
+56. [operations/implementation-standard.md](operations/implementation-standard.md) - Alur perubahan, verifikasi wajib, Definition of Done.
+57. [operations/agent-documentation-workflow.md](operations/agent-documentation-workflow.md) - Cara agent memakai docs sebagai SoT + Stop hook.
+58. [operations/roadmap.md](operations/roadmap.md) - Rencana: imagegen fix, rilis open-source; arah produk draft.
 
 ### Security
-58. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
-59. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
+59. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
+60. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
 ## Canonical Files
 

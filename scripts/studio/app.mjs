@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
 import { gateStatus, isGenerate } from '../lib/gates.mjs';
 import { probeMedia } from '../lib/video-sources.mjs';
-import { buildPrompt } from './agent.mjs';
+import { agentCommand, buildPrompt } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
 import { createGenerate, decide, generateDetail, generateDir, generateMediaPath, generateOptions, lastDecisionNote, listGenerate, saveScript } from './generate.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
@@ -40,6 +40,12 @@ function decode(part) {
 
 export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia }) {
   const opt = run ? { run } : {};
+  // generate routes take a JSON object; null, arrays, and scalars are a 400, not a TypeError (500)
+  const readObject = async (req, limit) => {
+    const b = await readJson(req, limit);
+    if (!b || typeof b !== 'object' || Array.isArray(b)) throw new HttpError(400, 'body must be a JSON object');
+    return b;
+  };
   const checkModel = async (b) => {
     const known = (await models())[b.runtime]?.models?.find((m) => m.value === b.model);
     if (known && !known.efforts.includes(b.effort)) throw new HttpError(400, `${b.model} supports effort ${known.efforts.join(', ')}`);
@@ -127,7 +133,8 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     ['GET', /^\/api\/generate$/, async () => listGenerate(root, await listSessions(opt))],
     ['GET', /^\/api\/generate\/options$/, async () => generateOptions(root)],
     ['POST', /^\/api\/generate$/, async (req, url, m, res) => {
-      const b = await readJson(req);
+      const b = await readObject(req);
+      agentCommand(b); // runtime, model, and effort are checked before anything is created (RD-05-23)
       await checkModel(b);
       const { slug } = createGenerate(root, b);
       let session = { started: true, error: null };
@@ -139,9 +146,9 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       sendJson(res, 201, { slug, session });
       return RAW;
     }],
-    ['GET', /^\/api\/generate\/([^/]+)$/, async (req, url, [slug]) => generateDetail(root, slugParam(slug), await listSessions(opt))],
-    ['POST', /^\/api\/generate\/([^/]+)\/decision$/, async (req, url, [slug]) => decide(root, slugParam(slug), await readJson(req), opt)],
-    ['PUT', /^\/api\/generate\/([^/]+)\/script$/, async (req, url, [slug]) => saveScript(root, slugParam(slug), (await readJson(req, 65536)).text, opt)],
+    ['GET', /^\/api\/generate\/([^/]+)$/, async (req, url, [slug]) => generateDetail(root, slugParam(slug), await listSessions(opt), { voiceJobs })],
+    ['POST', /^\/api\/generate\/([^/]+)\/decision$/, async (req, url, [slug]) => decide(root, slugParam(slug), await readObject(req), { ...opt, voiceJobs })],
+    ['PUT', /^\/api\/generate\/([^/]+)\/script$/, async (req, url, [slug]) => saveScript(root, slugParam(slug), (await readObject(req, 65536)).text, { ...opt, voiceJobs })],
     ['POST', /^\/api\/generate\/([^/]+)\/voice$/, async (req, url, [slug]) => {
       const dir = generateDir(root, slugParam(slug));
       const s = gateStatus(dir, { slug });
@@ -162,7 +169,8 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     }],
     ['POST', /^\/api\/generate\/([^/]+)\/session$/, async (req, url, [slug]) => {
       const dir = generateDir(root, slugParam(slug));
-      const b = await readJson(req);
+      const b = await readObject(req);
+      agentCommand(b);
       await checkModel(b);
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);

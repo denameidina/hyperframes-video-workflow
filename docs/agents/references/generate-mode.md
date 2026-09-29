@@ -106,7 +106,8 @@ the session by Studio ("Gate N disetujui dari Studio …", "Gate N revisi dari S
 is already recorded; an answer Dena gives in chat is recorded by you before you continue:
 `npm run video -- gate <slug> approve <n> [--note "…"]`, `… revise <n> --note "…"`, or
 `… qa 3`. `npm run video -- gate <slug>` prints where the project stands. The same rule
-applies at Gate 2 and Gate 3.
+applies at Gate 2 and Gate 3. A Gate 3 approval ends the run: never publish to Repliz or
+R2 from a generate session — Dena publishes from the Studio Results tab.
 
 ### 6. Brief Template (generate)
 

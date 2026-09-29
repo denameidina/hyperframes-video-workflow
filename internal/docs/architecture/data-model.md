@@ -36,6 +36,8 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Naskah (generate) | `videos/<slug>/script.md`, `research/` | Markdown | Story (mode generate) |
 | Storyboard (generate) | `videos/<slug>/storyboard.md`, `preview/storyboard-sheet.jpg` | Markdown + JPG | Screen Plan (mode generate) |
 | BGM (generate) | `videos/<slug>/bgm.wav`, `bgm.json` | WAV + JSON | Build (`npm run video -- bgm`) |
+| Keputusan gate (generate) | `videos/<slug>/gates.json` | JSON | `scripts/lib/gates.mjs` (Studio + `npm run video -- gate`) |
+| Permintaan Studio (generate) | `videos/<slug>/research/request.json` | JSON | Studio (form Generate) |
 
 > Semua `videos/<slug>/**` di-ignore git kecuali `.gitkeep` (lihat
 > `.gitignore`). Data ini lokal dan tidak masuk repo publik.
@@ -330,6 +332,12 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 - `storyboard.md`: `| # | time | spoken words | style / pattern | what appears | example |`;
   `preview/storyboard-sheet.jpg` dari `npm run video -- storyboard`.
 - `bgm.json`: `{ version: 1, track, file, sha256, from, duration, copies, gainDb, duck: { threshold, ratio, attack, release } }`, di samping `bgm.wav`.
+- `gates.json` (ADR-0026): `{ version: 1, log: [{ gate: 1|2|3, decision: "approve"|"revise"|"qa"|"edit", note, at, by: "studio"|"cli", fingerprint: { "<file>": "<sha256>" } | null }] }`.
+  Satu-satunya penulis: `scripts/lib/gates.mjs` (log, hanya ditambah, atomik). Persetujuan
+  berlaku untuk sidik jari file gate (G1 `script.md` + `processed-audio.wav`; G2 storyboard
+  sheet + `storyboard.md`; G3 `renders/<slug>.mp4`); `edit` tanpa sidik jari.
+- `research/request.json` (ADR-0026): `{ version: 1, brief, urls: [], repurpose, voice, duration, style, music, createdAt }`;
+  ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
 
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 

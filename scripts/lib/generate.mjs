@@ -3,6 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { isGenerate } from './gates.mjs';
 import { loadLexicon } from './voice/normalize.mjs';
 import { getPreset, loadVoices } from './voice/presets.mjs';
 import { renderVoice, writeJson } from './voice/render.mjs';
@@ -46,9 +47,7 @@ export function transcriptFromVoice({ meta, words }) {
 }
 
 export async function voiceStep({ dir, root = '.', preset: presetName, env, fetchImpl, run = spawnSync }) {
-  const brief = join(dir, 'creative-brief.md');
-  const generate = existsSync(brief) && /^\s*-\s*mode:\s*generate\b/m.test(readFileSync(brief, 'utf8'));
-  if (!generate || existsSync(join(dir, 'processed.mp4'))) {
+  if (!isGenerate(dir) || existsSync(join(dir, 'processed.mp4'))) {
     throw new Error(`${dir} is not a generate-mode project (creative-brief.md needs "- mode: generate" and there is no processed.mp4); start one with npm run video -- new <slug> --generate`);
   }
   const scriptFile = join(dir, 'script.md');

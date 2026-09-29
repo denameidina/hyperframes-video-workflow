@@ -179,3 +179,14 @@ test('video gate prints the status and records cli decisions', () => {
   }
   assert.equal(readGates(dir).log.length, 1);
 });
+
+test('video gate needs a gate number; fingerprints follow a rewritten file (hash cache)', () => {
+  const { root, dir, put } = project('demo');
+  put('script.md', 'Halo.\n', 1000);
+  put('processed-audio.wav', 'A', 1001);
+  assert.throws(() => main(['gate', 'demo', 'approve'], { root }), /usage: npm run video -- gate demo approve <1\|2\|3>/);
+  const a = fingerprint(dir, 1)['processed-audio.wav'];
+  assert.equal(fingerprint(dir, 1)['processed-audio.wav'], a, 'cached');
+  put('processed-audio.wav', 'B', 1002);
+  assert.notEqual(fingerprint(dir, 1)['processed-audio.wav'], a);
+});

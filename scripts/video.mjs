@@ -208,7 +208,9 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       return status;
     }
     if (!['approve', 'revise', 'qa'].includes(action)) throw new Error('gate action must be approve, revise, or qa');
-    const entry = recordDecision(dir, { gate: Number(n), decision: action, note: values.note ?? '', by: 'cli' });
+    const gate = Number(n);
+    if (![1, 2, 3].includes(gate)) throw new Error(`usage: npm run video -- gate ${slug} ${action} <1|2|3> [--note "…"]`);
+    const entry = recordDecision(dir, { gate, decision: action, note: values.note ?? '', by: 'cli' });
     console.log(`gate ${entry.gate} ${action} recorded (${entry.at})`);
     return entry;
   }

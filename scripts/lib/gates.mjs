@@ -23,7 +23,17 @@ export function isGenerate(dir) {
   return existsSync(brief) && /^\s*-\s*mode:\s*generate\b/m.test(readFileSync(brief, 'utf8'));
 }
 
-const sha = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
+// Studio polls every 3 s and a render is tens of MB: hash a file again only when its size, mtime, or inode changed.
+const hashes = new Map();
+function sha(file) {
+  const st = statSync(file);
+  const key = `${st.size}:${st.mtimeMs}:${st.ino}`;
+  const hit = hashes.get(file);
+  if (hit?.key === key) return hit.hash;
+  const hash = createHash('sha256').update(readFileSync(file)).digest('hex');
+  hashes.set(file, { key, hash });
+  return hash;
+}
 
 export function sheetsOf(dir) {
   const preview = join(dir, 'preview');

@@ -781,3 +781,65 @@ test('app generate continue session carries the last decision', async (t) => {
   assert.match(prompt, /Catatan dari Dena: Keputusan terakhir: Gate 1 revise — hook terlalu panjang \(studio, /);
   assert.equal((await app.call('POST', '/api/generate/vid-a/session', { runtime: 'claude', model: 'opus', effort: 'high' })).status, 404);
 });
+
+// ---- review fixes (2026-09-29) ----
+
+test('gateMessage: Gate 3 approval ends the run without publishing; edited-script prefix follows the voice', () => {
+  const g3 = gateMessage({ gate: 3, decision: 'approve' });
+  assert.match(g3, /^Gate 3 disetujui dari Studio\. Catatan: -\. Video selesai; jangan publish ke Repliz atau R2/);
+  assert.doesNotMatch(g3, /Lanjutkan ke fase berikutnya/);
+  assert.match(gateMessage({ gate: 1, decision: 'revise', note: 'x', edited: true, voiceStale: true }), /^Naskah diedit Dena di Studio \(suaranya belum dibuat ulang\); baca ulang script\.md\. Gate 1 revisi/);
+  assert.match(gateMessage({ gate: 1, decision: 'approve', edited: true, voiceStale: false }), /^Naskah diedit Dena di Studio dan suaranya sudah dibuat ulang/);
+  assert.equal(gateMessage({ gate: 2, decision: 'revise', note: 'a\u0085b\u009bc' }), 'Gate 2 revisi dari Studio: a b c. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate 2.');
+});
+
+test('app generate refuses bad session fields and non-object bodies before creating anything', async (t) => {
+  const root = genStudioRoot();
+  const { server, call } = await startApp(root);
+  t.after(() => server.close());
+  assert.equal((await call('POST', '/api/generate', { brief: 'x', slug: 'ai-rt', runtime: 'foo', model: 'opus', effort: 'high' })).status, 400);
+  assert.equal((await call('POST', '/api/generate', { brief: 'x', slug: 'ai-rt', runtime: 'claude', model: 'opus', effort: 'turbo' })).status, 400);
+  assert.equal(existsSync(join(root, 'videos/ai-rt')), false);
+  assert.equal((await call('POST', '/api/generate', null)).status, 400);
+  genProject(root, 'g-one', 'gate1');
+  assert.equal((await call('POST', '/api/generate/g-one/decision', null)).status, 400);
+  assert.equal((await call('PUT', '/api/generate/g-one/script', [])).status, 400);
+});
+
+test('app generate: a running voice job blocks decisions and script edits; detail reports it', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'g-one', 'gate1');
+  const spawned = [];
+  const voiceJobs = new VoiceJobs({ root, env: {}, spawnImpl: (cmd, args, opts) => { const c = fakeChild(); spawned.push(c); return c; } });
+  const app = await startApp(root, { voiceJobs }, idlePanes('g-one'));
+  t.after(() => app.server.close());
+  const fp = (await app.call('GET', '/api/generate/g-one')).body.status.fingerprint;
+  assert.equal((await app.call('POST', '/api/generate/g-one/voice')).status, 200);
+  assert.equal((await app.call('GET', '/api/generate/g-one')).body.voiceJob.running, true);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp })).status, 409);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'revise', note: 'x', fingerprint: fp })).status, 409);
+  assert.equal((await app.call('PUT', '/api/generate/g-one/script', { text: '# N\n\nBaru.\n' })).status, 409);
+  assert.equal(readGates(dir).log.length, 0);
+  spawned[0].emit('close', 0);
+  assert.equal((await app.call('GET', '/api/generate/g-one')).body.voiceJob.running, false);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp })).status, 200);
+  assert.equal((await app.call('POST', '/api/generate/g-one/voice')).status, 409, 'outside Gate 1');
+});
+
+test('app generate decision reports a failed or exited session; a second session start is refused', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'g-one', 'gate1');
+  const fail = await startApp(root, {}, { ...idlePanes('g-one'), 'send-keys': { code: 1, stdout: '', stderr: 'no pane' } });
+  t.after(() => fail.server.close());
+  const fp = (await fail.call('GET', '/api/generate/g-one')).body.status.fingerprint;
+  const r = await fail.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'revise', note: 'a', fingerprint: fp });
+  assert.deepEqual([r.status, r.body.sent, r.body.error], [200, false, 'tmux send-keys gagal: no pane']);
+  const exited = await startApp(root, {}, { 'list-panes': { code: 0, stdout: 'studio-g-one\t1\t1\tclaude\topus\thigh\t1\n', stderr: '' } });
+  t.after(() => exited.server.close());
+  const r2 = await exited.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'revise', note: 'b', fingerprint: fp });
+  assert.deepEqual([r2.body.sent, /tidak ada sesi/.test(r2.body.error)], [false, true]);
+  assert.equal(readGates(dir).log.length, 2);
+  const live = await startApp(root, {}, { ...idlePanes('g-one'), 'has-session': { code: 0, stdout: '', stderr: '' } });
+  t.after(() => live.server.close());
+  assert.equal((await live.call('POST', '/api/generate/g-one/session', { runtime: 'claude', model: 'opus', effort: 'high' })).status, 409);
+});

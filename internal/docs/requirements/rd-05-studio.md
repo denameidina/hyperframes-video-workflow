@@ -6,7 +6,8 @@ Domain: web UI lokal untuk project video (sumber per project + shared library),
 sesi agen tmux, dan publish. Owner:
 `scripts/studio.mjs`, `scripts/studio/`. Keputusan:
 [ADR-0020](../adr/0020-studio-web-ui.md), [ADR-0022](../adr/0022-multi-source-projects.md),
-[ADR-0023](../adr/0023-voice-adapter-tts.md), [ADR-0024](../adr/0024-music-library.md).
+[ADR-0023](../adr/0023-voice-adapter-tts.md), [ADR-0024](../adr/0024-music-library.md),
+[ADR-0026](../adr/0026-studio-generate.md).
 
 - **RD-05-01** (Ubiquitous) — Studio shall listen only on `127.0.0.1` and, while
   Tailscale reports `BackendState: Running` at startup, the host's Tailscale
@@ -91,15 +92,16 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-25** (Event-driven) — When Dena approves, revises, or asks for QA in the Generate
   panel, Studio shall record the decision through `scripts/lib/gates.mjs` with the
   fingerprint the panel showed, then type one line into `studio-<slug>` with
-  `tmux send-keys -l` followed by `Enter` (control characters removed, at most 1000
-  characters; a long note is shortened, the instruction is kept).
+  `tmux send-keys -l` followed, after a short pause, by `Enter` (C0/C1 control characters
+  removed, at most 1000 characters; a long note is shortened, the instruction is kept). A
+  Gate 3 approval tells the agent the video is done and not to publish to Repliz or R2.
 - **RD-05-26** (Unwanted) — If the fingerprint is missing or differs from the files, the gate
-  is not waiting, a revision has no note, or the session is busy (`running`), then Studio
-  shall refuse the decision (409, or 400 for a missing note or fingerprint) without
+  is not waiting, a revision has no note, the session is busy (`running`), or a voice job is
+  running for the project, then Studio shall refuse the decision (409, or 400 for a missing note or fingerprint) without
   recording it; without a live session it shall record the decision and answer
   `sent: false` with the reason.
 - **RD-05-27** (Event-driven) — When Dena saves an edited script at Gate 1 while the session
-  is not busy, Studio shall write `script.md` atomically (at most 20 KB, narration not empty)
+  is not busy and no voice job runs, Studio shall write `script.md` atomically (at most 20 KB, narration not empty)
   and log an `edit` entry; approval stays refused until "Buat ulang suara" — one
   `video voice <slug> [--preset <request.voice>]` job per project with a live log, refused
   while the session is busy or outside Gate 1 — makes the voiceover newer than the script;

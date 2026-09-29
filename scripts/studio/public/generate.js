@@ -8,6 +8,7 @@
   let bodyKey = '';
   let detail = null;
   let pending = null; // { gate, decision } while the note dialog is open
+  let followingVoice = ''; // slug whose voice-job log is attached
 
   const statusText = (s) => (s.phase === 'gate' ? `${STATE[s.state] || 'Menunggu'} · Gate ${s.gate}` : PHASE[s.phase] || s.phase);
   const sessionText = (x) => (x ? x.status : 'tidak ada sesi');
@@ -101,7 +102,7 @@
 
   function running(d) {
     const s = d.status;
-    if (s.phase === 'done') return `<section class="gen-card"><p>Selesai. Publish lewat tab Results.</p></section>${gate3(d)}`;
+    if (s.phase === 'done') return `<section class="gen-card"><p>Selesai. Publish lewat <button data-gen="results">tab Results</button>.</p></section>${gate3(d)}`;
     return `<section class="gen-card"><p>Agent sedang mengerjakan: ${esc(PHASE[s.phase] || s.phase)}…</p>
       <p class="muted">Buka Terminal untuk melihat prosesnya.</p></section>`;
   }
@@ -115,13 +116,18 @@
     $('#gen-head').innerHTML = `<button data-gen="back">← Generate</button><strong>${esc(d.slug)}</strong>
       <span class="status ${esc(d.session?.status || '')}">${esc(statusText(s))}</span><span class="muted">Sesi: ${esc(sessionText(d.session))}</span>
       ${live ? '<button data-gen="terminal">Terminal</button>' : '<button data-gen="session" class="primary">Mulai sesi lanjut</button>'}`;
-    // redraw the body only when what it shows changed: a playing player or an open editor survives polling
-    const key = JSON.stringify([s.phase, s.gate, s.fingerprint, s.voiceStale, d.gate2.rows.length, d.gate3.render]);
-    if (key !== bodyKey) {
+    // redraw the body only when what it shows changed: a playing player survives polling, an open editor is never
+    // redrawn under Dena's typing (RD-05-29)
+    const voiceBusy = Boolean(d.voiceJob?.running);
+    const key = JSON.stringify([s.phase, s.gate, s.fingerprint, s.voiceStale, voiceBusy, d.gate2.rows.length, d.gate3.render]);
+    const editing = $('#gen-script-form') && !$('#gen-script-form').hidden;
+    if (key !== bodyKey && !editing) {
       bodyKey = key;
       $('#gen-body').innerHTML = s.phase === 'gate' ? { 1: gate1, 2: gate2, 3: gate3 }[s.gate](d) : running(d);
+      if (voiceBusy) for (const b of document.querySelectorAll('[data-gen="edit"], [data-gen="voice"]')) b.disabled = true;
     }
-    $('#gen-history-list').innerHTML = s.log.slice().reverse().map((e) => `<li><strong>Gate ${e.gate} ${esc(e.decision)}</strong> <span class="muted">${esc(e.by)} · ${esc(new Date(e.at).toLocaleString('id-ID'))}</span>${e.note ? `<br>${esc(e.note)}` : ''}</li>`).join('') || '<li class="muted">Belum ada keputusan.</li>';
+    if (voiceBusy && followingVoice !== d.slug) followVoice(d.slug); // re-attach the log after a reload
+    $('#gen-history-list').innerHTML = s.log.slice().reverse().map((e) => `<li><strong>Gate ${esc(e.gate)} ${esc(e.decision)}</strong> <span class="muted">${esc(e.by)} · ${esc(new Date(e.at).toLocaleString('id-ID'))}</span>${e.note ? `<br>${esc(e.note)}` : ''}</li>`).join('') || '<li class="muted">Belum ada keputusan.</li>';
     renderActions(d);
   }
 
@@ -133,9 +139,10 @@
       return;
     }
     bar.hidden = false;
-    const busy = d.session?.status === 'running';
-    const label = s.state === 'revising'
-      ? (busy ? 'Agent merevisi…' : 'Agent selesai tanpa mengubah artefak — cek terminal')
+    const voiceBusy = Boolean(d.voiceJob?.running);
+    const busy = d.session?.status === 'running' || voiceBusy;
+    const label = voiceBusy ? 'Suara sedang dibuat ulang…'
+      : s.state === 'revising' ? (busy ? 'Agent merevisi…' : 'Agent selesai tanpa mengubah artefak — cek terminal')
       : s.state === 'qa' ? 'QA berjalan — putuskan setelah laporan QA' : busy ? 'Agent masih bekerja…' : '';
     const canApprove = !busy && !(s.gate === 1 && s.voiceStale);
     bar.innerHTML = `${label ? `<span class="muted">${esc(label)}</span>` : ''}
@@ -170,6 +177,7 @@
   });
 
   function followVoice(slug) {
+    followingVoice = slug;
     const log = $('#gen-voice-log');
     if (log) {
       log.hidden = false;
@@ -185,6 +193,7 @@
     es.addEventListener('done', (ev) => {
       const code = JSON.parse(ev.data).code;
       es.close();
+      followingVoice = '';
       banner(code === 0 ? '' : `Buat ulang suara gagal (exit ${code}); suara lama tetap dipakai.`);
       bodyKey = '';
       refresh();
@@ -207,6 +216,7 @@
     const act = b.dataset.gen;
     try {
       if (act === 'back') { home(); refresh(); }
+      if (act === 'results') document.querySelector('nav button[data-tab="results"]').click();
       if (act === 'terminal') openTerminal(detail.slug);
       if (act === 'session') await startSession();
       if (act === 'approve' || act === 'revise' || act === 'qa') askNote(detail.status.gate, act);
@@ -228,6 +238,7 @@
     e.preventDefault();
     try {
       await api(`/api/generate/${enc(detail.slug)}/script`, { method: 'PUT', body: JSON.stringify({ text: e.target.text.value }) });
+      e.target.hidden = true; // saved: the body may redraw again
       banner('Naskah tersimpan. Tekan "Buat ulang suara" sebelum menyetujui.');
       bodyKey = '';
       refresh();
