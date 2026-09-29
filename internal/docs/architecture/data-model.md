@@ -293,7 +293,8 @@ dan `words.json` `[{ text, start, end, matched }]` (ejaan naskah, waktu whisper 
 Config ter-track `config/voice-test.json`
 `{ version: 1, script, ref, presets: [<preset>], screens: [{ id, keep, base: <preset tanpa voice>, voices: [<id>] }] }`
 dan naskah `config/voice-test-script.md`. Isi run: `script.md`, `screen.json`
-(`{ <pool>: [{ voice, wer, error? }] }`), `samples/<A…>.wav`, `ref.wav`, `work/<label>/`,
+(`{ <pool>: [{ voice, wer, error? }] }`), `samples/<A…>.wav`, `ref.wav`, `screen/<pool>/<voice>/`
+(render saringan), `work/` hanya selama build (dihapus setelah sampel disalin, RD-06-15),
 `key.json` `{ version: 1, run, seed, createdAt, labels: { A: { name, provider, model, voice, duration, wer } } }`
 (tidak pernah dilayani Studio), `ratings.json`
 `{ version: 1, savedAt, ratings: { A: { natural, pronunciation, register, similarity, endurance, note } } }`

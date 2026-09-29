@@ -1,12 +1,15 @@
 // Blind listening test (ADR-0023, RD-06-14..17): screen stock-voice pools by WER on the hook, render every candidate
 // through the same adapter, shuffle with a seed into A, B, ..., and reveal the ranking from Dena's ratings.
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { exec } from './exec.mjs';
 import { loadLexicon } from './normalize.mjs';
 import { getPreset, loadVoices, resolveVoiceId } from './presets.mjs';
+import { geminiKey } from './providers/gemini.mjs';
 import { renderVoice, writeJson } from './render.mjs';
 import { scriptBody, splitParagraphs } from './script.mjs';
+import { WHISPER_BIN, WHISPER_MODEL } from './whisper.mjs';
 
 export const TEST_CONFIG = join('config', 'voice-test.json');
 export const TESTS_DIR = join('shared', 'voice-tests');
@@ -55,7 +58,7 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
   const voices = loadVoices(root);
   const lexicon = loadLexicon(root);
   const presets = config.presets.map((name) => getPreset(voices, name));
-  // Preflight: every named preset must resolve before the first paid call.
+  // Preflight: everything a paid call depends on is checked before the first one (RD-06-16).
   const missing = [];
   for (const p of presets) {
     try {
@@ -65,6 +68,25 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
       missing.push(e.message);
     }
   }
+  for (const s of config.screens) if (!Number.isInteger(s.keep) || s.keep < 1) missing.push(`screen ${s.id}: keep must be an integer >= 1`);
+  const providers = new Set([...presets.map((p) => p.provider), ...config.screens.map((s) => s.base?.provider)]);
+  if (providers.has('gemini')) {
+    try {
+      geminiKey(env);
+    } catch (e) {
+      missing.push(e.message);
+    }
+  }
+  for (const f of [WHISPER_BIN, WHISPER_MODEL]) if (!existsSync(join(root, f))) missing.push(`${f} not found; build vendor/whisper.cpp (docs/initial-setup.md)`);
+  if (providers.has('supertonic')) {
+    try {
+      exec(run, 'uv', ['--version']);
+    } catch (e) {
+      missing.push(e.message);
+    }
+  }
+  const total = presets.length + config.screens.reduce((n, s) => n + Math.min(Number(s.keep) || 0, s.voices.length), 0);
+  if (total > 26) missing.push(`at most 26 candidates (labels A-Z); this config makes ${total}`);
   if (missing.length) throw new Error(`listening test cannot start:\n- ${missing.join('\n- ')}`);
   const text = scriptBody(readFileSync(join(root, config.script), 'utf8'));
   const hook = splitParagraphs(text)[0];
@@ -93,7 +115,6 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
     for (const b of best) candidates.push({ name: `${s.id}:${b.voice}`, preset: { ...s.base, voice: b.voice, name: `${s.id}:${b.voice}` } });
   }
   writeJson(join(dir, 'screen.json'), screen);
-  if (candidates.length > 26) throw new Error('at most 26 candidates (labels A-Z)');
   const labels = {};
   for (const [i, c] of shuffle(candidates, seed).entries()) {
     const label = labelOf(i);
@@ -103,6 +124,8 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
     labels[label] = { name: c.name, provider: meta.provider, model: meta.model, voice: meta.voice, duration: meta.duration, wer: meta.alignment?.wer ?? null };
     log(`sample ${label} ready`);
   }
+  // work/<label>/voice-meta.json names each candidate: the mapping must live only in key.json (RD-06-15).
+  rmSync(join(dir, 'work'), { recursive: true, force: true });
   const ref = join(root, config.ref || join('shared', 'voices', 'dena', 'ref.wav'));
   const hasRef = existsSync(ref);
   if (hasRef) copyFileSync(ref, join(dir, 'ref.wav'));
@@ -156,13 +179,19 @@ export function revealRun({ root = '.', id }) {
       return { label, ...k, score: mean(CORE.map((c) => r[c])), ...Object.fromEntries(CRITERIA.map((c) => [c, r[c] ?? null])), note: r.note || '', costPerMin: cost };
     })
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || a.label.localeCompare(b.label));
-  writeFileSync(join(dir, 'reveal.md'), formatReveal(key, rows));
+  const screenFile = join(dir, 'screen.json');
+  writeFileSync(join(dir, 'reveal.md'), formatReveal(key, rows, existsSync(screenFile) ? readJson(screenFile) : {}));
   return rows;
 }
 
 const cell = (x) => (x === null || x === undefined || x === '' ? '–' : String(x));
 
-export function formatReveal(key, rows) {
+const screenLine = (pool, results) => `- ${pool}: ${[...results]
+  .sort((a, b) => (a.wer ?? Infinity) - (b.wer ?? Infinity) || a.voice.localeCompare(b.voice))
+  .map((x) => (x.wer === null ? `${x.voice} gagal (${x.error})` : `${x.voice} ${x.wer}`))
+  .join(', ')}`;
+
+export function formatReveal(key, rows, screen = {}) {
   const head = [
     `# Uji dengar ${key.run} — hasil`,
     '',
@@ -173,5 +202,12 @@ export function formatReveal(key, rows) {
   ];
   const body = rows.map((r, i) => `| ${i + 1} | ${r.label} | ${r.name} | ${r.provider} | ${cell(r.model)} | ${cell(r.score)} | ${cell(r.natural)} | ${cell(r.pronunciation)} | ${cell(r.register)} | ${cell(r.endurance)} | ${cell(r.similarity)} | ${cell(r.wer)} | ${cell(r.duration)} | ${cell(r.costPerMin)} |`);
   const notes = rows.filter((r) => r.note).map((r) => `- **${r.label}** (${r.name}): ${r.note}`);
-  return [...head, ...body, ...(notes.length ? ['', '## Catatan', '', ...notes] : []), ''].join('\n');
+  const pools = Object.entries(screen).map(([pool, results]) => screenLine(pool, results));
+  return [
+    ...head,
+    ...body,
+    ...(notes.length ? ['', '## Catatan', '', ...notes] : []),
+    ...(pools.length ? ['', '## Saringan WER (paragraf pertama)', '', ...pools] : []),
+    '',
+  ].join('\n');
 }

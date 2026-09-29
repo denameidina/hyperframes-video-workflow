@@ -55,12 +55,17 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   kandidat; pool voice yang gagal dicatat di `screen.json` dan dilewati.
 - **RD-06-15** (Ubiquitous) — Setiap sampel uji dengar shall dibuat lewat adapter yang sama
   (normalisasi dan −16 LUFS yang sama) dan diberi label A… dalam urutan acak ber-seed yang
-  hanya tercatat di `key.json`.
-- **RD-06-16** (Unwanted) — If `voiceRef` preset kandidat tidak ada, then `test build` shall
-  berhenti sebelum sintesis pertama dan menyebut perintah pembuatnya.
+  hanya tercatat di `key.json`; folder kerja per kandidat (`work/`) dihapus setelah sampel
+  disalin.
+- **RD-06-16** (Unwanted) — If `voiceRef` preset kandidat tidak ada, `GEMINI_TTS_API_KEY`
+  kosong padahal ada preset/pool Gemini, binary atau model whisper.cpp tidak ada, `uv` tidak
+  ada padahal ada pool Supertonic, `keep` bukan bilangan bulat ≥ 1, atau config menghasilkan
+  lebih dari 26 kandidat, then `test build` shall berhenti sebelum sintesis pertama dan
+  menyebut semua masalahnya.
 - **RD-06-17** (Event-driven) — When `voice test reveal <run>` dijalankan, the CLI shall
   mengurutkan kandidat berdasarkan rata-rata natural, ucapan, gaya, betah (1–5) dan
-  melaporkan kemiripan, WER, serta USD/menit terpisah di `reveal.md`.
+  melaporkan kemiripan, WER, USD/menit, catatan Dena, dan hasil saringan WER tiap pool di
+  `reveal.md`.
 
 ## Pustaka musik
 
