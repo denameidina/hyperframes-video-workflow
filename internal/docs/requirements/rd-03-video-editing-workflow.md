@@ -332,6 +332,23 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
 - **RD-03-87** (Ubiquitous) — Di mode generate, fase Build shall tidak memasang base
   video, mewarnai `.bg-fill` dengan latar style world, memutar `processed-audio.wav`
   (track 10) dan `bgm.wav` (track 9), dan memasang scene di track 4 dan 7.
+- **RD-03-88** (Ubiquitous) — Di mode generate, the system shall menghitung posisi proyek
+  (`story`, Gate 1, `screen-plan`, Gate 2, `build`, Gate 3, `done`) dari artefak
+  (`script.md` + `processed-audio.wav`, `preview/storyboard-sheet*.jpg`,
+  `renders/<slug>.mp4`) dan keputusan di `videos/<slug>/gates.json`, bukan dari terminal
+  agent (`scripts/lib/gates.mjs`, ADR-0026).
+- **RD-03-89** (Event-driven) — When sebuah gate disetujui, the system shall mencatat sidik
+  jari sha256 file gate itu (G1 `script.md` + `processed-audio.wav`; G2 semua storyboard
+  sheet + `storyboard.md`; G3 render); bila salah satu file berubah, gate itu kembali
+  menunggu.
+- **RD-03-90** (Unwanted) — If keputusan membawa sidik jari yang berbeda dari artefak
+  sekarang, gate yang diputuskan bukan gate yang menunggu, `revise` tanpa catatan, `qa` di
+  luar Gate 3, atau `approve` Gate 1 saat `script.md` lebih baru dari
+  `processed-audio.wav`, then the system shall menolak keputusan itu tanpa menulis
+  `gates.json`.
+- **RD-03-91** (Ubiquitous) — `gates.json` shall hanya ditulis lewat
+  `scripts/lib/gates.mjs`, hanya ditambah (log), dan ditulis atomik; isi rusak atau versi
+  lain menghasilkan error yang menyebut file itu, tanpa menimpanya.
 
 ## Referensi
 

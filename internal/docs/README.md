@@ -71,6 +71,7 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 47. [adr/0023-voice-adapter-tts.md](adr/0023-voice-adapter-tts.md) - Adapter suara: Gemini 3.8 Flash TTS (`GEMINI_TTS_API_KEY`) + Supertonic lokal via `uv` + rekaman; preset, cache per paragraf, uji dengar blind.
 48. [adr/0024-music-library.md](adr/0024-music-library.md) - Pustaka BGM `shared/music/`: allowlist lisensi (cc0, public-domain, pixabay, mixkit), katalog + bukti lisensi, tab Studio Musik.
 49. [adr/0025-generate-mode-explainer.md](adr/0025-generate-mode-explainer.md) - Mode generate: explainer motion design dari naskah + TTS (tanpa footage), Gate 1/2 wajib, storyboard sheet, BGM ter-duck, starter `dena-generate`.
+50. [adr/0026-studio-generate.md](adr/0026-studio-generate.md) - Studio mode generate: form + panel review gate, `gates.json` + `video gate` (sidik jari artefak), keputusan diketik ke sesi tmux.
 
 ### Design System & Frontend
 50. [design-system/visual-system.md](design-system/visual-system.md) - Sistem visual: palet, tipografi, kartu, track/z-index, safe area, motion.
@@ -104,7 +105,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
 | Studio web UI (EARS) | [requirements/rd-05-studio](requirements/rd-05-studio.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0025) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0026) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
