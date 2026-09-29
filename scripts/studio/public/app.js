@@ -31,11 +31,12 @@ function banner(msg) {
 }
 
 function showTab(name) {
+  if (name === 'generate' && tab === 'generate') window.studioGenerate?.home();
   if (name === 'projects' && tab === 'projects') openSlug = '';
   if (name === 'voice' && tab === 'voice') openRun = '';
   tab = name;
   for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === name);
-  for (const t of ['projects', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== name;
+  for (const t of ['projects', 'generate', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== name;
   refresh();
 }
 document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
@@ -47,6 +48,7 @@ async function refresh() {
       if (openSlug) renderProject(await api(`/api/projects/${enc(openSlug)}`), sessions);
       else renderProjects(await api('/api/projects'), sessions);
     }
+    if (tab === 'generate') await window.studioGenerate.refresh();
     if (tab === 'shared') renderShared(await api('/api/shared'));
     if (tab === 'sessions') renderSessions(await api('/api/sessions'));
     if (tab === 'results') renderResults(await api('/api/results'));
@@ -538,6 +540,9 @@ $('#music-list').addEventListener('click', async (e) => {
   }
 });
 
+// Helpers for generate.js (ADR-0026).
+window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, state: () => state, tab: () => tab, termOpen: () => !$('#term-panel').hidden };
+
 // ---- Boot ----
 (async () => {
   try {
@@ -547,7 +552,13 @@ $('#music-list').addEventListener('click', async (e) => {
   }
   const missing = Object.entries(state.tools).filter(([, ok]) => !ok).map(([t]) => t);
   if (missing.length) banner(`Tidak ditemukan di PATH: ${missing.join(', ')}`);
-  refresh();
+  const deep = /^#generate(?:\/([a-z0-9][a-z0-9-]*))?$/.exec(location.hash);
+  if (deep) {
+    tab = 'generate';
+    for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === 'generate');
+    for (const t of ['projects', 'generate', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== 'generate';
+    window.studioGenerate.open(deep[1] || '');
+  } else refresh();
   // Only the Sessions tab polls; re-rendering Results would reset playing videos.
   setInterval(() => { if (tab === 'sessions' && $('#term-panel').hidden) refresh(); }, 2000);
 })();

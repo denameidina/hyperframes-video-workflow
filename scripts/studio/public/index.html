@@ -12,6 +12,7 @@
   <h1>Studio</h1>
   <nav>
     <button data-tab="projects" class="active">Projects</button>
+    <button data-tab="generate">Generate</button>
     <button data-tab="shared">Shared</button>
     <button data-tab="sessions">Sessions</button>
     <button data-tab="results">Results</button>
@@ -42,6 +43,18 @@
         <progress id="source-progress" max="1" value="0" hidden></progress>
       </div>
       <ul id="source-list" class="list"></ul>
+    </div>
+  </section>
+  <section id="tab-generate" hidden>
+    <div id="gen-home">
+      <div class="bar"><button id="gen-new" class="primary">Buat video</button></div>
+      <ul id="gen-list" class="list"></ul>
+    </div>
+    <div id="gen-detail" class="gen-panel" hidden>
+      <div id="gen-head" class="gen-head"></div>
+      <div id="gen-body" class="gen-body"></div>
+      <details id="gen-history" class="gen-card"><summary>Riwayat keputusan</summary><ol id="gen-history-list"></ol></details>
+      <div id="gen-actions" class="gen-actions"></div>
     </div>
   </section>
   <section id="tab-shared" hidden>
@@ -102,6 +115,36 @@
   </form>
 </dialog>
 
+<dialog id="gen-dialog">
+  <form method="dialog" id="gen-form">
+    <h2>Buat video generate</h2>
+    <label>Brief (wajib) <textarea name="brief" rows="5" maxlength="4000" required placeholder="Topik, sudut pandang, poin yang wajib ada"></textarea></label>
+    <label>Slug <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off"></label>
+    <details><summary>Opsional (kosong = agent yang pilih)</summary>
+      <label>URL sumber (satu per baris, maks 5) <textarea name="urls" rows="2" autocapitalize="off"></textarea></label>
+      <label>Repurpose dari proyek <select name="repurpose"></select></label>
+      <label>Preset suara <select name="voice"></select></label>
+      <label>Durasi (detik, 30–90) <input name="duration" type="number" min="30" max="90" step="1" placeholder="otomatis"></label>
+      <label>Style utama <select name="style"></select></label>
+      <label>Musik <select name="music"></select></label>
+    </details>
+    <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
+    <label>Model <select name="model" required></select></label>
+    <label>Effort <select name="effort"></select></label>
+    <p class="error" id="gen-error"></p>
+    <menu><button value="cancel" formnovalidate>Batal</button><button value="create" class="primary">Buat &amp; mulai agent</button></menu>
+  </form>
+</dialog>
+
+<dialog id="gen-note-dialog">
+  <form method="dialog" id="gen-note-form">
+    <h2 id="gen-note-title"></h2>
+    <label id="gen-note-label">Catatan <textarea name="note" rows="4" maxlength="2000"></textarea></label>
+    <p class="error" id="gen-note-error"></p>
+    <menu><button value="cancel" formnovalidate>Batal</button><button value="send" class="primary">Kirim</button></menu>
+  </form>
+</dialog>
+
 <div id="term-panel" hidden>
   <div class="term-head"><strong id="term-title"></strong><button id="term-close">Tutup</button></div>
   <div id="term"></div>
@@ -114,5 +157,6 @@
 <script src="/vendor/xterm/xterm.js"></script>
 <script src="/vendor/xterm/addon-fit.js"></script>
 <script src="/app.js"></script>
+<script src="/generate.js"></script>
 </body>
 </html>

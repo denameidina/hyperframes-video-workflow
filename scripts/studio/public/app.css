@@ -59,3 +59,22 @@ audio { width: 100%; }
 .scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
 .list > li.rejected { opacity: .55; }
 code { font-size: 13px; }
+.gen-panel { max-width: 720px; margin: 0 auto; display: grid; gap: 12px; }
+.gen-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gen-body { display: grid; gap: 12px; min-width: 0; }
+.gen-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; min-width: 0; }
+.gen-card h3 { margin: 0; font-size: 15px; }
+.gen-card p { margin: 0; overflow-wrap: anywhere; }
+.gen-card .hook { border-left: 3px solid var(--primary); padding-left: 8px; }
+.gen-card menu { justify-content: flex-start; }
+#gen-script-form { display: grid; gap: 8px; }
+#gen-script-form textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; }
+.gen-actions { position: sticky; bottom: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: center;
+  padding: 10px 0 max(10px, env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--line); }
+.gen-actions .muted { flex: 1 1 100%; }
+img.sheet { display: block; width: 100%; height: auto; border-radius: 8px; }
+.scenes { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.scenes li { display: grid; gap: 2px; overflow-wrap: anywhere; }
+#gen-history ol { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+.warn { color: var(--warn); }
+#gen-script-view { display: grid; gap: 8px; }

@@ -17,7 +17,7 @@ import { getVoiceTest, listVoiceTests, saveVoiceRatings, voiceTestFile } from '.
 
 const PUBLIC = join(import.meta.dirname, 'public');
 const XTERM = join(import.meta.dirname, '..', '..', 'vendor', 'xterm');
-const STATIC = { '/': 'index.html', '/login': 'login.html', '/app.js': 'app.js', '/app.css': 'app.css' };
+const STATIC = { '/': 'index.html', '/login': 'login.html', '/app.js': 'app.js', '/generate.js': 'generate.js', '/app.css': 'app.css' };
 const VENDOR = new Set(['xterm.js', 'xterm.css', 'addon-fit.js']);
 const RAW = Symbol('handled');
 const OPEN = new Set(['/login', '/app.css']); // reachable before login

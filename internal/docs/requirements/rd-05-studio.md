@@ -107,3 +107,8 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-28** (Event-driven) — When a session starts for a generate project (Generate panel
   or Sessions tab), Studio shall use the generate continue prompt, which runs
   `npm run video -- gate <slug>` first; from the panel it also carries the last decision.
+- **RD-05-29** (Ubiquitous) — The Generate panel shall work at 390 px wide without horizontal
+  scrolling, keep its decision bar at the bottom of the screen, enable Setuju/Revisi only
+  while a gate waits and the session is not busy (Setuju also not while the Gate 1 voice is
+  stale), not redraw a playing player or an open script editor while it polls every 3 s,
+  and open from `#generate`, `#generate/new`, and `#generate/<slug>`.
