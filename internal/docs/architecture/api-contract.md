@@ -2,8 +2,8 @@
 Status: accepted (reverse-engineered)
 Date: 2026-07-20
 
-Kanonik untuk: kontrak eksternal (Repliz API, Cloudflare R2 via Wrangler) dan
-surface fungsi internal CLI publish. Diturunkan dari `scripts/repliz-publish.mjs`,
+Kanonik untuk: kontrak eksternal (Repliz API, Cloudflare R2 via Wrangler, Gemini TTS)
+dan surface fungsi internal CLI publish. Diturunkan dari `scripts/repliz-publish.mjs`,
 `scripts/repliz-publish.test.mjs`, `docs/repliz/openapi.json`, dan
 `docs/repliz/integration-spec.md`.
 
@@ -165,6 +165,27 @@ hitung `targetKey` lewat `buildSchedulePayload`, bandingkan dengan entry
 uploadToR2 → verifyPublicUrl → validateAccounts (hanya `toSchedule`) →
 createSchedules (hanya `toSchedule`) → pollSchedules → stamp `targetKey` ke
 schedule baru → gabung dengan `reused` → writeReceipt (+ `blocked` bila ada).
+
+## 4. Gemini TTS (adapter suara)
+
+Dipakai `scripts/lib/voice/providers/gemini.mjs` ([ADR-0023](../adr/0023-voice-adapter-tts.md),
+[RD-06](../requirements/rd-06-audio.md)); diverifikasi 2026-09-29.
+
+- Base `https://generativelanguage.googleapis.com/v1beta`; header `x-goog-api-key:
+  $GEMINI_TTS_API_KEY` (key tidak pernah di URL); timeout 120 s per request.
+- `POST /interactions` — sintesis:
+  `{ model: "gemini-3.8-flash-tts", input: <teks> | [{ type: "text", text, annotations: [{ type: "speech_metadata", style }] }], response_format: { type: "audio" }, generation_config: { speech_config: [{ voice, language? }] } }`
+  → audio di `steps[].content[]` `{ type: "audio", mime_type: "audio/wav", data: <base64> }`
+  (24 kHz mono 16-bit). Field tak dikenal → 400 (`Unknown parameter`).
+- `GET /voices?type=prebuilt&page_size=100&page_token=…` — daftar suara prebuilt
+  `{ voices: [{ id, display_name, language_code, region_code, accent, gender, pitch, persona, context, description }], next_page_token }`.
+- `POST /voices` — voice design / replication:
+  `{ store: true, voice: { model, type: "prompted", display_name, language_code, gender?, prompted: { input } } }` atau
+  `{ store: true, voice: { model, type: "replicated", display_name, replicated: { source_audio: { mime_type, data }, consent_audio: { mime_type, data } } } }`
+  → `{ id: "voice_…", model, type, display_name, expire_time, prompted?: { sample_audio } }`.
+  Maksimal 200 voice tersimpan per project, TTL 1 tahun.
+- Retry: sintesis dan daftar suara di-retry pada 429, 5xx, gagal jaringan, dan timeout
+  (1, 2, 4 s; maksimal 3 kali). `POST /voices` tidak pernah di-retry (bisa menyimpan dua voice).
 
 ## Referensi
 

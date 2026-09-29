@@ -29,3 +29,12 @@ test('alignWords compares spoken forms, so written numbers match spoken ones', (
   assert.equal(r.wer, 0);
   assert.deepEqual(r.words[1], { text: 'Rp2,5', start: 0.4, end: 1.6, matched: true });
 });
+
+test('alignWords treats an extra transcribed word as an insertion, not a misread', () => {
+  const asr = [...whisperWords(WHISPER)];
+  asr.splice(3, 0, { text: 'banget', start: 1.25, end: 1.3 });
+  const r = alignWords({ script: ['Jujur,', 'gue', 'kira', 'gampang.', 'Ternyata', 'susah.'], asr, duration: 4 });
+  assert.equal(r.wer, 0.167);
+  assert.ok(r.words.every((w) => w.matched));
+  assert.deepEqual(r.words[3], { text: 'gampang.', start: 1.3, end: 2.4, matched: true });
+});

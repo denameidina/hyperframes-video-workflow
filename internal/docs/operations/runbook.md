@@ -86,7 +86,7 @@ npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (o
 npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/asset-catalog/sheets/*.webp
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
-npm run test:voice          # node --test scripts/voice.test.mjs scripts/voice-test-run.test.mjs (adapter suara, uji dengar)
+npm run test:voice          # node --test scripts/voice-*.test.mjs (adapter suara, uji dengar)
 npm run test:music          # node --test scripts/music.test.mjs (pustaka musik)
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 npm run check:style-examples # lint + validate + snapshot contoh style b-roll, satu host per gaya → renders/style-examples/<gaya>/ (-- <gaya> untuk satu)

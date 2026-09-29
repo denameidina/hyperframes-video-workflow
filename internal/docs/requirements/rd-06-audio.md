@@ -46,8 +46,10 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   2–30 s, then the CLI shall menolak tanpa memanggil Gemini.
 - **RD-06-12** (Unwanted) — If `shared/voices/<name>/voice.json` tujuan `clone` atau
   `design` sudah ada tanpa `--force`, then the CLI shall menolak.
-- **RD-06-13** (Ubiquitous) — Id suara pribadi dan rekaman referensi/consent shall hanya
-  disimpan di `shared/voices/<name>/` (gitignored), tidak di file ter-track.
+- **RD-06-13** (Ubiquitous) — Rekaman referensi/consent dan `voice.json` (id suara pribadi)
+  shall disimpan di `shared/voices/<name>/` (gitignored); file ter-track seperti
+  `config/voices.json` hanya merujuknya lewat `voiceRef`. Id yang tercatat di output kerja
+  (`voice-meta.json`, `key.json`) berada di folder yang di-ignore.
 
 ## Uji dengar
 
