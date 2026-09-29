@@ -14,6 +14,7 @@
 //        npm run video -- voice <slug> [--preset <p>]   (script.md -> voice/, processed-audio.wav, processed-transcript.json)
 //        npm run video -- bgm <slug> --track <id> [--from <s>]   (shared/music track -> ducked bgm.wav + bgm.json)
 //        npm run video -- storyboard <slug>   (overlay-timeline.json scenes -> preview/storyboard-sheet.jpg)
+//        npm run video -- gate <slug> [approve|revise|qa <n>] [--note "…"]   (generate-mode gate status / decision, ADR-0026)
 // Generate-mode spec: docs/superpowers/specs/2026-09-29-generate-mode-explainer-design.md (ADR-0025)
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
@@ -23,6 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs, parseEnv } from 'node:util';
 import { runBgm } from './lib/bgm.mjs';
 import { GENERATE_TEMPLATE, briefStub, voiceStep } from './lib/generate.mjs';
+import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { runStoryboard } from './lib/storyboard.mjs';
 import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
@@ -195,6 +197,20 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     const { dir, duration } = scaffold({ slug, root, duration: values.duration, generate: values.generate });
     console.log(`created ${dir} (${duration} s${values.generate ? ', generate mode' : ''})`);
     return;
+  }
+  if (cmd === 'gate') {
+    const dir = projectDir(slug, root);
+    if (!existsSync(dir)) throw new Error(`${dir} not found`);
+    const [, , action, n] = positionals;
+    if (!action) {
+      const status = gateStatus(dir, { slug });
+      console.log(formatGateStatus(status, slug));
+      return status;
+    }
+    if (!['approve', 'revise', 'qa'].includes(action)) throw new Error('gate action must be approve, revise, or qa');
+    const entry = recordDecision(dir, { gate: Number(n), decision: action, note: values.note ?? '', by: 'cli' });
+    console.log(`gate ${entry.gate} ${action} recorded (${entry.at})`);
+    return entry;
   }
   if (cmd === 'voice' || cmd === 'bgm' || cmd === 'storyboard') {
     const dir = projectDir(slug, root);

@@ -219,6 +219,7 @@ npm run video -- new <slug> --generate      # generate mode: starter without bas
 npm run video -- voice <slug> [--preset <p>]  # script.md -> voiceover, processed-audio.wav, processed-transcript.json
 npm run video -- bgm <slug> --track <id> [--from <s>]  # shared/music track -> ducked bgm.wav + bgm.json
 npm run video -- storyboard <slug>          # Gate 2 sheet from each scene's style example -> preview/storyboard-sheet.jpg
+npm run video -- gate <slug> [approve|revise|qa <n>] [--note "…"]  # generate-mode gate status / decision -> gates.json (ADR-0026)
 npm run test:music             # unit test the music library
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved

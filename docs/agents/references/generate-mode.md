@@ -37,6 +37,9 @@ creates `research/`, an empty `sources.json`, the generate starter, and a brief 
 
 ### 1. Research
 
+- `research/request.json` (written by the Studio form, ADR-0026): every filled choice
+  (`urls`, `repurpose`, `voice`, `duration`, `style`, `music`) is binding; an empty one
+  (`null` / `[]`) is yours to decide. Research every URL it lists.
 - `research/brief.md`: Dena's brief, verbatim.
 - `research/NN-<domain>.md` per URL: URL, retrieved date, the passages used, and what is
   worth capturing on screen (for a `vox` scene). Read the page yourself; never quote from
@@ -97,6 +100,13 @@ names the words that were misread: fix the script or the lexicon and run it agai
 Stop. Give Dena the script (`script.md`) and the voice (`processed-audio.wav`, its
 duration, preset). Revisions: edit the script, run `video voice` again. Continue only
 after she approves.
+
+Every gate answer is recorded in `gates.json` (ADR-0026, RD-03-92). An answer typed into
+the session by Studio ("Gate N disetujui dari Studio …", "Gate N revisi dari Studio: …")
+is already recorded; an answer Dena gives in chat is recorded by you before you continue:
+`npm run video -- gate <slug> approve <n> [--note "…"]`, `… revise <n> --note "…"`, or
+`… qa 3`. `npm run video -- gate <slug>` prints where the project stands. The same rule
+applies at Gate 2 and Gate 3.
 
 ### 6. Brief Template (generate)
 
@@ -219,7 +229,8 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
 3. Check triggers R1, R2, R5, R6 as in edit mode; R1's sources are `script.md ## Fakta`
    and `research/`. R3 and R4 do not apply.
 4. Stop. Show Dena the sheet, `storyboard.md`, the style world, and the music. She
-   approves or changes; record it in `## Gate 2 Result`.
+   approves or changes; record it in `## Gate 2 Result` and, when she answered in chat,
+   with `npm run video -- gate <slug> approve 2` (or `revise 2 --note "…"`).
 
 ## Build (generate)
 
@@ -241,7 +252,8 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
 6. **Captions.** Build rail captions from `caption-beats.json`, skipping beats with
    `"rail": "hidden"`; hook and CTA cards as in edit mode.
 7. **Verify and render** as in edit mode: Still Check per scene, `npm run video -- check
-   <slug>`, `npm run video -- render <slug>`, **Gate 3**.
+   <slug>`, `npm run video -- render <slug>`, **Gate 3** (record a chat answer with
+   `npm run video -- gate <slug> approve|revise|qa 3`).
 
 ## QA (generate)
 

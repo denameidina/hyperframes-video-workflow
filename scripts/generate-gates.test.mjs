@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFile
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { briefStub } from './lib/generate.mjs';
+import { main } from './video.mjs';
 import { GateError, editedSinceDecision, fingerprint, formatGateStatus, gateStatus, readGates, recordDecision, sheetsOf } from './lib/gates.mjs';
 
 const T0 = new Date('2026-09-29T08:00:00Z');
@@ -153,4 +154,28 @@ test('sheetsOf lists only storyboard sheets, sorted; formatGateStatus reads well
   recordDecision(dir, { gate: 1, decision: 'revise', note: 'hook terlalu panjang', by: 'studio', now });
   assert.equal(formatGateStatus(gateStatus(dir), 'demo'), 'Gate 1: agent merevisi (menunggu artefak baru)\nterakhir: Gate 1 revise — hook terlalu panjang (studio, 2026-09-29T08:00:00.000Z)');
   assert.match(formatGateStatus(gateStatus(project('x', { generate: false }).dir), 'x'), /bukan proyek mode generate/);
+});
+
+test('video gate prints the status and records cli decisions', () => {
+  const { root, dir, put } = project('demo');
+  put('script.md', 'Halo.\n', 1000);
+  put('processed-audio.wav', 'A', 1001);
+  const logs = [];
+  const log = console.log;
+  console.log = (m) => logs.push(String(m));
+  try {
+    const s = main(['gate', 'demo'], { root });
+    assert.deepEqual([s.phase, s.gate], ['gate', 1]);
+    assert.match(logs.at(-1), /^Gate 1: menunggu keputusan/);
+    assert.throws(() => main(['gate', 'demo', 'revise', '1'], { root }), /revise needs a note/);
+    const e = main(['gate', 'demo', 'approve', '1', '--note', 'disetujui di chat'], { root });
+    assert.deepEqual([e.gate, e.decision, e.by, e.note], [1, 'approve', 'cli', 'disetujui di chat']);
+    assert.match(logs.at(-1), /^gate 1 approve recorded/);
+    assert.throws(() => main(['gate', 'demo', 'qa', '1'], { root }), /qa is a Gate 3 decision only/);
+    assert.throws(() => main(['gate', 'demo', 'ship', '2'], { root }), /gate action must be approve, revise, or qa/);
+    assert.throws(() => main(['gate', 'nope'], { root }), /not found/);
+  } finally {
+    console.log = log;
+  }
+  assert.equal(readGates(dir).log.length, 1);
 });

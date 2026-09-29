@@ -37,7 +37,9 @@ When `creative-brief.md` sets `mode: generate`, follow Build (generate) in
 `npm run video -- bgm <slug> --track <id> --from <s>` before assembly, one `SK.clip` per
 scene mounted on tracks 4 and 7, `.bg-fill` in the style world colour, and rail captions
 without the `"rail": "hidden"` beats. Verification, render, and Gate 3 are unchanged
-(ADR-0025, RD-03-87).
+(ADR-0025, RD-03-87). Record Dena's Gate 3 answer with
+`npm run video -- gate <slug> approve|revise|qa 3` when it comes from chat (Studio records
+its own).
 
 ## Core Principle
 

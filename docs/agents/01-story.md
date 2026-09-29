@@ -44,7 +44,9 @@ and stops at Gate 1 (script + voice, mandatory). Follow Story (generate) in
 `docs/agents/references/generate-mode.md` instead of Steps 2 and 4–9 below. Step 1
 (context) applies, except that the project is scaffolded with
 `npm run video -- new <slug> --generate`; Step 3 (direction, format `explainer`) applies. The 1.2x speed, the verbatim transcript
-hook, cuts, and `video cut` do not apply (ADR-0025, RD-03-75…81).
+hook, cuts, and `video cut` do not apply (ADR-0025, RD-03-75…81). A project made in Studio
+also has `research/request.json`; its filled choices are binding, and gate answers are
+recorded with `npm run video -- gate` (ADR-0026).
 
 ## Core Principles
 

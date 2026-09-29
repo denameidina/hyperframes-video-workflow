@@ -349,6 +349,13 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
 - **RD-03-91** (Ubiquitous) — `gates.json` shall hanya ditulis lewat
   `scripts/lib/gates.mjs`, hanya ditambah (log), dan ditulis atomik; isi rusak atau versi
   lain menghasilkan error yang menyebut file itu, tanpa menimpanya.
+- **RD-03-92** (Event-driven) — When Dena menjawab sebuah gate mode generate di chat, the
+  agent shall mencatat jawabannya dengan
+  `npm run video -- gate <slug> approve|revise|qa <n> [--note]` sebelum melanjutkan; jawaban
+  yang diketik Studio ke sesi sudah tercatat.
+- **RD-03-93** (State-driven) — While `research/request.json` ada, fase mode generate shall
+  memakai setiap pilihan yang terisi (URL, repurpose, preset suara, durasi, style, musik)
+  dan menentukan sendiri pilihan yang kosong.
 
 ## Referensi
 

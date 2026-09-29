@@ -38,7 +38,8 @@ When `creative-brief.md` sets `mode: generate`, follow Screen Plan (generate) in
 for beats a scene already shows), a `## Style World`, scenes that cover every second
 (treatment `full`, `example`), `## Music`, and `storyboard.md` +
 `npm run video -- storyboard <slug>`. Gate 2 always stops for Dena's approval; R3 and R4
-do not apply (ADR-0025, RD-03-82…86).
+do not apply (ADR-0025, RD-03-82…86). Record Dena's Gate 2 answer with
+`npm run video -- gate <slug> approve 2` when it comes from chat (Studio records its own).
 
 ## Core Principles
 

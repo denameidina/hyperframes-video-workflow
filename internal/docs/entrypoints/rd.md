@@ -11,7 +11,7 @@ di `requirements/`.
 - [RD-02 Composition & Render](../requirements/rd-02-composition-render.md) — kontrak komposisi HyperFrames.
 - [RD-03 Video Editing Workflow](../requirements/rd-03-video-editing-workflow.md)
   — workflow 4 fase + gate + hook verbatim `00:00.00-<hook_end>` dari transkrip (panjang diputuskan Story);
-  mode generate (RD-03-75…87): naskah + TTS, Gate 1/2 wajib, storyboard sheet.
+  mode generate (RD-03-75…93): naskah + TTS, Gate 1/2 wajib, storyboard sheet, gates.json + video gate.
 - [RD-04 Transcription & Setup](../requirements/rd-04-transcription-setup.md) — whisper + setup.
 - [RD-05 Studio Web UI](../requirements/rd-05-studio.md) — web UI lokal: project, sesi agen, publish, tab Suara/Musik.
 - [RD-06 Audio](../requirements/rd-06-audio.md) — adapter suara TTS, uji dengar blind, pustaka musik,
