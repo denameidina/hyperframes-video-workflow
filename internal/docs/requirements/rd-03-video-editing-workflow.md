@@ -356,6 +356,18 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
 - **RD-03-93** (State-driven) — While `research/request.json` ada, fase mode generate shall
   memakai setiap pilihan yang terisi (URL, repurpose, preset suara, durasi, style, musik)
   dan menentukan sendiri pilihan yang kosong.
+- **RD-03-94** (Ubiquitous) — Mode generate shall membaca `- format:` di
+  `creative-brief.md` (`explainer`, `kinetic-post`, `motion-short`; tanpa baris =
+  `explainer`); nilai lain menghasilkan error yang menyebut `creative-brief.md` (ADR-0027).
+- **RD-03-95** (State-driven) — While format-nya `kinetic-post` atau `motion-short`, the
+  system shall memakai dua gate: Gate 1 (sidik jari `script.md`, `processed-audio.wav`,
+  semua storyboard sheet, `storyboard.md`) dan Gate 2 (render), dengan urutan `story` →
+  `screen-plan` → Gate 1 → `build` → Gate 2 → `done`; `qa` hanya di Gate 2 dan entri `edit`
+  tidak berlaku.
+- **RD-03-96** (Event-driven) — When `npm run video -- new <slug> --generate --format <f>`
+  dijalankan, the CLI shall menulis `- format: <f>` di brief stub dan, untuk format musik,
+  starter tanpa elemen `bgm-audio`; format tak dikenal atau `--format` tanpa `--generate`
+  gagal sebelum ada berkas yang dibuat.
 
 ## Referensi
 

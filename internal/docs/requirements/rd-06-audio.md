@@ -120,6 +120,9 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   tanpa menulis `bgm.wav`.
 - **RD-06-28** (Ubiquitous) — `video bgm` shall deterministik: input yang sama menghasilkan
   `bgm.wav` yang identik byte per byte.
+- **RD-06-29** (Unwanted) — If proyeknya berformat `kinetic-post` atau `motion-short`, then
+  `video voice` dan `video bgm` shall gagal dengan pesan yang menyebut
+  `npm run video -- music` (ADR-0027).
 
 ## Referensi
 

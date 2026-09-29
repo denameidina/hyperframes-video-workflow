@@ -4,6 +4,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
+import { finalGate, isMusicFormat, readFormat } from './formats.mjs';
 
 export const GATES_FILE = 'gates.json';
 export const DECISIONS = ['approve', 'revise', 'qa', 'edit'];
@@ -41,17 +42,22 @@ export function sheetsOf(dir) {
   return readdirSync(preview).filter((f) => SHEET_RE.test(f)).sort().map((f) => `preview/${f}`);
 }
 
-// The files a gate approves (RD-03-89). visual-plan.md is left out on purpose: the agent writes
-// "## Gate 2 Result" into it after the approval, which would reopen Gate 2.
-export function gateFiles(dir, gate, slug = basename(dir)) {
+// The files a gate approves (RD-03-89, RD-03-95). visual-plan.md is left out on purpose: the agent writes
+// "## Gate 2 Result" into it after the approval, which would reopen the gate.
+export function gateFiles(dir, gate, slug = basename(dir), format = readFormat(dir)) {
+  if (isMusicFormat(format)) {
+    if (gate === 1) return ['script.md', 'processed-audio.wav', ...sheetsOf(dir), 'storyboard.md'];
+    if (gate === 2) return [`renders/${slug}.mp4`];
+    throw new GateError('bad-gate', `a ${format} project has Gate 1 and Gate 2 (got ${gate})`);
+  }
   if (gate === 1) return ['script.md', 'processed-audio.wav'];
   if (gate === 2) return [...sheetsOf(dir), 'storyboard.md'];
   if (gate === 3) return [`renders/${slug}.mp4`];
   throw new GateError('bad-gate', `gate must be 1, 2, or 3 (got ${gate})`);
 }
 
-export function fingerprint(dir, gate, slug = basename(dir)) {
-  return Object.fromEntries(gateFiles(dir, gate, slug).filter((f) => existsSync(join(dir, f))).map((f) => [f, sha(join(dir, f))]));
+export function fingerprint(dir, gate, slug = basename(dir), format = readFormat(dir)) {
+  return Object.fromEntries(gateFiles(dir, gate, slug, format).filter((f) => existsSync(join(dir, f))).map((f) => [f, sha(join(dir, f))]));
 }
 
 export function readGates(dir) {
@@ -75,21 +81,38 @@ function sameFingerprint(a, b) {
 
 export function gateStatus(dir, { slug = basename(dir) } = {}) {
   const { log } = readGates(dir);
-  const base = { mode: isGenerate(dir) ? 'generate' : 'edit', log };
+  const generate = isGenerate(dir);
+  let format = 'explainer';
+  if (generate) {
+    try {
+      format = readFormat(dir);
+    } catch (e) {
+      throw new GateError('bad-file', e.message);
+    }
+  }
+  const base = { mode: generate ? 'generate' : 'edit', format, finalGate: finalGate(format), log };
   const running = (phase) => ({ ...base, phase, gate: null, state: null, voiceStale: false, fingerprint: null, last: log.at(-1) || null });
   if (base.mode !== 'generate') return running(null);
   const has = (f) => existsSync(join(dir, f));
   // null when the gate is approved for the files on disk now; otherwise the waiting status
   const at = (gate) => {
-    const fp = fingerprint(dir, gate, slug);
+    const fp = fingerprint(dir, gate, slug, format);
     const mine = log.filter((e) => e.gate === gate && e.decision !== 'edit' && sameFingerprint(e.fingerprint, fp));
     const last = mine.at(-1);
     if (last?.decision === 'approve') return null;
     const state = !last ? 'waiting' : last.decision === 'revise' ? 'revising' : 'qa';
-    const voiceStale = gate === 1 && statSync(join(dir, 'script.md')).mtimeMs > statSync(join(dir, 'processed-audio.wav')).mtimeMs;
+    const voiceStale = format === 'explainer' && gate === 1 && statSync(join(dir, 'script.md')).mtimeMs > statSync(join(dir, 'processed-audio.wav')).mtimeMs;
     return { ...base, phase: 'gate', gate, state, voiceStale, fingerprint: fp, last: log.filter((e) => e.gate === gate).at(-1) || null };
   };
   if (!has('script.md') || !has('processed-audio.wav')) return running('story');
+  if (isMusicFormat(format)) {
+    // kinetic-post, motion-short: text + music + storyboard are one gate, the render the other (ADR-0027)
+    if (!sheetsOf(dir).length) return running('screen-plan');
+    const g1 = at(1);
+    if (g1) return g1;
+    if (!has(`renders/${slug}.mp4`)) return running('build');
+    return at(2) || running('done');
+  }
   const g1 = at(1);
   if (g1) return g1;
   if (!sheetsOf(dir).length) return running('screen-plan');
@@ -106,8 +129,15 @@ export function recordDecision(dir, { gate, decision, note = '', by, fingerprint
   const text = String(note ?? '').trim();
   if (text.length > MAX_NOTE) throw new GateError('bad-note', `note is longer than ${MAX_NOTE} characters`);
   if (decision === 'revise' && !text) throw new GateError('note-required', 'revise needs a note: what should change');
-  if (decision === 'qa' && gate !== 3) throw new GateError('bad-decision', 'qa is a Gate 3 decision only');
-  if (decision === 'edit' && gate !== 1) throw new GateError('bad-decision', 'edit is a Gate 1 entry only');
+  let format;
+  try {
+    format = readFormat(dir);
+  } catch (e) {
+    throw new GateError('bad-file', e.message);
+  }
+  const last = finalGate(format);
+  if (decision === 'qa' && gate !== last) throw new GateError('bad-decision', `qa is a Gate ${last} decision only`);
+  if (decision === 'edit' && (gate !== 1 || isMusicFormat(format))) throw new GateError('bad-decision', 'edit is an explainer Gate 1 entry only');
   const status = gateStatus(dir);
   if (status.phase !== 'gate' || status.gate !== gate) {
     const where = status.phase === 'gate' ? `Gate ${status.gate}` : status.phase;
@@ -139,7 +169,8 @@ const STATE_TEXT = { waiting: 'menunggu keputusan', revising: 'agent merevisi (m
 
 export function formatGateStatus(s, slug) {
   if (s.mode !== 'generate') return `${slug} bukan proyek mode generate (creative-brief.md tanpa "mode: generate")`;
-  const lines = [s.phase === 'gate' ? `Gate ${s.gate}: ${STATE_TEXT[s.state]}` : PHASE_TEXT[s.phase]];
+  const head = s.phase === 'gate' ? `Gate ${s.gate}: ${STATE_TEXT[s.state]}` : PHASE_TEXT[s.phase];
+  const lines = [isMusicFormat(s.format) ? `[${s.format}] ${head}` : head];
   if (s.voiceStale) lines.push(`naskah lebih baru dari suara: jalankan npm run video -- voice ${slug}`);
   const last = s.log.at(-1);
   if (last) lines.push(`terakhir: Gate ${last.gate} ${last.decision}${last.note ? ` — ${last.note}` : ''} (${last.by}, ${last.at})`);

@@ -10,7 +10,7 @@
 //        npm run video -- migrate-sources [--apply]   (raw/ + source.mp4 -> shared/ + sources.json, once)
 // Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
 // Multi-source spec: docs/superpowers/specs/2026-09-29-multi-source-projects-design.md (ADR-0022)
-//        npm run video -- new <slug> --generate   (generate mode: templates/dena-generate, research/, brief stub)
+//        npm run video -- new <slug> --generate [--format explainer|kinetic-post|motion-short]   (generate mode: templates/dena-generate, research/, brief stub)
 //        npm run video -- voice <slug> [--preset <p>]   (script.md -> voice/, processed-audio.wav, processed-transcript.json)
 //        npm run video -- bgm <slug> --track <id> [--from <s>]   (shared/music track -> ducked bgm.wav + bgm.json)
 //        npm run video -- storyboard <slug>   (overlay-timeline.json scenes -> preview/storyboard-sheet.jpg)
@@ -23,7 +23,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, parseEnv } from 'node:util';
 import { runBgm } from './lib/bgm.mjs';
-import { GENERATE_TEMPLATE, briefStub, voiceStep } from './lib/generate.mjs';
+import { GENERATE_TEMPLATE, briefStub, musicStarter, voiceStep } from './lib/generate.mjs';
+import { checkFormat, isMusicFormat } from './lib/formats.mjs';
 import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { runStoryboard } from './lib/storyboard.mjs';
@@ -66,7 +67,9 @@ export function resolveDuration({ duration, dir, probe = probeDuration, media = 
 
 const hasEntry = (p) => { try { lstatSync(p); return true; } catch { return false; } };
 
-export function scaffold({ slug, root = '.', duration, probe, generate = false }) {
+export function scaffold({ slug, root = '.', duration, probe, generate = false, format }) {
+  if (format !== undefined && !generate) throw new Error('--format needs --generate (formats belong to generate mode)');
+  const fmt = generate ? checkFormat(format ?? 'explainer') : null; // before anything is created
   const dir = projectDir(slug, root);
   if (generate && hasEntry(dir)) throw new Error(`${dir} already exists; generate mode starts a new project`);
   const index = join(dir, 'index.html');
@@ -77,14 +80,15 @@ export function scaffold({ slug, root = '.', duration, probe, generate = false }
   if (!hasEntry(join(dir, 'sources.json'))) writeManifest(dir, { version: 1, sources: [] });
   if (generate) {
     mkdirSync(join(dir, 'research'), { recursive: true });
-    writeFileSync(join(dir, 'creative-brief.md'), briefStub(slug));
+    writeFileSync(join(dir, 'creative-brief.md'), briefStub(slug, fmt));
   }
   const d = resolveDuration({ duration, dir, probe, media: generate ? 'processed-audio.wav' : 'processed.mp4' });
   const tpl = join(root, generate ? GENERATE_TEMPLATE : TEMPLATE);
-  writeFileSync(index, fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d }));
+  const html = fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d });
+  writeFileSync(index, generate && isMusicFormat(fmt) ? musicStarter(html) : html);
   cpSync(join(tpl, 'hyperframes.json'), join(dir, 'hyperframes.json'));
   if (!hasEntry(join(dir, 'vendor'))) symlinkSync('../../vendor', join(dir, 'vendor'));
-  return { dir, duration: d };
+  return { dir, duration: d, format: fmt };
 }
 
 const hf = (...args) => ['npx', ['--yes', HYPERFRAMES, ...args]];
@@ -179,6 +183,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       'add-shared': { type: 'string' }, set: { type: 'string' }, role: { type: 'string' }, note: { type: 'string' },
       detected: { type: 'boolean', default: false }, remove: { type: 'string' }, apply: { type: 'boolean', default: false },
       generate: { type: 'boolean', default: false }, preset: { type: 'string' }, track: { type: 'string' },
+      format: { type: 'string' }, bars: { type: 'string' },
     },
   });
   const [cmd, slug] = positionals;
@@ -194,8 +199,8 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     return;
   }
   if (cmd === 'new') {
-    const { dir, duration } = scaffold({ slug, root, duration: values.duration, generate: values.generate });
-    console.log(`created ${dir} (${duration} s${values.generate ? ', generate mode' : ''})`);
+    const { dir, duration, format } = scaffold({ slug, root, duration: values.duration, generate: values.generate, format: values.format });
+    console.log(`created ${dir} (${duration} s${values.generate ? `, generate mode, ${format}` : ''})`);
     return;
   }
   if (cmd === 'gate') {

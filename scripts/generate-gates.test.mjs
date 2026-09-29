@@ -6,16 +6,17 @@ import { join } from 'node:path';
 import { briefStub } from './lib/generate.mjs';
 import { main } from './video.mjs';
 import { GateError, editedSinceDecision, fingerprint, formatGateStatus, gateStatus, readGates, recordDecision, sheetsOf } from './lib/gates.mjs';
+import { DURATION, finalGate, readFormat } from './lib/formats.mjs';
 
 const T0 = new Date('2026-09-29T08:00:00Z');
 const now = () => T0;
 
 // a generate project under a temp root; put(f, text, secondsAfterEpoch) sets the mtime so voiceStale is deterministic
-function project(slug = 'demo', { generate = true } = {}) {
+function project(slug = 'demo', { generate = true, format } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'gates-'));
   const dir = join(root, 'videos', slug);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, 'creative-brief.md'), generate ? briefStub(slug) : '# Creative Brief\n\n- gate_cut: off\n');
+  writeFileSync(join(dir, 'creative-brief.md'), generate ? briefStub(slug, format) : '# Creative Brief\n\n- gate_cut: off\n');
   const put = (f, text = f, at = 1000) => {
     mkdirSync(join(dir, f, '..'), { recursive: true });
     writeFileSync(join(dir, f), text);
@@ -189,4 +190,46 @@ test('video gate needs a gate number; fingerprints follow a rewritten file (hash
   assert.equal(fingerprint(dir, 1)['processed-audio.wav'], a, 'cached');
   put('processed-audio.wav', 'B', 1002);
   assert.notEqual(fingerprint(dir, 1)['processed-audio.wav'], a);
+});
+
+test('a music-driven format walks story -> screen-plan -> Gate 1 (text + music + storyboard) -> build -> Gate 2 -> done', () => {
+  const { dir, put } = project('post', { format: 'kinetic-post' });
+  const code = (fn) => { try { fn(); return 'ok'; } catch (e) { return e.code; } };
+  assert.deepEqual(status(dir), ['story', null, null]);
+  put('script.md', 'BUKAN\nAI-NYA\n', 1000);
+  put('processed-audio.wav', 'M', 1001);
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+  put('preview/storyboard-sheet.jpg', 'S');
+  put('storyboard.md', '| 1 | 1 | 0:00 | BUKAN |');
+  assert.deepEqual(status(dir), ['gate', 1, 'waiting']);
+  const s = gateStatus(dir);
+  assert.deepEqual([s.format, s.finalGate, s.voiceStale], ['kinetic-post', 2, false]);
+  assert.deepEqual(Object.keys(s.fingerprint).sort(), ['preview/storyboard-sheet.jpg', 'processed-audio.wav', 'script.md', 'storyboard.md']);
+  assert.equal(code(() => recordDecision(dir, { gate: 1, decision: 'qa', by: 'cli', now })), 'bad-decision');
+  assert.equal(code(() => recordDecision(dir, { gate: 1, decision: 'edit', by: 'studio', now })), 'bad-decision');
+  recordDecision(dir, { gate: 1, decision: 'approve', by: 'studio', now });
+  assert.deepEqual(status(dir), ['build', null, null]);
+  put('renders/post.mp4', 'R');
+  assert.deepEqual(status(dir), ['gate', 2, 'waiting']);
+  recordDecision(dir, { gate: 2, decision: 'qa', by: 'studio', now });
+  assert.deepEqual(status(dir), ['gate', 2, 'qa']);
+  recordDecision(dir, { gate: 2, decision: 'approve', by: 'studio', now });
+  assert.deepEqual(status(dir), ['done', null, null]);
+  assert.equal(code(() => fingerprint(dir, 3)), 'bad-gate');
+  put('storyboard.md', 'changed');
+  assert.deepEqual(status(dir), ['gate', 1, 'waiting'], 'a new storyboard reopens Gate 1');
+  assert.match(formatGateStatus(gateStatus(dir), 'post'), /^\[kinetic-post\] Gate 1: menunggu keputusan/);
+});
+
+test('formats: durations, final gates, readFormat default and errors', () => {
+  assert.deepEqual([DURATION.explainer, DURATION['kinetic-post'], DURATION['motion-short']], [[30, 90], [8, 20], [15, 40]]);
+  assert.deepEqual([finalGate('explainer'), finalGate('kinetic-post'), finalGate('motion-short')], [3, 2, 2]);
+  const { dir } = project('x');
+  assert.equal(readFormat(dir), 'explainer');
+  assert.equal(gateStatus(dir).finalGate, 3);
+  writeFileSync(join(dir, 'creative-brief.md'), '# B\n\n## Workflow Settings\n\n- mode: generate\n');
+  assert.equal(readFormat(dir), 'explainer', 'no format line: a project made before ADR-0027');
+  writeFileSync(join(dir, 'creative-brief.md'), '# B\n\n- mode: generate\n- format: reel\n');
+  assert.throws(() => readFormat(dir), /creative-brief\.md: "reel" is not one of explainer, kinetic-post, motion-short/);
+  assert.throws(() => gateStatus(dir), (e) => e.code === 'bad-file');
 });

@@ -316,7 +316,8 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 
 ## Mode generate (ADR-0025)
 
-- `creative-brief.md` `## Workflow Settings` `mode: generate` (default `edit`); Hook
+- `creative-brief.md` `## Workflow Settings` `mode: generate` (default `edit`) dan
+  `format: explainer | kinetic-post | motion-short` (tanpa baris = explainer, ADR-0027); Hook
   `Status: scripted` dengan `hook_end` = `voice/voice-meta.json` `paragraphs[0].end`;
   bagian `## Voice` (preset, provider, model).
 - `research/`: `brief.md` (verbatim), `NN-<domain>.md` (URL, tanggal ambil, kutipan),

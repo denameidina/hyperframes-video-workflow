@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, renameSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { loudnessArgs, parseLoudnorm } from './cut-plan.mjs';
+import { isMusicFormat, readFormat } from './formats.mjs';
 import { LICENSES, MUSIC_DIR, checkCatalog, findTrack, readCatalog } from './music.mjs';
 import { writeJson } from './voice/render.mjs';
 import { probeDuration } from '../video.mjs';
@@ -53,6 +54,8 @@ function exec(run, args) {
 }
 
 export function runBgm({ dir, root = '.', trackId, from = 0, run = spawnSync }) {
+  const format = readFormat(dir);
+  if (isMusicFormat(format)) throw new Error(`${dir} is a ${format} project: the music is its only audio; use npm run video -- music <slug> --track <id> --bars <n>`);
   const voice = join(dir, 'processed-audio.wav');
   if (!existsSync(voice)) throw new Error(`${voice} not found; run npm run video -- voice <slug> first`);
   const f = Number(from);

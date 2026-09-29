@@ -217,3 +217,29 @@ test('video storyboard splits more than 28 scenes over several sheets and remove
   assert.equal((pages[0].match(/class="tile"/g) || []).length, 28);
   assert.match(pages[1], /<b>29<\/b> 1:24\.0–1:27\.0 · tx-07-zoom-grid/);
 });
+
+test('new --generate --format: the brief names the format; a music format has no separate bgm element', () => {
+  const root = genRoot();
+  const { dir } = scaffold({ slug: 'post', root, generate: true, format: 'kinetic-post' });
+  assert.match(readFileSync(join(dir, 'creative-brief.md'), 'utf8'), /^- format: kinetic-post$/m);
+  const html = readFileSync(join(dir, 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /bgm\.wav|bgm-audio/);
+  assert.match(html, /src="processed-audio\.wav"/);
+  assert.match(html, /npm run video -- music/);
+  const ex = scaffold({ slug: 'ex', root, generate: true });
+  assert.match(readFileSync(join(ex.dir, 'creative-brief.md'), 'utf8'), /^- format: explainer$/m);
+  assert.match(readFileSync(join(ex.dir, 'index.html'), 'utf8'), /src="bgm\.wav"/);
+  assert.throws(() => scaffold({ slug: 'bad', root, generate: true, format: 'reel' }), /"reel" is not one of/);
+  assert.equal(existsSync(join(root, 'videos/bad')), false, 'a bad format creates nothing');
+  assert.throws(() => scaffold({ slug: 'edit', root, format: 'kinetic-post' }), /--format needs --generate/);
+  main(['new', 'short', '--generate', '--format', 'motion-short'], { root });
+  assert.match(readFileSync(join(root, 'videos/short/creative-brief.md'), 'utf8'), /^- format: motion-short$/m);
+});
+
+test('video voice and video bgm refuse a music-driven project', async () => {
+  const root = genRoot();
+  const { dir } = scaffold({ slug: 'post', root, generate: true, format: 'kinetic-post' });
+  writeFileSync(join(dir, 'script.md'), 'BUKAN\n');
+  await assert.rejects(main(['voice', 'post'], { root, env: {}, run: fakeMedia().run }), /kinetic-post project: it has no narration/);
+  assert.throws(() => main(['bgm', 'post', '--track', 'm01-calm'], { root, env: {}, run: fakeMedia().run }), /kinetic-post project: the music is its only audio/);
+});
