@@ -26,6 +26,8 @@ Fungsi pendukung: transkripsi lokal & setup lingkungan
 | Komposisi & render | [rd-02-composition-render](rd-02-composition-render.md) | `index.html`, HyperFrames |
 | Workflow editing (4 fase) | [rd-03-video-editing-workflow](rd-03-video-editing-workflow.md) | `docs/agents/*` |
 | Transkripsi & setup | [rd-04-transcription-setup](rd-04-transcription-setup.md) | whisper.cpp, setup docs |
+| Studio web UI | [rd-05-studio](rd-05-studio.md) | `scripts/studio.mjs`, `scripts/studio/` |
+| Audio: suara TTS, uji dengar, musik | [rd-06-audio](rd-06-audio.md) | `scripts/voice.mjs`, `scripts/music.mjs`, `scripts/lib/voice/` |
 
 ## Batasan lintas domain (ubiquitous)
 

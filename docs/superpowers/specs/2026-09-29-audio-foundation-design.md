@@ -406,3 +406,45 @@ diperbarui di commit yang sama dengan kodenya.
 - Form "Generate video" dan panel review project di Studio — sub-proyek 3.
 - ElevenLabs, MiniMax, OmniVoice, Higgs Audio, Kokoro.
 - Pemeriksaan klaim Content ID otomatis.
+
+## Amandemen saat planning (2026-09-29, hasil spike)
+
+Semua butir di bawah diverifikasi terhadap API Gemini dan mesin ini sebelum plan
+`docs/superpowers/plans/2026-09-29-audio-foundation.md` ditulis.
+
+1. **Nama key `GEMINI_TTS_API_KEY`**, bukan `GEMINI_API_KEY`. Studio memuat `.env` ke
+   sesi agen tmux, dan `hyperframes snapshot` memakai `GEMINI_API_KEY` untuk mengirim
+   frame ke Gemini (RD-02-24).
+2. **Tidak ada suara prebuilt native Indonesia** di Gemini (2.089 suara; terdekat 8 suara
+   `jv-ID` berlogat Jawa). Kandidat uji dengar menjadi: clone Dena; 2 voice design
+   `id-ID`; 2 terbaik saringan WER dari pool prebuilt Gemini (termasuk 2 `jv-ID`);
+   2 terbaik saringan WER dari 10 suara Supertonic. Flash-Lite dicoret: selisih biaya
+   hanya ±USD 0,0045 per menit.
+3. **Bentuk API terverifikasi.** Sintesis: `POST /v1beta/interactions`, gaya di
+   `input: [{ type: "text", text, annotations: [{ type: "speech_metadata", style }] }]`,
+   audio di `steps[].content[]` (`audio/wav`, 24 kHz mono). Voice:
+   `POST /v1beta/voices` dengan
+   `{ store: true, voice: { model, type, display_name, language_code?, prompted: { input } | replicated: { source_audio, consent_audio } } }`;
+   daftar suara `GET /v1beta/voices?type=prebuilt&page_size=100&page_token=…`.
+   Referensi clone 10–30 s (24 kHz mono 16-bit); kalimat consent bahasa Indonesia:
+   "Saya pemilik suara ini dan saya menyetujui Google menggunakan suara ini untuk membuat
+   model suara sintetis."
+4. **Harga dan data.** Free tier: input dipakai Google untuk memperbaiki produk; paid tier
+   tidak. Paid ±USD 0,0135 per menit audio sampai 2026-12-31. Paid tier dulu sebelum clone.
+5. **Supertonic**: `supertonic==1.3.1` lewat `uv run --python 3.12 --with …`, suara
+   `F1`–`F5` / `M1`–`M5`, output 44,1 kHz, model di `~/.cache/supertonic3` (unduhan pertama
+   ±70 s). Tag `<short pause>` / `<long pause>` dibaca sebagai koma / titik, bukan hening.
+6. **Prompt whisper** = prompt domain, bukan teks naskah (kalau naskah jadi prompt, kata
+   yang dilewati TTS ikut "terdengar"). Waktu `words.json` = waktu DTW.
+7. **Studio**: tab **Suara** dan **Musik** di UI yang ada, bukan halaman `/voice-test` dan
+   `/music` terpisah. File lewat `/api/voice-tests/<run>/files/<name>` dan
+   `/api/music/<id>/file`; path `/media/music/<x>` akan bentrok dengan route render
+   `/media/<slug>/<file>`.
+8. **Musik**: Pixabay menjawab 403 untuk unduhan skrip → unduh manual lalu
+   `music add <file>`. Mixkit, Freesound (preview HQ), dan OpenGameArt bisa diunduh
+   langsung. Bukti lisensi = catatan teks yang ditulis `music add` + file bukti opsional
+   `--proof`.
+9. **Cache** juga memakai `speed` di kuncinya, dan tinggal di `<out>/cache/`.
+10. **Layout kode**: `scripts/lib/voice/` (+ `providers/`), test `scripts/voice-*.test.mjs`
+    dengan helper `scripts/voice-fixtures.mjs`; `npm run test:voice` memakai glob.
+11. **Nomor kriteria**: RD-06-01…RD-06-22 dan RD-05-18…RD-05-20.

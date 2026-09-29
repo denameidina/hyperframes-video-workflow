@@ -27,6 +27,12 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Komposisi video | `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html` (di-ignore) | HTML+GSAP | Build |
 | Project meta | `meta.json` | JSON | HyperFrames |
 | HyperFrames config | `hyperframes.json` | JSON | HyperFrames |
+| Voice presets | `config/voices.json` | JSON | manusia + `npm run voice` |
+| Leksikon ucapan | `config/pronunciation.json` | JSON | manusia |
+| Suara pribadi | `shared/voices/<name>/voice.json` + `ref.wav`, `consent.wav` (di-ignore) | JSON + WAV | `npm run voice -- clone/design` |
+| Voiceover | `<out>/voiceover.wav`, `voice-meta.json`, `words.json` | WAV + JSON | `npm run voice` |
+| Uji dengar | `shared/voice-tests/<run>/` (di-ignore); config `config/voice-test.json` | WAV + JSON | `npm run voice -- test`, Studio |
+| Katalog musik | `shared/music/catalog.json` + `licenses/` (di-ignore) | JSON | `npm run music`, Studio |
 
 > Semua `videos/<slug>/**` di-ignore git kecuali `.gitkeep` (lihat
 > `.gitignore`). Data ini lokal dan tidak masuk repo publik.
@@ -56,6 +62,12 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
   - `REPLIZ_TIKTOK_ACCOUNT_ID` → platform `tiktok`
   - `REPLIZ_INSTAGRAM_ACCOUNT_ID` → platform `instagram`
   - `REPLIZ_THREADS_ACCOUNT_ID` → platform `threads`
+
+**Voice adapter (opsional, [ADR-0023](../adr/0023-voice-adapter-tts.md)):**
+
+- `GEMINI_TTS_API_KEY` — key Gemini untuk `npm run voice` (TTS, voice design, clone).
+  Sengaja bukan `GEMINI_API_KEY`: nama itu membuat `hyperframes snapshot` mengirim frame
+  ke Gemini (RD-02-24).
 
 Secret tidak boleh masuk git (`.gitignore` mengabaikan `.env` + `.env.*` kecuali
 `.env.example`). Lihat [security-standard](../security/security-standard.md).
@@ -252,6 +264,49 @@ reason), `Timeline` (ID, in–out, line, visual type, placement/track, motion,
 SFX cue, illustrative, Gate 2 trigger), `Asset Briefs For Build`,
 `Conflicts And Resolutions`, `Gate 2 Result`, `Handoff`. Template:
 `docs/agents/references/visual-planning.md`.
+
+## `config/voices.json` (voice adapter, ter-track)
+
+`{ version: 1, default: <preset | null>, presets: { <nama>: { provider, model?, voice?, voiceRef?, style?, speed?, language? } } }` —
+[ADR-0023](../adr/0023-voice-adapter-tts.md). `provider` ∈ `gemini | supertonic | recorded`.
+`voice` = id suara langsung (prebuilt Gemini seperti `kore`, atau `F1`–`F5` / `M1`–`M5`
+Supertonic). `voiceRef` = path ke `shared/voices/<name>/voice.json`
+(`{ id: "voice_…", type: "replicated" | "prompted", model, displayName, createdAt, expireTime, prompt?, language?, gender? }`,
+di-ignore, ditulis `npm run voice -- clone` / `design`). `style` = arahan gaya bicara Gemini
+(`speech_metadata.style`). `default` diisi setelah uji dengar.
+
+## `config/pronunciation.json` (leksikon ucapan, ter-track)
+
+`{ version: 1, entries: [{ term, say, only? }] }` — `term` diganti `say` sebagai kata utuh
+sebelum TTS; `only` (daftar provider) membatasi entri itu.
+
+## Output voiceover (`voiceover.wav`, `voice-meta.json`, `words.json`)
+
+Ditulis `renderVoice` (`scripts/lib/voice/render.mjs`) ke satu folder `<out>`
+(`npm run voice -- say --out`, tiap sampel uji dengar): `voiceover.wav` (48 kHz mono,
+−16 LUFS), `cache/<sha>.wav` per paragraf, `voice-meta.json`
+`{ version: 1, preset, provider, model, voice, paragraphs: [{ hash, text, start, end, cached }], duration, lufs, alignment: { wer, unmatched } | null, warnings: [] }`,
+dan `words.json` `[{ text, start, end, matched }]` (ejaan naskah, waktu whisper DTW).
+
+## Uji dengar `shared/voice-tests/<YYYYMMDD-HHMM>/` (di-ignore)
+
+Config ter-track `config/voice-test.json`
+`{ version: 1, script, ref, presets: [<preset>], screens: [{ id, keep, base: <preset tanpa voice>, voices: [<id>] }] }`
+dan naskah `config/voice-test-script.md`. Isi run: `script.md`, `screen.json`
+(`{ <pool>: [{ voice, wer, error? }] }`), `samples/<A…>.wav`, `ref.wav`, `work/<label>/`,
+`key.json` `{ version: 1, run, seed, createdAt, labels: { A: { name, provider, model, voice, duration, wer } } }`
+(tidak pernah dilayani Studio), `ratings.json`
+`{ version: 1, savedAt, ratings: { A: { natural, pronunciation, register, similarity, endurance, note } } }`
+(skor 1–5 atau `null`, ditulis Studio), dan `reveal.md`.
+
+## `shared/music/catalog.json` (pustaka musik, di-ignore)
+
+`{ version: 1, tracks: [{ id, file, title, author, sourceUrl, license, licenseProof, extraProof?, retrievedAt, sha256, duration, lufs, mood, energy, bpm, vocals, loopable, contentIdRisk, rejected, notes }] }` —
+[ADR-0024](../adr/0024-music-library.md). `id` = `mNN-<slug>`; `license` ∈
+`cc0 | public-domain | pixabay | mixkit`; `mood` ⊆
+`reflektif | tech-ringan | tensi | playful | sinematik | upbeat`; `energy` 1–5;
+`contentIdRisk` ∈ `none | unknown | known`. Bukti lisensi `licenses/<id>.txt`.
+Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 

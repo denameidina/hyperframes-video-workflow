@@ -11,6 +11,7 @@ Kanonik untuk: aturan keamanan & privasi repo. Diturunkan dari `SECURITY.md`,
 - `.env`, `.env.*` (kecuali `.env.example`).
 - Repliz access/secret key (`REPLIZ_ACCESS_KEY`, `REPLIZ_SECRET_KEY`).
 - Cloudflare API token, `CLOUDFLARE_ACCOUNT_ID` nyata.
+- `GEMINI_TTS_API_KEY` (adapter suara, ADR-0023).
 - R2 credential / signed URL.
 - Footage/media klien privat.
 
@@ -33,6 +34,17 @@ Receipt `videos/<slug>/repliz-publish.json` **tidak** menyimpan access/secret ke
 Cloudflare API token, header Basic Auth penuh, atau signed URL. Hanya
 `descriptionHash`/`publishKey` (sha256), `scheduleId`, status. Receipt tetap di
 working dir yang di-ignore git.
+
+## Data suara (ADR-0023)
+
+- Rekaman referensi, klip consent, dan id suara (`voice_…`) hanya di
+  `shared/voices/<name>/` (gitignored); `config/voices.json` merujuknya lewat `voiceRef`.
+- `voice clone` mengirim referensi + consent ke Google dan menyimpan voice di project
+  Google (TTL 1 tahun). Di free tier Gemini, input dipakai Google untuk memperbaiki
+  produk; aktifkan paid tier sebelum clone.
+- Clone hanya untuk suara pemilik akun yang merekam klip consent sendiri.
+- Key bernama `GEMINI_TTS_API_KEY`, bukan `GEMINI_API_KEY`, supaya `hyperframes snapshot`
+  di sesi agen tidak mengirim frame ke Gemini (RD-02-24).
 
 ## Approval sebelum aksi keluar
 

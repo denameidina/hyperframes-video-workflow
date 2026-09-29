@@ -5,7 +5,8 @@ Date: 2026-09-28
 Domain: web UI lokal untuk project video (sumber per project + shared library),
 sesi agen tmux, dan publish. Owner:
 `scripts/studio.mjs`, `scripts/studio/`. Keputusan:
-[ADR-0020](../adr/0020-studio-web-ui.md), [ADR-0022](../adr/0022-multi-source-projects.md).
+[ADR-0020](../adr/0020-studio-web-ui.md), [ADR-0022](../adr/0022-multi-source-projects.md),
+[ADR-0023](../adr/0023-voice-adapter-tts.md), [ADR-0024](../adr/0024-music-library.md).
 
 - **RD-05-01** (Ubiquitous) — Studio shall listen only on `127.0.0.1` and, while
   Tailscale reports `BackendState: Running` at startup, the host's Tailscale
@@ -55,3 +56,13 @@ sesi agen tmux, dan publish. Owner:
   and limit the effort choices to the efforts that model supports.
 - **RD-05-17** (Unwanted) — If a session request names a known model with an
   effort that model does not support, then Studio shall reject it with 400.
+- **RD-05-18** (Event-driven) — When Dena opens the Suara tab, Studio shall list the runs in
+  `shared/voice-tests/` (a `YYYYMMDD-HHMM` folder with `key.json`) and, for one run, serve
+  only `samples/<label>.wav` and `ref.wav`; `key.json` and candidate names are never served.
+- **RD-05-19** (Event-driven) — When Dena saves ratings, Studio shall check every label
+  against the run, every score (natural, pronunciation, register, similarity, endurance)
+  as an integer 1–5 or empty, and the note as at most 1000 characters, then write
+  `ratings.json` atomically; anything else gets 400.
+- **RD-05-20** (Event-driven) — When Dena rejects or restores a track in the Musik tab,
+  Studio shall set `rejected` in `shared/music/catalog.json` through
+  `scripts/lib/music.mjs`; a non-boolean value gets 400 and an unknown id 404.

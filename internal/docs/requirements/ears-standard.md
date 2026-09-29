@@ -34,3 +34,5 @@ tanpa kata "cepat/aman/bagus" tanpa angka.
 - [RD-02 Composition & Render](rd-02-composition-render.md)
 - [RD-03 Video Editing Workflow](rd-03-video-editing-workflow.md)
 - [RD-04 Transcription & Setup](rd-04-transcription-setup.md)
+- [RD-05 Studio Web UI](rd-05-studio.md)
+- [RD-06 Audio](rd-06-audio.md)
