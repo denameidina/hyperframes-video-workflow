@@ -1,11 +1,13 @@
-// Studio routes (ADR-0020, RD-05). Filesystem + tmux are the only state.
+// Studio routes (ADR-0020, ADR-0022, RD-05). Filesystem + tmux are the only state.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
-import { CLAUDE_MODELS, EFFORTS, buildPrompt, suggestSlug } from './agent.mjs';
+import { probeMedia } from '../lib/video-sources.mjs';
+import { CLAUDE_MODELS, EFFORTS, buildPrompt } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
-import { deletePlan, deleteRawCascade, linkedProjects, listRaw, projectRaw, rawPath, receiveUpload } from './raw.mjs';
+import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
+import { deleteShared, listShared, receiveShared } from './shared.mjs';
 import { interruptSession, killSession, listSessions, startSession } from './sessions.mjs';
 import { VIEWER_RE } from './terminal.mjs';
 
@@ -32,40 +34,43 @@ function decode(part) {
   }
 }
 
-export function createApp({ root, env = {}, hosts, token = '', tools = {}, codex = {}, run, terminals, publisher, probe = async () => null }) {
+export function createApp({ root, env = {}, hosts, token = '', tools = {}, codex = {}, run, terminals, publisher, probe = async () => null, probeSource = probeMedia }) {
   const opt = run ? { run } : {};
-  const sessionsForRaw = async (name) => (await listSessions(opt)).filter((s) => s.raw === name);
 
   const routes = [
     ['GET', /^\/api\/state$/, async () => ({ tools, codex, claudeModels: CLAUDE_MODELS, efforts: EFFORTS })],
-    ['GET', /^\/api\/raw$/, async () => listRaw(root, { probe })],
-    ['POST', /^\/api\/raw$/, async (req, url) => ({ name: await receiveUpload(root, url.searchParams.get('name'), req) })],
-    ['GET', /^\/api\/raw\/([^/]+)\/edit-plan$/, async (req, url, [name]) => {
-      rawPath(root, name);
-      const live = (await sessionsForRaw(name)).find((s) => s.status !== 'exited');
-      if (live) return { mode: 'open', slug: live.slug };
-      const [slug] = linkedProjects(root, name);
-      return slug ? { mode: 'continue', slug } : { mode: 'new', slug: suggestSlug(name) };
+    ['GET', /^\/api\/shared$/, async () => listShared(root, { probe })],
+    ['POST', /^\/api\/shared$/, async (req, url) => ({ name: await receiveShared(root, url.searchParams.get('name'), req) })],
+    ['DELETE', /^\/api\/shared\/([^/]+)$/, async (req, url, [name]) => deleteShared(root, name)],
+    ['GET', /^\/api\/projects$/, async () => listProjects(root)],
+    ['POST', /^\/api\/projects$/, async (req) => createProject(root, (await readJson(req)).slug)],
+    ['GET', /^\/api\/projects\/([^/]+)$/, async (req, url, [slug]) => getProject(root, slug)],
+    ['DELETE', /^\/api\/projects\/([^/]+)$/, async (req, url, [slug]) => {
+      projectPath(root, slug);
+      await killSession(slug, opt);
+      return deleteProject(root, slug);
     }],
-    ['GET', /^\/api\/raw\/([^/]+)\/delete-plan$/, async (req, url, [name]) => ({ ...deletePlan(root, name), sessions: (await sessionsForRaw(name)).map((s) => s.slug) })],
-    ['DELETE', /^\/api\/raw\/([^/]+)$/, async (req, url, [name]) => {
-      rawPath(root, name);
-      const slugs = new Set([...linkedProjects(root, name), ...(await sessionsForRaw(name)).map((s) => s.slug)]);
-      for (const slug of slugs) await killSession(slug, opt);
-      return deleteRawCascade(root, name);
+    ['POST', /^\/api\/projects\/([^/]+)\/sources$/, async (req, url, [slug]) => uploadSource(root, slug, url.searchParams.get('name'), req, { probe: probeSource })],
+    ['POST', /^\/api\/projects\/([^/]+)\/shared$/, async (req, url, [slug]) => attachShared(root, slug, (await readJson(req)).names, { probe: probeSource })],
+    ['PATCH', /^\/api\/projects\/([^/]+)\/sources\/([^/]+)$/, async (req, url, [slug, id]) => {
+      const b = await readJson(req);
+      return updateSource(root, slug, id, { role: b.role, note: b.note });
+    }],
+    ['DELETE', /^\/api\/projects\/([^/]+)\/sources\/([^/]+)$/, async (req, url, [slug, id]) => deleteSource(root, slug, id)],
+    ['GET', /^\/api\/projects\/([^/]+)\/sources\/([^/]+)\/file$/, async (req, url, [slug, id], res) => {
+      sendFile(req, res, sourcePathOf(root, slug, id));
+      return RAW;
     }],
     ['GET', /^\/api\/sessions$/, async () => listSessions(opt)],
     ['POST', /^\/api\/sessions$/, async (req) => {
       const b = await readJson(req);
-      rawPath(root, b.raw);
       const slug = slugParam(b.slug);
-      const owner = projectRaw(root, slug);
-      if (owner && owner !== b.raw) throw new HttpError(409, `videos/${slug} belongs to raw/${owner}`);
-      const mode = existsSync(join(root, 'videos', slug)) ? 'continue' : 'new';
+      const dir = projectPath(root, slug);
+      const mode = existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);
-      const prompt = buildPrompt({ mode, rawFile: b.raw, slug, notes: b.notes });
-      return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, rawFile: b.raw, prompt, ...opt });
+      const prompt = buildPrompt({ mode, slug, notes: b.notes });
+      return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt, ...opt });
     }],
     ['POST', /^\/api\/sessions\/([^/]+)\/interrupt$/, async (req, url, [slug]) => {
       await interruptSession(slugParam(slug), opt);

@@ -9,7 +9,7 @@ import { HttpError } from './http.mjs';
 export const PREFIX = 'studio-';
 export const IDLE_AFTER = 3;
 export const sessionName = (slug) => PREFIX + checkSlug(slug);
-const FIELDS = ['session_name', 'window_activity', 'pane_dead', '@studio_runtime', '@studio_model', '@studio_effort', '@studio_raw', '@studio_started'];
+const FIELDS = ['session_name', 'window_activity', 'pane_dead', '@studio_runtime', '@studio_model', '@studio_effort', '@studio_started'];
 export const FORMAT = FIELDS.map((f) => `#{${f}}`).join('\t');
 
 // A Studio started inside tmux must not make tmux think it is nesting.
@@ -32,11 +32,11 @@ export function parseSessions(stdout, nowSec) {
   const seen = new Set();
   const out = [];
   for (const line of stdout.split('\n')) {
-    const [name, activity, dead, runtime, model, effort, raw, started] = line.split('\t');
+    const [name, activity, dead, runtime, model, effort, started] = line.split('\t');
     if (!name || !name.startsWith(PREFIX) || seen.has(name)) continue;
     seen.add(name);
     const status = dead === '1' ? 'exited' : nowSec - Number(activity) < IDLE_AFTER ? 'running' : 'idle';
-    out.push({ slug: name.slice(PREFIX.length), runtime, model, effort, raw, started: Number(started) || 0, status });
+    out.push({ slug: name.slice(PREFIX.length), runtime, model, effort, started: Number(started) || 0, status });
   }
   return out;
 }
@@ -51,7 +51,7 @@ export async function hasSession(slug, { run = runFile } = {}) {
   return (await run('tmux', ['has-session', '-t', `=${sessionName(slug)}`])).code === 0;
 }
 
-export async function startSession({ root, slug, runtime, model, effort, rawFile, prompt, run = runFile, now = Date.now }) {
+export async function startSession({ root, slug, runtime, model, effort, prompt, run = runFile, now = Date.now }) {
   const name = sessionName(slug);
   const argv = agentCommand({ runtime, model, effort });
   if (await hasSession(slug, { run })) throw new HttpError(409, `session ${name} already exists`);
@@ -65,7 +65,6 @@ export async function startSession({ root, slug, runtime, model, effort, rawFile
     ...set('@studio_runtime', runtime),
     ...set('@studio_model', model),
     ...set('@studio_effort', effort),
-    ...set('@studio_raw', rawFile),
     ...set('@studio_started', Math.floor(now() / 1000)),
   ]);
   if (r.code !== 0) throw new HttpError(500, `tmux new-session failed: ${r.stderr.trim()}`);

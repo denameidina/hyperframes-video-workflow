@@ -2,6 +2,7 @@
 
 Status: implemented 2026-09-28 (plan docs/superpowers/plans/2026-09-28-studio-web-ui.md)
 Date: 2026-09-28
+Amended 2026-09-29 by ADR-0022 (project-centered Studio, shared library).
 
 ## Latar belakang
 

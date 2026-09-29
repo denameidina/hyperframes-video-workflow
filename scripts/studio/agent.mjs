@@ -1,5 +1,4 @@
 // Studio agent sessions: runtime options, command line, and first prompt (ADR-0020).
-import { basename, extname } from 'node:path';
 import { HttpError } from './http.mjs';
 
 export const RUNTIMES = ['claude', 'codex'];
@@ -10,12 +9,6 @@ export const EFFORTS = {
 };
 const OPTION_RE = /^[A-Za-z0-9._:[\]-]+$/;
 const SKILL = '`docs/skills/dena-video-editing-workflow/SKILL.md`';
-
-export function suggestSlug(fileName) {
-  const stem = basename(String(fileName), extname(String(fileName)));
-  const slug = stem.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60).replace(/-+$/, '');
-  return slug || 'video';
-}
 
 export function agentCommand({ runtime, model, effort }) {
   if (!RUNTIMES.includes(runtime)) throw new HttpError(400, 'runtime must be claude or codex');
@@ -32,11 +25,11 @@ export function paneCommand(argv, promptPath) {
   return `${argv.map(shellQuote).join(' ')} "$(cat ${shellQuote(promptPath)})"`;
 }
 
-export function buildPrompt({ mode, rawFile, slug, notes }) {
+export function buildPrompt({ mode, slug, notes }) {
   const note = String(notes ?? '').trim() || '-';
   const first = mode === 'continue'
-    ? `Lanjutkan proyek \`videos/${slug}/\` (raw \`raw/${rawFile}\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`
-    : `Edit raw video \`raw/${rawFile}\` sebagai proyek \`videos/${slug}/\`. Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.`;
+    ? `Lanjutkan proyek \`videos/${slug}/\` (sumber di \`sources.json\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`
+    : `Edit video project \`videos/${slug}/\` dari sumber di \`videos/${slug}/sources.json\` (jalankan \`npm run video -- sources ${slug}\` dulu). Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.`;
   return `${first}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
 }
 

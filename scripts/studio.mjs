@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Studio: local web UI for raw videos, tmux agent sessions, and Repliz publish (ADR-0020, RD-05).
+// Studio: local web UI for projects and the shared library, tmux agent sessions, and Repliz publish (ADR-0020, RD-05).
 // Spec: docs/superpowers/specs/2026-09-28-studio-web-ui-design.md
 // Usage: npm run studio [-- --port 4777]
 // Node 22+, built-in modules only (ADR-0007).
