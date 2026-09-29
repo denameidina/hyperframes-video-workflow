@@ -17,7 +17,9 @@ import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
 import { createServer } from 'node:http';
 import { createApp } from './studio/app.mjs';
 import { parseTailscaleStatus } from './studio.mjs';
-import { STYLES, generateOptions, listGenerate, mdSection, storyboardRows, validateRequest } from './studio/generate.mjs';
+import { STYLES, VoiceJobs, gateMessage, generateOptions, listGenerate, mdSection, storyboardRows, validateRequest } from './studio/generate.mjs';
+import { JobRunner } from './studio/jobs.mjs';
+import { readGates, recordDecision as record } from './lib/gates.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -296,6 +298,7 @@ async function startApp(root, overrides = {}, responses = {}) {
     run: fake.run,
     terminals: new Terminals({ spawnImpl: () => fakeChild(), killImpl: () => {} }),
     publisher: new Publisher({ root, env: {}, spawnImpl: () => fakeChild() }),
+    voiceJobs: new VoiceJobs({ root, env: {}, spawnImpl: () => fakeChild() }),
     probeSource: PROBE,
     ...overrides,
   }));
@@ -666,4 +669,115 @@ test('buildPrompt generate modes point at request.json and the gate command', ()
   assert.match(c, /npm run video -- gate a/);
   assert.match(c, /Catatan dari Dena: Keputusan terakhir: Gate 1 revise — CTA/);
   assert.match(buildPrompt({ mode: 'new', slug: 'a' }), /^Edit video project/);
+});
+
+test('JobRunner keeps one job per key and replays its log', () => {
+  const spawned = [];
+  const r = new JobRunner({ spawnImpl: (cmd, args, opts) => { const c = fakeChild(); spawned.push({ cmd, args, opts, c }); return c; }, label: 'voice' });
+  r.start('a', 'node', ['x'], { cwd: '/tmp' });
+  assert.equal(r.running('a'), true);
+  assert.throws(() => r.start('a', 'node', ['x'], {}), { status: 409, message: 'voice for a is already running' });
+  spawned[0].c.stderr.emit('data', Buffer.from('warn\n'));
+  const seen = [];
+  r.follow('a', (e, d) => seen.push([e, d]));
+  spawned[0].c.emit('close', 2);
+  assert.deepEqual(seen, [['log', 'warn\n'], ['done', { code: 2 }]]);
+  assert.equal(r.running('a'), false);
+  assert.throws(() => r.follow('b', () => {}), { status: 404, message: 'no voice job' });
+});
+
+test('gateMessage is one line, strips control characters, and fits 1000 characters', () => {
+  assert.equal(gateMessage({ gate: 1, decision: 'approve' }), 'Gate 1 disetujui dari Studio. Catatan: -. Lanjutkan ke fase berikutnya.');
+  assert.equal(gateMessage({ gate: 2, decision: 'revise', note: 'scene 4\n\u001b[2Jlebih pendek' }), 'Gate 2 revisi dari Studio: scene 4 [2Jlebih pendek. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate 2.');
+  assert.match(gateMessage({ gate: 3, decision: 'qa' }), /^Gate 3: Dena memilih QA dulu\. Jalankan fase QA/);
+  assert.match(gateMessage({ gate: 1, decision: 'approve', edited: true }), /^Naskah diedit Dena di Studio dan suaranya sudah dibuat ulang; baca ulang script\.md\. Gate 1 disetujui/);
+  const long = gateMessage({ gate: 1, decision: 'revise', note: 'x'.repeat(3000) });
+  assert.equal(long.length, 1000);
+  assert.match(long, /…\. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate 1\.$/);
+});
+
+const idlePanes = (slug) => ({ 'list-panes': { code: 0, stdout: `studio-${slug}\t1\t0\tclaude\topus\thigh\t1\n`, stderr: '' } });
+const busyPanes = (slug) => ({ 'list-panes': { code: 0, stdout: `studio-${slug}\t${Math.floor(Date.now() / 1000)}\t0\tclaude\topus\thigh\t1\n`, stderr: '' } });
+
+test('app generate decision: records, types one literal line into the session, and refuses stale or busy', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'g-one', 'gate1');
+  const app = await startApp(root, {}, idlePanes('g-one'));
+  t.after(() => app.server.close());
+  const fp = (await app.call('GET', '/api/generate/g-one')).body.status.fingerprint;
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: { 'script.md': 'x' } })).status, 409);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 2, decision: 'approve', fingerprint: fp })).status, 409);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'revise', note: '', fingerprint: fp })).status, 400);
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve' })).status, 400, 'fingerprint is required');
+  app.calls.length = 0;
+  const ok = await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'revise', note: 'CTA\nkurang natural', fingerprint: fp });
+  assert.deepEqual([ok.status, ok.body.sent, ok.body.recorded.by, ok.body.recorded.note], [200, true, 'studio', 'CTA\nkurang natural']);
+  const typed = app.calls.filter((c) => c[1] === 'send-keys');
+  assert.deepEqual(typed, [
+    ['tmux', 'send-keys', '-t', '=studio-g-one:', '-l', 'Gate 1 revisi dari Studio: CTA kurang natural. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate 1.'],
+    ['tmux', 'send-keys', '-t', '=studio-g-one:', 'Enter'],
+  ]);
+  assert.equal(readGates(dir).log.length, 1);
+
+  const busy = await startApp(root, {}, busyPanes('g-one'));
+  t.after(() => busy.server.close());
+  assert.equal((await busy.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp })).status, 409);
+
+  const none = await startApp(root, {}, { 'list-panes': { code: 1, stdout: '', stderr: 'no server' } });
+  t.after(() => none.server.close());
+  const noSession = await none.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp });
+  assert.deepEqual([noSession.status, noSession.body.sent], [200, false]);
+  assert.match(noSession.body.error, /tidak ada sesi/);
+  assert.equal(readGates(dir).log.at(-1).decision, 'approve');
+});
+
+test('app generate script edit, voice job, and the edited-script message', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'g-one', 'gate1');
+  const spawned = [];
+  const voiceJobs = new VoiceJobs({ root, env: {}, spawnImpl: (cmd, args, opts) => { const c = fakeChild(); spawned.push({ cmd, args, opts, c }); return c; } });
+  const busyApp = await startApp(root, { voiceJobs }, busyPanes('g-one'));
+  t.after(() => busyApp.server.close());
+  assert.equal((await busyApp.call('PUT', '/api/generate/g-one/script', { text: '# Naskah\n\nx\n' })).status, 409, 'agent is busy');
+  assert.equal((await busyApp.call('POST', '/api/generate/g-one/voice')).status, 409, 'agent is busy');
+
+  const app = await startApp(root, { voiceJobs }, idlePanes('g-one'));
+  t.after(() => app.server.close());
+  const put = (text) => app.call('PUT', '/api/generate/g-one/script', { text });
+  assert.equal((await put('x'.repeat(20481))).status, 413);
+  assert.equal((await put('# Naskah\n\n## Fakta\n\n- a\n')).status, 400, 'no narration');
+  const saved = await put('# Naskah\n\nHook baru.\n\n## Fakta\n\n- a\n');
+  assert.equal(saved.status, 200);
+  assert.equal(saved.body.voiceStale, true);
+  assert.equal(readFileSync(join(dir, 'script.md'), 'utf8'), '# Naskah\n\nHook baru.\n\n## Fakta\n\n- a\n');
+  assert.equal(readGates(dir).log.at(-1).decision, 'edit');
+  const fp = (await app.call('GET', '/api/generate/g-one')).body.status.fingerprint;
+  assert.equal((await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp })).status, 409, 'voice is stale');
+
+  assert.equal((await app.call('POST', '/api/generate/g-one/voice')).status, 200);
+  assert.deepEqual(spawned[0].args, ['scripts/video.mjs', 'voice', 'g-one', '--preset', 'st-f2']);
+  assert.equal(spawned[0].opts.cwd, root);
+  assert.equal((await app.call('POST', '/api/generate/g-one/voice')).status, 409, 'one voice job per project');
+  spawned[0].c.emit('close', 0);
+  writeFileSync(join(dir, 'processed-audio.wav'), 'WAV2'); // what video voice writes
+  const fp2 = (await app.call('GET', '/api/generate/g-one')).body.status.fingerprint;
+  app.calls.length = 0;
+  const ok = await app.call('POST', '/api/generate/g-one/decision', { gate: 1, decision: 'approve', fingerprint: fp2 });
+  assert.equal(ok.status, 200);
+  assert.match(app.calls.find((c) => c.includes('-l')).at(-1), /^Naskah diedit Dena di Studio/);
+  assert.equal((await put('# Naskah\n\nLagi.\n')).status, 409, 'Gate 1 is approved: no more script edits');
+});
+
+test('app generate continue session carries the last decision', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'g-one', 'gate1');
+  record(dir, { gate: 1, decision: 'revise', note: 'hook terlalu panjang', by: 'studio' });
+  const app = await startApp(root);
+  t.after(() => app.server.close());
+  const s = await app.call('POST', '/api/generate/g-one/session', { runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.equal(s.status, 200);
+  const prompt = readFileSync(join(root, '.studio/prompts/g-one.md'), 'utf8');
+  assert.match(prompt, /^Lanjutkan proyek mode generate/);
+  assert.match(prompt, /Catatan dari Dena: Keputusan terakhir: Gate 1 revise — hook terlalu panjang \(studio, /);
+  assert.equal((await app.call('POST', '/api/generate/vid-a/session', { runtime: 'claude', model: 'opus', effort: 'high' })).status, 404);
 });

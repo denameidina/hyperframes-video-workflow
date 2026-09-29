@@ -1,16 +1,19 @@
 // Studio tab Generate (ADR-0026, RD-05-21..29): the form that starts a generate-mode video, the project list and
 // detail the review panel shows, and the /media whitelist for its files. Gate state and decisions go through
 // scripts/lib/gates.mjs, the only writer of gates.json.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { gateStatus, isGenerate, sheetsOf } from '../lib/gates.mjs';
+import { GateError, editedSinceDecision, gateStatus, isGenerate, readGates, recordDecision, sheetsOf } from '../lib/gates.mjs';
 import { readCatalog } from '../lib/music.mjs';
 import { loadVoices } from '../lib/voice/presets.mjs';
 import { scriptBody, splitParagraphs } from '../lib/voice/script.mjs';
 import { checkSlug, scaffold } from '../video.mjs';
 import { projectSlugs } from './files.mjs';
 import { HttpError } from './http.mjs';
+import { JobRunner } from './jobs.mjs';
 import { projectPath, rendersOf } from './projects.mjs';
+import { listSessions, runFile, sessionName } from './sessions.mjs';
 
 export const STYLES = ['motion-broll', 'broll-text', 'motion-graphic', 'whiteboard', 'stop-motion', 'vox', 'parallax'];
 const RESERVED = new Set(['options', 'new']); // /api/generate/options and #generate/new
@@ -209,4 +212,108 @@ export function generateMediaPath(root, slug, file) {
   const dir = generateDir(root, slug);
   if (!MEDIA_RE.test(file) || !existsSync(join(dir, file))) throw new HttpError(404, 'not found');
   return join(dir, file);
+}
+
+// ---- decisions (RD-05-25..26) ----
+const GATE_STATUS = { stale: 409, 'not-waiting': 409, 'voice-stale': 409, 'note-required': 400, 'bad-decision': 400, 'bad-note': 400, 'bad-gate': 400, 'not-generate': 404, 'bad-file': 500 };
+
+function asHttp(fn) {
+  try {
+    return fn();
+  } catch (e) {
+    if (e instanceof GateError) throw new HttpError(GATE_STATUS[e.code] ?? 400, e.message);
+    throw e;
+  }
+}
+
+const oneLine = (s) => String(s ?? '').replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim();
+const MAX_MESSAGE = 1000;
+
+export function gateMessage({ gate, decision, note = '', edited = false }) {
+  const build = (n) => {
+    let text;
+    if (decision === 'approve') text = `Gate ${gate} disetujui dari Studio. Catatan: ${n || '-'}. Lanjutkan ke fase berikutnya.`;
+    else if (decision === 'revise') text = `Gate ${gate} revisi dari Studio: ${n}. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate ${gate}.`;
+    else if (decision === 'qa') text = `Gate 3: Dena memilih QA dulu${n ? ` (${n})` : ''}. Jalankan fase QA (docs/agents/04-qa.md) sebagai subagent baru, lalu kembali ke Gate 3.`;
+    else throw new Error(`no message for decision ${decision}`);
+    return edited && gate === 1 ? `Naskah diedit Dena di Studio dan suaranya sudah dibuat ulang; baca ulang script.md. ${text}` : text;
+  };
+  const n = oneLine(note);
+  const full = build(n);
+  if (full.length <= MAX_MESSAGE) return full;
+  return build(`${n.slice(0, n.length - (full.length - MAX_MESSAGE) - 1)}…`); // shorten the note, keep the instruction
+}
+
+const sessionFor = async (slug, run) => (await listSessions(run ? { run } : {})).find((s) => s.slug === slug);
+const refuseBusy = (session) => {
+  if (session?.status === 'running') throw new HttpError(409, 'agent sedang bekerja; tunggu sampai ia berhenti di gate');
+};
+
+export async function decide(root, slug, body = {}, { run, now } = {}) {
+  const dir = generateDir(root, slug);
+  const gate = Number(body.gate);
+  if (![1, 2, 3].includes(gate)) throw new HttpError(400, 'gate must be 1, 2, or 3');
+  if (!['approve', 'revise', 'qa'].includes(body.decision)) throw new HttpError(400, 'decision must be approve, revise, or qa');
+  if (!body.fingerprint || typeof body.fingerprint !== 'object') throw new HttpError(400, 'fingerprint is required (reload the panel)');
+  const session = await sessionFor(slug, run);
+  refuseBusy(session);
+  const edited = gate === 1 && editedSinceDecision(asHttp(() => readGates(dir)).log, 1);
+  const recorded = asHttp(() => recordDecision(dir, { gate, decision: body.decision, note: body.note, by: 'studio', fingerprint: body.fingerprint, ...(now ? { now } : {}) }));
+  if (!session || session.status === 'exited') return { recorded, sent: false, error: 'tidak ada sesi agent; mulai sesi lanjut' };
+  const text = gateMessage({ gate, decision: body.decision, note: recorded.note, edited });
+  const target = `=${sessionName(slug)}:`;
+  const exec = run || runFile;
+  const typed = await exec('tmux', ['send-keys', '-t', target, '-l', text]);
+  const entered = typed.code === 0 ? await exec('tmux', ['send-keys', '-t', target, 'Enter']) : typed;
+  if (entered.code !== 0) return { recorded, sent: false, error: `tmux send-keys gagal: ${String(entered.stderr || '').trim()}` };
+  return { recorded, sent: true, error: null };
+}
+
+// ---- script edit (RD-05-27) ----
+export async function saveScript(root, slug, text, { run, now } = {}) {
+  const dir = generateDir(root, slug);
+  if (typeof text !== 'string') throw new HttpError(400, 'text must be a string');
+  if (Buffer.byteLength(text) > 20480) throw new HttpError(413, 'naskah maksimal 20 KB');
+  if (!scriptBody(text).trim()) throw new HttpError(400, 'naskah tanpa narasi (teks sebelum ## pertama kosong)');
+  const status = asHttp(() => gateStatus(dir, { slug }));
+  if (status.phase !== 'gate' || status.gate !== 1) throw new HttpError(409, 'naskah hanya bisa diedit di Gate 1');
+  refuseBusy(await sessionFor(slug, run));
+  const file = join(dir, 'script.md');
+  writeFileSync(`${file}.part`, text.endsWith('\n') ? text : `${text}\n`);
+  renameSync(`${file}.part`, file);
+  asHttp(() => recordDecision(dir, { gate: 1, decision: 'edit', note: 'naskah diedit di Studio', by: 'studio', ...(now ? { now } : {}) }));
+  return gateStatus(dir, { slug });
+}
+
+// ---- continue session (RD-05-28) ----
+export function lastDecisionNote(dir) {
+  const last = readGates(dir).log.at(-1);
+  return last ? `Keputusan terakhir: Gate ${last.gate} ${last.decision}${last.note ? ` — ${last.note}` : ''} (${last.by}, ${last.at}).` : '';
+}
+
+// ---- voice job (RD-05-27) ----
+export class VoiceJobs {
+  constructor({ root, env = process.env, spawnImpl = spawn }) {
+    this.root = root;
+    this.env = env;
+    this.runner = new JobRunner({ spawnImpl, label: 'voice' });
+  }
+
+  has(slug) {
+    return this.runner.has(slug);
+  }
+
+  running(slug) {
+    return this.runner.running(slug);
+  }
+
+  // video voice reads .env itself; its own child processes stay without Gemini keys (RD-06-25)
+  start(slug) {
+    const preset = readRequest(generateDir(this.root, slug))?.voice || null;
+    return this.runner.start(slug, process.execPath, ['scripts/video.mjs', 'voice', slug, ...(preset ? ['--preset', preset] : [])], { cwd: this.root, env: this.env });
+  }
+
+  follow(slug, listener) {
+    return this.runner.follow(slug, listener);
+  }
 }
