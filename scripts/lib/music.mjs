@@ -22,6 +22,8 @@ export const RISKS = ['none', 'unknown', 'known'];
 const catalogFile = (root) => join(root, MUSIC_DIR, 'catalog.json');
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const isUrl = (s) => /^https?:\/\//i.test(String(s ?? ''));
+// The Studio serves catalog files; a hand-edited "../x" must never reach outside shared/music/.
+const isPlainName = (f) => typeof f === 'string' && f !== '' && basename(f) === f && !f.startsWith('.');
 
 export function readCatalog(root = '.') {
   const file = catalogFile(root);
@@ -80,6 +82,7 @@ export async function addTrack({ root = '.', input, license, title, author, sour
   mkdirSync(join(dir, 'licenses'), { recursive: true });
   const file = join(dir, `${id}${ext}`);
   const part = join(dir, `.${id}.part${ext}`);
+  const written = []; // files already in their final place; removed again if a later step fails
   try {
     if (isUrl(input)) {
       const res = await fetchImpl(input);
@@ -102,16 +105,19 @@ export async function addTrack({ root = '.', input, license, title, author, sour
       loopable: Boolean(loopable), contentIdRisk: risk, rejected: false, notes: notes ?? '',
     };
     renameSync(part, file);
+    written.push(file);
+    written.push(join(dir, track.licenseProof));
     writeFileSync(join(dir, track.licenseProof), proofText(track));
     if (proof !== undefined) {
       track.extraProof = `licenses/${id}-proof${extname(proof).toLowerCase()}`;
+      written.push(join(dir, track.extraProof));
       copyFileSync(proof, join(dir, track.extraProof));
     }
     catalog.tracks.push(track);
     writeCatalog(root, catalog);
     return track;
   } catch (err) {
-    rmSync(part, { force: true });
+    for (const f of [part, ...written]) rmSync(f, { force: true });
     throw err;
   }
 }
@@ -126,6 +132,10 @@ export function checkCatalog(root = '.') {
   for (const t of readCatalog(root).tracks) {
     if (!LICENSES[t.license]) problems.push(`${t.id}: license "${t.license}" is not allowed`);
     if (!t.licenseProof || !existsSync(join(dir, t.licenseProof))) problems.push(`${t.id}: license proof ${t.licenseProof || '(none)'} is missing`);
+    if (!isPlainName(t.file)) {
+      problems.push(`${t.id}: file "${t.file}" must be a plain file name`);
+      continue;
+    }
     const f = join(dir, t.file);
     if (!existsSync(f)) problems.push(`${t.id}: ${t.file} is missing`);
     else if (sha256(f) !== t.sha256) problems.push(`${t.id}: sha256 does not match ${t.file}`);
@@ -149,6 +159,7 @@ export function setRejected(root, id, rejected) {
 
 export function musicPath(root, id) {
   const t = findTrack(readCatalog(root), id);
+  if (!isPlainName(t.file)) throw new Error(`${t.id}: file "${t.file}" must be a plain file name`);
   const f = join(root, MUSIC_DIR, t.file);
   if (!existsSync(f)) throw new Error(`${t.file} is missing`);
   return f;

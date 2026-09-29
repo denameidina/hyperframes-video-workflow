@@ -92,3 +92,27 @@ test('music CLI add, list, check', async () => {
   await assert.rejects(main(['check'], { root, log }), /music check failed:\n- m01-quiet-desk: sha256 does not match/);
   await assert.rejects(main(['nope'], { root, log }), /usage: npm run music/);
 });
+
+test('a failure after the audio is in place leaves no orphan track', async () => {
+  const root = musicRoot();
+  // copying a directory as the proof fails after the audio was moved into place (EISDIR on Linux, ENOTSUP on macOS)
+  await assert.rejects(addTrack({ root, input: join(root, 'track.mp3'), ...TRACK, proof: root, run: media() }));
+  assert.deepEqual(readdirSync(join(root, 'shared/music')).filter((f) => f.endsWith('.mp3')), []);
+  assert.deepEqual(readdirSync(join(root, 'shared/music/licenses')), []);
+  assert.deepEqual(readCatalog(root).tracks, []);
+});
+
+test('check reports a missing file and a license outside the allowlist; musicPath refuses path names', async () => {
+  const root = musicRoot();
+  await addTrack({ root, input: join(root, 'track.mp3'), ...TRACK, run: media() });
+  const cat = readCatalog(root);
+  cat.tracks.push({ ...cat.tracks[0], id: 'm02-x', file: 'm02-x.mp3', license: 'cc-by', sha256: 'x' });
+  cat.tracks.push({ ...cat.tracks[0], id: 'm03-y', file: '../../track.mp3' });
+  writeFileSync(join(root, 'shared/music/catalog.json'), JSON.stringify(cat));
+  assert.deepEqual(checkCatalog(root), [
+    'm02-x: license "cc-by" is not allowed',
+    'm02-x: m02-x.mp3 is missing',
+    'm03-y: file "../../track.mp3" must be a plain file name',
+  ]);
+  assert.throws(() => musicPath(root, 'm03-y'), /must be a plain file name/);
+});
