@@ -97,13 +97,15 @@ npm run moodboard -- sheets [gaya]  # render sheet moodboard per gaya → docs/a
 npm run moodboard -- fetch [gaya]   # unduh still referensi asli ke moodboard/local/ (gitignored, jaringan)
 ```
 
-## Mode generate (explainer tanpa footage)
+## Mode generate (tanpa footage)
 
-[ADR-0025](../adr/0025-generate-mode-explainer.md); alur per fase di
+[ADR-0025](../adr/0025-generate-mode-explainer.md) (explainer),
+[ADR-0027](../adr/0027-music-formats.md) (kinetic-post, motion-short); alur per fase di
 `docs/agents/references/generate-mode.md`.
 
 ```bash
-npm run video -- new <slug> --generate                 # starter generate + research/ + brief mode: generate
+npm run video -- new <slug> --generate [--format kinetic-post|motion-short]  # starter generate + research/ + brief (format default explainer)
+npm run video -- music <slug> --track <id> [--from <s>] --bars <n>  # format musik: potong bar utuh -> processed-audio.wav + beats.json (baca peringatannya)
 npm run video -- voice <slug> [--preset <p>]           # script.md -> processed-audio.wav + processed-transcript.json
 npm run video -- storyboard <slug>                     # Gate 2 sheet -> preview/storyboard-sheet.jpg
 npm run video -- bgm <slug> --track <id> --from <s>    # BGM ter-duck -> bgm.wav + bgm.json

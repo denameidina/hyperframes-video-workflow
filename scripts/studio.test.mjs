@@ -926,3 +926,18 @@ test('gateMessage uses the format\'s last gate for approval and QA', () => {
   assert.equal(gateMessage({ gate: 2, decision: 'qa', finalGate: 2 }), 'Gate 2: Dena memilih QA dulu. Jalankan fase QA (docs/agents/04-qa.md) sebagai subagent baru, lalu kembali ke Gate 2.');
   assert.match(buildPrompt({ mode: 'generate', slug: 'a', format: 'motion-short' }), /^Buat video mode generate \(motion-short\)[\s\S]*Gate 1 \(teks \+ musik \+ storyboard\) dan Gate 2 \(render\)/);
 });
+
+test('storyboardRows reads the bars column from the header, not from the column count; a bad format line shows as unknown', async (t) => {
+  const music = storyboardRows('| # | bars | time | on-screen text | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- | --- |\n| 1 | 1–2 | 0:00–0:04 | BUKAN | broll-text / slam | Kata | `tx-01-slam` |\n');
+  assert.deepEqual([music[0].bars, music[0].words], ['1–2', 'BUKAN']);
+  const wide = storyboardRows('| # | time | spoken words | style / pattern | what appears | example | note |\n| --- | --- | --- | --- | --- | --- | --- |\n| 1 | 0:00.0–0:04.4 | Banyak AI | stop-motion / pop-up | Warung | `sm-08-walk-hinge` | x |\n');
+  assert.deepEqual([wide[0].bars, wide[0].time, wide[0].words, wide[0].example], [null, '0:00.0–0:04.4', 'Banyak AI', 'sm-08-walk-hinge']);
+  const root = genStudioRoot();
+  const dir = genMusicProject(root, 'post-bad', 'gate1');
+  writeFileSync(join(dir, 'creative-brief.md'), '# B\n\n## Workflow Settings\n\n- mode: generate\n- format: reel\n');
+  const app = await startApp(root);
+  t.after(() => app.server.close());
+  const item = (await app.call('GET', '/api/generate')).body.find((p) => p.slug === 'post-bad');
+  assert.deepEqual([item.format, item.status.phase], [null, 'error']);
+  assert.equal((await app.call('GET', '/api/generate/post-bad')).status, 500);
+});

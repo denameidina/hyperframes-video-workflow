@@ -141,13 +141,15 @@ export function mdSection(md, heading) {
   return (end < 0 ? rest : rest.slice(0, end)).join('\n').trim();
 }
 
-// explainer: | # | time | spoken words | style | what | example |; music formats add "bars" after "#" (ADR-0027)
+// explainer: | # | time | spoken words | style | what | example |; music formats add a "bars" column after "#"
+// (ADR-0027), recognised by its header, so an explainer table with an extra column is not misread
 export function storyboardRows(md) {
-  return String(md ?? '').split('\n')
-    .filter((l) => /^\|\s*\d+\s*\|/.test(l))
-    .map((l) => l.split('|').slice(1, -1).map((c) => c.trim()))
+  const rows = String(md ?? '').split('\n').filter((l) => /^\s*\|/.test(l)).map((l) => l.trim().split('|').slice(1, -1).map((c) => c.trim()));
+  const withBars = rows.find((c) => c[0] === '#')?.[1]?.toLowerCase() === 'bars';
+  return rows
+    .filter((c) => /^\d+$/.test(c[0]))
     .map((c) => {
-      const [n, bars, time = '', words = '', style = '', what = '', example = ''] = c.length >= 7 ? c : [c[0], null, ...c.slice(1)];
+      const [n, bars, time = '', words = '', style = '', what = '', example = ''] = withBars ? c : [c[0], null, ...c.slice(1)];
       return { n: Number(n), bars, time, words, style, what, example: example.replace(/`/g, '') };
     });
 }
@@ -179,13 +181,15 @@ export function listGenerate(root, sessions = []) {
     .filter(({ dir }) => isGenerate(dir))
     .map(({ slug, dir }) => {
       let status;
+      let format = null; // unknown when the format line is broken (the status says why)
       try {
         const s = gateStatus(dir, { slug });
         status = { phase: s.phase, gate: s.gate, state: s.state };
+        format = s.format;
       } catch (e) {
         status = { phase: 'error', gate: null, state: null, error: e.message };
       }
-      return { slug, format: readFormatSafe(dir), brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
+      return { slug, format, brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
     });
 }
 

@@ -4,8 +4,9 @@ Date: 2026-09-29
 
 Domain: voiceover TTS untuk video generate, uji dengar blind pemilihan suara, dan pustaka
 BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
-`scripts/lib/music.mjs`. Keputusan: [ADR-0023](../adr/0023-voice-adapter-tts.md),
-[ADR-0024](../adr/0024-music-library.md).
+`scripts/lib/music.mjs`, `scripts/lib/music/` (`video music`). Keputusan:
+[ADR-0023](../adr/0023-voice-adapter-tts.md), [ADR-0024](../adr/0024-music-library.md),
+[ADR-0027](../adr/0027-music-formats.md).
 
 ## Adapter suara
 

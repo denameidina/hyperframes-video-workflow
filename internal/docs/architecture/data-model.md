@@ -36,6 +36,8 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Naskah (generate) | `videos/<slug>/script.md`, `research/` | Markdown | Story (mode generate) |
 | Storyboard (generate) | `videos/<slug>/storyboard.md`, `preview/storyboard-sheet.jpg` | Markdown + JPG | Screen Plan (mode generate) |
 | BGM (generate) | `videos/<slug>/bgm.wav`, `bgm.json` | WAV + JSON | Build (`npm run video -- bgm`) |
+| Musik terpotong (format musik) | `videos/<slug>/processed-audio.wav`, `beats.json` | WAV + JSON | Story (`npm run video -- music`) |
+| Cache analisis beat | `shared/music/beats/<id>.json` | JSON | `scripts/lib/music/cut.mjs` |
 | Keputusan gate (generate) | `videos/<slug>/gates.json` | JSON | `scripts/lib/gates.mjs` (Studio + `npm run video -- gate`) |
 | Permintaan Studio (generate) | `videos/<slug>/research/request.json` | JSON | Studio (form Generate) |
 

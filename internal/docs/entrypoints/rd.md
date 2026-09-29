@@ -16,6 +16,6 @@ di `requirements/`.
 - [RD-04 Transcription & Setup](../requirements/rd-04-transcription-setup.md) — whisper + setup.
 - [RD-05 Studio Web UI](../requirements/rd-05-studio.md) — web UI lokal: project, sesi agen, publish, tab Suara/Musik; tab Generate (RD-05-21…33): form + panel review gate, per format.
 - [RD-06 Audio](../requirements/rd-06-audio.md) — adapter suara TTS, uji dengar blind, pustaka musik,
-  `video voice` / `video bgm` untuk mode generate.
+  `video voice` / `video bgm` untuk mode generate, `video music` untuk format musik (RD-06-29…32).
 
 Standar penulisan → [ears-standard](../requirements/ears-standard.md).

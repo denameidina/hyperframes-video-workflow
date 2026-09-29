@@ -47,7 +47,7 @@
     $('#gen-home').hidden = false;
     $('#gen-list').innerHTML = items.length ? items.map((p) => `
       <li>
-        <div class="meta"><strong>${esc(p.slug)}</strong><span class="status ${esc(p.session?.status || '')}">${esc(`${p.format || 'explainer'} · ${statusText(p.status)}`)}</span>
+        <div class="meta"><strong>${esc(p.slug)}</strong><span class="status ${esc(p.session?.status || '')}">${esc(`${p.format || '?'} · ${statusText(p.status)}`)}</span>
           <span class="muted">${esc(p.brief)}</span><span class="muted">Sesi: ${esc(sessionText(p.session))}</span></div>
         <div class="actions"><button class="primary" data-gen-open="${esc(p.slug)}">Buka</button></div>
       </li>`).join('') : '<li class="muted">Belum ada video generate. Tekan "Buat video".</li>';
@@ -294,6 +294,8 @@
     const [lo, hi] = durations[f.format.value] || [30, 90];
     f.duration.min = String(lo);
     f.duration.max = String(hi);
+    // a duration typed for another format would block submit from inside the closed Opsional section
+    if (f.duration.value && (Number(f.duration.value) < lo || Number(f.duration.value) > hi)) f.duration.value = '';
     $('#gen-duration-range').textContent = `${lo}–${hi}`;
   }
 

@@ -11,7 +11,8 @@ musik: tipografi kinetik pendek dan motion graphic pendek untuk IG/TikTok.
 ## Decision
 
 - **`format` di `creative-brief.md`** (`explainer` | `kinetic-post` | `motion-short`;
-  tanpa baris = explainer). `scripts/lib/formats.mjs` memegang daftar, rentang durasi
+  tanpa baris = `format` di `research/request.json`, lalu explainer; keduanya berbeda atau
+  nilai tak dikenal = error, tidak pernah menebak). `scripts/lib/formats.mjs` memegang daftar, rentang durasi
   (30–90 / 8–20 / 15–40 detik), dan gate terakhir per format.
 - **Musik sebagai sumbu waktu.** `npm run video -- music` menganalisis lagu katalog sekali
   (sidecar librosa lewat `uv`, di-cache per sha256), memotong bar utuh dari downbeat ke

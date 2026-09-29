@@ -101,6 +101,12 @@ satu `SK.clip` per scene di track 4/7, render → Gate 3. Tanpa percepatan 1,2x.
 `docs/agents/references/generate-mode.md`,
 [rd-03](../requirements/rd-03-video-editing-workflow.md) RD-03-75…87.
 
+Format musik (`- format: kinetic-post | motion-short`, ADR-0027): tanpa narasi. Story menulis
+teks layar di `script.md` dan memotong musik dengan `npm run video -- music` (bar utuh dari
+downbeat → `processed-audio.wav` + `beats.json`); Screen Plan tanpa caption, scene di beat,
+`storyboard.md` dengan kolom bar → **Gate 1** (teks + musik + storyboard); Build tanpa
+`video bgm`, kinetic-post loop / motion-short kartu CTA → **Gate 2** (render). RD-03-94…99.
+
 ## Gate review/publish
 
 Setelah render Build: berhenti, minta user review (Gate 3). Tawarkan: publish

@@ -129,5 +129,6 @@ sesi agen tmux, dan publish. Owner:
   then Studio shall refuse it (409); the approval at a format's last gate tells the agent the
   video is done and not to publish, and QA dulu is offered only at that gate.
 - **RD-05-33** (Ubiquitous) — The Generate form shall show Teks persis and hide the voice
-  preset for the music formats, and show the duration range of the chosen format; the list
-  and panel shall name each project's format.
+  preset for the music formats, show the duration range of the chosen format (clearing a
+  typed duration outside it), and read a storyboard's bars column from the table header; the
+  list and panel shall name each project's format (`?` when the format line is broken).
