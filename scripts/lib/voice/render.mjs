@@ -33,7 +33,21 @@ export function makeSay(preset, { root = '.', env = process.env, fetchImpl = fet
   throw new Error(`preset ${preset.name} (${preset.provider}) has no synthesizer; pass a recording with --recorded <file>`);
 }
 
-export async function renderVoice({ text, preset, out, root = '.', lexicon = [], env, fetchImpl, run = spawnSync, sleep, recorded, align = true, say }) {
+const OUTPUTS = ['voiceover.wav', 'voice-meta.json', 'words.json'];
+
+// A render either writes a matching voiceover.wav + voice-meta.json (+ words.json) or leaves none of them (RD-06-05).
+export async function renderVoice(opts) {
+  for (const f of OUTPUTS) rmSync(join(opts.out, f), { force: true });
+  try {
+    return await render(opts);
+  } catch (e) {
+    for (const f of OUTPUTS) rmSync(join(opts.out, f), { force: true });
+    throw e;
+  }
+}
+
+async function render({ text, preset, out, root = '.', lexicon = [], env, fetchImpl, run = spawnSync, sleep, recorded, align = true, say }) {
+  if (align && !scriptWords(text ?? '').length) throw new Error('alignment needs the script text; pass --text or --file, or --no-align');
   mkdirSync(out, { recursive: true });
   let audio;
   let voiceId = null;

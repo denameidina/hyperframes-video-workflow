@@ -10,7 +10,7 @@
 //        npm run voice -- test reveal <run>
 // Node 22+, built-in modules only (ADR-0007); Supertonic runs as a uv sidecar (ADR-0023).
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -83,8 +83,16 @@ export async function main(argv, { root = '.', env = process.env, fetchImpl = fe
     if (!(dur >= REF.min && dur <= REF.max)) throw new Error(`--dur must be ${REF.min}-${REF.max} seconds`);
     mkdirSync(dir, { recursive: true });
     const ref = join(dir, 'ref.wav');
-    exec(run, 'ffmpeg', refArgs({ from: values.from, at, dur, out: ref }));
-    checkLength(ref, REF, 'the reference clip', run);
+    // A retry that fails must not replace a reference Dena already approved.
+    const part = join(dir, 'ref.part.wav');
+    try {
+      exec(run, 'ffmpeg', refArgs({ from: values.from, at, dur, out: part }));
+      checkLength(part, REF, 'the reference clip', run);
+    } catch (e) {
+      rmSync(part, { force: true });
+      throw e;
+    }
+    renameSync(part, ref);
     const plan = whisperPlan({ wav: ref, work: dir, root });
     for (const [c, a] of plan.cmds) exec(run, c, a);
     writeFileSync(join(dir, 'ref.txt'), `${transcriptText(JSON.parse(readFileSync(plan.json, 'utf8')))}\n`);
@@ -103,8 +111,15 @@ export async function main(argv, { root = '.', env = process.env, fetchImpl = fe
     refuseOverwrite(join(dir, 'voice.json'), values.force);
     checkLength(ref, REF, 'the reference clip', run);
     const consent = join(dir, 'consent.wav');
-    exec(run, 'ffmpeg', refArgs({ from: values.consent, out: consent }));
-    checkLength(consent, CONSENT, 'the consent clip', run);
+    const part = join(dir, 'consent.part.wav');
+    try {
+      exec(run, 'ffmpeg', refArgs({ from: values.consent, out: part }));
+      checkLength(part, CONSENT, 'the consent clip', run);
+    } catch (e) {
+      rmSync(part, { force: true });
+      throw e;
+    }
+    renameSync(part, consent);
     const key = geminiKey(env);
     const v = await createVoice(replicateRequest({ model: VOICE_MODEL, name, source: readFileSync(ref), consent: readFileSync(consent) }), { key, fetchImpl });
     writeJson(join(dir, 'voice.json'), { id: v.id, type: 'replicated', model: v.model, displayName: v.displayName, createdAt: now().toISOString(), expireTime: v.expireTime });
@@ -140,6 +155,7 @@ export async function main(argv, { root = '.', env = process.env, fetchImpl = fe
 
   if (cmd === 'test' && sub === 'build') {
     const seed = values.seed === undefined ? undefined : Number(values.seed);
+    if (seed !== undefined && !Number.isInteger(seed)) throw new Error('--seed must be an integer');
     const r = await buildRun({ root, env, fetchImpl, run, seed, now: now(), log });
     log(`listening test ${r.dir}: samples ${r.labels.join(' ')}${r.hasRef ? ' + reference' : ''}; rate them in Studio (tab Suara), then npm run voice -- test reveal ${r.id}`);
     return;

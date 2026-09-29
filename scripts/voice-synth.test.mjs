@@ -79,3 +79,26 @@ test('renderVoice drives Gemini and Supertonic through makeSay, and takes a reco
   assert.deepEqual(rec.paragraphs, []);
   await assert.rejects(renderVoice({ text: 'x', preset: getPreset(voices, 'recorded'), out: join(root, 'r2'), root, run: fakeMedia().run }), /needs --recorded/);
 });
+
+test('renderVoice never leaves a previous run\'s files next to a failed one', async () => {
+  const root = voiceRoot();
+  const out = join(root, 'o');
+  const preset = getPreset(loadVoices(root), 'g-kore');
+  const say = async ({ file }) => writeFileSync(file, 'RIFF');
+  await renderVoice({ text: 'Jujur, gue kira gampang.', preset, out, root, run: fakeMedia().run, say });
+  assert.ok(existsSync(join(out, 'words.json')));
+  const broken = fakeMedia({ fail: { 'whisper-cli': 'model not found' } });
+  await assert.rejects(renderVoice({ text: 'Ternyata susah.', preset, out, root, run: broken.run, say }), /whisper-cli failed/);
+  for (const f of ['voiceover.wav', 'voice-meta.json', 'words.json']) assert.equal(existsSync(join(out, f)), false, f);
+  await renderVoice({ text: 'Ternyata susah.', preset, out, root, run: fakeMedia().run, say, align: false });
+  assert.equal(existsSync(join(out, 'words.json')), false, 'no stale words.json next to alignment: null');
+});
+
+test('renderVoice refuses to align a recording without the script text', async () => {
+  const root = voiceRoot();
+  writeFileSync(join(root, 'take.m4a'), 'audio');
+  const preset = getPreset(loadVoices(root), 'recorded');
+  await assert.rejects(renderVoice({ text: '', preset, out: join(root, 'r'), root, run: fakeMedia().run, recorded: join(root, 'take.m4a') }), /alignment needs the script text/);
+  const meta = await renderVoice({ text: '', preset, out: join(root, 'r'), root, run: fakeMedia().run, recorded: join(root, 'take.m4a'), align: false });
+  assert.equal(meta.alignment, null);
+});
