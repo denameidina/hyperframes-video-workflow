@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
 import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, paneCommand } from './studio/agent.mjs';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { FORMAT, hasSession, interruptSession, killSession, listSessions, parseSessions, sessionName, startSession } from './studio/sessions.mjs';
@@ -17,6 +17,7 @@ import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
 import { createServer } from 'node:http';
 import { createApp } from './studio/app.mjs';
 import { parseTailscaleStatus } from './studio.mjs';
+import { STYLES, generateOptions, listGenerate, mdSection, storyboardRows, validateRequest } from './studio/generate.mjs';
 
 const HOSTS = allowedHosts({ addresses: ['127.0.0.1', '100.64.0.1'], port: 4777, names: ['mac.tail.ts.net'] });
 const statusOf = (fn) => { try { fn(); return 0; } catch (e) { return e.status; } };
@@ -275,10 +276,11 @@ test('Terminals relays data, writes input, and kills the process group on close'
   assert.equal(VIEWER_RE.test('bad id'), false);
 });
 
-async function startApp(root, overrides = {}) {
+async function startApp(root, overrides = {}, responses = {}) {
   const fake = fakeRun({
     'list-panes': { code: 0, stdout: 'studio-vid-b\t0\t0\tclaude\topus\thigh\t1\n', stderr: '' },
     'has-session': { code: 1, stdout: '', stderr: '' },
+    ...responses,
   });
   const server = createServer();
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
@@ -499,4 +501,169 @@ test('app music routes list, serve, and reject tracks', async (t) => {
   assert.equal((await call('POST', '/api/music/m01-quiet/reject', { rejected: 'yes' })).status, 400);
   assert.equal((await call('POST', '/api/music/nope/reject', { rejected: true })).status, 404);
   assert.equal((await fetch(`${base}/api/music/nope/file`)).status, 404);
+});
+
+// studioRoot plus the generate starter, voice presets, a music catalog, and a repurpose-able project
+function genStudioRoot() {
+  const root = studioRoot();
+  mkdirSync(join(root, 'templates/dena-generate'), { recursive: true });
+  writeFileSync(join(root, 'templates/dena-generate/index.html'), '<main data-composition-id="dena-__SLUG__" data-duration="__DURATION__"></main>');
+  writeFileSync(join(root, 'templates/dena-generate/hyperframes.json'), '{}');
+  mkdirSync(join(root, 'config'), { recursive: true });
+  writeFileSync(join(root, 'config/voices.json'), JSON.stringify({ version: 1, default: 'st-f2', presets: { 'st-f2': { provider: 'supertonic', voice: 'F2' }, 'gm-a': { provider: 'gemini', model: 'gemini-3.8-flash-tts' }, recorded: { provider: 'recorded' } } }));
+  mkdirSync(join(root, 'shared/music'), { recursive: true });
+  writeFileSync(join(root, 'shared/music/m01-quiet.mp3'), 'MP3');
+  writeFileSync(join(root, 'shared/music/catalog.json'), JSON.stringify({ version: 1, tracks: [
+    { id: 'm01-quiet', file: 'm01-quiet.mp3', title: 'Quiet', mood: ['reflektif'], energy: 2, duration: 90, rejected: false },
+    { id: 'm02-loud', file: 'm02-loud.mp3', title: 'Loud', mood: ['upbeat'], energy: 4, duration: 60, rejected: true },
+  ] }));
+  writeFileSync(join(root, 'videos/vid-a/processed-transcript.json'), '{"words":[]}');
+  return root;
+}
+
+// a generate project at stage 'story' (brief only) or 'gate1' (script + voiceover); later gates are reached in the
+// tests through recordDecision and real files, so their fingerprints are real
+function genProject(root, slug, stage) {
+  const dir = join(root, 'videos', slug);
+  mkdirSync(join(dir, 'research'), { recursive: true });
+  writeFileSync(join(dir, 'creative-brief.md'), '# Creative Brief\n\n## Workflow Settings\n\n- mode: generate\n');
+  writeFileSync(join(dir, 'research/brief.md'), '# Brief (verbatim dari Dena, 2026-09-29)\n\nKenapa AI agent gagal di bisnis kecil.\n');
+  writeFileSync(join(dir, 'research/request.json'), JSON.stringify({ version: 1, brief: 'x', urls: [], repurpose: null, voice: 'st-f2', duration: null, style: null, music: null }));
+  if (stage === 'story') return dir;
+  writeFileSync(join(dir, 'script.md'), '# Naskah\n\nHook paragraf.\n\nParagraf dua.\n\n## Fakta\n\n- tidak ada angka\n');
+  writeFileSync(join(dir, 'processed-audio.wav'), 'WAV');
+  utimesSync(join(dir, 'script.md'), 1000, 1000);
+  utimesSync(join(dir, 'processed-audio.wav'), 1001, 1001);
+  mkdirSync(join(dir, 'voice'), { recursive: true });
+  writeFileSync(join(dir, 'voice/voice-meta.json'), JSON.stringify({ preset: 'st-f2', duration: 49.78, alignment: { wer: 0 } }));
+  return dir;
+}
+
+test('generate options offer presets without recorded, the styles, unrejected music, and repurpose projects', () => {
+  const root = genStudioRoot();
+  const o = generateOptions(root);
+  assert.deepEqual(o.voices, [{ name: 'st-f2', provider: 'supertonic' }, { name: 'gm-a', provider: 'gemini' }]);
+  assert.equal(o.defaultVoice, 'st-f2');
+  assert.deepEqual(o.styles, STYLES);
+  assert.equal(STYLES.includes('mix-media'), false);
+  assert.deepEqual(o.music.map((m) => m.id), ['m01-quiet']);
+  assert.deepEqual(o.repurpose, ['vid-a']);
+});
+
+test('validateRequest names the bad field and creates nothing', () => {
+  const root = genStudioRoot();
+  const ok = { brief: 'Kenapa AI agent gagal', slug: 'ai-baru' };
+  const err = (body) => { try { validateRequest(root, body); return 'ok'; } catch (e) { return `${e.status} ${e.message}`; } };
+  assert.equal(err(ok), 'ok');
+  assert.match(err({ ...ok, brief: '  ' }), /^400 brief:/);
+  assert.match(err({ ...ok, brief: 'x'.repeat(4001) }), /^400 brief:/);
+  assert.match(err({ ...ok, slug: 'Bad Slug' }), /^400 slug:/);
+  assert.match(err({ ...ok, slug: 'options' }), /^400 slug:/);
+  assert.match(err({ ...ok, slug: 'new' }), /^400 slug:/);
+  assert.match(err({ ...ok, slug: 'vid-a' }), /^409 slug:/);
+  assert.match(err({ ...ok, urls: ['ftp://x.id'] }), /^400 urls:/);
+  assert.match(err({ ...ok, urls: ['https://a.id', 'https://b.id', 'https://c.id', 'https://d.id', 'https://e.id', 'https://f.id'] }), /^400 urls:/);
+  assert.match(err({ ...ok, repurpose: 'vid-b' }), /^400 repurpose:/);
+  assert.match(err({ ...ok, voice: 'recorded' }), /^400 voice:/);
+  assert.match(err({ ...ok, duration: 25 }), /^400 duration:/);
+  assert.match(err({ ...ok, duration: 45.5 }), /^400 duration:/);
+  assert.match(err({ ...ok, style: 'mix-media' }), /^400 style:/);
+  assert.match(err({ ...ok, music: 'm02-loud' }), /^400 music:/);
+  const v = validateRequest(root, { ...ok, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: '60', style: 'stop-motion', music: 'm01-quiet' }, { now: () => new Date('2026-09-29T08:00:00Z') });
+  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, brief: 'Kenapa AI agent gagal', urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', createdAt: '2026-09-29T08:00:00.000Z' } });
+  assert.equal(existsSync(join(root, 'videos/ai-baru')), false);
+});
+
+test('mdSection and storyboardRows read the plan files', () => {
+  const md = '# T\n\n## Style World\n\n- main: stop-motion\n\n### sub\n\nx\n\n## Music\n\n- m01-quiet\n';
+  assert.equal(mdSection(md, 'Style World'), '- main: stop-motion\n\n### sub\n\nx');
+  assert.equal(mdSection(md, 'Music'), '- m01-quiet');
+  assert.equal(mdSection(md, 'Nope'), '');
+  const rows = storyboardRows('| # | time | spoken words | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 0:00.0–0:04.4 | Banyak AI | stop-motion / pop-up | Warung | `sm-08-walk-hinge` (still 2) |\n');
+  assert.deepEqual(rows, [{ n: 1, time: '0:00.0–0:04.4', words: 'Banyak AI', style: 'stop-motion / pop-up', what: 'Warung', example: 'sm-08-walk-hinge (still 2)' }]);
+});
+
+test('app generate: options, create with a session, validation, and a failed session start', async (t) => {
+  const root = genStudioRoot();
+  const { server, call, calls } = await startApp(root);
+  t.after(() => server.close());
+  const opts = await call('GET', '/api/generate/options');
+  assert.deepEqual(opts.body.music.map((m) => m.id), ['m01-quiet']);
+  const bad = await call('POST', '/api/generate', { brief: '', slug: 'x-1', runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.deepEqual([bad.status, bad.body.error.split(':')[0]], [400, 'brief']);
+  assert.equal(existsSync(join(root, 'videos/x-1')), false);
+  const made = await call('POST', '/api/generate', { brief: 'Kenapa AI agent gagal\ndi bisnis kecil', slug: 'ai-baru', style: 'whiteboard', runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.equal(made.status, 201);
+  assert.deepEqual(made.body.session, { started: true, error: null });
+  const dir = join(root, 'videos/ai-baru');
+  assert.match(readFileSync(join(dir, 'creative-brief.md'), 'utf8'), /mode: generate/);
+  assert.match(readFileSync(join(dir, 'research/brief.md'), 'utf8'), /^# Brief \(verbatim dari Dena, \d{4}-\d{2}-\d{2}\)\n\nKenapa AI agent gagal\ndi bisnis kecil\n$/);
+  assert.equal(JSON.parse(readFileSync(join(dir, 'research/request.json'), 'utf8')).style, 'whiteboard');
+  assert.match(readFileSync(join(root, '.studio/prompts/ai-baru.md'), 'utf8'), /^Buat video mode generate \(explainer\) di `videos\/ai-baru\/`[\s\S]*research\/request\.json[\s\S]*Jangan publish/);
+  assert.ok(calls.some((c) => c[0] === 'tmux' && c[1] === 'new-session' && c.includes('studio-ai-baru')));
+  assert.equal((await call('POST', '/api/generate', { brief: 'lagi', slug: 'ai-baru', runtime: 'claude', model: 'opus', effort: 'high' })).status, 409);
+  const wrongEffort = await call('POST', '/api/generate', { brief: 'x', slug: 'ai-dua', runtime: 'codex', model: 'gpt-6-sol', effort: 'high' });
+  assert.equal(wrongEffort.status, 400);
+  assert.equal(existsSync(join(root, 'videos/ai-dua')), false);
+
+  const failing = await startApp(genStudioRoot(), {}, { 'new-session': { code: 1, stdout: '', stderr: 'no server' } });
+  t.after(() => failing.server.close());
+  const kept = await failing.call('POST', '/api/generate', { brief: 'x', slug: 'ai-tiga', runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.equal(kept.status, 201);
+  assert.equal(kept.body.session.started, false);
+  assert.match(kept.body.session.error, /tmux new-session failed/);
+});
+
+test('app generate list, detail per gate, media whitelist, and the generate continue prompt', async (t) => {
+  const root = genStudioRoot();
+  genProject(root, 'g-story', 'story');
+  const g1 = genProject(root, 'g-one', 'gate1');
+  const { server, call, base } = await startApp(root);
+  t.after(() => server.close());
+  const list = (await call('GET', '/api/generate')).body;
+  assert.deepEqual(list.map((p) => [p.slug, p.status.phase, p.status.gate]), [['g-one', 'gate', 1], ['g-story', 'story', null]]);
+  assert.equal(list[0].brief, 'Kenapa AI agent gagal di bisnis kecil.');
+  const d1 = (await call('GET', '/api/generate/g-one')).body;
+  assert.deepEqual([d1.status.phase, d1.status.gate, d1.status.state, d1.status.voiceStale], ['gate', 1, 'waiting', false]);
+  assert.deepEqual(d1.gate1.paragraphs, ['Hook paragraf.', 'Paragraf dua.']);
+  assert.equal(d1.gate1.facts, '- tidak ada angka');
+  assert.deepEqual(d1.gate1.voice, { duration: 49.78, preset: 'st-f2', wer: 0 });
+  assert.equal(d1.gate1.audio, true);
+  assert.equal(d1.request.voice, 'st-f2');
+  assert.equal((await call('GET', '/api/generate/vid-a')).status, 404, 'an edit project is not a generate project');
+
+  const { recordDecision } = await import('./lib/gates.mjs');
+  recordDecision(g1, { gate: 1, decision: 'approve', by: 'cli' });
+  mkdirSync(join(g1, 'preview'), { recursive: true });
+  writeFileSync(join(g1, 'preview/storyboard-sheet.jpg'), 'JPG');
+  writeFileSync(join(g1, 'storyboard.md'), '| # | time | spoken words | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 0:00 | Halo | stop-motion / pop-up | Warung | `sm-08-walk-hinge` |\n');
+  writeFileSync(join(g1, 'visual-plan.md'), '# Visual Plan\n\n## Style World\n\n- stop-motion\n\n## Music\n\n- Track: `m01-quiet` from 0\n\n## Timeline\n');
+  const d2 = (await call('GET', '/api/generate/g-one')).body;
+  assert.deepEqual([d2.status.gate, d2.gate2.sheets, d2.gate2.rows.length, d2.gate2.styleWorld, d2.gate2.musicTrack], [2, ['preview/storyboard-sheet.jpg'], 1, '- stop-motion', 'm01-quiet']);
+
+  recordDecision(g1, { gate: 2, decision: 'approve', by: 'cli' });
+  mkdirSync(join(g1, 'renders'), { recursive: true });
+  writeFileSync(join(g1, 'renders/g-one.mp4'), 'MP4');
+  writeFileSync(join(g1, 'assembly-notes.md'), '# Assembly Notes\n\n## Deviations From Plan\n\n- ov-004 strings\n\n## Verification\n\nok\n\n## Handoff Risks\n\n- CTA intonation\n');
+  const d3 = (await call('GET', '/api/generate/g-one')).body;
+  assert.deepEqual([d3.status.gate, d3.gate3.render, d3.gate3.deviations, d3.gate3.risks, d3.gate3.qaReport], [3, 'g-one.mp4', '- ov-004 strings', '- CTA intonation', false]);
+
+  const audio = await fetch(`${base}/media/g-one/processed-audio.wav`);
+  assert.deepEqual([audio.status, await audio.text()], [200, 'WAV']);
+  assert.equal((await fetch(`${base}/media/g-one/preview/storyboard-sheet.jpg`)).status, 200);
+  assert.equal((await fetch(`${base}/media/g-one/preview/other.jpg`)).status, 404);
+  assert.equal((await fetch(`${base}/media/g-one/script.md`)).status, 404);
+  assert.equal((await fetch(`${base}/media/g-one/renders/g-one.mp4`)).status, 404, 'renders keep their own route');
+  assert.equal((await fetch(`${base}/media/g-one/g-one.mp4`)).status, 200);
+
+  await call('POST', '/api/sessions', { slug: 'g-story', runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.match(readFileSync(join(root, '.studio/prompts/g-story.md'), 'utf8'), /^Lanjutkan proyek mode generate `videos\/g-story\/`\. Jalankan `npm run video -- gate g-story`/);
+});
+
+test('buildPrompt generate modes point at request.json and the gate command', () => {
+  assert.match(buildPrompt({ mode: 'generate', slug: 'a' }), /^Buat video mode generate \(explainer\) di `videos\/a\/`\. Brief Dena ada di `research\/brief\.md`/);
+  const c = buildPrompt({ mode: 'generate-continue', slug: 'a', notes: 'Keputusan terakhir: Gate 1 revise — CTA' });
+  assert.match(c, /npm run video -- gate a/);
+  assert.match(c, /Catatan dari Dena: Keputusan terakhir: Gate 1 revise — CTA/);
+  assert.match(buildPrompt({ mode: 'new', slug: 'a' }), /^Edit video project/);
 });

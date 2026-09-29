@@ -66,3 +66,25 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-20** (Event-driven) — When Dena rejects or restores a track in the Musik tab,
   Studio shall set `rejected` in `shared/music/catalog.json` through
   `scripts/lib/music.mjs`; a non-boolean value gets 400 and an unknown id 404.
+- **RD-05-21** (Event-driven) — When Dena opens the Generate tab, Studio shall list every
+  project whose `creative-brief.md` sets `mode: generate` with its position from
+  `scripts/lib/gates.mjs`, the first line of `research/brief.md`, and its session status
+  (ADR-0026).
+- **RD-05-22** (Event-driven) — When Dena submits the Generate form, Studio shall validate
+  every field before writing anything — brief 1–4000 characters; slug valid, not `options` or
+  `new`, not taken; at most 5 `http:`/`https:` URLs; repurpose, voice preset (not `recorded`),
+  style (`motion-broll`, `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`,
+  `parallax`), and music (an unrejected catalog track) from the options Studio offers;
+  duration an integer 30–90 or empty — then scaffold `videos/<slug>/` in generate mode, write
+  `research/brief.md` (the brief verbatim) and `research/request.json`, and start
+  `studio-<slug>` with the generate prompt.
+- **RD-05-23** (Unwanted) — If a Generate form field is invalid, then Studio shall answer 400
+  naming the field (409 for a taken slug) and create nothing; if the session cannot start,
+  Studio shall keep the project and report why.
+- **RD-05-24** (Event-driven) — When Dena opens a generate project, Studio shall show the
+  artifacts of its current gate (Gate 1: voiceover player, duration, preset, WER, script
+  paragraphs with `## Fakta`; Gate 2: storyboard sheets, `storyboard.md` rows, `## Style World`
+  and `## Music` of `visual-plan.md` with the named catalog track; Gate 3: the render and
+  "Deviations From Plan" / "Handoff Risks" of `assembly-notes.md`) and serve under
+  `/media/<slug>/` only `processed-audio.wav`, `preview/storyboard-sheet[-N].jpg`, and the
+  project's renders.

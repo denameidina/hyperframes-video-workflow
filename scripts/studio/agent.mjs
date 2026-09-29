@@ -37,11 +37,18 @@ export function paneCommand(argv, promptPath) {
   return `${argv.map(shellQuote).join(' ')} "$(cat ${shellQuote(promptPath)})"`;
 }
 
+const GENERATE_DOC = '`docs/agents/references/generate-mode.md`';
+
 export function buildPrompt({ mode, slug, notes }) {
   const note = String(notes ?? '').trim() || '-';
-  const first = mode === 'continue'
-    ? `Lanjutkan proyek \`videos/${slug}/\` (sumber di \`sources.json\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`
-    : `Edit video project \`videos/${slug}/\` dari sumber di \`videos/${slug}/sources.json\` (jalankan \`npm run video -- sources ${slug}\` dulu). Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.`;
+  const first = {
+    continue: `Lanjutkan proyek \`videos/${slug}/\` (sumber di \`sources.json\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`,
+    new: `Edit video project \`videos/${slug}/\` dari sumber di \`videos/${slug}/sources.json\` (jalankan \`npm run video -- sources ${slug}\` dulu). Gunakan style yang sudah ada; serahkan ke agent Story untuk memilih dan memastikan hasil editing videonya bagus.`,
+    // ADR-0026: Studio types gate answers into this session; they are already in gates.json
+    generate: `Buat video mode generate (explainer) di \`videos/${slug}/\`. Brief Dena ada di \`research/brief.md\`; pilihannya di \`research/request.json\` — pilihan yang terisi wajib dipakai, yang kosong kamu tentukan. Ikuti ${SKILL} dan ${GENERATE_DOC}. Berhenti di Gate 1 (naskah + suara), Gate 2 (storyboard), dan Gate 3 (render); keputusan Dena datang sebagai pesan "Gate N disetujui dari Studio …" atau "Gate N revisi dari Studio: …" dan sudah tercatat di \`gates.json\`.`,
+    'generate-continue': `Lanjutkan proyek mode generate \`videos/${slug}/\`. Jalankan \`npm run video -- gate ${slug}\` untuk posisi dan keputusan terakhir, baca artefak yang sudah ada, lalu lanjutkan sesuai ${SKILL} dan ${GENERATE_DOC}. Keputusan Dena dari Studio sudah tercatat di \`gates.json\`.`,
+  }[mode];
+  if (!first) throw new Error(`unknown prompt mode ${mode}`);
   return `${first}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
 }
 

@@ -2,9 +2,11 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
+import { isGenerate } from '../lib/gates.mjs';
 import { probeMedia } from '../lib/video-sources.mjs';
 import { buildPrompt } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
+import { createGenerate, generateDetail, generateMediaPath, generateOptions, listGenerate } from './generate.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
 import { listMusic, musicFile, rejectMusic } from './music.mjs';
@@ -38,6 +40,10 @@ function decode(part) {
 
 export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, probe = async () => null, probeSource = probeMedia }) {
   const opt = run ? { run } : {};
+  const checkModel = async (b) => {
+    const known = (await models())[b.runtime]?.models?.find((m) => m.value === b.model);
+    if (known && !known.efforts.includes(b.effort)) throw new HttpError(400, `${b.model} supports effort ${known.efforts.join(', ')}`);
+  };
 
   const routes = [
     ['GET', /^\/api\/state$/, async () => ({ tools, models: await models() })],
@@ -68,9 +74,8 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       const b = await readJson(req);
       const slug = slugParam(b.slug);
       const dir = projectPath(root, slug);
-      const known = (await models())[b.runtime]?.models?.find((m) => m.value === b.model);
-      if (known && !known.efforts.includes(b.effort)) throw new HttpError(400, `${b.model} supports effort ${known.efforts.join(', ')}`);
-      const mode = existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
+      await checkModel(b);
+      const mode = isGenerate(dir) ? 'generate-continue' : existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);
       const prompt = buildPrompt({ mode, slug, notes: b.notes });
@@ -119,6 +124,26 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       return RAW;
     }],
     ['POST', /^\/api\/music\/([^/]+)\/reject$/, async (req, url, [id]) => rejectMusic(root, id, (await readJson(req)).rejected)],
+    ['GET', /^\/api\/generate$/, async () => listGenerate(root, await listSessions(opt))],
+    ['GET', /^\/api\/generate\/options$/, async () => generateOptions(root)],
+    ['POST', /^\/api\/generate$/, async (req, url, m, res) => {
+      const b = await readJson(req);
+      await checkModel(b);
+      const { slug } = createGenerate(root, b);
+      let session = { started: true, error: null };
+      try {
+        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug }), ...opt });
+      } catch (e) {
+        session = { started: false, error: e.message }; // the project stays; the panel offers "Mulai sesi"
+      }
+      sendJson(res, 201, { slug, session });
+      return RAW;
+    }],
+    ['GET', /^\/api\/generate\/([^/]+)$/, async (req, url, [slug]) => generateDetail(root, slugParam(slug), await listSessions(opt))],
+    ['GET', /^\/media\/([^/]+)\/(processed-audio\.wav|preview\/storyboard-sheet(?:-\d+)?\.jpg)$/, async (req, url, [slug, file], res) => {
+      sendFile(req, res, generateMediaPath(root, slugParam(slug), file));
+      return RAW;
+    }],
     ['GET', /^\/api\/results$/, async () => listResults(root)],
     ['GET', /^\/media\/([^/]+)\/([^/]+)$/, async (req, url, [slug, file], res) => {
       sendFile(req, res, renderPath(root, slugParam(slug), file));
