@@ -30,6 +30,15 @@ Do not use this phase when:
 - The project is not a HyperFrames project and no conversion/initialization has
   been approved.
 
+## Mode generate
+
+When `creative-brief.md` sets `mode: generate`, follow Build (generate) in
+`docs/agents/references/generate-mode.md`: readiness without `processed.mp4`,
+`npm run video -- bgm <slug> --track <id> --from <s>` before assembly, one `SK.clip` per
+scene mounted on tracks 4 and 7, `.bg-fill` in the style world colour, and rail captions
+without the `"rail": "hidden"` beats. Verification, render, and Gate 3 are unchanged
+(ADR-0025, RD-03-87).
+
 ## Core Principle
 
 Assembly must be faithful, inspectable, and deterministic.

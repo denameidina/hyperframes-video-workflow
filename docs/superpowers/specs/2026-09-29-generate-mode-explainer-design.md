@@ -301,3 +301,40 @@ satu explainer nyata melewati tiga gate bersama Dena.
 - Product-promo (capture/rekaman UI produk) — sub-proyek 5.
 - Ronde Gemini uji dengar dan pemilihan default final — lanjutan sub-proyek 1.
 - Suara asli Dena untuk repurpose (provider `recorded`) — tidak dipilih.
+
+## Amandemen saat planning (2026-09-29, hasil spike)
+
+Semua butir di bawah diverifikasi di salinan repo sebelum plan
+`docs/superpowers/plans/2026-09-29-generate-mode-explainer.md` ditulis. Smoke nyata
+(`new --generate` → `voice` Supertonic → `bgm` → `storyboard` → dua scene contoh →
+lint/validate bersih → render 1080×1920, audio −16,1 LUFS) lulus.
+
+1. **ffmpeg lokal tanpa `drawtext`** (build Homebrew tanpa libfreetype). Storyboard sheet
+   dirakit sebagai halaman HTML (grid still + label, font OFL Plus Jakarta Sans dari
+   asset-lib) lalu di-snapshot `hyperframes snapshot`, dan PNG-nya dikonversi ke JPG.
+   Area label per tile 104 px.
+2. **Still contoh** memakai hasil `npm run check:style-examples -- <style>` yang sudah ada
+   di `renders/style-examples/<style>/frame-NN-at-<t>s.png` (bukan cache terpisah
+   `renders/storyboard-cache/`); gaya yang still-nya belum ada di-render sekali.
+3. **Narasi `script.md` berakhir di section `## ` pertama** (`scriptBody`): `## Fakta` dan
+   catatan lain tidak pernah dibacakan TTS; baris judul `# ` dibuang; `#1`/`#AI` tetap.
+4. **Alignment per kelompok kata** (maksimal 3 kata; perluasan dua kata hanya bila
+   pasangan itu sendiri tidak berubah bentuk ucapannya). Timing di dalam kelompok dibagi
+   rata. Pada voiceover F2 naskah uji, WER turun 0,043 → 0,021.
+5. **`video voice` membaca `.env` dengan `parseEnv`** ke salinan env-nya sendiri; `process.env`
+   dan proses anak HyperFrames tidak berubah.
+6. **Penanda `data-voice-duration`**: `video voice` mengisi `data-duration` elemen bertanda
+   (di luar komentar HTML); tween progress membaca `data-duration` root lewat DOM.
+7. **`video new --generate` tetap menulis `sources.json` kosong**, supaya gambar/B-roll Dena
+   bisa dilampirkan (Studio membaca manifest yang sama).
+8. **`example` sebaiknya contoh bertreatment `cutaway`** (full frame): contoh `split`/`panel`
+   menampilkan wajah placeholder di sheet.
+9. **`inspect` bisa melaporkan overflow dari klip contoh** (lapisan kamera `wb-01-flow` lebih
+   besar dari frame). Itu urusan klip per scene di Build (perbaiki, atau tandai
+   `data-layout-allow-overflow` bila disengaja); starter generate sendiri bersih.
+10. **BGM:** `apad` di kedua input + `atrim` akhir membuat `sidechaincompress` berhenti tepat
+    di durasi voiceover dan hasilnya identik antar-run (tanpa itu durasinya berubah-ubah).
+    Ducking terukur ±8 dB (−30,2 → −37,8 LUFS pada voiceover 35 s).
+11. **Test:** `scripts/generate-lib.test.mjs` (fungsi murni) dan `scripts/generate.test.mjs`
+    (CLI) masuk `npm run test:video`.
+12. **Nomor kriteria:** RD-03-75…RD-03-87 dan RD-06-23…RD-06-28 (+ rumusan RD-06-02).

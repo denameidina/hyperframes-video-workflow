@@ -60,6 +60,8 @@ Kontrak layer dari style guide (dipetakan ke penggunaan `index.html`):
 | 4 | Overlay kontekstual (screenshot, b-roll, kartu bukti) | `.proof-card` |
 | 5 | Hook card / editorial title / takeaway besar / CTA / end card | `#hook-card`, `#cta-card` |
 | 6 | Label/sticker kecil (varian track kontekstual) | `.label-card`, `.sticker` |
+| 7 | Mix-media: lapisan depan `.broll-front`; mode generate: scene (bergantian dengan track 4) | `.broll` |
+| 9 | Mode generate: BGM ter-duck (`bgm.wav`) | `#bgm-audio` |
 | 10+ | Audio: base audio (10), SFX (11..16) | `#base-audio`, `#sfx-*` |
 
 > `data-track-index` mengatur tumpang tindih temporal saja. Urutan paint (siapa di

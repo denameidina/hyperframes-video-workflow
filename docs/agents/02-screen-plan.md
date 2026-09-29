@@ -31,6 +31,15 @@ Do not use this phase when:
 - The task is only producing asset files or HTML for an approved plan (Build).
 - The task is only QA or publishing.
 
+## Mode generate
+
+When `creative-brief.md` sets `mode: generate`, follow Screen Plan (generate) in
+`docs/agents/references/generate-mode.md` alongside the steps below: hybrid captions (`"rail": "hidden"`
+for beats a scene already shows), a `## Style World`, scenes that cover every second
+(treatment `full`, `example`), `## Music`, and `storyboard.md` +
+`npm run video -- storyboard <slug>`. Gate 2 always stops for Dena's approval; R3 and R4
+do not apply (ADR-0025, RD-03-82…86).
+
 ## Core Principles
 
 ### Captions

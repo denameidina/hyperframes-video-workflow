@@ -71,6 +71,7 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
+- Generate mode (ADR-0025, `mode: generate`): a motion-design explainer from a topic, URL, or rewritten older video, with no footage of Dena. The hook is paragraph 1 of the script Dena approved at Gate 1 (script + voice); the TTS voiceover is never sped up to 1.2x; captions are hybrid (every word, hidden on the rail where a scene already shows it); Gate 2 always stops with the storyboard sheet. Rules: `docs/agents/references/generate-mode.md`.
 
 ## Dena Workflow Discipline
 
@@ -93,6 +94,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 
 ### Routing Rules
 
+- A motion-design video with no footage of Dena (topic, brief, URL, article, thread, rewritten older video): Story in generate mode (`docs/agents/references/generate-mode.md`).
 - New project sources (one or many raw takes, B-roll, images), reference video, "make this viral", "edit like this", angle, hook, format, transcript, silence/filler cuts, pacing, speed, or processed media: Story.
 - Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, CTA text, or publish captions: Screen Plan (captions step).
 - Which moments get visuals, visual type (screenshot, generated still/video, diagram, proof card, label, sticker), placement, overlay timing, pattern interrupts, zooms, effects, progress bars, transitions, or SFX cues: Screen Plan (visual step).
@@ -207,6 +209,10 @@ npm run test:voice             # unit test the voice adapter and listening test
 npm run music -- add <url|file> --source <page> --license cc0|public-domain|pixabay|mixkit --title <t> --author <a> --mood <m> --energy <1-5>  # BGM -> shared/music/ (ADR-0024)
 npm run music -- list [--mood <m>] [--min-dur <s>]       # BGM catalog (rejected tracks hidden)
 npm run music -- check                                   # files, sha256, license allowlist, license proofs
+npm run video -- new <slug> --generate      # generate mode: starter without base video, research/, brief stub (ADR-0025)
+npm run video -- voice <slug> [--preset <p>]  # script.md -> voiceover, processed-audio.wav, processed-transcript.json
+npm run video -- bgm <slug> --track <id> [--from <s>]  # shared/music track -> ducked bgm.wav + bgm.json
+npm run video -- storyboard <slug>          # Gate 2 sheet from each scene's style example -> preview/storyboard-sheet.jpg
 npm run test:music             # unit test the music library
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved

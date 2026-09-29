@@ -33,6 +33,9 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Voiceover | `<out>/voiceover.wav`, `voice-meta.json`, `words.json` | WAV + JSON | `npm run voice` |
 | Uji dengar | `shared/voice-tests/<run>/` (di-ignore); config `config/voice-test.json` | WAV + JSON | `npm run voice -- test`, Studio |
 | Katalog musik | `shared/music/catalog.json` + `licenses/` (di-ignore) | JSON | `npm run music`, Studio |
+| Naskah (generate) | `videos/<slug>/script.md`, `research/` | Markdown | Story (mode generate) |
+| Storyboard (generate) | `videos/<slug>/storyboard.md`, `preview/storyboard-sheet.jpg` | Markdown + JPG | Screen Plan (mode generate) |
+| BGM (generate) | `videos/<slug>/bgm.wav`, `bgm.json` | WAV + JSON | Build (`npm run video -- bgm`) |
 
 > Semua `videos/<slug>/**` di-ignore git kecuali `.gitkeep` (lihat
 > `.gitignore`). Data ini lokal dan tidak masuk repo publik.
@@ -308,6 +311,25 @@ dan naskah `config/voice-test-script.md`. Isi run: `script.md`, `screen.json`
 `reflektif | tech-ringan | tensi | playful | sinematik | upbeat`; `energy` 1–5;
 `contentIdRisk` ∈ `none | unknown | known`. Bukti lisensi `licenses/<id>.txt`.
 Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
+
+## Mode generate (ADR-0025)
+
+- `creative-brief.md` `## Workflow Settings` `mode: generate` (default `edit`); Hook
+  `Status: scripted` dengan `hook_end` = `voice/voice-meta.json` `paragraphs[0].end`;
+  bagian `## Voice` (preset, provider, model).
+- `research/`: `brief.md` (verbatim), `NN-<domain>.md` (URL, tanggal ambil, kutipan),
+  `repurpose.md` (slug + path transkrip sumber).
+- `script.md`: narasi = teks sebelum section `## ` pertama (paragraf 1 = hook);
+  `## Fakta` memberi sumber tiap angka, nama, harga, hasil, atau kutipan.
+- `processed-transcript.json` versi generate:
+  `{ source: "voice/voiceover.wav", model: "<provider>/<model>/<voice>", language: "id", note, segments: [{ start, end, text }], words: [{ start, end, text }] }`
+  (`segments` = paragraf).
+- `caption-beats.json`: field opsional `rail` = `"shown"` (default) | `"hidden"`.
+- `overlay-timeline.json`: baris scene `placement: "full"`, `track` 4/7, `example`
+  (id contoh style, mis. `wb-03-mind-map`).
+- `storyboard.md`: `| # | time | spoken words | style / pattern | what appears | example |`;
+  `preview/storyboard-sheet.jpg` dari `npm run video -- storyboard`.
+- `bgm.json`: `{ version: 1, track, file, sha256, from, duration, copies, gainDb, duck: { threshold, ratio, attack, release } }`, di samping `bgm.wav`.
 
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 

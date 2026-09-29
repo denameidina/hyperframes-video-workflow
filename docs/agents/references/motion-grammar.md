@@ -440,6 +440,8 @@ Each element needs:
 - `motion`
 - `purpose`
 - `notes`
+- generate mode scene rows also use `placement: "full"` and carry `example`, the id of
+  the style example the scene leans on (`generate-mode.md`)
 
 Use processed-video time.
 

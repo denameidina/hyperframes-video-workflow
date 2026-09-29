@@ -52,11 +52,10 @@ native Indonesia; yang terdekat 8 suara `jv-ID` berlogat Jawa.
   Indonesia: "Saya pemilik suara ini dan saya menyetujui Google menggunakan suara ini
   untuk membuat model suara sintetis."
 - Waktu di `words.json` adalah waktu DTW (±0,2–0,3 s setelah onset, RD-04-11).
-- Alignment menormalisasi per kata, jadi ungkapan yang terpisah spasi ("Rp 2.500",
-  "2,5 jt", "50 %") belum bertemu bentuk ucapannya: WER naik dan peringatan RD-06-10 bisa
-  muncul palsu. Diperbaiki (normalisasi per paragraf + peta offset) sebelum sub-proyek 2
-  memakai `words.json` untuk caption. Jam ("10.30") dan "M" setelah angka dibaca harfiah;
-  tulis sebagai kata atau tambahkan ke leksikon.
+- Alignment menormalisasi per kelompok kata (sejak ADR-0025): ungkapan yang terpisah
+  spasi ("Rp 2.500", "2,5 jt", "50 %", "3 - 5") bertemu bentuk ucapannya; timing di dalam
+  kelompok dibagi rata. Jam ("10.30") dan "M" setelah angka dibaca harfiah; tulis sebagai
+  kata atau tambahkan ke leksikon.
 - Supertonic membaca tag `<short pause>` / `<long pause>` sebagai koma / titik; tag lain
   dibuang.
 

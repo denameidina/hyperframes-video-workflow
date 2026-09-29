@@ -34,6 +34,7 @@ For validation, QA, and render gates, read `references/quality-gates.md`.
 | Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
 | Capturing/generating asset files, `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
 | Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/04-qa.md` (fresh-context subagent) |
+| Motion-design video with no footage of Dena, from a topic, brief, URL, article, thread, or a rewritten older video (generate mode) | `docs/agents/01-story.md` (Mode generate) with `docs/agents/references/generate-mode.md` |
 | R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
@@ -110,6 +111,20 @@ Screen Plan:  videos/<slug>/caption-plan.md
 Build:        videos/<slug>/assets/asset-manifest.json   (when assets exist)
               videos/<slug>/assembly-notes.md
               videos/<slug>/assembly-checklist.md
+```
+
+For a generate-mode video (ADR-0025) the chain is:
+
+```text
+Story:        creative-brief.md (mode: generate), metadata.json, research/, script.md (## Fakta),
+              voice/, processed-audio.wav, processed-transcript.json,
+              edit-decision-notes.md (ends with ## Script Summary)
+Screen Plan:  caption-plan.md, caption-beats.json (rail), publish-captions.md,
+              visual-plan.md (## Style World, ## Music, ## Gate 2 Result),
+              overlay-timeline.json (scene rows: placement full, example),
+              storyboard.md, preview/storyboard-sheet.jpg
+Build:        bgm.wav, bgm.json, assets/asset-manifest.json (when assets exist),
+              assembly-notes.md, assembly-checklist.md
 ```
 
 Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.

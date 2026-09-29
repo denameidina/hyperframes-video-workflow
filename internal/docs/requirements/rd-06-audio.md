@@ -12,8 +12,9 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
 - **RD-06-01** (Ubiquitous) — The voice adapter shall membaca preset hanya dari
   `config/voices.json` (version 1); preset `gemini` memakai `voice` langsung atau
   `voiceRef` ke file `{ id | key }` di `shared/voices/<name>/`.
-- **RD-06-02** (Event-driven) — When adapter menyintesis naskah, the adapter shall memecah
-  paragraf di baris kosong lalu menormalisasi tiap paragraf (bilangan, desimal, rupiah +
+- **RD-06-02** (Event-driven) — When adapter menyintesis naskah, the adapter shall mengambil
+  narasi (teks sebelum section `## ` pertama, tanpa baris judul `# ` dan komentar HTML),
+  memecah paragraf di baris kosong lalu menormalisasi tiap paragraf (bilangan, desimal, rupiah +
   `rb/jt/M/T`, persen, `Nx`, `ke-N`, rentang `a-b`, leksikon `config/pronunciation.json`
   dengan `only` per provider) sebelum dikirim ke provider; `words.json` dan
   `voice-meta.json` memakai teks naskah.
@@ -90,6 +91,31 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   file hilang, sha256 berbeda, lisensi di luar allowlist, atau bukti lisensi hilang.
 - **RD-06-22** (Ubiquitous) — `music list` shall menyembunyikan track `rejected: true`
   kecuali `--include-rejected`.
+
+## Mode generate (ADR-0025)
+
+- **RD-06-23** (Event-driven) — When `npm run video -- voice <slug>` dijalankan, the CLI
+  shall membaca narasi `script.md`, menyintesisnya dengan `--preset` atau `default` di
+  `config/voices.json` lewat `renderVoice` ke `voice/`, lalu menulis `processed-audio.wav`
+  dan `processed-transcript.json` (`segments` = paragraf, `words` = `words.json`) dengan
+  skema jalur edit.
+- **RD-06-24** (Event-driven) — When `index.html` ada, `video voice` shall mengisi
+  `data-duration` setiap elemen bertanda `data-voice-duration` (di luar komentar HTML)
+  dengan durasi voiceover.
+- **RD-06-25** (Unwanted) — If `script.md` tidak ada, tidak ada preset (`--preset` kosong
+  dan `default` null), atau preset-nya `recorded`, then `video voice` shall gagal sebelum
+  sintesis dan menyebut langkah yang perlu dilakukan.
+- **RD-06-26** (Event-driven) — When `npm run video -- bgm <slug> --track <id> [--from <s>]`
+  dijalankan, the CLI shall memotong track mulai `from`, meloop-nya dengan crossfade 1 s
+  bila lebih pendek dari voiceover, fade in 0,5 s dan fade out 1,5 s, mengatur loudness ke
+  −30 LUFS (gain dijepit −30…+20 dB), dan men-duck-nya di bawah `processed-audio.wav`
+  dengan `sidechaincompress` (threshold 0,05, ratio 8, attack 20 ms, release 400 ms), lalu
+  menulis `bgm.wav` (48 kHz stereo, tepat sepanjang voiceover) dan `bgm.json`.
+- **RD-06-27** (Unwanted) — If `processed-audio.wav` tidak ada, atau track-nya `rejected`,
+  lisensinya di luar allowlist, atau gagal `music check`, then `video bgm` shall gagal
+  tanpa menulis `bgm.wav`.
+- **RD-06-28** (Ubiquitous) — `video bgm` shall deterministik: input yang sama menghasilkan
+  `bgm.wav` yang identik byte per byte.
 
 ## Referensi
 

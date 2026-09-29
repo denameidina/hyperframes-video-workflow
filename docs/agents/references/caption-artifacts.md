@@ -55,6 +55,8 @@ Each beat needs:
 - `position`
 - `sourceWords` covering the exact processed transcript word range
 - `notes`
+- `rail` (generate mode only, optional): `"shown"` (default) or `"hidden"` for a beat
+  whose words a scene already shows on screen (`generate-mode.md`)
 
 Use processed-video time, not raw-source time.
 

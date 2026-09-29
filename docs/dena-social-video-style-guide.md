@@ -19,6 +19,11 @@ Then route the work through the phase documents in `docs/agents/`:
 3. `03-build.md` - asset production, `index.html`, timed clips, tracks, GSAP, local asset wiring, render.
 4. Optional at user review/publish gate: `04-qa.md` - QA, punch list, render/platform readiness review.
 
+Generate mode (ADR-0025): a motion-design explainer with no footage of Dena. The script's
+TTS voice is the time base and is never sped up to 1.2x; the hook is paragraph 1 of the
+script Dena approved at Gate 1; captions are hybrid; one style world with scenes over
+every second; a ducked BGM track. Rules: `docs/agents/references/generate-mode.md`.
+
 Do not jump to HyperFrames assembly before the Story and Screen Plan artifacts exist or are explicitly marked unnecessary.
 
 ## Public Profile Context

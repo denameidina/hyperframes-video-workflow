@@ -33,6 +33,18 @@ menyusunnya. Aturan umum ada di
   (track 11+, tanpa `data-media-start`), mount b-roll (track 4, `id` wajib),
   dan treatment split.
 
+## Starter generate (`templates/dena-generate/index.html`, ADR-0025)
+
+- Dibuat oleh `npm run video -- new <slug> --generate`. Tanpa `#base-video`; `.bg-fill`
+  diwarnai latar style world oleh Build.
+- `#voice-audio` (`processed-audio.wav`, track 10), `#bgm-audio` (`bgm.wav`, track 9),
+  `#progress` (track 3). Elemen bertanda `data-voice-duration` diselaraskan ke durasi
+  voiceover oleh `npm run video -- voice`.
+- Tween progress membaca `data-duration` root lewat DOM (bukan jam), jadi tetap
+  deterministik.
+- Scene: mount `.broll` bergantian di track 4 dan 7; caption, hook/CTA card, dan SFX sama
+  dengan starter edit.
+
 ## Aturan implementasi
 
 - GSAP dan engine dari `vendor/` (lokal), tanpa jaringan saat render.

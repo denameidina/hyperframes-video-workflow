@@ -32,8 +32,18 @@ Do not use this phase for:
 - Caption styling or caption typo fixes (Screen Plan).
 - Visual, overlay, or motion work (Screen Plan, Build).
 - Render/lint/debug tasks (Build).
-- Projects with no speech source at all (montage only): write a blocker note
-  instead (RD-03-68).
+- Edit-mode projects with no speech source at all (montage only): write a blocker
+  note instead (RD-03-68). A video with no footage of Dena is generate mode (below).
+
+## Mode generate
+
+When `creative-brief.md` sets `mode: generate` (a project made with
+`npm run video -- new <slug> --generate`), there is no footage to cut: this phase
+researches, writes `script.md`, makes the voiceover with `npm run video -- voice <slug>`,
+and stops at Gate 1 (script + voice, mandatory). Follow Story (generate) in
+`docs/agents/references/generate-mode.md` instead of Steps 2 and 4–9 below; Step 1 (context) and Step 3
+(direction, format `explainer`) still apply. The 1.2x speed, the verbatim transcript
+hook, cuts, and `video cut` do not apply (ADR-0025, RD-03-75…81).
 
 ## Core Principles
 

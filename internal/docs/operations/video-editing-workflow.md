@@ -90,6 +90,17 @@ Verdict: `pass|pass-with-minor-notes|revise|blocked`. Severity:
 caption/audio sama seperti di [nfr](../architecture/nfr.md).
 `final-approval.md` = lulus QA internal, **bukan** izin publish.
 
+## Mode generate (ADR-0025)
+
+Video motion design tanpa footage Dena (`mode: generate`, dibuat
+`npm run video -- new <slug> --generate`). Story: `research/` → `script.md` (paragraf 1 =
+hook, `## Fakta`) → `npm run video -- voice <slug>` → **Gate 1 wajib** (naskah + suara).
+Screen Plan: caption hybrid, `## Style World`, scene penuh, `## Music`, `storyboard.md` +
+`npm run video -- storyboard <slug>` → **Gate 2 selalu**. Build: `npm run video -- bgm`,
+satu `SK.clip` per scene di track 4/7, render → Gate 3. Tanpa percepatan 1,2x. Detail:
+`docs/agents/references/generate-mode.md`,
+[rd-03](../requirements/rd-03-video-editing-workflow.md) RD-03-75…87.
+
 ## Gate review/publish
 
 Setelah render Build: berhenti, minta user review (Gate 3). Tawarkan: publish

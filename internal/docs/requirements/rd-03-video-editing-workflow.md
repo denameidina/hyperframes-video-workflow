@@ -281,9 +281,51 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   1080×1920, 30 fps, audio 48 kHz stereo dengan loudness per sumber −16 LUFS,
   dan menulis `cut-map.json`.
 
+## Mode generate (ADR-0025)
+
+- **RD-03-75** (Event-driven) — When `npm run video -- new <slug> --generate` dijalankan,
+  the CLI shall membuat `videos/<slug>/` dari `templates/dena-generate/`, beserta
+  `research/`, `sources.json`, dan `creative-brief.md` yang memuat `mode: generate`.
+- **RD-03-76** (Unwanted) — If `videos/<slug>/` sudah ada, then `video new --generate`
+  shall menolak tanpa mengubah file apa pun.
+- **RD-03-77** (State-driven) — While `creative-brief.md` memuat `mode: generate`, fase
+  Story shall menyimpan bahan di `research/` (brief verbatim; per URL: URL, tanggal ambil,
+  kutipan; repurpose: slug + path transkrip sumber) dan menulis `script.md` dengan
+  paragraf 1 sebagai hook dan `## Fakta` setelah narasi.
+- **RD-03-78** (Unwanted) — If sebuah angka, nama, harga, hasil, atau kutipan di narasi
+  `script.md` tidak punya sumber di `## Fakta`, then fase Story shall tidak masuk Gate 1.
+- **RD-03-79** (Ubiquitous) — Voiceover mode generate shall diputar pada tempo preset;
+  percepatan 1,2x dan `atempo` tidak diterapkan.
+- **RD-03-80** (Event-driven) — When `script.md` dan suaranya ada, fase Story shall
+  berhenti di Gate 1 dan lanjut hanya setelah Dena menyetujui naskah dan suara.
+- **RD-03-81** (Ubiquitous) — Di mode generate, `hook_end` shall sama dengan
+  `paragraphs[0].end` di `voice/voice-meta.json` dan tercatat sebagai Hook window di
+  `creative-brief.md`.
+- **RD-03-82** (Ubiquitous) — Di mode generate, setiap kata `processed-transcript.json`
+  shall masuk satu beat caption; beat di dalam scene yang sudah menampilkan kata yang sama
+  memakai `"rail": "hidden"` dan tidak dirender di rail.
+- **RD-03-83** (Ubiquitous) — Di mode generate, fase Screen Plan shall menulis
+  `## Style World` (satu style utama + palet, maksimal 2 aksen) dan baris scene
+  (`placement: "full"`, track 4/7 bergantian, `example`) yang menutup `0` sampai akhir
+  voiceover tanpa celah, masing-masing 2–8 s, dengan style aksen maksimal 30% durasi.
+- **RD-03-84** (Event-driven) — When baris scene sudah ada, fase Screen Plan shall menulis
+  `storyboard.md`, menjalankan `npm run video -- storyboard <slug>`, dan berhenti di Gate 2
+  untuk persetujuan Dena, terlepas ada pemicu R1–R6 atau tidak.
+- **RD-03-85** (Unwanted) — If `overlay-timeline.json` tidak ada atau sebuah baris scene
+  tidak punya `example`, then `video storyboard` shall gagal dengan pesan yang menyebut
+  fase pemiliknya atau id barisnya.
+- **RD-03-86** (Event-driven) — When `video storyboard` berjalan, the CLI shall memakai
+  still ter-cache di `renders/style-examples/<style>/`, me-render still sebuah style hanya
+  bila ada yang hilang, dan menulis `preview/storyboard-sheet.jpg` berisi nomor scene,
+  waktu, id contoh, dan kata yang diucapkan, tanpa `GEMINI_API_KEY` di env proses anak.
+- **RD-03-87** (Ubiquitous) — Di mode generate, fase Build shall tidak memasang base
+  video, mewarnai `.bg-fill` dengan latar style world, memutar `processed-audio.wav`
+  (track 10) dan `bgm.wav` (track 9), dan memasang scene di track 4 dan 7.
+
 ## Referensi
 
 - Operasional detail: [operations/video-editing-workflow](../operations/video-editing-workflow.md)
 - Keputusan: [ADR-0008](../adr/0008-four-phase-workflow.md) (menggantikan
-  [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md))
+  [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md)); mode generate:
+  [ADR-0025](../adr/0025-generate-mode-explainer.md), `docs/agents/references/generate-mode.md`
 - Sistem visual: [design-system/visual-system](../design-system/visual-system.md)

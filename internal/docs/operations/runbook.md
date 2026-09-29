@@ -97,6 +97,18 @@ npm run moodboard -- sheets [gaya]  # render sheet moodboard per gaya → docs/a
 npm run moodboard -- fetch [gaya]   # unduh still referensi asli ke moodboard/local/ (gitignored, jaringan)
 ```
 
+## Mode generate (explainer tanpa footage)
+
+[ADR-0025](../adr/0025-generate-mode-explainer.md); alur per fase di
+`docs/agents/references/generate-mode.md`.
+
+```bash
+npm run video -- new <slug> --generate                 # starter generate + research/ + brief mode: generate
+npm run video -- voice <slug> [--preset <p>]           # script.md -> processed-audio.wav + processed-transcript.json
+npm run video -- storyboard <slug>                     # Gate 2 sheet -> preview/storyboard-sheet.jpg
+npm run video -- bgm <slug> --track <id> --from <s>    # BGM ter-duck -> bgm.wav + bgm.json
+```
+
 ## Suara (TTS)
 
 Adapter suara ([ADR-0023](../adr/0023-voice-adapter-tts.md), [RD-06](../requirements/rd-06-audio.md)).
