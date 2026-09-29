@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "default": null,
+  "presets": {
+    "dena-clone": {
+      "provider": "gemini",
+      "model": "gemini-3.8-flash-tts",
+      "voiceRef": "shared/voices/dena/voice.json",
+      "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
+    },
+    "gemini-designed-a": {
+      "provider": "gemini",
+      "model": "gemini-3.8-flash-tts",
+      "voiceRef": "shared/voices/designed-a/voice.json",
+      "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
+    },
+    "gemini-designed-b": {
+      "provider": "gemini",
+      "model": "gemini-3.8-flash-tts",
+      "voiceRef": "shared/voices/designed-b/voice.json",
+      "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
+    },
+    "gemini-kore": {
+      "provider": "gemini",
+      "model": "gemini-3.8-flash-tts",
+      "voice": "kore",
+      "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
+    },
+    "supertonic-f2": { "provider": "supertonic", "voice": "F2", "speed": 1.05 },
+    "recorded": { "provider": "recorded" }
+  }
+}
