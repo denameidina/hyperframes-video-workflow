@@ -44,14 +44,16 @@ const UNITS = { rb: 'ribu', ribu: 'ribu', jt: 'juta', juta: 'juta', M: 'miliar',
 const UNIT = Object.keys(UNITS).join('|');
 const START = String.raw`(?<![\p{L}\p{N}])`;
 const END = String.raw`(?![\p{L}\p{N}])`;
-const unit = (u) => (u ? ` ${UNITS[u]}` : '');
+// "1rb" is "seribu", not "satu ribu"; everything else reads as number + unit.
+const amount = (n, u) => (u && UNITS[u] === 'ribu' && readNumber(n) === 'satu' ? 'seribu' : `${readNumber(n)}${u ? ` ${UNITS[u]}` : ''}`);
+const inRange = (...xs) => xs.every((x) => Number.isSafeInteger(Number(x)) && Number(x) < 1e15); // else leave the text as written
 const RULES = [
-  [new RegExp(String.raw`Rp\.?\s?(${NUM})(?:\s?(${UNIT})${END})?`, 'gu'), (m, n, u) => `${readNumber(n)}${unit(u)} rupiah`],
+  [new RegExp(String.raw`Rp\.?\s?(${NUM})(?:\s?(${UNIT})${END})?`, 'gu'), (m, n, u) => `${amount(n, u)} rupiah`],
   [new RegExp(String.raw`${START}(${NUM})\s?%`, 'gu'), (m, n) => `${readNumber(n)} persen`],
-  [new RegExp(String.raw`${START}(${NUM})\s?(${UNIT})${END}`, 'gu'), (m, n, u) => `${readNumber(n)}${unit(u)}`],
+  [new RegExp(String.raw`${START}(${NUM})\s?(${UNIT})${END}`, 'gu'), (m, n, u) => amount(n, u)],
   [new RegExp(String.raw`${START}(${NUM})x${END}`, 'gu'), (m, n) => `${readNumber(n)} kali`],
-  [new RegExp(String.raw`(?<!\p{L})ke-(\d+)${END}`, 'gu'), (m, n) => (n === '1' ? 'pertama' : `ke${terbilang(Number(n))}`)],
-  [/(?<![\d.,–-])(\d+)\s?[–-]\s?(\d+)(?![\d.,–-])/gu, (m, a, b) => `${terbilang(Number(a))} sampai ${terbilang(Number(b))}`],
+  [new RegExp(String.raw`(?<!\p{L})ke-(\d+)${END}`, 'gu'), (m, n) => (n === '1' ? 'pertama' : inRange(n) ? `ke${terbilang(Number(n))}` : m)],
+  [/(?<![\d.,–-])(\d+)\s?[–-]\s?(\d+)(?![\d.,–-])/gu, (m, a, b) => (inRange(a, b) ? `${terbilang(Number(a))} sampai ${terbilang(Number(b))}` : m)],
   [new RegExp(String.raw`(?<![\p{L}\p{N}.,])(${NUM})${END}`, 'gu'), (m, n) => readNumber(n)],
 ];
 

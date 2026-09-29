@@ -17,7 +17,7 @@ test('concatArgs joins paragraphs with a fixed gap', () => {
 test('cacheKey changes with any input that changes the audio', () => {
   const base = { provider: 'gemini', model: 'm', voice: 'kore', style: 's', speed: '', text: 'Halo' };
   const k = cacheKey(base);
-  for (const change of [{ voice: 'puck' }, { style: 't' }, { text: 'Halo.' }, { model: 'n' }, { speed: 1.1 }]) assert.notEqual(cacheKey({ ...base, ...change }), k);
+  for (const change of [{ voice: 'puck' }, { style: 't' }, { text: 'Halo.' }, { model: 'n' }, { speed: 1.1 }, { language: 'id-ID' }]) assert.notEqual(cacheKey({ ...base, ...change }), k);
   assert.equal(cacheKey(base), k);
 });
 
@@ -101,4 +101,11 @@ test('renderVoice refuses to align a recording without the script text', async (
   await assert.rejects(renderVoice({ text: '', preset, out: join(root, 'r'), root, run: fakeMedia().run, recorded: join(root, 'take.m4a') }), /alignment needs the script text/);
   const meta = await renderVoice({ text: '', preset, out: join(root, 'r'), root, run: fakeMedia().run, recorded: join(root, 'take.m4a'), align: false });
   assert.equal(meta.alignment, null);
+});
+
+test('Supertonic paragraphs are cached under the pinned package version', async () => {
+  const root = voiceRoot();
+  const media = fakeMedia();
+  const meta = await renderVoice({ text: 'Halo semua.', preset: getPreset(loadVoices(root), 'st-f2'), out: join(root, 's'), root, run: media.run, align: false });
+  assert.equal(meta.paragraphs[0].hash, cacheKey({ provider: 'supertonic', model: 'supertonic==1.3.1', voice: 'F2', speed: 1.05, text: 'Halo semua.' }));
 });

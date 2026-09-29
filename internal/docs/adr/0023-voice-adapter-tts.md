@@ -29,7 +29,8 @@ native Indonesia; yang terdekat 8 suara `jv-ID` berlogat Jawa.
   rentang) dan melewati leksikon `config/pronunciation.json`; caption tetap memakai teks
   naskah.
 - Sintesis per paragraf dengan cache
-  `sha256(provider, model, voice, style, speed, teks ternormalisasi)`, trim hening tepi,
+  `sha256(provider, model, voice, style, speed, language, teks ternormalisasi)` (Supertonic:
+  `model` = versi paket ter-pin), trim hening tepi,
   jeda 0,35 s, satu pass loudness ke −16 LUFS (target dan limiter sama dengan
   `video cut`), WAV 48 kHz mono.
 - Timing kata dari whisper.cpp (large-v3-turbo, DTW, prompt domain — bukan teks naskah)

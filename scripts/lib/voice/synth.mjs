@@ -8,14 +8,15 @@ import { LOUDNESS, gainDb, loudnessArgs, parseLoudnorm } from '../cut-plan.mjs';
 import { probeDuration } from '../../video.mjs';
 import { exec } from './exec.mjs';
 import { normalizeForSpeech } from './normalize.mjs';
+import { SUPERTONIC } from './providers/supertonic.mjs';
 import { forProvider, splitParagraphs, stripTags } from './script.mjs';
 
 export const OUT_RATE = 48000;
 export const GAP = 0.35; // seconds between paragraphs
 const r3 = (x) => Math.round(x * 1000) / 1000;
 
-export function cacheKey({ provider, model = '', voice = '', style = '', speed = '', text }) {
-  return createHash('sha256').update(JSON.stringify([provider, model, voice, style, String(speed), text])).digest('hex').slice(0, 32);
+export function cacheKey({ provider, model = '', voice = '', style = '', speed = '', language = '', text }) {
+  return createHash('sha256').update(JSON.stringify([provider, model, voice, style, String(speed), language, text])).digest('hex').slice(0, 32);
 }
 
 const TRIM = 'silenceremove=start_periods=1:start_threshold=-50dB';
@@ -54,7 +55,9 @@ export async function synthesize({ text, preset, voiceId = preset.voice || '', o
   const items = [];
   for (const p of paragraphs) {
     const spoken = normalizeForSpeech(forProvider(p, preset.provider), { lexicon, provider: preset.provider });
-    const hash = cacheKey({ provider: preset.provider, model: preset.model, voice: voiceId, style: preset.style, speed: preset.speed, text: spoken });
+    // Supertonic has no model field: its pinned package version stands in, so an upgrade re-renders.
+    const model = preset.model ?? (preset.provider === 'supertonic' ? SUPERTONIC.package : '');
+    const hash = cacheKey({ provider: preset.provider, model, voice: voiceId, style: preset.style, speed: preset.speed, language: preset.language, text: spoken });
     const file = join(out, 'cache', `${hash}.wav`);
     const cached = existsSync(file);
     if (!cached) {

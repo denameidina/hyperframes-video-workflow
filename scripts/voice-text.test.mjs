@@ -33,6 +33,9 @@ test('normalizeForSpeech rewrites money, percent, units, multipliers, ordinals, 
   assert.equal(n('Ini yang ke-3 kalinya di 2026.'), 'Ini yang ketiga kalinya di dua ribu dua puluh enam.');
   assert.equal(n('Pakai v3 dan 4K'), 'Pakai v3 dan 4K');
   assert.equal(n('Tunggu <short pause> 3 detik.'), 'Tunggu <short pause> tiga detik.');
+  assert.equal(n('Cuma 1rb, ongkir Rp1rb.'), 'Cuma seribu, ongkir seribu rupiah.');
+  assert.doesNotThrow(() => n('Kode 1234567890123456-2 lalu 9999999999999999-3.'));
+  assert.equal(n('Yang ke-12345678901234567.'), 'Yang ke-12345678901234567.');
 });
 
 test('the lexicon replaces whole words, only for the listed providers', () => {
@@ -53,4 +56,5 @@ test('script helpers: body, paragraphs, tags per provider, caption words', () =>
   assert.equal(forProvider('Jujur, gue kira <short pause> gampang. <long pause> Oke <laugh> ya.', 'supertonic'), 'Jujur, gue kira, gampang. Oke ya.');
   assert.equal(forProvider('A <breath> B', 'gemini'), 'A <breath> B');
   assert.deepEqual(scriptWords(body), ['Jujur,', 'gue', 'kira', 'gampang.', 'Ternyata', 'susah.']);
+  assert.deepEqual(splitParagraphs(scriptBody('## Judul\n\n#1 masalahnya: #AIagent itu mahal.\n')), ['#1 masalahnya: #AIagent itu mahal.']);
 });

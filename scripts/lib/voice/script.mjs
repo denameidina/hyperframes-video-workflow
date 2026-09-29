@@ -2,9 +2,9 @@
 export const TAG_RE = /<([a-z][a-z ]*)>/g;
 const PAUSE = { 'short pause': ',', 'long pause': '.' };
 
-// Markdown script file -> plain text: drops heading lines and HTML comments.
+// Markdown script file -> plain text: drops heading lines ("# ", "## ", ...) and HTML comments; "#1" or "#AI" stay.
 export function scriptBody(md) {
-  return String(md).replace(/<!--[\s\S]*?-->/g, '').split('\n').filter((l) => !/^\s*#/.test(l)).join('\n');
+  return String(md).replace(/<!--[\s\S]*?-->/g, '').split('\n').filter((l) => !/^\s*#{1,6}\s/.test(l)).join('\n');
 }
 
 export function splitParagraphs(text) {

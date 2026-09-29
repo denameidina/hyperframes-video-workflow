@@ -18,8 +18,9 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   dengan `only` per provider) sebelum dikirim ke provider; `words.json` dan
   `voice-meta.json` memakai teks naskah.
 - **RD-06-03** (Event-driven) — When WAV paragraf dengan kunci
-  `sha256(provider, model, voice, style, speed, teks ternormalisasi)` sudah ada di
-  `<out>/cache/`, the adapter shall memakainya tanpa memanggil provider.
+  `sha256(provider, model, voice, style, speed, language, teks ternormalisasi)` sudah ada di
+  `<out>/cache/`, the adapter shall memakainya tanpa memanggil provider. Untuk Supertonic,
+  `model` diisi versi paket yang di-pin (`supertonic==1.3.1`).
 - **RD-06-04** (Ubiquitous) — `voiceover.wav` shall berupa WAV 48 kHz mono: tiap paragraf
   di-trim hening tepi (−50 dB), disambung dengan jeda 0,35 s, lalu satu pass gain ke
   −16 LUFS (clamp ±20 dB) dengan limiter 0,84.
