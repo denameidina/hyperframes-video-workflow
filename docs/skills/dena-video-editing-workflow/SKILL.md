@@ -29,7 +29,7 @@ For validation, QA, and render gates, read `references/quality-gates.md`.
 
 | User need | Phase |
 | --- | --- |
-| New raw/reference video, angle, hook, format, style adaptation, transcript, verbatim spoken hook and its length, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
+| New project sources (one or many raw takes, B-roll, images), reference video, angle, hook, format, style adaptation, transcript, verbatim spoken hook and its length, silence/filler cuts, pacing, speed, processed base video | `docs/agents/01-story.md` |
 | Captions, subtitles, verbatim hook card, phrase grouping, ASR correction, CTA text, publish captions | `docs/agents/02-screen-plan.md` (captions step) |
 | Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
 | Capturing/generating asset files, `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
@@ -95,11 +95,13 @@ For a complete edit, the expected artifact chain is:
 ```text
 Story:        videos/<slug>/creative-brief.md
               videos/<slug>/metadata.json
-              videos/<slug>/transcript.json
+              videos/<slug>/sources.json
+              videos/<slug>/transcripts/<id>.json
               videos/<slug>/processed-transcript.json
               videos/<slug>/edit-decision-notes.md   (ends with ## Cut Summary)
               videos/<slug>/cut-list.json
               videos/<slug>/processed.mp4
+              videos/<slug>/cut-map.json
 Screen Plan:  videos/<slug>/caption-plan.md
               videos/<slug>/caption-beats.json
               videos/<slug>/publish-captions.md

@@ -54,9 +54,9 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 
 - **RD-03-13** (Ubiquitous) — The system shall menghasilkan artifact milik tiap
   fase di `videos/<slug>/` bila slug ada: Story (`creative-brief.md`,
-  `metadata.json`, `transcript.json`, `processed-transcript.json`,
-  `edit-decision-notes.md`, `cut-list.json`,
-  `processed.mp4`), Screen Plan (`caption-plan.md`, `caption-beats.json`,
+  `metadata.json`, `sources.json`, `transcripts/<id>.json`,
+  `processed-transcript.json`, `edit-decision-notes.md`, `cut-list.json`,
+  `cut-map.json`, `processed.mp4`), Screen Plan (`caption-plan.md`, `caption-beats.json`,
   `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`), Build
   (`assets/asset-manifest.json` bila ada aset, `assembly-notes.md`,
   `assembly-checklist.md`).

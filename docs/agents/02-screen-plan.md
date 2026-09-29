@@ -82,7 +82,9 @@ does not improve understanding, retention, or emotional force, remove it.
 
 From `videos/<slug>/`: `creative-brief.md`, `edit-decision-notes.md` (including
 Cut Summary), `processed-transcript.json` (processed-timeline word timing),
-`transcript.json` (raw timeline), `processed.mp4`, `cut-list.json`. Also: user notes about caption or visual style, reference video
+`transcripts/<id>.json` (source timelines), `processed.mp4`, `cut-list.json`,
+`cut-map.json`, and the `## Source Inventory` in `creative-brief.md` (Dena's own
+B-roll and images from `sources.json`, with her notes). Also: user notes about caption or visual style, reference video
 notes, user-provided URLs or screenshots, platform target (Instagram Reels,
 TikTok, YouTube Shorts), and user constraints (minimal effects, no generated
 media, no generated people, no fake product UI, no client data, keep face
@@ -117,7 +119,9 @@ unobstructed, use only project-local assets).
    decision rules at the top of Generated Image Prompt Rules in
    `docs/agents/references/asset-production.md`. Write a Visual Decision Log
    entry for every visual-support opportunity before concluding generated media
-   is unnecessary.
+   is unnecessary. Every Source Inventory entry gets a log row: Dena's own
+   B-roll/images are the first candidate for the moment their note or content
+   matches; an unused source needs a reason (RD-03-72).
    Before deciding a visual, read `vendor/asset-lib/CATALOG.md` (grep the line's topic tag:
    `uang`, `ai`, `chat`, `umkm`, …) and open the contact sheets for the candidate style in
    `docs/agents/references/asset-catalog/sheets/`; choose a palette and type preset from the style

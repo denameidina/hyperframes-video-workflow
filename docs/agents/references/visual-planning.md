@@ -181,7 +181,7 @@ Prefer the simplest asset that works.
 Priority:
 
 1. A motion visual from the menu in `styles/README.md` (`motion-broll`, `broll-text`, `motion-graphic`, `whiteboard`, `stop-motion`, `vox`, `mix-media`, `parallax`) for a line that explains, shows, compares, or sequences something, or whose words or number are the point.
-2. Existing real source footage, user-supplied media, or real web/app capture when the moment needs proof (it may sit inside a motion b-roll state).
+2. Dena's own sources from the Source Inventory (`broll`/`image` ids in `sources.json`; her note says where they fit), existing real source footage, or real web/app capture when the moment needs proof (it may sit inside a motion b-roll state).
 3. Cropped/censored proof asset or focused screenshot/screen recording.
 4. Generated still or designed bitmap support asset for mood, texture, or background.
 5. Generated video.
@@ -200,6 +200,7 @@ Required fields:
 | --- | --- |
 | `time` | Transcript window |
 | `purpose` | clarify, prove, contrast, reset-attention, background, etc. |
+| `source` | Source Inventory id (`b1`, `i2`, …) when the row uses or considers Dena's own B-roll/image, else `-` |
 | `best_real_asset` | source footage, screenshot, screen recording, user media, or `none` |
 | `simple_asset_option` | diagram, text-support visual, sticker, or `none` |
 | `imagegen_candidate` | `yes` or `no` |
@@ -207,6 +208,8 @@ Required fields:
 | `reason` | One concrete sentence tied to the transcript |
 
 Do not write "no generated image needed" unless this log explains why for each visual opportunity.
+
+Every Source Inventory entry appears in at least one row; a source that is not used gets a row with `decision: skip` and the reason (RD-03-72).
 
 ### 4. Define Visual Constraints
 
@@ -383,9 +386,9 @@ replace the generic brief below.
 
 ## Visual Decision Log
 
-| Time | Line | Purpose | Best real asset | Simple asset option | Imagegen candidate | Decision | Reason |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.0-hook_end | "<hook words>" | reset-attention | none | hook text card | yes | generate | The hook needs a grounded visual plate, and a static text card would feel stiff. |
+| Time | Line | Purpose | Source | Best real asset | Simple asset option | Imagegen candidate | Decision | Reason |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0.0-hook_end | "<hook words>" | reset-attention | - | none | hook text card | yes | generate | The hook needs a grounded visual plate, and a static text card would feel stiff. |
 
 ## Timeline
 

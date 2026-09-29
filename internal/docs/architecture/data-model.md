@@ -229,7 +229,7 @@ Beat: `id`, `start`, `duration`, `text`, `highlight` (atau null), `type`, `posit
 ## `asset-manifest.json` (Build)
 
 Per asset: `id`, `file`, `type`, `purpose`, `timestamp { start, end }`, `required`, `provenance`, `source`, `privacy`, `style`, `doNotShow[]`, `handoff`.
-Aset generated menambah `promptSummary`, `rejectedAlternatives`.
+Aset generated menambah `promptSummary`, `rejectedAlternatives`. Aset `user-supplied` dari sumber project menambah `sourceId` (id di `sources.json`).
 `provenance` ∈ `source-frame | source-video-segment | user-supplied | screenshot | screen-recording | web-research | generated | designed | reference-analysis`.
 
 ## `overlay-timeline.json` (Screen Plan)

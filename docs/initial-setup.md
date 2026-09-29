@@ -112,6 +112,18 @@ videos/0702-2/assets/transcript-cut-flow.svg
 Minta folder `videos/0702-2/` dari pemilik project, atau regenerate lewat
 workflow agent di `docs/agents/`.
 
+## Video Sources
+
+Setiap video punya project `videos/<slug>/`. Taruh file khusus video itu di
+`videos/<slug>/sources/`, atau file reusable di `shared/` (ADR-0022):
+
+```bash
+npm run video -- new <slug>
+npm run video -- sources <slug> [--add-shared a.mp4,b.png] [--set <id> --role speech|broll --note "<text>"]
+npm run video -- cut <slug>          # processed.mp4 + cut-map.json dari cut-list.json
+npm run video -- migrate-sources     # clone lama dengan raw/ + source.mp4: dry run, lalu --apply
+```
+
 ## Run HyperFrames
 
 Preview:

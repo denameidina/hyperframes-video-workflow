@@ -119,7 +119,7 @@ When user provides a raw vlog/monologue video:
    - Cut filler and repeated starts when meaning stays intact.
    - Keep human texture; do not remove every pause if it makes speech unnatural.
    - Build a tighter retention structure: hook, problem, insight, example, takeaway, CTA.
-   - Write `creative-brief.md`, `metadata.json`, `transcript.json`, `edit-decision-notes.md`, and `cut-list.json`; after `processed.mp4`, write `processed-transcript.json`.
+   - Write `creative-brief.md`, `metadata.json`, `transcripts/<id>.json`, `edit-decision-notes.md`, and `cut-list.json`; `npm run video -- cut <slug>` writes `processed.mp4` + `cut-map.json`; after that, write `processed-transcript.json`.
 
 2. Audio cleanup and timing (Story phase, when creating `processed.mp4`)
    - Reduce noise.
@@ -424,10 +424,10 @@ For each edited video, create a work folder such as:
 
 Expected files:
 
-- `source.mp4` or original video reference.
+- `sources.json` (all source files and their roles).
 - `processed.mp4` after silence/redundancy/audio/speed cleanup.
 - `metadata.json`.
-- `transcript.json`.
+- `transcripts/<id>.json` (one per video source).
 - `processed-transcript.json`.
 - `edit-decision-notes.md`.
 - `cut-list.json`.

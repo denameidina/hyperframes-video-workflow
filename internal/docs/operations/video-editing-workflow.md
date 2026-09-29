@@ -28,11 +28,13 @@ default 1.2x** (1.12–1.18x bila sumber cepat; lebih rendah wajib
 didokumentasikan). Hook verbatim dipindah ke output `00:00.00-<hook_end>` (panjang
 diputuskan Story sampai keputusan hook tuntas, ADR-0019), kemunculan
 aslinya dihapus kecuali callback terdokumentasi. Base video 9:16 1080x1920 30fps
-tanpa caption/overlay burned-in. Audio: highpass 70–100Hz, −16..−14 LUFS, true
-peak −1.5..−1.0 dBFS. **Output:** `creative-brief.md` (+ `visual_density`,
-`gate_cut`, `## User Approvals`), `metadata.json`, `transcript.json`,
+tanpa caption/overlay burned-in, dibangun hanya lewat `npm run video -- cut <slug>`
+dari sumber di `sources.json` (satu atau banyak take; ADR-0022). Audio: highpass
+70–100Hz, −16..−14 LUFS, true peak −1.5..−1.0 dBFS. **Output:** `creative-brief.md`
+(+ `visual_density`, `gate_cut`, `## User Approvals`, `## Source Inventory`),
+`metadata.json`, `sources.json`, `transcripts/<id>.json`,
 `processed-transcript.json`, `edit-decision-notes.md`
-(diakhiri `## Cut Summary`), `cut-list.json`, `processed.mp4`.
+(diakhiri `## Cut Summary`), `cut-list.json`, `cut-map.json`, `processed.mp4`.
 **Gate 1** (opsional, default off): review cut hanya bila user minta atau
 `gate_cut: on`. Referensi: `hook-and-angle.md`, `cut-and-pacing.md`.
 

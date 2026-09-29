@@ -7,7 +7,7 @@ Use this reference when deciding which Dena video phase to run and what artifact
 1. `docs/agents/01-story.md`
    - Owns: media audit, transcript, angle, audience, content lane, hook locked from transcript, visual grammar, CTA direction, silence/filler/repetition cuts, base pacing, `1.2x` default speed or documented exception.
    - Reads: style guide, user request, reference notes or inspected reference video, source media.
-   - Writes: `creative-brief.md`, `metadata.json`, `transcript.json`, `processed-transcript.json`, `edit-decision-notes.md` (with Cut Summary), `cut-list.json`, `processed.mp4`.
+   - Writes: `creative-brief.md`, `metadata.json`, `sources.json`, `transcripts/<id>.json`, `processed-transcript.json`, `edit-decision-notes.md` (with Cut Summary), `cut-list.json`, `cut-map.json`, `processed.mp4`.
    - Gate 1 (optional): cut review only when the user asks or `gate_cut: on`.
 
 2. `docs/agents/02-screen-plan.md`

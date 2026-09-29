@@ -6,7 +6,8 @@ names it. Workflow order lives in the phase documents, not here.
 
 ## Media Audit
 
-Start every job by inspecting the source.
+Start every job by inspecting every source in `sources.json`
+(`npm run video -- sources <slug>` already stores the probe).
 
 Record:
 
@@ -44,20 +45,19 @@ Generate word-level transcript when possible.
 Use project-local Whisper, not a global binary:
 
 ```bash
-ffmpeg -y -i videos/<slug>/<input-media> -ar 16000 -ac 1 videos/<slug>/audio.wav
+ffmpeg -y -i videos/<slug>/<source path> -ar 16000 -ac 1 videos/<slug>/transcripts/<id>.wav
 
 vendor/whisper.cpp/build/bin/whisper-cli \
   -m vendor/whisper.cpp/models/ggml-large-v3-turbo.bin \
-  -f videos/<slug>/audio.wav \
+  -f videos/<slug>/transcripts/<id>.wav \
   -l id \
   --prompt "Dena Meidina, HyperFrames, Codex, AGENTS.md, skills, motion overlay, transcript cut, IG, TikTok, AI workflow" \
   -oj -ojf \
-  -of videos/<slug>/transcript-large-v3-turbo
+  -of videos/<slug>/transcripts/<id>-large-v3-turbo
 ```
 
-Preferred output:
-
-`videos/<slug>/transcript.json`
+Preferred output: `videos/<slug>/transcripts/<id>.json`, one per video source
+(rename Whisper's `<id>-large-v3-turbo.json`; source timeline).
 
 Transcript entries should include:
 
@@ -99,9 +99,23 @@ If transcript is poor:
 For storytelling/talking-head edits, downstream captions depend on complete word coverage. Preserve word-level timing for every spoken word that survives the cut. If `processed.mp4` is speed-adjusted, the handoff must include either:
 
 - a processed-timeline word-level transcript, or
-- a reliable raw-to-processed time mapping in `cut-list.json`.
+- the raw-to-processed time mapping in `cut-map.json` (written by `video cut`).
 
 Do not hand off only sentence-level notes when Screen Plan phase (captions step) needs running captions.
+
+## Source Roles
+
+- `speech`: the video carries Dena talking and can feed the cut.
+- `broll`: a video without meaningful speech (whisper returning only noise,
+  music, or a few hallucinated words counts as no speech). It never enters the
+  cut; Screen Plan places it as an overlay.
+- `image`: always an overlay candidate.
+- A role marked `(user)` in `video sources` output is Dena's; never change it.
+  Record detected roles with `--detected`.
+- Several speech takes: read all transcripts first, then choose, per line, the
+  take with the cleanest delivery, fewest fillers, and best framing. Log the other
+  occurrences as `cut-retake`.
+- Content Map timestamps name their source: `s2 00:08-00:21`.
 
 ## Content Map
 
@@ -227,13 +241,14 @@ Use this format in `edit-decision-notes.md`:
 ```md
 ## Edit Decision List
 
-| Source Start | Source End | Action | Reason | Output Position |
-| --- | --- | --- | --- | --- |
-| 00:00.00 | 00:06.20 | cut-silence | slow setup before hook | - |
-| 00:42.10 | 00:44.70 | move-to-hook | locked peak problem | 00:00.00 |
-| 00:06.20 | 00:18.90 | keep | explanation after hook | 00:02.60 |
-| 00:18.90 | 00:24.50 | cut-repeat | repeated setup | - |
-| 00:24.50 | 00:41.00 | tighten | useful context, remove pauses | 00:15.30 |
+| Source | Source Start | Source End | Action | Reason | Output Position |
+| --- | --- | --- | --- | --- | --- |
+| s1 | 00:00.00 | 00:06.20 | cut-silence | slow setup before hook | - |
+| s1 | 00:42.10 | 00:44.70 | move-to-hook | locked peak problem | 00:00.00 |
+| s1 | 00:06.20 | 00:18.90 | keep | explanation after hook | 00:02.60 |
+| s2 | 00:03.40 | 00:09.80 | cut-retake | same line, s1 take is cleaner | - |
+| s1 | 00:18.90 | 00:24.50 | cut-repeat | repeated setup | - |
+| s1 | 00:24.50 | 00:41.00 | tighten | useful context, remove pauses | 00:15.30 |
 ```
 
 Also create machine-readable `cut-list.json`.
@@ -242,7 +257,6 @@ Recommended JSON shape:
 
 ```json
 {
-  "source": "raw/example.mp4",
   "targetDuration": 60,
   "speed": 1.2,
   "primaryHook": {
@@ -260,11 +274,19 @@ Recommended JSON shape:
   },
   "segments": [
     {
+      "source": "s1",
       "sourceStart": 42.1,
       "sourceEnd": 44.7,
       "action": "move-to-hook",
       "outputStart": 0.0,
       "reason": "locked peak problem"
+    },
+    {
+      "source": "s2",
+      "sourceStart": 3.4,
+      "sourceEnd": 9.8,
+      "action": "keep",
+      "reason": "explanation, cleaner take"
     }
   ],
   "notes": [
@@ -275,11 +297,13 @@ Recommended JSON shape:
 
 ## Processed Base Video
 
-If asked to create `processed.mp4`, the output should be:
+Built only by `npm run video -- cut <slug>` (ADR-0022); the bullets below are what
+it guarantees. Segments render in array order; `cut-*` segments are skipped.
 
 - Vertical `9:16`
-- Prefer `1080x1920` for final work
-- 30fps unless source requires otherwise
+- `1080x1920`; a wider take is scaled to fill and center-cropped (`cropX` 0–1 per segment shifts the crop)
+- 30fps
+- Loudness normalized per source to −16 LUFS, 15 ms fades at every join
 - Audio cleaned but not overprocessed
 - Speech clear after speed change
 - No captions burned in

@@ -98,7 +98,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 
 ### Routing Rules
 
-- New raw video, reference video, "make this viral", "edit like this", angle, hook, format, transcript, silence/filler cuts, pacing, speed, or processed media: Story.
+- New project sources (one or many raw takes, B-roll, images), reference video, "make this viral", "edit like this", angle, hook, format, transcript, silence/filler cuts, pacing, speed, or processed media: Story.
 - Captions, subtitles, hook text, caption grouping, highlights, ASR corrections, CTA text, or publish captions: Screen Plan (captions step).
 - Which moments get visuals, visual type (screenshot, generated still/video, diagram, proof card, label, sticker), placement, overlay timing, pattern interrupts, zooms, effects, progress bars, transitions, or SFX cues: Screen Plan (visual step).
 - Capturing/generating asset files, editing `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP timelines, HyperFrames tracks, local asset wiring, or rendering: Build, plus the relevant HyperFrames skill.
@@ -116,7 +116,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 
 ### Minimum Handoff Chain
 
-- Story: `creative-brief.md`, `metadata.json`, `transcript.json`, `processed-transcript.json`, `edit-decision-notes.md`, `cut-list.json`, `processed.mp4`
+- Story: `creative-brief.md`, `metadata.json`, `sources.json`, `transcripts/<id>.json`, `processed-transcript.json`, `edit-decision-notes.md`, `cut-list.json`, `cut-map.json`, `processed.mp4`
 - Screen Plan: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`
 - Build: `assets/asset-manifest.json` (when assets exist), `assembly-notes.md`, `assembly-checklist.md`, render MP4
 - Optional QA: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
@@ -189,7 +189,10 @@ npm run style-examples -- build # regenerate example hosts from each style's exa
 npm run moodboard -- build     # regenerate the moodboard studies host from moodboard.json
 npm run moodboard -- sheets [style]  # render the per-style moodboard sheets (docs/agents/references/moodboard/sheets/)
 npm run moodboard -- fetch [style]   # download real reference stills into the gitignored moodboard/local/ (network)
-npm run video -- new <slug>    # scaffold videos/<slug>/ from the Dena starter
+npm run video -- new <slug>    # scaffold videos/<slug>/ from the Dena starter (with sources/ + sources.json)
+npm run video -- sources <slug> [--add-shared a,b] [--set <id> --role <r> --note <t>]  # project sources manifest (ADR-0022)
+npm run video -- cut <slug>    # processed.mp4 + cut-map.json from cut-list.json (multi-source)
+npm run video -- migrate-sources [--apply]  # one-off: raw/ + source.mp4 -> shared/ + sources.json
 npm run video -- check <slug>  # lint + validate + inspect one video project
 npm run video -- dev <slug>    # preview one video project (long-running)
 npm run video -- snapshot <slug> --at 1.5,3  # stills, no Gemini upload
@@ -197,7 +200,7 @@ npm run video -- render <slug> [--blur]      # render to videos/<slug>/renders/
 npm run video -- cutout <slug> --from 31.2 --dur 5 --name 07-dena  # matte a mix-media cut-out
 npm run video -- layers <slug> --at 12.4 --name 05-scene   # parallax source + matted subject (or --image <file>)
 npm run test:video             # unit test the video CLI
-npm run studio                 # web UI: raw upload/delete, tmux agent sessions + terminal, renders, publish (long-running)
+npm run studio                 # web UI: projects (sources upload, shared library), tmux agent sessions + terminal, renders, publish (long-running)
 npm run test:studio            # unit test the Studio server
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
@@ -231,7 +234,8 @@ https://hyperframes.heygen.com/llms.txt
 
 - `index.html` — HyperFrames blank portrait template (not a video; ADR-0010)
 - `templates/dena-video/` — Dena starter copied by `npm run video -- new <slug>`
-- `videos/<slug>/` — one ignored HyperFrames project per video (`index.html`, `compositions/`, `assets/`, `renders/`)
+- `videos/<slug>/` — one ignored HyperFrames project per video (`index.html`, `compositions/`, `assets/`, `renders/`, `sources/` + `sources.json`)
+- `shared/` — reusable raw videos/images (ignored), referenced from any project's `sources.json` (ADR-0022)
 - `compositions/` — sub-compositions for the root template only
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)

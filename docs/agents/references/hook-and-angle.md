@@ -378,6 +378,14 @@ Muted-viewer hook:
 - Selected format:
 - Why this format:
 
+## Source Inventory
+
+One row per `broll` and `image` source in `sources.json` (RD-03-71). Describe; do
+not decide placement (Screen Plan does).
+
+| ID | Role | Duration/Size | What it shows | Dena's note |
+| --- | --- | --- | --- | --- |
+
 ## Workflow Settings
 
 - visual_density: <light|medium|heavy> (default medium)

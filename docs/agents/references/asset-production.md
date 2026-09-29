@@ -59,6 +59,8 @@ Every asset must say where it came from:
 
 If generated, include the prompt or short prompt summary.
 
+A `user-supplied` asset cut from Dena's own sources also records `sourceId` (its id in `sources.json`).
+
 ## Style Assets
 
 Bitmaps a style b-roll clip lists under `Assets:` in its Style B-roll Brief

@@ -17,7 +17,8 @@ compositions, or render the final video.
 
 Use this phase when:
 
-- Dena provides a new raw video in `raw/` or `videos/<slug>/`.
+- Dena provides video/image sources for a project in `videos/<slug>/sources/`
+  or `shared/` (one or many takes, B-roll, images; ADR-0022).
 - Dena provides a reference video in `references/` and asks to adapt the style.
 - A previous edit feels weak and needs a stronger angle or hook.
 - The request is broad, such as "make this viral", "edit like this reference",
@@ -31,8 +32,8 @@ Do not use this phase for:
 - Caption styling or caption typo fixes (Screen Plan).
 - Visual, overlay, or motion work (Screen Plan, Build).
 - Render/lint/debug tasks (Build).
-- Sources with no speech that are purely montage/B-roll, unless the user asks
-  for a structural cut.
+- Projects with no speech source at all (montage only): write a blocker note
+  instead (RD-03-68).
 
 ## Core Principles
 
@@ -73,9 +74,10 @@ A bad cut creates:
 
 ## Inputs
 
-- Raw video: `raw/<file>.mp4` or a file in `videos/<slug>/`
+- Sources: `videos/<slug>/sources.json` (project files in `sources/`, shared
+  files in `shared/`), with Dena's optional role labels and notes
 - Reference video: `references/<file>.mp4`, if any
-- Existing `transcript.json`, `edit-decision-notes.md`, `cut-list.json`, or
+- Existing `transcripts/`, `edit-decision-notes.md`, `cut-list.json`, or
   `processed.mp4` for the same slug
 - User goal, such as "edit like Kumar", "make this more viral", "more
   cinematic", "cut silent/redundant words", "add hook, overlay, CTA"
@@ -89,12 +91,21 @@ A bad cut creates:
 1. **Read context.** `docs/dena-social-video-style-guide.md`, the user request,
    reference notes, and existing artifacts for the slug. If a reference video
    exists, inspect it as evidence; do not infer from memory when a local file is
-   available. Create `videos/<slug>/` if needed and place the raw file there as
-   `source.mp4` (copy or symlink).
-2. **Audit and transcribe.** Read `docs/agents/references/cut-and-pacing.md`
-   sections Media Audit, Transcription Workflow, and Content Map. Write
-   `metadata.json` and `transcript.json` (rename Whisper's
-   `transcript-large-v3-turbo.json` output; raw timeline).
+   available. If `videos/<slug>/` does not exist, run `npm run video -- new <slug>`.
+   Files Dena names from `shared/` are attached with
+   `npm run video -- sources <slug> --add-shared <a,b>`; roles/notes Dena gives in
+   the prompt are written with `--set <id> --role <speech|broll> --note "<text>"`.
+2. **Inventory and transcribe.** Run `npm run video -- sources <slug>`. Read
+   `docs/agents/references/cut-and-pacing.md` sections Media Audit, Transcription
+   Workflow, Source Roles, and Content Map. Transcribe every video source to
+   `transcripts/<id>.json` (source timeline). For each source with role `auto`,
+   decide `speech` (meaningful speech) or `broll` and record it with
+   `npm run video -- sources <slug> --set <id> --role <r> --detected`, with the
+   reason in `edit-decision-notes.md`. Never change a role marked `(user)`. If no
+   speech source remains, stop and write a blocker note. Take one contact sheet per
+   `broll` source and per image and write `## Source Inventory` in
+   `creative-brief.md` (id, role, duration or size, what it shows, Dena's note).
+   Write `metadata.json` (with `"sources": "sources.json"`).
 3. **Direct.** Read `docs/agents/references/hook-and-angle.md` section Decision
    Workflow (and Kumar-Inspired Adaptation Rules when a reference calls for it).
    Choose content lane, premise, audience, emotional promise, retention spine,
@@ -115,10 +126,16 @@ A bad cut creates:
    Quality Bar and Dena-Specific Guardrails in the same reference.
 6. **Cut.** Read `docs/agents/references/cut-and-pacing.md` sections Cut
    Categories through Speed Rules and Edit Decision List. Write `cut-list.json`.
-7. **Build the base video.** Sections Processed Base Video and Audio Cleanup
-   Handoff. Write `processed.mp4` (and `audio-clean.wav` when audio is cleaned
-   separately). Verify orientation with a frame grab before a long encode (DJI
-   rotation note in the style guide). Then transcribe `processed.mp4` with the
+   Every segment names its `source` id; segments may come from any take in any
+   order. When a line was recorded more than once, keep one take and log the
+   others as `cut-retake` with the reason.
+7. **Build the base video.** Run `npm run video -- cut <slug>`: it validates the
+   cut-list, normalizes every take (1080×1920, 30 fps, −16 LUFS per source,
+   15 ms fades) and writes `processed.mp4` and `cut-map.json`. Do not write your
+   own ffmpeg cut. Check orientation with a frame grab of `processed.mp4`. Audio
+   cleanup beyond that follows sections Processed Base Video and Audio Cleanup
+   Handoff (`audio-clean.wav` when audio is cleaned separately). Then transcribe
+   `processed.mp4` with the
    same Transcription Workflow and save it as `processed-transcript.json`: the
    processed-timeline word timing that Screen Plan uses.
 8. **Write notes.** Use the Output Template in
@@ -132,11 +149,11 @@ All in `videos/<slug>/`:
 
 - `creative-brief.md` (hook `locked-from-transcript` with `hook_end`, `visual_density`, `gate_cut`)
 - `metadata.json`
-- `transcript.json` (raw timeline)
+- `sources.json` (roles settled) and `transcripts/<id>.json` (source timelines)
 - `processed-transcript.json` (processed timeline)
 - `edit-decision-notes.md` (ends with `## Cut Summary`)
 - `cut-list.json`
-- `processed.mp4`
+- `processed.mp4` and `cut-map.json` (from `video cut`)
 - Conditional: `audio-clean.wav`, `preview/contact-sheet.jpg` or
   `preview/processed-sheet.jpg`
 
@@ -149,12 +166,14 @@ Append to `edit-decision-notes.md`:
 ```md
 ## Cut Summary
 
-- Hook (output 00:00.00-<hook_end>): "<exact spoken quote>" (source <mm:ss.s-mm:ss.s>)
+- Hook (output 00:00.00-<hook_end>): "<exact spoken quote>" (source <id> <mm:ss.s-mm:ss.s>)
 - Hook length: <why the hook ends here: the decision it completes>
 - Open loop -> payoff: <question the hook leaves open> -> <output mm:ss.s, line that closes it>
-- Duration: <raw mm:ss> -> <processed mm:ss> at <speed>x
+- Duration: <sum of speech sources mm:ss> -> <processed mm:ss> at <speed>x (<n> sources)
+- Take choices: <line> - <id> used, <id> cut-retake - <why>
+- Source Inventory: see creative-brief.md (<n> broll, <n> image)
 - Removed:
-  - <source range>: <what was removed> - <why>
+  - <id> <source range>: <what was removed> - <why>
 ```
 
 ## Gate 1 - Cut Review (optional)

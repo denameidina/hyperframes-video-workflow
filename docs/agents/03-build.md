@@ -80,7 +80,11 @@ motion, match Dena default style, reuse existing project structure).
    `videos/<slug>/assets/` under its Planned file name, record it in
    `videos/<slug>/assets/asset-manifest.json` (Asset Manifest Format, with the
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
-   `assembly-notes.md` under `## Asset Production`. Prepare a local, trimmed SFX
+   `assembly-notes.md` under `## Asset Production`. For a Source Inventory entry
+   (Dena's own B-roll/image), trim or copy from its `sources.json` path into
+   `assets/` (videos: `ffmpeg -ss <in> -t <dur>` re-encoded to 1080-wide H.264
+   without audio; images: `npm run asset-lib -- process`) and record
+   `provenance: "user-supplied"` with `sourceId`. Prepare a local, trimmed SFX
    file for every SFX cue in the Timeline, sourced from a local project library or
    the `/hyperframes-media` bundled SFX library (no `data-media-start`; see Lean Fixing
    Defaults in `docs/skills/dena-video-editing-workflow/SKILL.md`). If a capture
