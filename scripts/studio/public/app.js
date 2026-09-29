@@ -463,7 +463,7 @@ function renderVoiceTests(runs) {
     <li>
       <div class="meta"><strong>${esc(r.id)}</strong><span class="muted">${r.labels.length} sampel${r.hasRef ? ' + referensi' : ''} · ${r.rated ? 'sudah dinilai' : 'belum dinilai'}</span></div>
       <div class="actions"><button class="primary" data-run="${esc(r.id)}">Buka</button></div>
-    </li>`).join('') : '<li class="muted">Belum ada uji dengar. Jalankan <code>npm run voice -- test build</code>.</li>';
+    </li>`).join('') : '<li class="muted"><span>Belum ada uji dengar. Jalankan <code>npm run voice -- test build</code>.</span></li>';
 }
 
 function scoreSelect(label, key, text, value) {
@@ -524,7 +524,7 @@ function renderMusic(tracks) {
         <button data-reject="${esc(t.id)}" data-value="${t.rejected ? 'false' : 'true'}" class="${t.rejected ? '' : 'danger'}">${t.rejected ? 'Batal tolak' : 'Tolak'}</button>
         <a class="btn" href="${esc(t.sourceUrl)}" target="_blank" rel="noopener">Sumber</a>
       </div>
-    </li>`).join('') : '<li class="muted">Pustaka musik kosong. Tambah dengan <code>npm run music -- add</code>.</li>';
+    </li>`).join('') : '<li class="muted"><span>Pustaka musik kosong. Tambah dengan <code>npm run music -- add</code>.</span></li>';
 }
 
 $('#music-list').addEventListener('click', async (e) => {
