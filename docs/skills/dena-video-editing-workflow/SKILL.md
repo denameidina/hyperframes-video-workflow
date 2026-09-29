@@ -34,7 +34,7 @@ For validation, QA, and render gates, read `references/quality-gates.md`.
 | Which moments get screenshots, b-roll, generated images/video, diagrams, stickers, proof cards; overlay timing, pattern interrupts, zooms, effects, transitions, SFX cues | `docs/agents/02-screen-plan.md` (visual step) |
 | Capturing/generating asset files, `videos/<slug>/index.html`, `videos/<slug>/compositions/*.html`, timed clips, GSAP, HyperFrames assembly, render | `docs/agents/03-build.md` |
 | Optional QA, punch list, render/platform readiness review, regression review | `docs/agents/04-qa.md` (fresh-context subagent) |
-| Motion-design video with no footage of Dena, from a topic, brief, URL, article, thread, or a rewritten older video (generate mode) | `docs/agents/01-story.md` (Mode generate) with `docs/agents/references/generate-mode.md` |
+| Motion-design video with no footage of Dena, from a topic, brief, URL, article, thread, or a rewritten older video (generate mode: explainer, kinetic-post, motion-short) | `docs/agents/01-story.md` (Mode generate) with `docs/agents/references/generate-mode.md` |
 | R2/Repliz auto publish after explicit user approval | `docs/repliz/integration-spec.md` |
 
 Do not skip ahead unless the user explicitly requests a narrow technical fix and upstream decisions already exist.
@@ -126,6 +126,11 @@ Screen Plan:  caption-plan.md, caption-beats.json (rail), publish-captions.md,
 Build:        bgm.wav, bgm.json, assets/asset-manifest.json (when assets exist),
               assembly-notes.md, assembly-checklist.md
 ```
+
+Music formats (kinetic-post, motion-short, ADR-0027): Story writes `script.md` (on-screen
+text) + `processed-audio.wav` + `beats.json` (`npm run video -- music`) instead of `voice/`
+and `processed-transcript.json`; Screen Plan skips `caption-beats.json`; Build has no
+`bgm.wav`; gates are 1 (text + music + storyboard) and 2 (render).
 
 Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
 

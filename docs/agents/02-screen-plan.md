@@ -40,6 +40,8 @@ for beats a scene already shows), a `## Style World`, scenes that cover every se
 `npm run video -- storyboard <slug>`. Gate 2 always stops for Dena's approval; R3 and R4
 do not apply (ADR-0025, RD-03-82…86). Record Dena's Gate 2 answer with
 `npm run video -- gate <slug> approve 2` when it comes from chat (Studio records its own).
+In `kinetic-post` / `motion-short` there are no captions; scenes follow `beats.json`, rows
+carry `text`, and Gate 1 shows text + music + storyboard together (ADR-0027).
 
 ## Core Principles
 

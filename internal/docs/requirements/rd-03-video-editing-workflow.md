@@ -368,6 +368,20 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   dijalankan, the CLI shall menulis `- format: <f>` di brief stub dan, untuk format musik,
   starter tanpa elemen `bgm-audio`; format tak dikenal atau `--format` tanpa `--generate`
   gagal sebelum ada berkas yang dibuat.
+- **RD-03-97** (State-driven) — While format-nya `kinetic-post` / `motion-short`, fase Story
+  shall menulis teks layar (bukan narasi) di `script.md` — kinetic-post satu ide 10–30 kata
+  yang menyambung ke awal, motion-short 3–6 scene maksimal 8 kata per tampilan dengan
+  kartu CTA terakhir — memakai Teks persis `request.json` kata demi kata bila ada, lalu
+  memotong musik dengan `npm run video -- music`.
+- **RD-03-98** (State-driven) — While format-nya musik, fase Screen Plan shall tidak menulis
+  `caption-beats.json`, menyelaraskan setiap baris teks ke beat dan pergantian scene serta
+  kata puncak ke downbeat (`beats.json`), memberi `text` pada baris scene
+  `overlay-timeline.json` (tile storyboard menampilkannya), dan berhenti di Gate 1 dengan
+  teks + musik + storyboard.
+- **RD-03-99** (State-driven) — While format-nya musik, fase Build shall memakai
+  `processed-audio.wav` sebagai satu-satunya musik (tanpa `video bgm` dan ducking), membuat
+  kinetic-post loop (frame terakhir = keadaan frame pertama, tanpa fade ke hitam) dan
+  motion-short berakhir dengan kartu CTA di bar terakhir, lalu berhenti di Gate 2.
 
 ## Referensi
 

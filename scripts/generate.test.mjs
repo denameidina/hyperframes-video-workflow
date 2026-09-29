@@ -243,3 +243,14 @@ test('video voice and video bgm refuse a music-driven project', async () => {
   await assert.rejects(main(['voice', 'post'], { root, env: {}, run: fakeMedia().run }), /kinetic-post project: it has no narration/);
   assert.throws(() => main(['bgm', 'post', '--track', 'm01-calm'], { root, env: {}, run: fakeMedia().run }), /kinetic-post project: the music is its only audio/);
 });
+
+test('video storyboard shows a row\'s on-screen text when it has one (music formats have no spoken words)', () => {
+  const { root, dir } = storyboardRoot();
+  writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify({ elements: [
+    { id: 'ov-001', type: 'broll-text', track: 4, start: 0, duration: 2, placement: 'full', example: 'tx-01-slam', text: 'BUKAN AI-NYA' },
+  ] }));
+  writeFrames(root, 'broll-text');
+  const pages = [];
+  main(['storyboard', 'demo'], { root, env: {}, run: storyboardRun(root, [], (html) => pages.push(html)) });
+  assert.match(pages[0], /<b>1<\/b> 0:00\.0–0:02\.0 · tx-01-slam<br \/>BUKAN AI-NYA/);
+});

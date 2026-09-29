@@ -47,6 +47,9 @@ and stops at Gate 1 (script + voice, mandatory). Follow Story (generate) in
 hook, cuts, and `video cut` do not apply (ADR-0025, RD-03-75…81). A project made in Studio
 also has `research/request.json`; its filled choices are binding, and gate answers are
 recorded with `npm run video -- gate` (ADR-0026).
+The music-driven formats `kinetic-post` and `motion-short` write on-screen text instead of
+narration and cut their music with `npm run video -- music` (section Music-driven formats in
+`generate-mode.md`, ADR-0027).
 
 ## Core Principles
 

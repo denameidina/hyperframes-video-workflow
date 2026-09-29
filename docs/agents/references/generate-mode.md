@@ -256,6 +256,59 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
    <slug>`, `npm run video -- render <slug>`, **Gate 3** (record a chat answer with
    `npm run video -- gate <slug> approve|revise|qa 3`).
 
+## Music-driven formats: kinetic-post and motion-short (ADR-0027)
+
+`creative-brief.md` sets `- format: kinetic-post` or `- format: motion-short` (scaffold:
+`npm run video -- new <slug> --generate --format <f>`). There is no voice: the cut music is
+the time base, and there are **two gates** — Gate 1 (on-screen text + music + storyboard)
+and Gate 2 (render). Everything above applies unless this section says otherwise.
+
+| | kinetic-post | motion-short |
+| --- | --- | --- |
+| Length | 8–20 s | 15–40 s |
+| Content | one idea, quote, or hook as kinetic type | 3–6 scenes (text + objects + numbers) |
+| Words | 10–30 | at most 8 per state |
+| End | loops: the last frame is the first frame's state; CTA only in `publish-captions.md` | a CTA card (non-promissory) in the last bar |
+| Main style | usually `broll-text` (+ at most one accent) | a style world as for an explainer |
+
+### Story (music formats)
+
+1. Research as for an explainer. When `research/request.json` has `text` (Teks persis),
+   use those words exactly: only split them into beat groups and choose the stressed word.
+2. `script.md` holds the **on-screen text**, one line per beat or beat group (no
+   narration); `## Fakta` still sources every number, name, price, result, or quote.
+   kinetic-post: the payoff word lands on a downbeat, and the last line leads back into the
+   first. motion-short: the last scene is the CTA card.
+3. Music: pick a catalog track (`npm run music -- list --mood upbeat`, also `playful`,
+   `tech-ringan`), then `npm run video -- music <slug> --track <id> --from <s> --bars <n>`
+   (the command names the `--bars` range that fits). Reading pace is about one word or
+   phrase per beat; when that is too fast, pick a slower track — never cram the text.
+4. No `video voice`, no `processed-transcript.json`, no Gate 1 stop here: continue to
+   Screen Plan.
+
+### Screen Plan (music formats)
+
+- No caption rail and no `caption-beats.json`: the on-screen text is the content.
+  `publish-captions.md` is still written (the kinetic-post CTA lives there).
+- Scenes follow the bars in `beats.json`: every text line enters on a beat; scene changes
+  and the payoff word land on downbeats.
+- `storyboard.md`: `| # | bars | time | on-screen text | style / pattern | what appears | example |`.
+  Each scene row in `overlay-timeline.json` carries `text` (its on-screen words); then
+  `npm run video -- storyboard <slug>`.
+- **Gate 1**: stop and show Dena `script.md`, the music (`processed-audio.wav`, track, BPM,
+  bars), the storyboard sheet, `storyboard.md`, and the style world. Record a chat answer
+  with `npm run video -- gate <slug> approve 1` (or `revise 1 --note "…"`).
+
+### Build (music formats)
+
+- `processed-audio.wav` (the music) on track 10 is the only music: no `video bgm`, no
+  ducking. SFX sparingly, only accents the music does not already hit.
+- kinetic-post: the last frame returns to the first frame's state (an invisible loop), no
+  fade to black. motion-short: the CTA card in the last bar while the music fades.
+- Render → **Gate 2**; record a chat answer with
+  `npm run video -- gate <slug> approve|revise|qa 2`. A Gate 2 approval ends the run: never
+  publish.
+
 ## QA (generate)
 
 `qa-checklist.md` section Generate Mode lists what changes: every second is covered by a

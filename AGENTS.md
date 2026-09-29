@@ -71,7 +71,7 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
-- Generate mode (ADR-0025, `mode: generate`): a motion-design explainer from a topic, URL, or rewritten older video, with no footage of Dena. The hook is paragraph 1 of the script Dena approved at Gate 1 (script + voice); the TTS voiceover is never sped up to 1.2x; captions are hybrid (every word, hidden on the rail where a scene already shows it); Gate 2 always stops with the storyboard sheet. Rules: `docs/agents/references/generate-mode.md`.
+- Generate mode (ADR-0025, `mode: generate`): a motion-design explainer from a topic, URL, or rewritten older video, with no footage of Dena. The hook is paragraph 1 of the script Dena approved at Gate 1 (script + voice); the TTS voiceover is never sped up to 1.2x; captions are hybrid (every word, hidden on the rail where a scene already shows it); Gate 2 always stops with the storyboard sheet. Rules: `docs/agents/references/generate-mode.md`. Two music-driven formats, `kinetic-post` (8–20 s, loop) and `motion-short` (15–40 s, CTA card), have no voice: `npm run video -- music` cuts the music on bars, and there are two gates (text + music + storyboard, then render; ADR-0027).
 
 ## Dena Workflow Discipline
 

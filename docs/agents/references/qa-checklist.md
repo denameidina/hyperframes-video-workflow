@@ -21,6 +21,10 @@ checks replace the edit-mode ones they name:
   silence before the fade-out.
 - Facts: every number, name, price, result, or quote on screen has a `script.md ## Fakta`
   source.
+- Music formats (`kinetic-post`, `motion-short`, ADR-0027): kinetic-post's first and last
+  frames show the same state (the loop is invisible); every text change lands on a beat in
+  `beats.json` (±1 frame); no text is on screen for less than 0.4 s; there is no caption
+  rail; the music is the only music track (no ducked bed).
 
 ## Verdicts
 

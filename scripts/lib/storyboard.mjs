@@ -1,6 +1,7 @@
 // `video storyboard` (ADR-0025, RD-03-84..86): the Gate 2 sheet for generate mode. Each scene row
 // (placement "full") in overlay-timeline.json names the style example it leans on; the sheet shows that
-// example's first still (or the row's "exampleStill") with the scene number, time, and spoken words, laid out in HTML and snapshotted
+// example's first still (or the row's "exampleStill") with the scene number, time, and spoken words (a music-format
+// row shows its on-screen "text" instead, ADR-0027), laid out in HTML and snapshotted
 // by hyperframes (this machine's ffmpeg has no drawtext). Node 22+ built-ins (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
@@ -114,7 +115,7 @@ export function runStoryboard({ dir, root = '.', run = spawnSync, env = process.
     if (!f) throw new Error(`no still for ${s.clip} at ${s.at} s in renders/style-examples/${s.style}/ (run npm run check:style-examples -- ${s.style})`);
     return f;
   };
-  const tiles = rows.map((e, i) => ({ time: `${mmss(e.start)}–${mmss(e.start + e.duration)}`, example: e.example, words: spokenIn(words, e.start, e.start + e.duration), still: frameOf(stills[i]) }));
+  const tiles = rows.map((e, i) => ({ time: `${mmss(e.start)}–${mmss(e.start + e.duration)}`, example: e.example, words: typeof e.text === 'string' ? e.text : spokenIn(words, e.start, e.start + e.duration), still: frameOf(stills[i]) }));
   const pages = Array.from({ length: Math.ceil(tiles.length / PER_SHEET) }, (_, p) => tiles.slice(p * PER_SHEET, (p + 1) * PER_SHEET));
   const preview = join(dir, 'preview');
   mkdirSync(preview, { recursive: true });

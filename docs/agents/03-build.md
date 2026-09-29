@@ -40,6 +40,8 @@ without the `"rail": "hidden"` beats. Verification, render, and Gate 3 are uncha
 (ADR-0025, RD-03-87). Record Dena's Gate 3 answer with
 `npm run video -- gate <slug> approve|revise|qa 3` when it comes from chat (Studio records
 its own).
+In `kinetic-post` / `motion-short` the music is the only music track (no `video bgm`);
+kinetic-post loops, motion-short ends on a CTA card; the render is Gate 2 (ADR-0027).
 
 ## Core Principle
 
