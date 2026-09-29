@@ -5,13 +5,16 @@
 //        npm run video -- cutout <slug> --from <s> --dur <s> --name NN-name   (matted mix-media cut-out)
 //        npm run video -- layers <slug> (--at <s> | --image <file>) --name NN-name   (parallax source + subject)
 // Cut-out spec: docs/superpowers/specs/2026-09-27-vox-mix-media-design.md
+//        npm run video -- sources <slug> [--add-shared a,b] [--set <id> --role <r> [--note <t>] [--detected]] [--remove <id>]
 // Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
+// Multi-source spec: docs/superpowers/specs/2026-09-29-multi-source-projects-design.md (ADR-0022)
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
 export const HYPERFRAMES = 'hyperframes@0.7.24';
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -54,6 +57,8 @@ export function scaffold({ slug, root = '.', duration, probe }) {
   if (hasEntry(index)) throw new Error(`${index} already exists; refusing to overwrite`);
   mkdirSync(join(dir, 'compositions', 'broll'), { recursive: true });
   mkdirSync(join(dir, 'assets'), { recursive: true });
+  mkdirSync(join(dir, SOURCES_DIR), { recursive: true });
+  if (!hasEntry(join(dir, 'sources.json'))) writeManifest(dir, { version: 1, sources: [] });
   const d = resolveDuration({ duration, dir, probe });
   const tpl = join(root, TEMPLATE);
   writeFileSync(index, fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d }));
@@ -79,7 +84,7 @@ export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
         ? [['node', [join(root, 'scripts', 'render-blur.mjs'), '--slug', slug, '--project', dir]]]
         : [hf('render', '--quality', 'high', '-o', join(dir, 'renders', `${slug}.mp4`), dir)];
     default:
-      throw new Error(`unknown command "${cmd}" (use new, check, dev, snapshot, render, cutout, layers)`);
+      throw new Error(`unknown command "${cmd}" (use new, sources, cut, check, dev, snapshot, render, cutout, layers, migrate-sources)`);
   }
 }
 
@@ -151,12 +156,25 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
       at: { type: 'string' }, blur: { type: 'boolean', default: false }, duration: { type: 'string' },
       from: { type: 'string' }, dur: { type: 'string' }, name: { type: 'string' },
       image: { type: 'string' },
+      'add-shared': { type: 'string' }, set: { type: 'string' }, role: { type: 'string' }, note: { type: 'string' },
+      detected: { type: 'boolean', default: false }, remove: { type: 'string' }, apply: { type: 'boolean', default: false },
     },
   });
   const [cmd, slug] = positionals;
   if (cmd === 'new') {
     const { dir, duration } = scaffold({ slug, root, duration: values.duration });
     console.log(`created ${dir} (${duration} s)`);
+    return;
+  }
+  if (cmd === 'sources') {
+    const dir = projectDir(slug, root);
+    if (!existsSync(dir)) throw new Error(`${dir} not found; run npm run video -- new ${slug}`);
+    const probe = (f, k) => probeMedia(f, k, run);
+    const addShared = (values['add-shared'] || '').split(',').map((x) => x.trim()).filter(Boolean);
+    syncManifest({ dir, root, addShared, probe });
+    if (values.set !== undefined) setSource(dir, values.set, { role: values.role, note: values.note, by: values.detected ? 'detected' : 'user' });
+    if (values.remove !== undefined) removeSource(dir, values.remove);
+    console.log(formatSources(readManifest(dir)));
     return;
   }
   if (cmd === 'cutout') {

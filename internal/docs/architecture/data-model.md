@@ -187,6 +187,21 @@ Caption final untuk IG.
 ```
 ```
 
+## `sources.json` (Story, Studio)
+
+`{ version: 1, sources: [{ id, path, origin, kind, role, roleSource, note, probe }] }` —
+satu entri per sumber project ([ADR-0022](../adr/0022-multi-source-projects.md)).
+`path` relatif ke `videos/<slug>/`: `sources/<file>` (`origin: "project"`) atau
+`../../shared/<file>` (`origin: "shared"`, dirujuk tanpa disalin).
+`kind` ∈ `video | image`. `role` ∈ `speech | broll | image | null` (null = Auto,
+belum dideteksi). `roleSource` ∈ `user | detected | null`; peran `user` tidak
+pernah ditimpa. `id` berprefiks `s|b|i|u` dan tidak pernah berubah.
+`probe` (hanya ditulis script): video `{ duration, width, height, fps, rotation,
+hasAudio, size, mtime }`, gambar `{ width, height, size, mtime }`.
+Penulis tunggal: `scripts/lib/video-sources.mjs` (`npm run video -- sources`, Studio).
+Transcript per sumber video: `transcripts/<id>.json` (timestamp sumber).
+`metadata.json` merujuknya lewat `"sources": "sources.json"` (field `source` lama dihapus).
+
 ## `cut-list.json` (Story)
 
 `{ source, targetDuration, speed, primaryHook, segments: [{ sourceStart, sourceEnd, action, reason }], notes: [] }`.

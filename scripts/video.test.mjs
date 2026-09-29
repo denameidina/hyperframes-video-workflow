@@ -45,6 +45,8 @@ test('scaffold creates the project, fills the template, and links vendor', () =>
   assert.ok(lstatSync(join(dir, 'assets')).isDirectory());
   assert.ok(lstatSync(join(dir, 'vendor')).isSymbolicLink());
   assert.equal(readlinkSync(join(dir, 'vendor')), '../../vendor');
+  assert.ok(lstatSync(join(dir, 'sources')).isDirectory());
+  assert.deepEqual(JSON.parse(readFileSync(join(dir, 'sources.json'), 'utf8')), { version: 1, sources: [] });
   rmSync(root, { recursive: true, force: true });
 });
 
