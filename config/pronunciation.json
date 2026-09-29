@@ -4,6 +4,12 @@
     { "term": "CRM", "say": "si ar em", "only": ["supertonic"] },
     { "term": "ERP", "say": "i ar pi", "only": ["supertonic"] },
     { "term": "API", "say": "ei pi ai", "only": ["supertonic"] },
-    { "term": "AI", "say": "ei ai", "only": ["supertonic"] }
+    { "term": "AI", "say": "ei ai", "only": ["supertonic"] },
+    { "term": "agent", "say": "ejen", "only": ["supertonic"] },
+    { "term": "deploy", "say": "diploi", "only": ["supertonic"] },
+    { "term": "workflow", "say": "werkflou", "only": ["supertonic"] },
+    { "term": "prompt", "say": "promt", "only": ["supertonic"] },
+    { "term": "chat", "say": "cet", "only": ["supertonic"] },
+    { "term": "dites", "say": "di tes", "only": ["supertonic"] }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "default": null,
+  "default": "supertonic-f2",
   "presets": {
     "dena-clone": {
       "provider": "gemini",

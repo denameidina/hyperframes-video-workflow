@@ -62,7 +62,24 @@ native Indonesia; yang terdekat 8 suara `jv-ID` berlogat Jawa.
 
 ## Hasil uji dengar
 
-Belum dijalankan; `config/voices.json` `default` tetap `null` sampai Dena memilih.
+**Ronde 1 — Supertonic saja (run `20260929-1413`, 2026-09-29).** Kunci Gemini masih free
+tier (3 request/menit, 10 request/hari untuk `gemini-3.8-flash-tts`), jadi build penuh
+berhenti di kuota; ronde ini memakai `test build --only supertonic --keep 4`. Semua 10 suara
+lolos saringan dengan WER 0; kandidat diambil dari urutan config (F1, M1, F2, M2). Clone
+ditunda atas pilihan Dena.
+
+| # | Kandidat | Skor | Natural | Ucapan | Gaya | Betah | Mirip | WER |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `supertonic:F2` | 3,25 | 4 | 2 | 3 | 4 | 3 | 0,032 |
+| 2 | `supertonic:F1` | 3,25 | 4 | 2 | 3 | 4 | 3 | 0,053 |
+| 3 | `supertonic:M2` | 3 | 3 | 2 | 3 | 4 | 3 | 0,053 |
+
+- Keputusan Dena: `supertonic-f2` menjadi **default sementara** (seri skor dengan F1, WER
+  lebih rendah); default final diputuskan setelah ronde Gemini (2 voice design `id-ID` +
+  suara stok).
+- Semua sampel mendapat 2 untuk ucapan. Menurut Dena yang salah: istilah Inggris dan
+  intonasi. Leksikon Supertonic ditambah: `agent`, `deploy`, `workflow`, `prompt`, `chat`,
+  `dites`. Intonasi (tanya, register santai) adalah batas model Supertonic, bukan leksikon.
 
 ## Referensi
 
