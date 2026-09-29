@@ -53,7 +53,8 @@ const RULES = [
   [new RegExp(String.raw`${START}(${NUM})\s?(${UNIT})${END}`, 'gu'), (m, n, u) => amount(n, u)],
   [new RegExp(String.raw`${START}(${NUM})x${END}`, 'gu'), (m, n) => `${readNumber(n)} kali`],
   [new RegExp(String.raw`(?<!\p{L})ke-(\d+)${END}`, 'gu'), (m, n) => (n === '1' ? 'pertama' : inRange(n) ? `ke${terbilang(Number(n))}` : m)],
-  [/(?<![\d.,–-])(\d+)\s?[–-]\s?(\d+)(?![\d.,–-])/gu, (m, a, b) => (inRange(a, b) ? `${terbilang(Number(a))} sampai ${terbilang(Number(b))}` : m)],
+  // a range may end a clause ("3-5."), but a decimal ("1.2-1.5") is not a range
+  [/(?<![\d–-]|\d[.,])(\d+)\s?[–-]\s?(\d+)(?![\d–-]|[.,]\d)/gu, (m, a, b) => (inRange(a, b) ? `${terbilang(Number(a))} sampai ${terbilang(Number(b))}` : m)],
   [new RegExp(String.raw`(?<![\p{L}\p{N}.,])(${NUM})${END}`, 'gu'), (m, n) => readNumber(n)],
 ];
 

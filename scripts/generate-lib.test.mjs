@@ -5,7 +5,8 @@ import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { BGM, bgmArgs, bgmCopies, bgmGain } from './lib/bgm.mjs';
 import { briefStub, syncDuration, transcriptFromVoice } from './lib/generate.mjs';
-import { exampleStill, findFrame, sceneRows, sheetHtml, spokenIn } from './lib/storyboard.mjs';
+import { PER_SHEET, exampleStill, findFrame, mmss, sceneRows, sheetHtml, spokenIn } from './lib/storyboard.mjs';
+import { readManifest, snapshots } from './lib/style-examples.mjs';
 
 const REPO = process.cwd();
 
@@ -30,8 +31,9 @@ test('transcriptFromVoice writes the edit-path processed-transcript schema', () 
 
 test('bgmCopies, bgmGain, and bgmArgs build one deterministic ffmpeg call', () => {
   assert.equal(bgmCopies({ trackDuration: 120, from: 5, duration: 60 }), 1);
-  assert.equal(bgmCopies({ trackDuration: 20, from: 2, duration: 34.76 }), 2);
-  assert.equal(bgmCopies({ trackDuration: 20, from: 0, duration: 80 }), 5);
+  assert.equal(bgmCopies({ trackDuration: 60, from: 0, duration: 59.5 }), 2, 'too close to the end: a spare copy guards against a short mp3');
+  assert.equal(bgmCopies({ trackDuration: 20, from: 2, duration: 34.76 }), 3);
+  assert.equal(bgmCopies({ trackDuration: 20, from: 0, duration: 80 }), 6);
   assert.throws(() => bgmCopies({ trackDuration: 20, from: 19.5, duration: 30 }), /leaves less than 1 s/);
   assert.equal(bgmGain(-12.02), -17.98);
   assert.equal(bgmGain(-70), 20);
@@ -60,15 +62,33 @@ test('sceneRows keeps full-frame scenes in time order and names rows without an 
   assert.throws(() => sceneRows({ elements: [] }), /no scene rows/);
 });
 
-test('exampleStill finds the host time of an example\'s first still; findFrame matches the snapshot file', () => {
-  assert.deepEqual(exampleStill(REPO, 'wb-01-flow'), { style: 'whiteboard', clip: 'wb-01-flow', at: 2.5 });
+// the files hyperframes snapshot writes for a style host: frame-NN-at-<t.toFixed(1)>s.png
+function writeFrames(dir, style) {
+  const { at } = snapshots(readManifest(REPO, style));
+  at.forEach((t, i) => writeFileSync(join(dir, `frame-${String(i).padStart(2, '0')}-at-${t.toFixed(1)}s.png`), `${style}:${i}`));
+  return at;
+}
+
+test('exampleStill finds the snapshot index of an example\'s first still; findFrame matches it by index', () => {
+  const total = snapshots(readManifest(REPO, 'whiteboard')).at.length;
+  assert.deepEqual(exampleStill(REPO, 'wb-01-flow'), { style: 'whiteboard', clip: 'wb-01-flow', at: 2.5, index: 0, total });
   assert.throws(() => exampleStill(REPO, 'wb-99-nope'), /unknown style example "wb-99-nope"/);
   const d = mkdtempSync(join(tmpdir(), 'frames-'));
-  writeFileSync(join(d, 'frame-00-at-2.5s.png'), 'p');
-  writeFileSync(join(d, 'frame-01-at-6.2s.png'), 'p');
-  assert.equal(basename(findFrame(d, 6.2)), 'frame-01-at-6.2s.png');
-  assert.equal(findFrame(d, 7), null);
-  assert.equal(findFrame(join(d, 'missing'), 1), null);
+  writeFrames(d, 'broll-text');
+  const zoom = exampleStill(REPO, 'tx-07-zoom-grid');
+  assert.equal(zoom.at, 34.45, 'two decimals: the file says 34.5');
+  assert.equal(basename(findFrame(d, zoom)), `frame-${String(zoom.index).padStart(2, '0')}-at-34.5s.png`);
+  assert.equal(findFrame(join(d, 'missing'), zoom), null);
+  const partial = mkdtempSync(join(tmpdir(), 'frames-'));
+  writeFileSync(join(partial, `frame-${String(zoom.index).padStart(2, '0')}-at-34.5s.png`), 'p');
+  assert.equal(findFrame(partial, zoom), null, 'an incomplete or stale set is rendered again');
+});
+
+test('mmss rounds to tenths without printing 60 seconds', () => {
+  assert.equal(mmss(3), '0:03.0');
+  assert.equal(mmss(59.96), '1:00.0');
+  assert.equal(mmss(75.34), '1:15.3');
+  assert.equal(PER_SHEET, 28);
 });
 
 test('sheetHtml lays tiles out in a 4-column grid with escaped labels', () => {
@@ -76,5 +96,6 @@ test('sheetHtml lays tiles out in a 4-column grid with escaped labels', () => {
   assert.equal(height, 24 + 1 * (427 + 104 + 24));
   assert.match(html, /<b>1<\/b> 0:00\.0–0:03\.0 · wb-01-flow<br \/>Jujur, gue &lt;kira&gt;/);
   assert.match(html, /x{57}…/);
+  assert.match(sheetHtml([{ time: 't', example: 'e', words: 'w' }], 28).html, /<img src="img\/00\.png" \/><div class="cap"><b>29<\/b>/, 'numbers continue on the next sheet');
   assert.equal(spokenIn([{ start: 0.1, text: 'a' }, { start: 2.9, text: 'b' }, { start: 3, text: 'c' }], 0, 3), 'a b');
 });

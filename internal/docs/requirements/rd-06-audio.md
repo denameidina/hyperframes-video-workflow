@@ -102,9 +102,11 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
 - **RD-06-24** (Event-driven) — When `index.html` ada, `video voice` shall mengisi
   `data-duration` setiap elemen bertanda `data-voice-duration` (di luar komentar HTML)
   dengan durasi voiceover.
-- **RD-06-25** (Unwanted) — If `script.md` tidak ada, tidak ada preset (`--preset` kosong
-  dan `default` null), atau preset-nya `recorded`, then `video voice` shall gagal sebelum
-  sintesis dan menyebut langkah yang perlu dilakukan.
+- **RD-06-25** (Unwanted) — If project bukan mode generate (`creative-brief.md` tanpa
+  `mode: generate`, atau ada `processed.mp4`), `script.md` tidak ada, tidak ada preset
+  (`--preset` kosong dan `default` null), atau preset-nya `recorded`, then `video voice`
+  shall gagal sebelum sintesis dan menyebut langkah yang perlu dilakukan; proses anaknya
+  berjalan tanpa `GEMINI_API_KEY`/`GEMINI_TTS_API_KEY`.
 - **RD-06-26** (Event-driven) — When `npm run video -- bgm <slug> --track <id> [--from <s>]`
   dijalankan, the CLI shall memotong track mulai `from`, meloop-nya dengan crossfade 1 s
   bila lebih pendek dari voiceover, fade in 0,5 s dan fade out 1,5 s, mengatur loudness ke

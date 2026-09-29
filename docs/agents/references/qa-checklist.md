@@ -3,6 +3,25 @@
 Verdicts, severity, review axes, procedure, and report formats for the optional
 QA phase. Loaded by `docs/agents/04-qa.md`.
 
+## Generate Mode
+
+When `creative-brief.md` sets `mode: generate` (ADR-0025, `generate-mode.md`), these
+checks replace the edit-mode ones they name:
+
+- Speed: the voiceover plays at the preset's tempo; "processed speed is 1.2x" does not
+  apply, and a sped-up voice is a finding.
+- Hook: paragraph 1 of the script Dena approved at Gate 1, for `00:00.00-<hook_end>`;
+  there is no source transcript to be verbatim with. On-screen words still come from
+  `processed-transcript.json` (the script's words).
+- Face: there is no footage; face-cover checks (R3/R4) do not apply.
+- Coverage: every second has a scene (`placement: "full"`), without gaps.
+- Captions: a beat with `"rail": "hidden"` is visible in its scene; every other beat is on
+  the rail.
+- Music: `bgm.wav` is audible in pauses and sits under the voice (ducked), with no
+  silence before the fade-out.
+- Facts: every number, name, price, result, or quote on screen has a `script.md ## Fakta`
+  source.
+
 ## Verdicts
 
 Use exactly one verdict:

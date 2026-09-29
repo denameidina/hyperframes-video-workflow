@@ -80,8 +80,8 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Privacy notes:
 - Do not cover: <e.g. Dena's face in 0–3 s, the caption area>
 - Planned file: `compositions/broll/NN-name.html`
-- Placement / Track: <treatment> / track 4
-- Treatment: <cutaway | split | panel | collage (mix-media only) | parallax-stage (parallax only)> — <reason>
+- Placement / Track: <treatment> / track 4 (generate mode: 4 or 7, alternating)
+- Treatment: <cutaway | split | panel | collage (mix-media only) | parallax-stage (parallax only) | full (generate mode, `generate-mode.md`)> — <reason>
 - Pattern: <pattern names from the style's Patterns table>
 - Palette: <preset class, e.g. `sk-pal-wb-graph-paper` (+ its add class), or hex values with the reason>
 - Type: <preset class, e.g. `sk-type-wb-kalam`, or font classes `.sk-f-*`>, sizes in px

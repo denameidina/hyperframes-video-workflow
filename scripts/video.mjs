@@ -199,10 +199,15 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
   if (cmd === 'voice' || cmd === 'bgm' || cmd === 'storyboard') {
     const dir = projectDir(slug, root);
     if (!existsSync(dir)) throw new Error(`${dir} not found; run npm run video -- new ${slug} --generate`);
+    // every child process (uv, whisper, ffmpeg, npx) runs without Gemini keys (RD-02-24); fetch gets the key itself
+    const childEnv = { ...env };
+    delete childEnv.GEMINI_API_KEY;
+    delete childEnv.GEMINI_TTS_API_KEY;
+    const childRun = (c, a, o = {}) => run(c, a, { ...o, env: o.env ?? childEnv });
     if (cmd === 'voice') {
       // .env is read into this call's env only; process.env (and every child process) stays as it was
       const fileEnv = existsSync(join(root, '.env')) ? parseEnv(readFileSync(join(root, '.env'), 'utf8')) : {};
-      return voiceStep({ dir, root, preset: values.preset, env: { ...fileEnv, ...env }, fetchImpl, run }).then((meta) => {
+      return voiceStep({ dir, root, preset: values.preset, env: { ...fileEnv, ...env }, fetchImpl, run: childRun }).then((meta) => {
         console.log(`voice ${join(dir, 'processed-audio.wav')} (${meta.duration} s, preset ${meta.preset}${meta.alignment ? `, WER ${meta.alignment.wer}` : ''})`);
         for (const w of meta.warnings) console.log(`warning: ${w}`);
         return meta;
@@ -210,12 +215,12 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     }
     if (cmd === 'bgm') {
       if (!values.track) throw new Error('bgm needs --track <id> (npm run music -- list)');
-      const meta = runBgm({ dir, root, trackId: values.track, from: values.from ?? 0, run });
+      const meta = runBgm({ dir, root, trackId: values.track, from: values.from ?? 0, run: childRun });
       console.log(`bgm ${join(dir, 'bgm.wav')} (${meta.track} from ${meta.from} s, ${meta.copies} cop${meta.copies === 1 ? 'y' : 'ies'}, gain ${meta.gainDb} dB)`);
       return meta;
     }
-    const r = runStoryboard({ dir, root, run, env, log: console.log });
-    console.log(`storyboard ${r.out} (${r.scenes} scenes)`);
+    const r = runStoryboard({ dir, root, run: childRun, env: childEnv, log: console.log });
+    console.log(`storyboard ${r.outs.join(', ')} (${r.scenes} scenes)`);
     return r;
   }
   if (cmd === 'sources') {

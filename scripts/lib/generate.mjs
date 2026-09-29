@@ -43,6 +43,11 @@ export function transcriptFromVoice({ meta, words }) {
 }
 
 export async function voiceStep({ dir, root = '.', preset: presetName, env, fetchImpl, run = spawnSync }) {
+  const brief = join(dir, 'creative-brief.md');
+  const generate = existsSync(brief) && /^\s*-\s*mode:\s*generate\b/m.test(readFileSync(brief, 'utf8'));
+  if (!generate || existsSync(join(dir, 'processed.mp4'))) {
+    throw new Error(`${dir} is not a generate-mode project (creative-brief.md needs "- mode: generate" and there is no processed.mp4); start one with npm run video -- new <slug> --generate`);
+  }
   const scriptFile = join(dir, 'script.md');
   if (!existsSync(scriptFile)) throw new Error(`${scriptFile} not found; the Story phase writes the script first (docs/agents/01-story.md, mode generate)`);
   const voices = loadVoices(root);
@@ -59,6 +64,9 @@ export async function voiceStep({ dir, root = '.', preset: presetName, env, fetc
   const words = JSON.parse(readFileSync(join(out, 'words.json'), 'utf8'));
   writeJson(join(dir, 'processed-transcript.json'), transcriptFromVoice({ meta, words }));
   const index = join(dir, 'index.html');
-  if (existsSync(index)) writeFileSync(index, syncDuration(readFileSync(index, 'utf8'), meta.duration));
+  if (existsSync(index)) {
+    writeFileSync(`${index}.part`, syncDuration(readFileSync(index, 'utf8'), meta.duration));
+    renameSync(`${index}.part`, index);
+  }
   return meta;
 }

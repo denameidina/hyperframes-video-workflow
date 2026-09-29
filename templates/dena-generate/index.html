@@ -27,7 +27,7 @@
       }
       .clip { position: absolute; }
       /* full-bleed background as a child: a root background can drop out in the producer */
-      .bg-fill { position: absolute; inset: 0; z-index: 0; background: #050505; }
+      .bg-fill { position: absolute; inset: 0; z-index: 0; background: var(--sk-bg, #050505); }
       audio.clip { width: 0; height: 0; opacity: 0; }
       /* inline-block so transforms apply to highlighted words */
       .hl { color: var(--yellow); display: inline-block; }

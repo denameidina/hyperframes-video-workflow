@@ -41,8 +41,9 @@ When `creative-brief.md` sets `mode: generate` (a project made with
 `npm run video -- new <slug> --generate`), there is no footage to cut: this phase
 researches, writes `script.md`, makes the voiceover with `npm run video -- voice <slug>`,
 and stops at Gate 1 (script + voice, mandatory). Follow Story (generate) in
-`docs/agents/references/generate-mode.md` instead of Steps 2 and 4–9 below; Step 1 (context) and Step 3
-(direction, format `explainer`) still apply. The 1.2x speed, the verbatim transcript
+`docs/agents/references/generate-mode.md` instead of Steps 2 and 4–9 below. Step 1
+(context) applies, except that the project is scaffolded with
+`npm run video -- new <slug> --generate`; Step 3 (direction, format `explainer`) applies. The 1.2x speed, the verbatim transcript
 hook, cuts, and `video cut` do not apply (ADR-0025, RD-03-75…81).
 
 ## Core Principles

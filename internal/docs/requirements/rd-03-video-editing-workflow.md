@@ -283,6 +283,13 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 
 ## Mode generate (ADR-0025)
 
+Prioritas: while `creative-brief.md` memuat `mode: generate`, RD-03-75…87 menggantikan
+RD-03-06 dan RD-03-07 (Gate 1 opsional), RD-03-09 (Gate 2 lanjut tanpa pemicu), RD-03-13
+untuk artefak Story (`transcripts/`, `cut-list.json`, `cut-map.json`, `processed.mp4`),
+RD-03-16 (kecepatan 1,2x), dan RD-03-24…RD-03-28 (hook verbatim dari transkrip); RD-03-15
+berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
+`docs/agents/references/generate-mode.md`. Kriteria lain tetap berlaku.
+
 - **RD-03-75** (Event-driven) — When `npm run video -- new <slug> --generate` dijalankan,
   the CLI shall membuat `videos/<slug>/` dari `templates/dena-generate/`, beserta
   `research/`, `sources.json`, dan `creative-brief.md` yang memuat `mode: generate`.
@@ -315,9 +322,11 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   tidak punya `example`, then `video storyboard` shall gagal dengan pesan yang menyebut
   fase pemiliknya atau id barisnya.
 - **RD-03-86** (Event-driven) — When `video storyboard` berjalan, the CLI shall memakai
-  still ter-cache di `renders/style-examples/<style>/`, me-render still sebuah style hanya
-  bila ada yang hilang, dan menulis `preview/storyboard-sheet.jpg` berisi nomor scene,
-  waktu, id contoh, dan kata yang diucapkan, tanpa `GEMINI_API_KEY` di env proses anak.
+  still ter-cache di `renders/style-examples/<style>/` (dicocokkan per indeks snapshot; set
+  yang jumlahnya tidak sama dianggap basi), me-render still sebuah style hanya bila ada
+  yang hilang, dan menulis `preview/storyboard-sheet.jpg` — atau `storyboard-sheet-N.jpg`
+  per 28 scene bila lebih — berisi nomor scene, waktu, id contoh, dan kata yang
+  diucapkan, tanpa `GEMINI_API_KEY`/`GEMINI_TTS_API_KEY` di env proses anak.
 - **RD-03-87** (Ubiquitous) — Di mode generate, fase Build shall tidak memasang base
   video, mewarnai `.bg-fill` dengan latar style world, memutar `processed-audio.wav`
   (track 10) dan `bgm.wav` (track 9), dan memasang scene di track 4 dan 7.

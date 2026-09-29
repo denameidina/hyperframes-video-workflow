@@ -142,7 +142,11 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - **fase (phase)** — tahap workflow: Story → Screen Plan → Build → QA opsional (ADR-0008).
 - **handoff artifact** — file output milik satu fase di `videos/<slug>/`.
 - **Visual Decision Log** — log wajib fase Screen Plan di `visual-plan.md` untuk tiap peluang visual-support.
-- **Gate 1 / Gate 2 / Gate 3** — review cut (opsional), rencana visual (kondisional R1–R6), review render (wajib).
+- **Gate 1 / Gate 2 / Gate 3** — review cut (opsional), rencana visual (kondisional R1–R6), review render (wajib); di mode generate: naskah + suara (wajib), storyboard (wajib), render.
+- **mode generate** — video motion design tanpa footage Dena (`mode: generate`, ADR-0025): naskah + TTS sebagai sumbu waktu.
+- **script.md** — naskah mode generate; narasi = teks sebelum section `## ` pertama, `## Fakta` memberi sumber tiap fakta.
+- **style world** — satu style utama + palet (+ maksimal 2 aksen) untuk seluruh video generate.
+- **storyboard sheet** — `preview/storyboard-sheet.jpg`: still contoh style per scene dengan nomor, waktu, dan kata (Gate 2 mode generate).
 - **receipt** — `videos/<slug>/repliz-publish.json` (metadata + hasil publish).
 - **publishKey** — sha256 ringkasan seluruh run `{r2Key, targetAccounts, description}`; disimpan di receipt tapi tidak lagi dipakai untuk keputusan skip (lihat `targetKey`, ADR-0011).
 - **targetKey** — sha256 per target account `{r2Key, platform, accountId, description, title, replies}`; menentukan apakah satu platform di-reuse, dijadwalkan ulang, atau `blocked` (ADR-0011).

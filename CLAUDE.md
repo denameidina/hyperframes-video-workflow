@@ -122,6 +122,7 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 - Screen Plan: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`
 - Build: `assets/asset-manifest.json` (when assets exist), `assembly-notes.md`, `assembly-checklist.md`, render MP4
 - Optional QA: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
+- Generate mode (ADR-0025): Story writes `research/`, `script.md`, `voice/`, `processed-audio.wav` instead of the cut artifacts; Screen Plan adds `storyboard.md` + `preview/storyboard-sheet.jpg`; Build adds `bgm.wav` + `bgm.json` (full chain: Handoff Contract in `docs/skills/dena-video-editing-workflow/SKILL.md`)
 
 ### Repliz/R2 Auto Publish Gate
 

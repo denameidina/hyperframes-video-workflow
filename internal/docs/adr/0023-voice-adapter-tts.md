@@ -54,8 +54,8 @@ native Indonesia; yang terdekat 8 suara `jv-ID` berlogat Jawa.
 - Waktu di `words.json` adalah waktu DTW (±0,2–0,3 s setelah onset, RD-04-11).
 - Alignment menormalisasi per kelompok kata (sejak ADR-0025): ungkapan yang terpisah
   spasi ("Rp 2.500", "2,5 jt", "50 %", "3 - 5") bertemu bentuk ucapannya; timing di dalam
-  kelompok dibagi rata. Jam ("10.30") dan "M" setelah angka dibaca harfiah; tulis sebagai
-  kata atau tambahkan ke leksikon.
+  kelompok dibagi rata. Jam ("10.30") dibaca sebagai desimal dan "M" setelah angka selalu
+  "miliar"; tulis sebagai kata bila maksudnya lain.
 - Supertonic membaca tag `<short pause>` / `<long pause>` sebagai koma / titik; tag lain
   dibuang.
 

@@ -5,16 +5,20 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { PREFIX, layout, readManifest } from './style-examples.mjs';
+import { join, resolve } from 'node:path';
+import { PREFIX, layout, readManifest, snapshots } from './style-examples.mjs';
 import { HYPERFRAMES } from '../video.mjs';
 
 export const COLS = 4;
+export const PER_SHEET = 28; // 7 rows of 4: a taller page is cut off at 4096 px by the snapshot
 const TILE = { w: 240, h: 427, gap: 24, caption: 104 };
 const FONT = 'plus-jakarta-sans-latin-wght-normal.woff2';
 const STYLE_OF = Object.fromEntries(Object.entries(PREFIX).map(([style, p]) => [p, style]));
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const mmss = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
+export function mmss(t) {
+  const tenths = Math.round(t * 10);
+  return `${Math.floor(tenths / 600)}:${((tenths % 600) / 10).toFixed(1).padStart(4, '0')}`;
+}
 
 export function sceneRows(timeline) {
   const rows = (timeline?.elements || []).filter((e) => e.placement === 'full').sort((a, b) => a.start - b.start);
@@ -24,31 +28,34 @@ export function sceneRows(timeline) {
   return rows;
 }
 
-// The example clip's first still, as a time in its style's example host.
+// The example clip's first still: its time in the style's example host, and its place among the host's
+// snapshot times (index of total), which is how hyperframes numbers the files.
 export function exampleStill(root, clip) {
   const style = STYLE_OF[String(clip).split('-')[0]];
   const m = style && readManifest(root, style);
   const e = m && layout(m).find((x) => x.clip === clip);
   if (!e) throw new Error(`unknown style example "${clip}" (see docs/agents/references/style-examples/<style>/examples.json)`);
-  return { style, clip, at: Math.round((e.start + e.stills[0]) * 1000) / 1000 };
+  const at = Math.round((e.start + e.stills[0]) * 1000) / 1000;
+  const all = snapshots(m).at;
+  return { style, clip, at, index: all.indexOf(at), total: all.length };
 }
 
-// renders/style-examples/<style>/frame-NN-at-<t>s.png, written by npm run check:style-examples -- <style>
-export function findFrame(dir, at) {
+// renders/style-examples/<style>/frame-NN-at-<t.toFixed(1)>s.png from npm run check:style-examples -- <style>.
+// Matched by index (the label has one decimal); a set whose size differs from the host's is stale or partial.
+export function findFrame(dir, still) {
   if (!existsSync(dir)) return null;
-  const hit = readdirSync(dir).find((f) => {
-    const m = /^frame-\d+-at-([\d.]+)s\.png$/.exec(f);
-    return m && Math.abs(Number(m[1]) - at) < 0.0005;
-  });
-  return hit ? join(dir, hit) : null;
+  const frames = readdirSync(dir).map((f) => /^frame-(\d+)-at-([\d.]+)s\.png$/.exec(f)).filter(Boolean);
+  if (frames.length !== still.total) return null;
+  const hit = frames.find((m) => Number(m[1]) === still.index && Number(m[2]) === Number(still.at.toFixed(1)));
+  return hit ? join(dir, hit[0]) : null;
 }
 
 export const spokenIn = (words, start, end) => words.filter((w) => w.start >= start && w.start < end).map((w) => w.text).join(' ');
 
-export function sheetHtml(tiles) {
+export function sheetHtml(tiles, first = 0) {
   const rows = Math.ceil(tiles.length / COLS);
   const height = TILE.gap + rows * (TILE.h + TILE.caption + TILE.gap);
-  const cells = tiles.map((t, i) => `        <div class="tile"><img src="img/${String(i).padStart(2, '0')}.png" /><div class="cap"><b>${i + 1}</b> ${esc(t.time)} · ${esc(t.example)}<br />${esc(t.words.length > 60 ? `${t.words.slice(0, 57)}…` : t.words)}</div></div>`).join('\n');
+  const cells = tiles.map((t, i) => `        <div class="tile"><img src="img/${String(i).padStart(2, '0')}.png" /><div class="cap"><b>${first + i + 1}</b> ${esc(t.time)} · ${esc(t.example)}<br />${esc(t.words.length > 60 ? `${t.words.slice(0, 57)}…` : t.words)}</div></div>`).join('\n');
   return { height, html: `<!doctype html>
 <html lang="id">
   <head>
@@ -93,35 +100,43 @@ export function runStoryboard({ dir, root = '.', run = spawnSync, env = process.
   const stills = rows.map((e) => exampleStill(root, e.example));
   const childEnv = { ...env };
   delete childEnv.GEMINI_API_KEY; // snapshot would otherwise send frames to Gemini for --describe
+  delete childEnv.GEMINI_TTS_API_KEY;
   for (const style of new Set(stills.map((s) => s.style))) {
     const frames = join(root, 'renders', 'style-examples', style);
-    if (stills.filter((s) => s.style === style).every((s) => findFrame(frames, s.at))) continue;
+    if (stills.filter((s) => s.style === style).every((s) => findFrame(frames, s))) continue;
     log(`rendering ${style} example stills (npm run check:style-examples -- ${style}) ...`);
-    exec(run, 'node', [join(root, 'scripts', 'check-style-examples.mjs'), style], { cwd: root, env: childEnv, stdio: 'inherit' });
+    exec(run, 'node', [resolve(root, 'scripts', 'check-style-examples.mjs'), style], { cwd: root, env: childEnv, stdio: 'inherit' });
   }
-  const tmp = mkdtempSync(join(tmpdir(), 'storyboard-'));
-  try {
-    mkdirSync(join(tmp, 'img'));
-    mkdirSync(join(tmp, 'fonts'));
-    mkdirSync(join(tmp, 'vendor'));
-    stills.forEach((s, i) => {
-      const f = findFrame(join(root, 'renders', 'style-examples', s.style), s.at);
-      if (!f) throw new Error(`no still for ${s.clip} at ${s.at} s in renders/style-examples/${s.style}/`);
-      copyFileSync(f, join(tmp, 'img', `${String(i).padStart(2, '0')}.png`));
-    });
-    copyFileSync(join(root, 'vendor', 'gsap.min.js'), join(tmp, 'vendor', 'gsap.min.js'));
-    copyFileSync(join(root, 'vendor', 'asset-lib', 'fonts', FONT), join(tmp, 'fonts', FONT));
-    const tiles = rows.map((e) => ({ time: `${mmss(e.start)}–${mmss(e.start + e.duration)}`, example: e.example, words: spokenIn(words, e.start, e.start + e.duration) }));
-    writeFileSync(join(tmp, 'index.html'), sheetHtml(tiles).html);
-    exec(run, 'npx', ['--yes', HYPERFRAMES, 'snapshot', '--at', '0.5', '-o', join(tmp, 'out'), tmp], { env: childEnv, stdio: 'inherit' });
-    const png = join(tmp, 'out', 'frame-00-at-0.5s.png');
-    if (!existsSync(png)) throw new Error('hyperframes snapshot wrote no storyboard frame');
-    mkdirSync(join(dir, 'preview'), { recursive: true });
-    const out = join(dir, 'preview', 'storyboard-sheet.jpg');
-    exec(run, 'ffmpeg', ['-y', '-loglevel', 'error', '-i', png, '-q:v', '3', `${out}.part.jpg`]);
-    renameSync(`${out}.part.jpg`, out);
-    return { out, scenes: rows.length };
-  } finally {
-    rmSync(tmp, { recursive: true, force: true });
-  }
+  const frameOf = (s) => {
+    const f = findFrame(join(root, 'renders', 'style-examples', s.style), s);
+    if (!f) throw new Error(`no still for ${s.clip} at ${s.at} s in renders/style-examples/${s.style}/ (run npm run check:style-examples -- ${s.style})`);
+    return f;
+  };
+  const tiles = rows.map((e, i) => ({ time: `${mmss(e.start)}–${mmss(e.start + e.duration)}`, example: e.example, words: spokenIn(words, e.start, e.start + e.duration), still: frameOf(stills[i]) }));
+  const pages = Array.from({ length: Math.ceil(tiles.length / PER_SHEET) }, (_, p) => tiles.slice(p * PER_SHEET, (p + 1) * PER_SHEET));
+  const preview = join(dir, 'preview');
+  mkdirSync(preview, { recursive: true });
+  for (const f of readdirSync(preview)) if (/^storyboard-sheet(-\d+)?\.jpg$/.test(f)) rmSync(join(preview, f)); // no stale page from a longer plan
+  const outs = pages.map((page, p) => {
+    const tmp = mkdtempSync(join(tmpdir(), 'storyboard-'));
+    try {
+      mkdirSync(join(tmp, 'img'));
+      mkdirSync(join(tmp, 'fonts'));
+      mkdirSync(join(tmp, 'vendor'));
+      page.forEach((t, i) => copyFileSync(t.still, join(tmp, 'img', `${String(i).padStart(2, '0')}.png`)));
+      copyFileSync(join(root, 'vendor', 'gsap.min.js'), join(tmp, 'vendor', 'gsap.min.js'));
+      copyFileSync(join(root, 'vendor', 'asset-lib', 'fonts', FONT), join(tmp, 'fonts', FONT));
+      writeFileSync(join(tmp, 'index.html'), sheetHtml(page, p * PER_SHEET).html);
+      exec(run, 'npx', ['--yes', HYPERFRAMES, 'snapshot', '--at', '0.5', '-o', join(tmp, 'out'), tmp], { env: childEnv, stdio: 'inherit' });
+      const png = join(tmp, 'out', 'frame-00-at-0.5s.png');
+      if (!existsSync(png)) throw new Error('hyperframes snapshot wrote no storyboard frame');
+      const out = join(preview, pages.length === 1 ? 'storyboard-sheet.jpg' : `storyboard-sheet-${p + 1}.jpg`);
+      exec(run, 'ffmpeg', ['-y', '-loglevel', 'error', '-i', png, '-q:v', '3', `${out}.part.jpg`]);
+      renameSync(`${out}.part.jpg`, out);
+      return out;
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+  return { outs, scenes: rows.length };
 }

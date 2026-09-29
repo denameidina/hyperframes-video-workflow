@@ -30,6 +30,9 @@ test('normalizeForSpeech rewrites money, percent, units, multipliers, ordinals, 
   assert.equal(n('Naik 70% dalam 3x percobaan.'), 'Naik tujuh puluh persen dalam tiga kali percobaan.');
   assert.equal(n('Omzet 2,5 M setahun'), 'Omzet dua koma lima miliar setahun');
   assert.equal(n('Butuh 3-5 hari, bukan 3–5 minggu.'), 'Butuh tiga sampai lima hari, bukan tiga sampai lima minggu.');
+  assert.equal(n('Waktunya 3-5.'), 'Waktunya tiga sampai lima.');
+  assert.equal(n('antara 3 - 5, lalu'), 'antara tiga sampai lima, lalu');
+  assert.equal(n('Versi 1.2-1.5'), 'Versi satu koma dua-satu koma lima', 'decimals are not a range');
   assert.equal(n('Ini yang ke-3 kalinya di 2026.'), 'Ini yang ketiga kalinya di dua ribu dua puluh enam.');
   assert.equal(n('Pakai v3 dan 4K'), 'Pakai v3 dan 4K');
   assert.equal(n('Tunggu <short pause> 3 detik.'), 'Tunggu <short pause> tiga detik.');
@@ -59,4 +62,5 @@ test('script helpers: body, paragraphs, tags per provider, caption words', () =>
   assert.deepEqual(splitParagraphs(scriptBody('# Judul\n\n#1 masalahnya: #AIagent itu mahal.\n')), ['#1 masalahnya: #AIagent itu mahal.']);
   const script = '# Naskah - demo\n\nHook dulu.\n\nIsi kedua.\n\n## Fakta\n\n- "Rp2,5 juta" — research/brief.md\n\n## Catatan\n\nbukan narasi\n';
   assert.deepEqual(splitParagraphs(scriptBody(script)), ['Hook dulu.', 'Isi kedua.'], 'narration ends at the first ## section');
+  assert.deepEqual(splitParagraphs(scriptBody('# T\n\nSatu.\n\n### Sub\n\nIni lanjut.\n')), ['Satu.', 'Ini lanjut.'], 'deeper headings are never read aloud');
 });

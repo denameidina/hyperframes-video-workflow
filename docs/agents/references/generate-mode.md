@@ -28,6 +28,13 @@ repurposed older project (rewritten, read by TTS).
 
 ## Story (generate)
 
+### 0. Scaffold
+
+`npm run video -- new <slug> --generate` (never the plain `new`: its starter binds a base
+video to `processed.mp4`, and `--generate` refuses a folder that already exists). It
+creates `research/`, an empty `sources.json`, the generate starter, and a brief stub with
+`mode: generate`.
+
 ### 1. Research
 
 - `research/brief.md`: Dena's brief, verbatim.
@@ -205,7 +212,8 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
    `| # | time | spoken words | style / pattern | what appears | example |`.
 2. `npm run video -- storyboard <slug>` → `preview/storyboard-sheet.jpg` (each scene's
    example still with its number, time, and words; styles without cached stills are
-   rendered once with `npm run check:style-examples -- <style>`).
+   rendered once with `npm run check:style-examples -- <style>`). More than 28 scenes
+   make `storyboard-sheet-1.jpg`, `-2.jpg`, … (numbers continue).
 3. Check triggers R1, R2, R5, R6 as in edit mode; R1's sources are `script.md ## Fakta`
    and `research/`. R3 and R4 do not apply.
 4. Stop. Show Dena the sheet, `storyboard.md`, the style world, and the music. She
@@ -235,6 +243,7 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
 
 ## QA (generate)
 
-Add to `qa-checklist.md`: every second is covered by a scene; hidden-rail beats really are
-on screen in their scene; the voice is not sped up; BGM is audible in pauses and sits
-under the voice; every on-screen fact has a `## Fakta` source.
+`qa-checklist.md` section Generate Mode lists what changes: every second is covered by a
+scene; hidden-rail beats really are on screen in their scene; the voice is not sped up;
+BGM is audible in pauses and sits under the voice; every on-screen fact has a `## Fakta`
+source; the 1.2x, verbatim-transcript-hook, and face checks do not apply.

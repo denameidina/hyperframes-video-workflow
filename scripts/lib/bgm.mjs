@@ -20,10 +20,11 @@ export const BGM = {
 const r3 = (x) => Math.round(x * 1000) / 1000;
 
 // How many copies of the track cover the video: the first starts at `from`, each next overlaps by the crossfade.
+// A looped bed gets one spare copy (atrim cuts the rest): a catalog duration estimated from an mp3 can run long.
 export function bgmCopies({ trackDuration, from, duration, xfade = BGM.xfade }) {
   const first = trackDuration - from;
   if (!(first > xfade)) throw new Error(`--from ${from} leaves less than ${xfade} s of the track`);
-  return first >= duration ? 1 : 1 + Math.ceil((duration - first) / (trackDuration - xfade));
+  return first >= duration + xfade ? 1 : 2 + Math.ceil(Math.max(0, duration - first) / (trackDuration - xfade));
 }
 
 export const bgmGain = (inputI) => (inputI === null ? 0 : r3(Math.max(-30, Math.min(20, BGM.target - inputI))));
@@ -70,7 +71,12 @@ export function runBgm({ dir, root = '.', trackId, from = 0, run = spawnSync }) 
   const out = join(dir, 'bgm.wav');
   const part = join(dir, 'bgm.part.wav');
   rmSync(part, { force: true });
-  exec(run, bgmArgs({ track, from: f, copies, voice, duration, gainDb, out: part }));
+  try {
+    exec(run, bgmArgs({ track, from: f, copies, voice, duration, gainDb, out: part }));
+  } catch (e) {
+    rmSync(part, { force: true });
+    throw e;
+  }
   renameSync(part, out);
   const meta = { version: 1, track: t.id, file: t.file, sha256: createHash('sha256').update(readFileSync(out)).digest('hex'), from: f, duration, copies, gainDb, duck: BGM.duck };
   writeJson(join(dir, 'bgm.json'), meta);

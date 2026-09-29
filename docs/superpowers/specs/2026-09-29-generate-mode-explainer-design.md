@@ -338,3 +338,9 @@ lint/validate bersih → render 1080×1920, audio −16,1 LUFS) lulus.
 11. **Test:** `scripts/generate-lib.test.mjs` (fungsi murni) dan `scripts/generate.test.mjs`
     (CLI) masuk `npm run test:video`.
 12. **Nomor kriteria:** RD-03-75…RD-03-87 dan RD-06-23…RD-06-28 (+ rumusan RD-06-02).
+13. **Pasca-review (2026-09-29):** still dicocokkan per indeks snapshot (label file hanya
+    satu desimal, mis. `34.45` → `frame-12-at-34.5s.png`; set yang jumlahnya berbeda dianggap
+    basi); lebih dari 28 scene → `storyboard-sheet-1.jpg`, `-2.jpg`, … (snapshot memotong di
+    4096 px); label maksimal 60 karakter. `video voice` menolak project yang bukan mode
+    generate; semua proses anak `voice`/`bgm`/`storyboard` berjalan tanpa kunci Gemini;
+    loop BGM memakai satu salinan cadangan. RD-03 mendapat aturan prioritas mode generate.
