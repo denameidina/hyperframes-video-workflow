@@ -16,7 +16,8 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   narasi (teks sebelum section `## ` pertama, tanpa baris judul `# ` dan komentar HTML),
   memecah paragraf di baris kosong lalu menormalisasi tiap paragraf (bilangan, desimal, rupiah +
   `rb/jt/M/T`, persen, `Nx`, `ke-N`, rentang `a-b`, leksikon `config/pronunciation.json`
-  dengan `only` per provider) sebelum dikirim ke provider; `words.json` dan
+  dengan `only` per provider; istilah huruf kecil juga cocok dengan bentuk berhuruf kapital
+  di awal kalimat) sebelum dikirim ke provider; `words.json` dan
   `voice-meta.json` memakai teks naskah.
 - **RD-06-03** (Event-driven) — When WAV paragraf dengan kunci
   `sha256(provider, model, voice, style, speed, language, teks ternormalisasi)` sudah ada di

@@ -72,11 +72,16 @@ export function loadLexicon(root = '.') {
   return data.entries;
 }
 
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+// A lowercase term also matches its capitalized form ("Agent" at the start of a sentence -> "Ejen").
 function applyLexicon(text, lexicon, provider) {
   let out = text;
   for (const e of lexicon) {
     if (e.only && !e.only.includes(provider)) continue;
-    out = out.replace(new RegExp(`${START}${escapeRe(e.term)}${END}`, 'gu'), () => e.say);
+    const forms = [[e.term, e.say]];
+    if (capitalize(e.term) !== e.term) forms.push([capitalize(e.term), capitalize(e.say)]);
+    for (const [term, say] of forms) out = out.replace(new RegExp(`${START}${escapeRe(term)}${END}`, 'gu'), () => say);
   }
   return out;
 }

@@ -45,6 +45,9 @@ test('the lexicon replaces whole words, only for the listed providers', () => {
   const lexicon = [{ term: 'CRM', say: 'si ar em', only: ['supertonic'] }, { term: 'Nafanesia', say: 'nafa nesia' }];
   assert.equal(normalizeForSpeech('CRM Nafanesia, bukan CRMX.', { lexicon, provider: 'supertonic' }), 'si ar em nafa nesia, bukan CRMX.');
   assert.equal(normalizeForSpeech('CRM Nafanesia.', { lexicon, provider: 'gemini' }), 'CRM nafa nesia.');
+  // a lowercase term also matches its capitalized form at the start of a sentence; uppercase terms stay exact
+  const cased = [{ term: 'agent', say: 'ejen' }, { term: 'AI', say: 'eiai' }];
+  assert.equal(normalizeForSpeech('Agent salah, agent-nya diam. AI-nya, bukan Ai.', { lexicon: cased }), 'Ejen salah, ejen-nya diam. eiai-nya, bukan Ai.');
   const root = voiceRoot();
   assert.deepEqual(loadLexicon(root), []);
   writeFileSync(join(root, 'config/pronunciation.json'), JSON.stringify({ version: 1, entries: [{ term: 'CRM' }] }));

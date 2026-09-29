@@ -79,6 +79,11 @@ ditunda atas pilihan Dena.
 - Semua sampel mendapat 2 untuk ucapan. Menurut Dena yang salah: istilah Inggris dan
   intonasi. Leksikon Supertonic ditambah: `agent`, `deploy`, `workflow`, `prompt`, `chat`,
   `dites`. Intonasi (tanya, register santai) adalah batas model Supertonic, bukan leksikon.
+- Explainer pertama (`ai-agent-gagal`, 2026-09-29): "ei ai" (dua kata) membuat Supertonic
+  mengeja "AI" terlalu lama → leksikon `AI` = `eiai` (satu kata; paling pendek dan tetap
+  terdengar "AI" di whisper). `Agent` di awal kalimat lolos dari leksikon → istilah huruf
+  kecil kini juga cocok dengan bentuk kapitalnya. Supertonic tidak deterministik: teks yang
+  sama menghasilkan take berbeda, jadi render ulang paragraf bisa mengubah intonasinya.
 
 ## Referensi
 
