@@ -342,10 +342,11 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 - `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, createdAt }`
   (`text` = Teks persis atau `null`; `voice` selalu `null` untuk format musik);
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
-- `beats.json` (format musik, ADR-0027): `{ version: 1, track, file, sha256, meter: "4/4", bpm, from, bars, duration, loop, beats: [s], downbeats: [s], barList: [{ n, start, end, energy }] }`
+- `beats.json` (format musik, ADR-0027): `{ version: 1, track, file, sha256, meter: "4/4", bpm, downbeatConfidence, from, bars, duration, loop, warnings: [text], beats: [s], downbeats: [s], barList: [{ n, start, end, energy }] }`
   dalam waktu video (0 = titik potong); ditulis `npm run video -- music`. Cache analisis per
-  lagu: `shared/music/beats/<id>.json` (`{ version, meter, bpm, duration, beats, downbeats, beatEnergy, track, sha256 }`,
-  waktu lagu), dianalisis ulang bila sha256 berkas lagu berbeda.
+  lagu: `shared/music/beats/<id>.json` (`{ version, meter, bpm, duration, beats, downbeats, downbeatConfidence, beatEnergy, track, sha256, analyzer }`,
+  waktu lagu), dianalisis ulang bila sha256 berkas lagu atau `analyzer` (hash `beats.py` +
+  paket) berbeda.
 
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 

@@ -127,18 +127,22 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   --bars <n>` dijalankan untuk proyek `kinetic-post` / `motion-short`, the CLI shall
   menganalisis lagu dengan `scripts/lib/music/beats.py` lewat
   `uv run --python 3.12 --with librosa==1.0.0 --with soundfile==0.14.0` (tempo, beat,
-  downbeat 4/4, energi per beat; di-cache di `shared/music/beats/<id>.json` bersama sha256
-  berkas lagu) tanpa kunci Gemini di env proses anak.
+  downbeat 4/4 = fase dengan onset pita rendah < 200 Hz terkuat beserta
+  `downbeatConfidence` = fase terbaik / kedua, energi per beat; di-cache di
+  `shared/music/beats/<id>.json` bersama sha256 berkas lagu dan id analyzer = hash
+  `beats.py` + paket) tanpa kunci Gemini di env proses anak.
 - **RD-06-31** (Event-driven) — When analisis ada, the CLI shall memotong dari downbeat
   pertama ≥ `--from` tepat `n` bar ke `processed-audio.wav` (48 kHz stereo, −16 LUFS;
   kinetic-post fade 20 ms di kedua ujung, motion-short fade-in 20 ms dan fade-out sepanjang
-  bar terakhir), menulis `beats.json` (waktu video), dan menyesuaikan `data-duration`
-  elemen `data-voice-duration` di `index.html`.
+  bar terakhir), menulis `beats.json` (waktu video), menyesuaikan `data-duration` elemen
+  `data-voice-duration` di `index.html`, dan mencetak peringatan (juga di `beats.json`
+  `warnings`) bila `downbeatConfidence` < 1,25 atau ada bar yang panjangnya meleset > 10%
+  dari 240/BPM; bila grid downbeat habis, bar berikutnya dihitung dari downbeat terakhir.
 - **RD-06-32** (Unwanted) — If proyeknya explainer atau bukan mode generate, lagunya tidak
   dikenal, ditolak, atau lisensinya tidak diizinkan, `--bars` bukan bilangan bulat positif,
   potongan di luar rentang durasi format (pesan menyebut rentang `--bars` pada tempo lagu),
   atau ffmpeg gagal, then the CLI shall berhenti tanpa mengubah `processed-audio.wav`;
-  cache yang rusak atau sha-nya beda dianalisis ulang.
+  cache yang rusak, sha-nya beda, atau dari versi analyzer lain dianalisis ulang.
 
 ## Referensi
 

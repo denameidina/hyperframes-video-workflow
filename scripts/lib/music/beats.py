@@ -19,9 +19,15 @@ def analyse(path):
     if len(frames) < 8:
         sys.exit('fewer than 8 beats found; does this track have a pulse?')
     times = librosa.frames_to_time(frames, sr=sr, hop_length=HOP)
-    # 4/4: the downbeat phase is the one whose every 4th beat has the most onset strength
-    strength = onset[np.clip(frames, 0, len(onset) - 1)]
-    phase = int(np.argmax([strength[p::4].sum() for p in range(4)]))
+    # 4/4: the downbeat phase is the one whose every 4th beat has the most low-band (kick, under 200 Hz) onset.
+    # The full-band onset is nearly flat across phases (snares and hats on 2 and 4); on the catalog the low band
+    # was decisive and matched the start of the loop tracks.
+    low = librosa.onset.onset_strength(y=y, sr=sr, hop_length=HOP, fmax=200, n_mels=16)
+    strength = low[np.clip(frames, 0, len(low) - 1)]
+    sums = np.array([strength[p::4].sum() for p in range(4)])
+    order = np.argsort(sums)[::-1]
+    phase = int(order[0])
+    confidence = float(sums[order[0]] / max(sums[order[1]], 1e-9))  # best phase / second best; near 1 = unsure
     rms = librosa.feature.rms(y=y, hop_length=HOP)[0]
     edges = [min(int(f), len(rms) - 1) for f in frames] + [len(rms)]
     energy = np.array([rms[edges[k]:max(edges[k] + 1, edges[k + 1])].mean() for k in range(len(frames))])
@@ -38,6 +44,7 @@ def analyse(path):
         'duration': r(len(y) / sr),
         'beats': [r(t) for t in times],
         'downbeats': [r(t) for t in times[phase::4]],
+        'downbeatConfidence': r(confidence),
         'beatEnergy': [r(e) for e in energy],
     }
 

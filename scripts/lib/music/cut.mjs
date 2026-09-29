@@ -16,7 +16,10 @@ import { writeJson } from '../voice/render.mjs';
 
 export const ANALYZER = { python: '3.12', packages: ['librosa==1.0.0', 'soundfile==0.14.0'] };
 export const EDGE_FADE = 0.02; // seconds: no click at the start, or where a loop joins
+export const DOWNBEAT_SURE = 1.25; // best / second-best phase; below it `video music` asks for a listen
 const SCRIPT = join(import.meta.dirname, 'beats.py');
+// a cached analysis is reused only when it came from this analyser: beats.py and the pinned packages
+export const ANALYZER_ID = createHash('sha256').update(readFileSync(SCRIPT)).update(ANALYZER.packages.join(',')).digest('hex').slice(0, 12);
 const r3 = (x) => Math.round(x * 1000) / 1000;
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 
@@ -29,7 +32,7 @@ function checkAnalysis(a) {
   return a;
 }
 
-// shared/music/beats/<id>.json keeps the analysis next to the sha256 of the file it came from
+// shared/music/beats/<id>.json keeps the analysis next to the sha256 of the file and the analyser it came from
 export function analyzeTrack({ root = '.', track, run = spawnSync }) {
   const file = join(root, MUSIC_DIR, track.file);
   const sha = sha256(file);
@@ -37,7 +40,7 @@ export function analyzeTrack({ root = '.', track, run = spawnSync }) {
   if (existsSync(cacheFile)) {
     try {
       const cached = JSON.parse(readFileSync(cacheFile, 'utf8'));
-      if (cached.sha256 === sha) return checkAnalysis(cached);
+      if (cached.sha256 === sha && cached.analyzer === ANALYZER_ID) return checkAnalysis(cached);
     } catch {
       // unreadable or unusable cache: analyse again
     }
@@ -49,7 +52,7 @@ export function analyzeTrack({ root = '.', track, run = spawnSync }) {
   } catch {
     throw new Error('the beat analyser printed no JSON');
   }
-  const out = { ...checkAnalysis(a), track: track.id, sha256: sha };
+  const out = { ...checkAnalysis(a), track: track.id, sha256: sha, analyzer: ANALYZER_ID };
   mkdirSync(join(root, MUSIC_DIR, 'beats'), { recursive: true });
   writeFileSync(`${cacheFile}.part`, `${JSON.stringify(out)}\n`);
   renameSync(`${cacheFile}.part`, cacheFile);
@@ -69,7 +72,8 @@ export function planCut({ analysis, from = 0, bars, format }) {
   const i = downs.findIndex((d) => d >= from - 1e-6);
   if (i < 0) throw new Error(`--from ${from} is after the last downbeat (${downs.at(-1)} s) of the track`);
   const start = downs[i];
-  const edge = (k) => downs[i + k] ?? start + k * bar; // the grid can run out near the end of a track
+  // the grid can run out near the end of a track: count on in bar periods from the last detected downbeat
+  const edge = (k) => downs[i + k] ?? downs.at(-1) + (i + k - (downs.length - 1)) * bar;
   const end = edge(bars);
   if (end > analysis.duration + 1e-6) throw new Error(`--bars ${bars} from ${r3(start)} s runs past the end of the track (${analysis.duration} s)`);
   const duration = r3(end - start);
@@ -81,10 +85,16 @@ export function planCut({ analysis, from = 0, bars, format }) {
     const v = analysis.beats.map((t, k) => [t, analysis.beatEnergy?.[k] ?? 0]).filter(([t]) => t >= s - 1e-6 && t < e - 1e-6).map(([, x]) => x);
     return v.length ? r3(v.reduce((a, b) => a + b, 0) / v.length) : 0;
   };
+  const warnings = [];
+  for (let k = 0; k < bars; k++) {
+    const len = r3(edge(k + 1) - edge(k));
+    if (Math.abs(len - bar) > 0.1 * bar) warnings.push(`bar ${k + 1} is ${len} s, not ${r3(bar)} s: the beat grid is uneven there; listen to the cut or try another --from`);
+  }
   return {
     start: r3(start),
     end: r3(end),
     duration,
+    warnings,
     loop: format === 'kinetic-post',
     beats: analysis.beats.filter(inside).map(shift),
     downbeats: downs.filter(inside).map(shift),
@@ -126,7 +136,12 @@ export function runMusic({ dir, root = '.', trackId, from = 0, bars, run = spawn
     throw e;
   }
   renameSync(part, audio);
-  const meta = { version: 1, track: t.id, file: t.file, sha256: analysis.sha256, meter: analysis.meter || '4/4', bpm: analysis.bpm, from: cut.start, bars: n, duration: cut.duration, loop: cut.loop, beats: cut.beats, downbeats: cut.downbeats, barList: cut.barList };
+  const confidence = analysis.downbeatConfidence ?? null;
+  const warnings = [
+    ...(confidence !== null && confidence < DOWNBEAT_SURE ? [`downbeats are uncertain on this track (confidence ${confidence}): listen to where the cut starts and loops, or pick another track`] : []),
+    ...cut.warnings,
+  ];
+  const meta = { version: 1, track: t.id, file: t.file, sha256: analysis.sha256, meter: analysis.meter || '4/4', bpm: analysis.bpm, downbeatConfidence: confidence, from: cut.start, bars: n, duration: cut.duration, loop: cut.loop, warnings, beats: cut.beats, downbeats: cut.downbeats, barList: cut.barList };
   writeJson(join(dir, 'beats.json'), meta);
   const index = join(dir, 'index.html');
   if (existsSync(index)) {

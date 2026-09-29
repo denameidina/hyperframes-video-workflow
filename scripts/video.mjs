@@ -243,6 +243,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       if (!values.track) throw new Error('music needs --track <id> (npm run music -- list --mood upbeat)');
       const meta = runMusic({ dir, root, trackId: values.track, from: values.from ?? 0, bars: values.bars, run: childRun });
       console.log(`music ${join(dir, 'processed-audio.wav')} (${meta.track} from ${meta.from} s, ${meta.bars} bars at ${meta.bpm} BPM = ${meta.duration} s${meta.loop ? ', loop' : ''})`);
+      for (const w of meta.warnings) console.log(`warning: ${w}`);
       return meta;
     }
     if (cmd === 'bgm') {

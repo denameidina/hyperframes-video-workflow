@@ -4,13 +4,13 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
-import { analyzerArgs, barsHint, musicArgs, planCut } from './lib/music/cut.mjs';
+import { ANALYZER_ID, analyzerArgs, barsHint, musicArgs, planCut } from './lib/music/cut.mjs';
 import { main, scaffold } from './video.mjs';
 
 const REPO = process.cwd();
 // 120 BPM: a beat every 0.5 s, a bar every 2 s; downbeats on 0.5, 2.5, ...; the first beat of each bar is loud
 const ANALYSIS = {
-  version: 1, meter: '4/4', bpm: 120, duration: 60,
+  version: 1, meter: '4/4', bpm: 120, duration: 60, downbeatConfidence: 2,
   beats: Array.from({ length: 119 }, (_, k) => 0.5 + k * 0.5),
   downbeats: Array.from({ length: 30 }, (_, k) => 0.5 + k * 2),
   beatEnergy: Array.from({ length: 119 }, (_, k) => (k % 4 === 0 ? 1 : 0.5)),
@@ -33,8 +33,8 @@ test('planCut refuses a bad bar count, a cut outside the format, and a --from pa
   assert.throws(() => planCut({ analysis: ANALYSIS, from: 0, bars: Number.NaN, format: 'motion-short' }), /--bars must be a whole number of bars; .*fits --bars 8–20/);
   assert.throws(() => planCut({ analysis: ANALYSIS, from: 59, bars: 4, format: 'kinetic-post' }), /--from 59 is after the last downbeat/);
   assert.throws(() => planCut({ analysis: ANALYSIS, from: 50, bars: 8, format: 'kinetic-post' }), /runs past the end of the track/);
-  const sparse = { ...ANALYSIS, downbeats: ANALYSIS.downbeats.slice(0, 6) }; // the grid ends at 10.5 s
-  assert.equal(planCut({ analysis: sparse, from: 0, bars: 8, format: 'kinetic-post' }).end, 16.5, 'bar period beyond the grid');
+  const sparse = { ...ANALYSIS, downbeats: [0.5, 2.5, 4.5, 6.6] }; // the grid ends at 6.6 s, a little late
+  assert.equal(planCut({ analysis: sparse, from: 0, bars: 5, format: 'kinetic-post' }).end, 10.6, 'bar period counted on from the last detected downbeat');
   assert.equal(barsHint(120, 'explainer'), 'at 120 BPM a bar is 2 s; a explainer (30–90 s) fits --bars 15–45');
 });
 
@@ -63,13 +63,13 @@ function musicRoot() {
 }
 
 // uv answers with the analysis; ffmpeg measures -20 LUFS and writes its output file
-function musicRun({ failCut = false } = {}) {
+function musicRun({ failCut = false, analysis = ANALYSIS } = {}) {
   const calls = [];
   const run = (cmd, args, opts = {}) => {
     const name = basename(cmd);
     calls.push([name, ...args]);
     assert.equal(opts.env?.GEMINI_API_KEY, undefined, 'no Gemini key in a child process');
-    if (name === 'uv') return { status: 0, stdout: `${JSON.stringify(ANALYSIS)}\n`, stderr: '' };
+    if (name === 'uv') return { status: 0, stdout: `${JSON.stringify(analysis)}\n`, stderr: '' };
     if (name === 'ffmpeg' && args.includes('null')) return { status: 0, stdout: '', stderr: '{\n"input_i" : "-20.00"\n}' };
     if (name === 'ffmpeg') {
       writeFileSync(args.at(-1), failCut ? 'half' : 'RIFF-MUSIC');
@@ -114,4 +114,21 @@ test('video music refuses an explainer, a missing or rejected track, a missing -
   assert.equal(readFileSync(join(dir, 'processed-audio.wav'), 'utf8'), 'OLD');
   assert.deepEqual(readdirSync(dir).filter((f) => f.includes('.part')), []);
   assert.equal(existsSync(join(ex.dir, 'beats.json')), false);
+});
+
+test('planCut warns about an uneven bar; video music warns about uncertain downbeats and re-analyses after an analyser change', () => {
+  const uneven = { ...ANALYSIS, downbeats: [0.5, 2.5, 4.5, 7.0, 9.0, 11.0, 13.0] };
+  assert.deepEqual(planCut({ analysis: uneven, from: 0, bars: 5, format: 'kinetic-post' }).warnings, ['bar 3 is 2.5 s, not 2 s: the beat grid is uneven there; listen to the cut or try another --from']);
+  assert.deepEqual(planCut({ analysis: ANALYSIS, from: 0, bars: 6, format: 'kinetic-post' }).warnings, []);
+  const { root } = musicRoot();
+  scaffold({ slug: 'post', root, generate: true, format: 'kinetic-post' });
+  const unsure = musicRun({ analysis: { ...ANALYSIS, downbeatConfidence: 1.1 } });
+  const meta = main(['music', 'post', '--track', 'm01-beat', '--bars', '6'], { root, env: {}, run: unsure.run });
+  assert.match(meta.warnings[0], /downbeats are uncertain on this track \(confidence 1\.1\)/);
+  const cache = join(root, 'shared/music/beats/m01-beat.json');
+  assert.equal(JSON.parse(readFileSync(cache, 'utf8')).analyzer, ANALYZER_ID);
+  writeFileSync(cache, JSON.stringify({ ...JSON.parse(readFileSync(cache, 'utf8')), analyzer: 'old' }));
+  const again = musicRun();
+  main(['music', 'post', '--track', 'm01-beat', '--bars', '6'], { root, env: {}, run: again.run });
+  assert.equal(again.calls.filter((c) => c[0] === 'uv').length, 1, 'a cache from another analyser version is analysed again');
 });
