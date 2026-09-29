@@ -6,15 +6,17 @@
 //        npm run video -- layers <slug> (--at <s> | --image <file>) --name NN-name   (parallax source + subject)
 // Cut-out spec: docs/superpowers/specs/2026-09-27-vox-mix-media-design.md
 //        npm run video -- sources <slug> [--add-shared a,b] [--set <id> --role <r> [--note <t>] [--detected]] [--remove <id>]
+//        npm run video -- cut <slug>   (processed.mp4 + cut-map.json from cut-list.json + sources.json)
 // Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
 // Multi-source spec: docs/superpowers/specs/2026-09-29-multi-source-projects-design.md (ADR-0022)
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, syncManifest, writeManifest } from './lib/video-sources.mjs';
+import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
+import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, sourceFile, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
 export const HYPERFRAMES = 'hyperframes@0.7.24';
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -175,6 +177,36 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
     if (values.set !== undefined) setSource(dir, values.set, { role: values.role, note: values.note, by: values.detected ? 'detected' : 'user' });
     if (values.remove !== undefined) removeSource(dir, values.remove);
     console.log(formatSources(readManifest(dir)));
+    return;
+  }
+  if (cmd === 'cut') {
+    const dir = projectDir(slug, root);
+    const cutFile = join(dir, 'cut-list.json');
+    if (!existsSync(cutFile)) throw new Error(`${cutFile} not found; the Story phase writes it first`);
+    const manifest = readManifest(dir);
+    const cutList = JSON.parse(readFileSync(cutFile, 'utf8'));
+    const segs = validateCutList(cutList, manifest);
+    const loudness = {};
+    for (const id of new Set(segs.map((g) => g.source))) {
+      const file = sourceFile(dir, manifest.sources.find((s) => s.id === id));
+      const r = run('ffmpeg', loudnessArgs(file), { encoding: 'utf8', maxBuffer: 64 << 20 });
+      if (r.status !== 0) throw new Error(`loudness pass failed for ${id} (${file})`);
+      loudness[id] = parseLoudnorm(r.stderr);
+    }
+    const out = join(dir, 'processed.mp4');
+    const part = `${out}.part`;
+    const { args, cutMap } = buildCutPlan({ manifest, cutList, dir, loudness, out: part });
+    rmSync(part, { force: true });
+    const r = run('ffmpeg', args, { stdio: 'inherit', env });
+    if (r.status !== 0) {
+      rmSync(part, { force: true });
+      throw new Error(`ffmpeg exited with ${r.status}; processed.mp4 was not changed`);
+    }
+    renameSync(part, out);
+    const mapFile = join(dir, 'cut-map.json');
+    writeFileSync(`${mapFile}.part`, `${JSON.stringify(cutMap, null, 2)}\n`);
+    renameSync(`${mapFile}.part`, mapFile);
+    console.log(`processed ${out} (${cutMap.duration} s from ${cutMap.segments.length} segments)`);
     return;
   }
   if (cmd === 'cutout') {

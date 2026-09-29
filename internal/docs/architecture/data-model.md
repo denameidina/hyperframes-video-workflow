@@ -204,12 +204,21 @@ Transcript per sumber video: `transcripts/<id>.json` (timestamp sumber).
 
 ## `cut-list.json` (Story)
 
-`{ source, targetDuration, speed, primaryHook, segments: [{ sourceStart, sourceEnd, action, reason }], notes: [] }`.
+`{ targetDuration, speed, primaryHook, segments: [{ source, sourceStart, sourceEnd, action, reason, cropX? }], notes: [] }`.
+`source` = id di `sources.json` (wajib video `speech` untuk segmen yang dirender); field `source` tingkat atas dihapus (ADR-0022).
+Segmen yang dirender (`keep | tighten | move-to-hook | preserve-human`) muncul di output sesuai urutan array; segmen `cut-*` hanya catatan.
+`cropX` (0–1, default 0.5) menggeser crop take yang lebih lebar dari 9:16.
 `primaryHook`: `text`, `sourceStart`, `sourceEnd`, `outputStart` (selalu `0`), `outputEnd` (= `hook_end`, diputuskan
 Story tanpa batas detik tetap), `reason`, `lengthReason`, `openLoop`, `payoff { outputStart, text }`, `transition`, `originalOccurrence` ∈ `removed | intentional-callback`.
 Jendela hook `0`–`outputEnd` dipakai hook card dan R4 (ADR-0019).
-`action` ∈ `keep | tighten | move-to-hook | cut-silence | cut-filler | cut-repeat | cut-tangent | cut-unclear | preserve-human`.
-`speed` default `1.2`.
+`action` ∈ `keep | tighten | move-to-hook | cut-silence | cut-filler | cut-repeat | cut-tangent | cut-unclear | cut-retake | preserve-human` (`cut-retake` = take ulang yang tidak dipakai).
+`speed` default `1.2` (0.5–2.0).
+
+## `cut-map.json` (Story, generated)
+
+Ditulis `npm run video -- cut <slug>` bersama `processed.mp4`:
+`{ speed, duration, segments: [{ index, source, sourceStart, sourceEnd, outStart, outEnd }] }`.
+`outStart/outEnd` = detik timeline `processed.mp4`. Jangan ditulis tangan.
 
 ## `caption-beats.json` (Screen Plan)
 
