@@ -336,9 +336,15 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 - `gates.json` (ADR-0026): `{ version: 1, log: [{ gate: 1|2|3, decision: "approve"|"revise"|"qa"|"edit", note, at, by: "studio"|"cli", fingerprint: { "<file>": "<sha256>" } | null }] }`.
   Satu-satunya penulis: `scripts/lib/gates.mjs` (log, hanya ditambah, atomik). Persetujuan
   berlaku untuk sidik jari file gate (G1 `script.md` + `processed-audio.wav`; G2 storyboard
-  sheet + `storyboard.md`; G3 `renders/<slug>.mp4`); `edit` tanpa sidik jari.
+  sheet + `storyboard.md`; G3 `renders/<slug>.mp4`); `edit` tanpa sidik jari. Format musik
+  (ADR-0027): G1 = `script.md` + `processed-audio.wav` + storyboard sheet + `storyboard.md`,
+  G2 = render; `gate` hanya 1|2.
 - `research/request.json` (ADR-0026): `{ version: 1, brief, urls: [], repurpose, voice, duration, style, music, createdAt }`;
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
+- `beats.json` (format musik, ADR-0027): `{ version: 1, track, file, sha256, meter: "4/4", bpm, from, bars, duration, loop, beats: [s], downbeats: [s], barList: [{ n, start, end, energy }] }`
+  dalam waktu video (0 = titik potong); ditulis `npm run video -- music`. Cache analisis per
+  lagu: `shared/music/beats/<id>.json` (`{ version, meter, bpm, duration, beats, downbeats, beatEnergy, track, sha256 }`,
+  waktu lagu), dianalisis ulang bila sha256 berkas lagu berbeda.
 
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 

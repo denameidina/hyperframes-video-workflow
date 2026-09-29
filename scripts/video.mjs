@@ -13,6 +13,7 @@
 //        npm run video -- new <slug> --generate [--format explainer|kinetic-post|motion-short]   (generate mode: templates/dena-generate, research/, brief stub)
 //        npm run video -- voice <slug> [--preset <p>]   (script.md -> voice/, processed-audio.wav, processed-transcript.json)
 //        npm run video -- bgm <slug> --track <id> [--from <s>]   (shared/music track -> ducked bgm.wav + bgm.json)
+//        npm run video -- music <slug> --track <id> [--from <s>] --bars <n>   (kinetic-post / motion-short: music cut on bars -> processed-audio.wav + beats.json, ADR-0027)
 //        npm run video -- storyboard <slug>   (overlay-timeline.json scenes -> preview/storyboard-sheet.jpg)
 //        npm run video -- gate <slug> [approve|revise|qa <n>] [--note "…"]   (generate-mode gate status / decision, ADR-0026)
 // Generate-mode spec: docs/superpowers/specs/2026-09-29-generate-mode-explainer-design.md (ADR-0025)
@@ -23,6 +24,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, parseEnv } from 'node:util';
 import { runBgm } from './lib/bgm.mjs';
+import { runMusic } from './lib/music/cut.mjs';
 import { GENERATE_TEMPLATE, briefStub, musicStarter, voiceStep } from './lib/generate.mjs';
 import { checkFormat, isMusicFormat } from './lib/formats.mjs';
 import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
@@ -219,7 +221,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     console.log(`gate ${entry.gate} ${action} recorded (${entry.at})`);
     return entry;
   }
-  if (cmd === 'voice' || cmd === 'bgm' || cmd === 'storyboard') {
+  if (cmd === 'voice' || cmd === 'bgm' || cmd === 'storyboard' || cmd === 'music') {
     const dir = projectDir(slug, root);
     if (!existsSync(dir)) throw new Error(`${dir} not found; run npm run video -- new ${slug} --generate`);
     // every child process (uv, whisper, ffmpeg, npx) runs without Gemini keys (RD-02-24); fetch gets the key itself
@@ -235,6 +237,12 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
         for (const w of meta.warnings) console.log(`warning: ${w}`);
         return meta;
       });
+    }
+    if (cmd === 'music') {
+      if (!values.track) throw new Error('music needs --track <id> (npm run music -- list --mood upbeat)');
+      const meta = runMusic({ dir, root, trackId: values.track, from: values.from ?? 0, bars: values.bars, run: childRun });
+      console.log(`music ${join(dir, 'processed-audio.wav')} (${meta.track} from ${meta.from} s, ${meta.bars} bars at ${meta.bpm} BPM = ${meta.duration} s${meta.loop ? ', loop' : ''})`);
+      return meta;
     }
     if (cmd === 'bgm') {
       if (!values.track) throw new Error('bgm needs --track <id> (npm run music -- list)');

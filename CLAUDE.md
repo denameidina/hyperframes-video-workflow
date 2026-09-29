@@ -215,7 +215,8 @@ npm run test:voice             # unit test the voice adapter and listening test
 npm run music -- add <url|file> --source <page> --license cc0|public-domain|pixabay|mixkit --title <t> --author <a> --mood <m> --energy <1-5>  # BGM -> shared/music/ (ADR-0024)
 npm run music -- list [--mood <m>] [--min-dur <s>]       # BGM catalog (rejected tracks hidden)
 npm run music -- check                                   # files, sha256, license allowlist, license proofs
-npm run video -- new <slug> --generate      # generate mode: starter without base video, research/, brief stub (ADR-0025)
+npm run video -- new <slug> --generate [--format explainer|kinetic-post|motion-short]  # generate mode: starter without base video, research/, brief stub (ADR-0025, ADR-0027)
+npm run video -- music <slug> --track <id> [--from <s>] --bars <n>  # kinetic-post / motion-short: music cut on bars -> processed-audio.wav + beats.json (ADR-0027)
 npm run video -- voice <slug> [--preset <p>]  # script.md -> voiceover, processed-audio.wav, processed-transcript.json
 npm run video -- bgm <slug> --track <id> [--from <s>]  # shared/music track -> ducked bgm.wav + bgm.json
 npm run video -- storyboard <slug>          # Gate 2 sheet from each scene's style example -> preview/storyboard-sheet.jpg
