@@ -6,7 +6,7 @@
 //        npm run voice -- clone --consent <audio> [--name dena] [--force]
 //        npm run voice -- design --name <n> --prompt "<deskripsi>" [--gender female|male|neutral] [--language id-ID] [--force]
 //        npm run voice -- voices [--lang <bcp47>] [--search <kata>]
-//        npm run voice -- test build [--seed <n>]
+//        npm run voice -- test build [--seed <n>] [--only gemini|supertonic] [--keep <n>]
 //        npm run voice -- test reveal <run>
 // Node 22+, built-in modules only (ADR-0007); Supertonic runs as a uv sidecar (ADR-0023).
 import { spawnSync } from 'node:child_process';
@@ -58,7 +58,7 @@ export async function main(argv, { root = '.', env = process.env, fetchImpl = fe
       from: { type: 'string' }, at: { type: 'string' }, dur: { type: 'string' }, name: { type: 'string' },
       consent: { type: 'string' }, force: { type: 'boolean', default: false },
       prompt: { type: 'string' }, gender: { type: 'string' }, language: { type: 'string' },
-      lang: { type: 'string' }, search: { type: 'string' }, seed: { type: 'string' },
+      lang: { type: 'string' }, search: { type: 'string' }, seed: { type: 'string' }, only: { type: 'string' }, keep: { type: 'string' },
     },
   });
   const [cmd, sub, arg] = positionals;
@@ -156,7 +156,9 @@ export async function main(argv, { root = '.', env = process.env, fetchImpl = fe
   if (cmd === 'test' && sub === 'build') {
     const seed = values.seed === undefined ? undefined : Number(values.seed);
     if (seed !== undefined && !Number.isInteger(seed)) throw new Error('--seed must be an integer');
-    const r = await buildRun({ root, env, fetchImpl, run, seed, now: now(), log });
+    const keep = values.keep === undefined ? undefined : Number(values.keep);
+    if (keep !== undefined && !(Number.isInteger(keep) && keep >= 1)) throw new Error('--keep must be an integer >= 1');
+    const r = await buildRun({ root, env, fetchImpl, run, seed, now: now(), log, only: values.only, keep });
     log(`listening test ${r.dir}: samples ${r.labels.join(' ')}${r.hasRef ? ' + reference' : ''}; rate them in Studio (tab Suara), then npm run voice -- test reveal ${r.id}`);
     return;
   }

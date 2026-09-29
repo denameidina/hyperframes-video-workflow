@@ -2,7 +2,7 @@
   "version": 1,
   "script": "config/voice-test-script.md",
   "ref": "shared/voices/dena/ref.wav",
-  "presets": ["dena-clone", "gemini-designed-a", "gemini-designed-b"],
+  "presets": ["gemini-designed-a", "gemini-designed-b"],
   "screens": [
     {
       "id": "gemini",
@@ -12,13 +12,13 @@
         "model": "gemini-3.8-flash-tts",
         "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
       },
-      "voices": ["kore", "aoede", "sulafat", "vindemiatrix", "puck", "achird", "umbriel", "jv-id-concierge-6", "jv-id-concierge-7"]
+      "voices": ["kore", "puck", "aoede", "achird", "sulafat", "umbriel", "jv-id-concierge-6", "jv-id-concierge-7", "vindemiatrix"]
     },
     {
       "id": "supertonic",
       "keep": 2,
       "base": { "provider": "supertonic", "speed": 1.05 },
-      "voices": ["F1", "F2", "F3", "F4", "F5", "M1", "M2", "M3", "M4", "M5"]
+      "voices": ["F1", "M1", "F2", "M2", "F3", "M3", "F4", "M4", "F5", "M5"]
     }
   ]
 }

@@ -28,7 +28,8 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   provider itu, tidak memakai provider lain, dan tidak menulis `voiceover.wav`.
 - **RD-06-06** (Event-driven) — When Gemini menjawab 429 atau 5xx, gagal di jaringan, atau
   tidak menjawab dalam 120 s pada sintesis, the adapter shall mencoba ulang maksimal 3 kali
-  dengan jeda 1, 2, 4 s dan pesan akhirnya menyebut `Gemini <method> <path>`; status 4xx lain
+  dengan jeda 1, 2, 4 s — atau selama yang diminta Gemini (`Retry-After` / "retry in Ns"),
+  maksimal 60 s — dan pesan akhirnya menyebut `Gemini <method> <path>`; status 4xx lain
   gagal tanpa retry, dan pembuatan voice (`POST /v1beta/voices`) tidak pernah di-retry.
 - **RD-06-07** (Unwanted) — If `GEMINI_TTS_API_KEY` kosong, then preset `gemini` shall gagal
   sebelum request apa pun dan menyebut `.env`.
@@ -55,8 +56,10 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
 
 - **RD-06-14** (Event-driven) — When `voice test build` dijalankan, the CLI shall menyaring
   tiap pool di `config/voice-test.json` pada paragraf pertama naskah uji berdasarkan WER,
-  mengambil `keep` terbaik per pool, dan menambahkan preset yang dinamai config sebagai
-  kandidat; pool voice yang gagal dicatat di `screen.json` dan dilewati.
+  mengambil `keep` terbaik per pool (WER seri dipecah dengan urutan voice di config, bukan
+  abjad), dan menambahkan preset yang dinamai config sebagai kandidat; pool voice yang gagal
+  dicatat di `screen.json` dan dilewati. `--only <provider>` membatasi preset dan pool ke satu
+  provider, `--keep <n>` menimpa `keep` semua pool; keduanya tercatat di `key.json.filter`.
 - **RD-06-15** (Ubiquitous) — Setiap sampel uji dengar shall dibuat lewat adapter yang sama
   (normalisasi dan −16 LUFS yang sama) dan diberi label A… dalam urutan acak ber-seed yang
   hanya tercatat di `key.json`; folder kerja per kandidat (`work/`) dihapus setelah sampel

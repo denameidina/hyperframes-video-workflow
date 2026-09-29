@@ -66,3 +66,7 @@ test('voice design stores the voice id and its preview; voices filters the prebu
 test('voice test build refuses a seed that is not an integer', async () => {
   await assert.rejects(main(['test', 'build', '--seed', 'abc'], { root: voiceRoot() }), /--seed must be an integer/);
 });
+
+test('voice test build passes --only and --keep through and checks them', async () => {
+  await assert.rejects(main(['test', 'build', '--keep', 'two'], { root: voiceRoot() }), /--keep must be an integer >= 1/);
+});

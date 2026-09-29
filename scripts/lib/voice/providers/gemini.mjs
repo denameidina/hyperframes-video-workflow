@@ -13,6 +13,14 @@ export function geminiKey(env = process.env) {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// How long Gemini asks us to wait: a Retry-After header, or "Please retry in 17.4s" in the error message.
+function retryHintMs(res, json, text) {
+  const header = Number(res.headers?.get?.('retry-after'));
+  if (header > 0) return header * 1000;
+  const m = /retry in (\d+(?:\.\d+)?)s/i.exec(json?.error?.message || text);
+  return m ? Math.round(Number(m[1]) * 1000) : 0;
+}
+
 export const GEMINI_TIMEOUT_MS = 120000;
 
 // 429, 5xx, network failures, and timeouts are retried with 1 s, 2 s, 4 s backoff; any other error fails at once.
@@ -43,7 +51,7 @@ export async function geminiFetch(path, { method = 'GET', body, key, fetchImpl =
     if (!(res.status === 429 || res.status >= 500) || attempt >= retries) {
       throw new Error(`${where} failed: HTTP ${res.status} ${json?.error?.message || text.slice(0, 200)}`.trim());
     }
-    await sleep(1000 * 2 ** attempt);
+    await sleep(Math.min(60000, Math.max(1000 * 2 ** attempt, retryHintMs(res, json, text))));
   }
 }
 

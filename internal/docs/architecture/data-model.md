@@ -295,7 +295,7 @@ Config ter-track `config/voice-test.json`
 dan naskah `config/voice-test-script.md`. Isi run: `script.md`, `screen.json`
 (`{ <pool>: [{ voice, wer, error? }] }`), `samples/<A…>.wav`, `ref.wav`, `screen/<pool>/<voice>/`
 (render saringan), `work/` hanya selama build (dihapus setelah sampel disalin, RD-06-15),
-`key.json` `{ version: 1, run, seed, createdAt, labels: { A: { name, provider, model, voice, duration, wer } } }`
+`key.json` `{ version: 1, run, seed, createdAt, filter: { only, keep }, labels: { A: { name, provider, model, voice, duration, wer } } }`
 (tidak pernah dilayani Studio), `ratings.json`
 `{ version: 1, savedAt, ratings: { A: { natural, pronunciation, register, similarity, endurance, note } } }`
 (skor 1–5 atau `null`, ditulis Studio), dan `reveal.md`.

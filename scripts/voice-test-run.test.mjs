@@ -147,3 +147,26 @@ test('buildRun checks the key, whisper, uv, and the candidate count before any s
   await assert.rejects(buildRun({ root, env: ENV, run: uvOk, seed: 1, now: at(5), render: fakeRender(calls) }), /at most 26 candidates/);
   assert.deepEqual(calls, []);
 });
+
+test('ties keep config order; --only and --keep narrow a run without touching the config', async () => {
+  const root = testRoot();
+  const c = JSON.parse(readFileSync(join(root, 'config/voice-test.json'), 'utf8'));
+  c.screens[1].voices = ['M2', 'F1', 'F2'];
+  writeFileSync(join(root, 'config/voice-test.json'), JSON.stringify(c));
+  const tie = async ({ text, preset, out }) => {
+    mkdirSync(out, { recursive: true });
+    writeFileSync(join(out, 'voiceover.wav'), `wav:${preset.name}`);
+    return { provider: preset.provider, model: null, voice: preset.voice, duration: 40, alignment: { wer: 0 } };
+  };
+  const calls = [];
+  const spy = async (o) => {
+    calls.push(o.preset.name);
+    return tie(o);
+  };
+  await assert.rejects(buildRun({ root, env: {}, run: uvOk, seed: 3, now: new Date(2026, 8, 30, 9, 0), render: spy, only: 'elevenlabs' }), /--only must be one of gemini, supertonic/);
+  const r = await buildRun({ root, env: {}, run: uvOk, seed: 3, now: new Date(2026, 8, 30, 9, 1), render: spy, only: 'supertonic', keep: 2 });
+  assert.ok(calls.every((n) => n.startsWith('supertonic:')), 'no Gemini call and no Gemini key needed');
+  const key = JSON.parse(readFileSync(join(r.dir, 'key.json'), 'utf8'));
+  assert.deepEqual(Object.values(key.labels).map((l) => l.name).sort(), ['supertonic:F1', 'supertonic:M2']);
+  assert.deepEqual(key.filter, { only: 'supertonic', keep: 2 });
+});

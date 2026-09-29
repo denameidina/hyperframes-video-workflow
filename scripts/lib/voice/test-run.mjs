@@ -53,11 +53,17 @@ export function loadTestConfig(root = '.') {
   return c;
 }
 
-export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, seed = Math.floor(Math.random() * 2 ** 31), now = new Date(), render = renderVoice, log = () => {} }) {
+export const TTS_PROVIDERS = ['gemini', 'supertonic'];
+
+// only: keep one provider's presets and pools (e.g. while Gemini's free-tier quota is used up); keep: override every pool's keep.
+export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, seed = Math.floor(Math.random() * 2 ** 31), now = new Date(), render = renderVoice, log = () => {}, only, keep }) {
   const config = loadTestConfig(root);
   const voices = loadVoices(root);
   const lexicon = loadLexicon(root);
-  const presets = config.presets.map((name) => getPreset(voices, name));
+  if (only !== undefined && !TTS_PROVIDERS.includes(only)) throw new Error(`--only must be one of ${TTS_PROVIDERS.join(', ')}`);
+  const presets = config.presets.map((name) => getPreset(voices, name)).filter((p) => !only || p.provider === only);
+  const screens = config.screens.filter((s) => !only || s.base?.provider === only).map((s) => (keep === undefined ? s : { ...s, keep }));
+  if (!presets.length && !screens.length) throw new Error('nothing to test: no preset or pool is left after --only');
   // Preflight: everything a paid call depends on is checked before the first one (RD-06-16).
   const missing = [];
   for (const p of presets) {
@@ -68,8 +74,8 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
       missing.push(e.message);
     }
   }
-  for (const s of config.screens) if (!Number.isInteger(s.keep) || s.keep < 1) missing.push(`screen ${s.id}: keep must be an integer >= 1`);
-  const providers = new Set([...presets.map((p) => p.provider), ...config.screens.map((s) => s.base?.provider)]);
+  for (const s of screens) if (!Number.isInteger(s.keep) || s.keep < 1) missing.push(`screen ${s.id}: keep must be an integer >= 1`);
+  const providers = new Set([...presets.map((p) => p.provider), ...screens.map((s) => s.base?.provider)]);
   if (providers.has('gemini')) {
     try {
       geminiKey(env);
@@ -85,7 +91,7 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
       missing.push(e.message);
     }
   }
-  const total = presets.length + config.screens.reduce((n, s) => n + Math.min(Number(s.keep) || 0, s.voices.length), 0);
+  const total = presets.length + screens.reduce((n, s) => n + Math.min(Number(s.keep) || 0, s.voices.length), 0);
   if (total > 26) missing.push(`at most 26 candidates (labels A-Z); this config makes ${total}`);
   if (missing.length) throw new Error(`listening test cannot start:\n- ${missing.join('\n- ')}`);
   const text = scriptBody(readFileSync(join(root, config.script), 'utf8'));
@@ -98,7 +104,7 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
   writeFileSync(join(dir, 'script.md'), text);
   const candidates = presets.map((p) => ({ name: p.name, preset: p }));
   const screen = {};
-  for (const s of config.screens) {
+  for (const s of screens) {
     screen[s.id] = [];
     for (const voice of s.voices) {
       const preset = { ...s.base, voice, name: `${s.id}:${voice}` };
@@ -111,7 +117,8 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
         log(`screen ${s.id}:${voice} failed: ${e.message}`);
       }
     }
-    const best = screen[s.id].filter((x) => x.wer !== null).sort((a, b) => a.wer - b.wer || a.voice.localeCompare(b.voice)).slice(0, s.keep);
+    // WER ties are common (most voices read the hook perfectly): the config order breaks them, not the alphabet.
+    const best = screen[s.id].filter((x) => x.wer !== null).sort((a, b) => a.wer - b.wer || s.voices.indexOf(a.voice) - s.voices.indexOf(b.voice)).slice(0, s.keep);
     for (const b of best) candidates.push({ name: `${s.id}:${b.voice}`, preset: { ...s.base, voice: b.voice, name: `${s.id}:${b.voice}` } });
   }
   writeJson(join(dir, 'screen.json'), screen);
@@ -129,7 +136,7 @@ export async function buildRun({ root = '.', env, fetchImpl, run = spawnSync, se
   const ref = join(root, config.ref || join('shared', 'voices', 'dena', 'ref.wav'));
   const hasRef = existsSync(ref);
   if (hasRef) copyFileSync(ref, join(dir, 'ref.wav'));
-  writeJson(join(dir, 'key.json'), { version: 1, run: id, seed, createdAt: now.toISOString(), labels });
+  writeJson(join(dir, 'key.json'), { version: 1, run: id, seed, createdAt: now.toISOString(), filter: { only: only ?? null, keep: keep ?? null }, labels });
   return { id, dir, labels: Object.keys(labels), hasRef };
 }
 

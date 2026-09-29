@@ -109,6 +109,7 @@ npm run voice -- clone --consent <rekaman-consent.m4a>             # clone Gemin
 npm run voice -- design --name designed-a --prompt "<deskripsi>"   # voice design id-ID
 npm run voice -- voices --lang jv                                  # daftar suara prebuilt
 npm run voice -- test build                                        # uji dengar blind -> shared/voice-tests/<run>/
+npm run voice -- test build --only supertonic --keep 4             # tanpa Gemini (mis. kuota free tier habis: 10 request/hari)
 npm run voice -- test reveal <run>                                 # setelah dinilai di Studio (tab Suara)
 ```
 
@@ -134,3 +135,5 @@ npm run music -- check
 - `voice` berhenti "GEMINI_TTS_API_KEY is not set" → isi di `.env` (bukan `GEMINI_API_KEY`).
 - `voice` berhenti "uv not found" → `brew install uv`; unduhan model Supertonic pertama ±70 s.
 - Peringatan "alignment WER" → dengarkan paragraf yang disebut, perbaiki naskah/leksikon, buat ulang.
+- `HTTP 429 … Free Tier` dari Gemini → kuota free tier `gemini-3.8-flash-tts` hanya 3 request/menit dan
+  10 request/hari (±1 request per paragraf); aktifkan paid tier atau pakai `--only supertonic`.

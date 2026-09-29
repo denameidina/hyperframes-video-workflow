@@ -88,3 +88,15 @@ test('Gemini network failures and timeouts name Gemini; synthesis retries them, 
   await assert.rejects(createVoice(designRequest({ model: 'm', name: 'a', prompt: 'x' }), { key: 'k', fetchImpl: down, sleep }), /Gemini POST \/voices failed: fetch failed/);
   assert.equal(down.calls.length, 1);
 });
+
+test('a 429 waits as long as Gemini asks (capped at 60 s) before the next try', async () => {
+  const slept = [];
+  const sleep = async (ms) => slept.push(ms);
+  const f = fakeFetch([
+    { status: 429, body: { error: { message: 'Rate limit exceeded (limit: 3 requests per minute). Please retry in 17.4s or upgrade.' } } },
+    { status: 429, body: { error: { message: 'Please retry in 300s.' } } },
+    { status: 200, body: audioBody },
+  ]);
+  assert.deepEqual(await geminiSay({ text: 'Halo', model: 'm', voice: 'kore', key: 'k', fetchImpl: f, sleep }), WAV);
+  assert.deepEqual(slept, [17400, 60000]);
+});
