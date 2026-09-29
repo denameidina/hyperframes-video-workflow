@@ -1,6 +1,6 @@
 // `video storyboard` (ADR-0025, RD-03-84..86): the Gate 2 sheet for generate mode. Each scene row
 // (placement "full") in overlay-timeline.json names the style example it leans on; the sheet shows that
-// example's first still with the scene number, time, and spoken words, laid out in HTML and snapshotted
+// example's first still (or the row's "exampleStill") with the scene number, time, and spoken words, laid out in HTML and snapshotted
 // by hyperframes (this machine's ffmpeg has no drawtext). Node 22+ built-ins (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
@@ -28,14 +28,16 @@ export function sceneRows(timeline) {
   return rows;
 }
 
-// The example clip's first still: its time in the style's example host, and its place among the host's
-// snapshot times (index of total), which is how hyperframes numbers the files.
-export function exampleStill(root, clip) {
+// One still of the example clip (n is 1-based, default the first; a scene row picks another with
+// "exampleStill"): its time in the style's example host, and its place among the host's snapshot times
+// (index of total), which is how hyperframes numbers the files.
+export function exampleStill(root, clip, n = 1) {
   const style = STYLE_OF[String(clip).split('-')[0]];
   const m = style && readManifest(root, style);
   const e = m && layout(m).find((x) => x.clip === clip);
   if (!e) throw new Error(`unknown style example "${clip}" (see docs/agents/references/style-examples/<style>/examples.json)`);
-  const at = Math.round((e.start + e.stills[0]) * 1000) / 1000;
+  if (!Number.isInteger(n) || n < 1 || n > e.stills.length) throw new Error(`${clip} has ${e.stills.length} stills; exampleStill ${n} is out of range`);
+  const at = Math.round((e.start + e.stills[n - 1]) * 1000) / 1000;
   const all = snapshots(m).at;
   return { style, clip, at, index: all.indexOf(at), total: all.length };
 }
@@ -97,7 +99,7 @@ export function runStoryboard({ dir, root = '.', run = spawnSync, env = process.
   if (!existsSync(tlFile)) throw new Error(`${tlFile} not found; the Screen Plan phase writes it first`);
   const rows = sceneRows(JSON.parse(readFileSync(tlFile, 'utf8')));
   const words = existsSync(join(dir, 'processed-transcript.json')) ? JSON.parse(readFileSync(join(dir, 'processed-transcript.json'), 'utf8')).words || [] : [];
-  const stills = rows.map((e) => exampleStill(root, e.example));
+  const stills = rows.map((e) => exampleStill(root, e.example, e.exampleStill ?? 1));
   const childEnv = { ...env };
   delete childEnv.GEMINI_API_KEY; // snapshot would otherwise send frames to Gemini for --describe
   delete childEnv.GEMINI_TTS_API_KEY;

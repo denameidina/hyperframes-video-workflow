@@ -98,7 +98,8 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
 - **RD-06-23** (Event-driven) — When `npm run video -- voice <slug>` dijalankan, the CLI
   shall membaca narasi `script.md`, menyintesisnya dengan `--preset` atau `default` di
   `config/voices.json` lewat `renderVoice` ke `voice/`, lalu menulis `processed-audio.wav`
-  dan `processed-transcript.json` (`segments` = paragraf, `words` = `words.json`) dengan
+  dan `processed-transcript.json` (`segments` = paragraf, `words` = `words.json`, kata
+  terakhir paragraf berakhir paling lambat di akhir paragrafnya, bukan di jeda) dengan
   skema jalur edit.
 - **RD-06-24** (Event-driven) — When `index.html` ada, `video voice` shall mengisi
   `data-duration` setiap elemen bertanda `data-voice-duration` (di luar komentar HTML)

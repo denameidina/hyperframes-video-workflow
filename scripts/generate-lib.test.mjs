@@ -29,6 +29,13 @@ test('transcriptFromVoice writes the edit-path processed-transcript schema', () 
   assert.deepEqual(t, { source: 'voice/voiceover.wav', model: 'supertonic/-/F2', language: 'id', note: 'generate mode: words from voice/words.json (script spelling, whisper DTW times)', segments: [{ start: 0, end: 1.2, text: 'Halo semua.' }], words: [{ start: 0.1, end: 0.5, text: 'Halo' }, { start: 0.5, end: 1.2, text: 'semua.' }] });
 });
 
+test('transcriptFromVoice ends the last word of a paragraph at the paragraph end, not in the gap', () => {
+  const meta = { provider: 'supertonic', voice: 'F2', paragraphs: [{ text: 'Satu dua.', start: 0, end: 1.0 }, { text: 'Tiga.', start: 1.35, end: 2.0 }] };
+  // alignment stretches a word to the next word's start, across the 0.35 s pause between paragraphs
+  const words = [{ text: 'Satu', start: 0.1, end: 0.5 }, { text: 'dua.', start: 0.5, end: 1.4 }, { text: 'Tiga.', start: 1.4, end: 2.0 }];
+  assert.deepEqual(transcriptFromVoice({ meta, words }).words.map((w) => w.end), [0.5, 1.0, 2.0]);
+});
+
 test('bgmCopies, bgmGain, and bgmArgs build one deterministic ffmpeg call', () => {
   assert.equal(bgmCopies({ trackDuration: 120, from: 5, duration: 60 }), 1);
   assert.equal(bgmCopies({ trackDuration: 60, from: 0, duration: 59.5 }), 2, 'too close to the end: a spare copy guards against a short mp3');
@@ -82,6 +89,14 @@ test('exampleStill finds the snapshot index of an example\'s first still; findFr
   const partial = mkdtempSync(join(tmpdir(), 'frames-'));
   writeFileSync(join(partial, `frame-${String(zoom.index).padStart(2, '0')}-at-34.5s.png`), 'p');
   assert.equal(findFrame(partial, zoom), null, 'an incomplete or stale set is rendered again');
+});
+
+test('exampleStill picks a later still by its 1-based number (a scene row\'s exampleStill)', () => {
+  const second = exampleStill(REPO, 'tx-07-zoom-grid', 2);
+  assert.equal(second.at, 37.9);
+  assert.equal(second.index, exampleStill(REPO, 'tx-07-zoom-grid').index + 1);
+  assert.throws(() => exampleStill(REPO, 'tx-07-zoom-grid', 3), /tx-07-zoom-grid has 2 stills; exampleStill 3 is out of range/);
+  assert.throws(() => exampleStill(REPO, 'tx-07-zoom-grid', 0), /out of range/);
 });
 
 test('mmss rounds to tenths without printing 60 seconds', () => {

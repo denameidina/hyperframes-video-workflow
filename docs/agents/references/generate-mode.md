@@ -198,7 +198,9 @@ mode. `mix-media` and `parallax-stage` are not available (they need Dena's foota
   panel examples show a placeholder face in the storyboard.
 - In `overlay-timeline.json` a scene row has `type` = the style, `track` 4 or 7
   (alternating), `placement: "full"`, `assetRef` = the clip's Planned file, and
-  `example` = the example id.
+  `example` = the example id. The storyboard shows the example's first still; when a later
+  still matches the scene better (e.g. the finished 4-panel fold), add `exampleStill: n`
+  (1-based, from the example's `stills` in `examples.json`).
 
 ### Music
 

@@ -31,14 +31,17 @@ export function syncDuration(html, duration) {
 }
 
 // processed-transcript.json in the schema the edit path writes (segments + words), from the voiceover.
+// Alignment stretches a paragraph's last word to the next word's start; the pause between
+// paragraphs is silence, so a word ends no later than its paragraph (captions and scenes rely on it).
 export function transcriptFromVoice({ meta, words }) {
+  const paraEnd = (t) => (meta.paragraphs.find((p) => t >= p.start && t < p.end) ?? {}).end ?? Infinity;
   return {
     source: 'voice/voiceover.wav',
     model: [meta.provider, meta.model || '-', meta.voice || '-'].join('/'),
     language: 'id',
     note: 'generate mode: words from voice/words.json (script spelling, whisper DTW times)',
     segments: meta.paragraphs.map((p) => ({ start: p.start, end: p.end, text: p.text })),
-    words: words.map((w) => ({ start: w.start, end: w.end, text: w.text })),
+    words: words.map((w) => ({ start: w.start, end: Math.min(w.end, paraEnd(w.start)), text: w.text })),
   };
 }
 

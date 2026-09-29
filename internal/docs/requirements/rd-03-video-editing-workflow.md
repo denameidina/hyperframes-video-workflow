@@ -322,7 +322,9 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   tidak punya `example`, then `video storyboard` shall gagal dengan pesan yang menyebut
   fase pemiliknya atau id barisnya.
 - **RD-03-86** (Event-driven) — When `video storyboard` berjalan, the CLI shall memakai
-  still ter-cache di `renders/style-examples/<style>/` (dicocokkan per indeks snapshot; set
+  still pertama contoh itu, atau still ke-n bila baris scene memberi `exampleStill` (n mulai
+  1; di luar jumlah still contoh → gagal dengan id contohnya), dari cache
+  `renders/style-examples/<style>/` (dicocokkan per indeks snapshot; set
   yang jumlahnya tidak sama dianggap basi), me-render still sebuah style hanya bila ada
   yang hilang, dan menulis `preview/storyboard-sheet.jpg` — atau `storyboard-sheet-N.jpg`
   per 28 scene bila lebih — berisi nomor scene, waktu, id contoh, dan kata yang
