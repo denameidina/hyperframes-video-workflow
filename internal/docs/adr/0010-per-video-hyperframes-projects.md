@@ -1,5 +1,5 @@
 # ADR-0010 Proyek HyperFrames per Video
-Status: accepted
+Status: accepted (amended by [ADR-0022](0022-multi-source-projects.md))
 Date: 2026-09-26
 
 ## Context

@@ -1,5 +1,5 @@
 # ADR-0020 Studio: web UI lokal tanpa dependency untuk raw, sesi agen, dan publish
-Status: accepted
+Status: accepted (amended by [ADR-0022](0022-multi-source-projects.md))
 Date: 2026-09-28
 
 ## Context

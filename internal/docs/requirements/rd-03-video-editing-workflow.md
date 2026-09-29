@@ -250,6 +250,36 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
 - **RD-03-64** (Unwanted) — If jawaban hook sudah jelas dari hook itu sendiri
   atau terjawab di awal video, then fase Story shall memilih kandidat lain atau
   menyusun ulang urutan cut, bukan mengunci hook tersebut.
+- **RD-03-65** (Ubiquitous) — Fase Story shall membaca sumber project dari
+  `videos/<slug>/sources.json` dan menjalankan `npm run video -- sources <slug>`
+  sebelum transcribe ([ADR-0022](../adr/0022-multi-source-projects.md)).
+- **RD-03-66** (Event-driven) — When sebuah sumber video punya `role: null`,
+  fase Story shall men-transcribe-nya ke `transcripts/<id>.json`, menetapkan
+  `role` `speech` (ada ucapan bermakna) atau `broll` dengan
+  `roleSource: "detected"`, dan mencatat alasannya di `edit-decision-notes.md`.
+- **RD-03-67** (Unwanted) — If sebuah sumber punya `roleSource: "user"`, then
+  fase Story dan `video sources --detected` shall tidak mengubah `role`-nya.
+- **RD-03-68** (Unwanted) — If tidak ada sumber `speech` setelah deteksi, then
+  fase Story shall berhenti dan menulis blocker note, bukan membuat cut.
+- **RD-03-69** (Ubiquitous) — Fase Story shall menulis `source` di setiap segmen
+  `cut-list.json` dan membangun `processed.mp4` hanya dengan
+  `npm run video -- cut <slug>`.
+- **RD-03-70** (Event-driven) — When sebuah kalimat direkam di lebih dari satu
+  take, fase Story shall memakai satu take dan mencatat take lain sebagai segmen
+  `cut-retake` beserta alasannya.
+- **RD-03-71** (Ubiquitous) — Fase Story shall mencatat setiap sumber `broll` dan
+  `image` (id, durasi/ukuran, isi, catatan Dena) di bagian `## Source Inventory`
+  pada `creative-brief.md`.
+- **RD-03-72** (Ubiquitous) — Fase Screen Plan shall mencantumkan setiap sumber
+  `broll`/`image` dari Source Inventory di Visual Decision Log, termasuk alasan
+  bila sumber itu tidak dipakai.
+- **RD-03-73** (Unwanted) — If sebuah segmen yang dirender merujuk sumber yang
+  tidak ada, bukan video `speech`, atau melewati durasi sumber, then
+  `video cut` shall gagal dengan pesan yang menyebut indeks segmen dan tidak
+  menulis `processed.mp4`.
+- **RD-03-74** (Ubiquitous) — `video cut` shall menormalisasi setiap segmen ke
+  1080×1920, 30 fps, audio 48 kHz stereo dengan loudness per sumber −16 LUFS,
+  dan menulis `cut-map.json`.
 
 ## Referensi
 

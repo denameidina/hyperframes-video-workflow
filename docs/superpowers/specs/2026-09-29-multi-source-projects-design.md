@@ -1,6 +1,6 @@
 # Multi-Source Projects — Banyak Video + Gambar Menjadi Satu Edited Video — Design
 
-Status: draft 2026-09-29
+Status: approved 2026-09-29 (plan docs/superpowers/plans/2026-09-29-multi-source-projects.md)
 Date: 2026-09-29
 
 ## Latar belakang
@@ -370,3 +370,17 @@ mencetak rencana):
 - Letterbox blur untuk take landscape (hanya crop).
 - Sinkronisasi multi-kamera (dua sudut dari momen yang sama); take dianggap
   rekaman terpisah.
+
+## Amandemen saat planning
+
+- Modul berada di `scripts/lib/video-sources.mjs`, `scripts/lib/cut-plan.mjs`,
+  `scripts/lib/migrate-sources.mjs` (konvensi repo), bukan `scripts/video/*.mjs`.
+- Flag CLI: `video sources <slug> [--add-shared a,b] [--set <id> --role <r>
+  [--note <t>] [--detected]] [--remove <id>]`.
+- Take ulang yang tidak dipakai memakai aksi baru `cut-retake` (bukan `drop`).
+  Segmen dirender bila aksinya `keep | tighten | move-to-hook | preserve-human`;
+  aksi `cut-*` hanya catatan.
+- Tag tmux `@studio_raw` dihapus, bukan diganti `@studio_slug` (nama sesi sudah
+  memuat slug).
+- `--source-frame` untuk `cutout`/`layers` tidak dikerjakan (YAGNI); `cut-map.json`
+  cukup untuk melacak waktu sumber.
