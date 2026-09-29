@@ -29,7 +29,7 @@ Fungsi pendukung: transkripsi lokal & setup lingkungan
 
 ## Batasan lintas domain (ubiquitous)
 
-- The system shall menyimpan semua media kerja (`raw/`, `videos/`, `references/`,
+- The system shall menyimpan semua media kerja (`shared/`, `videos/`, `references/`,
   `renders/`) di luar git kecuali `.gitkeep`.
 - The system shall menjaga komposisi tetap deterministik (tanpa `Date.now`,
   `Math.random`, network runtime).

@@ -7,8 +7,8 @@ node_modules/
 !.env.example
 
 # raw inputs and rendered/intermediate video work
-/raw/*
-!/raw/.gitkeep
+/shared/*
+!/shared/.gitkeep
 /videos/*
 !/videos/.gitkeep
 /references/*

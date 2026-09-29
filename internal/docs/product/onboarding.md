@@ -10,7 +10,8 @@ framing produk dari wawancara (personal tool + template open-source).
 
 1. Setup lingkungan sekali (Node 22+, Git, CMake, FFmpeg) — lihat
    [operations/runbook](../operations/runbook.md).
-2. Taruh raw footage di `raw/` atau `videos/<slug>/`.
+2. Buat project (`npm run video -- new <slug>` atau Studio), taruh footage di
+   `videos/<slug>/sources/`, atau di `shared/` untuk file reusable.
 3. Jalankan workflow agent mulai dari
    `docs/skills/dena-video-editing-workflow/SKILL.md` → fase 01..03 (QA opsional).
 4. `npm run render`, review, lalu publish ter-gate approval bila diinginkan.
@@ -30,7 +31,7 @@ framing produk dari wawancara (personal tool + template open-source).
 
 Baca [operations/agent-documentation-workflow](../operations/agent-documentation-workflow.md)
 dan `docs/ai-agent-initial-setup.md`. Verifikasi toolchain (`node --version` ≥ 22,
-`ffmpeg`, `cmake`), pastikan `raw/ videos/ references/ renders/` ada, lalu route
+`ffmpeg`, `cmake`), pastikan `shared/ videos/ references/ renders/` ada, lalu route
 task lewat skill router.
 
 ## Referensi

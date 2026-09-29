@@ -20,7 +20,7 @@ Kanonik untuk: batas scope produk. Diisi dari wawancara (2026-07-20) + kode.
   (repo = personal use, bukan inisiatif branding).
 - Monetisasi terintegrasi (affiliate automation, checkout, dsb.).
 - Backend/aplikasi web ter-deploy, database, atau API publik milik sendiri.
-- Menyimpan media besar/kredensial di git (raw/render/`.env` selalu di-ignore).
+- Menyimpan media besar/kredensial di git (shared/render/`.env` selalu di-ignore).
 - OAuth/connect akun sosial baru dari repo (Repliz MVP hanya schedule).
 
 ## Prinsip

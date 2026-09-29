@@ -15,7 +15,7 @@ Kanonik untuk: aturan keamanan & privasi repo. Diturunkan dari `SECURITY.md`,
 - Footage/media klien privat.
 
 Ditegakkan `.gitignore` (mengabaikan `.env`, `.env.*` kecuali template; serta
-`raw/`, `videos/`, `references/`, `renders/`, dan ekstensi media besar).
+`shared/`, `videos/`, `references/`, `renders/`, dan ekstensi media besar).
 
 ## Model kredensial publish
 

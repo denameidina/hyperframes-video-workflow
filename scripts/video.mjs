@@ -7,6 +7,7 @@
 // Cut-out spec: docs/superpowers/specs/2026-09-27-vox-mix-media-design.md
 //        npm run video -- sources <slug> [--add-shared a,b] [--set <id> --role <r> [--note <t>] [--detected]] [--remove <id>]
 //        npm run video -- cut <slug>   (processed.mp4 + cut-map.json from cut-list.json + sources.json)
+//        npm run video -- migrate-sources [--apply]   (raw/ + source.mp4 -> shared/ + sources.json, once)
 // Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
 // Multi-source spec: docs/superpowers/specs/2026-09-29-multi-source-projects-design.md (ADR-0022)
 // Node 22+, built-in modules only (ADR-0007).
@@ -15,6 +16,7 @@ import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmS
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
 import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, sourceFile, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
@@ -163,6 +165,17 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
     },
   });
   const [cmd, slug] = positionals;
+  if (cmd === 'migrate-sources') {
+    const plan = planMigration(root);
+    console.log(formatPlan(plan));
+    if (!values.apply) {
+      console.log('dry run; add --apply to migrate');
+      return;
+    }
+    applyMigration(root, plan, { probe: (f, k) => probeMedia(f, k, run) });
+    console.log('migrated');
+    return;
+  }
   if (cmd === 'new') {
     const { dir, duration } = scaffold({ slug, root, duration: values.duration });
     console.log(`created ${dir} (${duration} s)`);

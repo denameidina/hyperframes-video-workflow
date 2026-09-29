@@ -20,7 +20,7 @@ Diturunkan dari setup docs, `.gitmodules`, dan fase Story (`docs/agents/referenc
 - **RD-04-04** (Ubiquitous) — The system shall menjaga model whisper dan submodule
   build di luar git (di-ignore).
 - **RD-04-05** (Event-driven) — When agent AI memulai, the system shall memastikan
-  `raw/`, `videos/`, `references/`, `renders/` ada (buat + `.gitkeep` bila hilang).
+  `shared/`, `videos/`, `references/`, `renders/` ada (buat + `.gitkeep` bila hilang).
 
 ## Transkripsi
 

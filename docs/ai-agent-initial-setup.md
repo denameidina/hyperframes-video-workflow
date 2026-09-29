@@ -28,7 +28,7 @@ Node harus `v22` atau lebih baru.
 Folder ini harus ada walaupun kosong:
 
 ```text
-raw/
+shared/
 videos/
 references/
 renders/
@@ -37,8 +37,8 @@ renders/
 Jika hilang:
 
 ```bash
-mkdir -p raw videos references renders
-touch raw/.gitkeep videos/.gitkeep references/.gitkeep renders/.gitkeep
+mkdir -p shared videos references renders
+touch shared/.gitkeep videos/.gitkeep references/.gitkeep renders/.gitkeep
 ```
 
 ## Ensure whisper.cpp
