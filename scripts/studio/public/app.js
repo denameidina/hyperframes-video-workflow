@@ -21,7 +21,8 @@ async function api(path, opts = {}) {
 const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(body || {}) });
 
 let state = { tools: {}, codex: {}, claudeModels: [], efforts: {} };
-let tab = 'raw';
+let tab = 'projects';
+let openSlug = '';
 
 function banner(msg) {
   $('#banner').textContent = msg || '';
@@ -29,16 +30,22 @@ function banner(msg) {
 }
 
 function showTab(name) {
+  if (name === 'projects' && tab === 'projects') openSlug = '';
   tab = name;
   for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === name);
-  for (const t of ['raw', 'sessions', 'results']) $(`#tab-${t}`).hidden = t !== name;
+  for (const t of ['projects', 'shared', 'sessions', 'results']) $(`#tab-${t}`).hidden = t !== name;
   refresh();
 }
 document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
 async function refresh() {
   try {
-    if (tab === 'raw') renderRaw(await api('/api/raw'));
+    if (tab === 'projects') {
+      const sessions = await api('/api/sessions');
+      if (openSlug) renderProject(await api(`/api/projects/${enc(openSlug)}`), sessions);
+      else renderProjects(await api('/api/projects'), sessions);
+    }
+    if (tab === 'shared') renderShared(await api('/api/shared'));
     if (tab === 'sessions') renderSessions(await api('/api/sessions'));
     if (tab === 'results') renderResults(await api('/api/results'));
   } catch (e) {
@@ -46,44 +53,177 @@ async function refresh() {
   }
 }
 
-// ---- Raw ----
-function renderRaw(items) {
-  $('#raw-list').innerHTML = items.length ? items.map((r) => `
-    <li>
-      <div class="meta"><strong>${esc(r.name)}</strong><span class="muted">${mb(r.size)} · ${dur(r.duration)} · ${r.projects.length} proyek</span></div>
-      <div class="actions"><button class="primary" data-edit="${esc(r.name)}">Edit this video</button><button class="danger" data-delete="${esc(r.name)}">Delete</button></div>
-    </li>`).join('') : '<li class="muted">Belum ada raw video.</li>';
+// ---- Uploads (one file at a time, in order) ----
+function uploadOne(url, file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.upload.onprogress = (e) => { if (e.lengthComputable) onProgress(e.loaded / e.total); };
+    xhr.onload = () => {
+      if (xhr.status < 400) return resolve();
+      let msg = '';
+      try { msg = JSON.parse(xhr.responseText).error; } catch { /* not JSON */ }
+      reject(new Error(msg || `Upload gagal (${xhr.status})`));
+    };
+    xhr.onerror = () => reject(new Error('Upload terputus'));
+    xhr.send(file);
+  });
 }
-$('#raw-list').addEventListener('click', (e) => {
-  const b = e.target.closest('button');
-  if (b?.dataset.edit) openEdit(b.dataset.edit);
-  if (b?.dataset.delete) openDelete(b.dataset.delete);
-});
 
-$('#upload').addEventListener('change', () => {
-  const file = $('#upload').files[0];
-  if (!file) return;
-  const bar = $('#upload-progress');
+async function uploadFiles(input, url, bar) {
+  const files = [...input.files];
+  if (!files.length) return;
   bar.hidden = false;
   bar.value = 0;
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', `/api/raw?name=${enc(file.name)}`);
-  xhr.upload.onprogress = (e) => { if (e.lengthComputable) bar.value = e.loaded / e.total; };
-  xhr.onload = () => {
-    bar.hidden = true;
-    $('#upload').value = '';
-    if (xhr.status >= 400) banner((JSON.parse(xhr.responseText || '{}').error) || `Upload gagal (${xhr.status})`);
+  for (const [i, file] of files.entries()) {
+    try {
+      await uploadOne(`${url}?name=${enc(file.name)}`, file, (f) => { bar.value = (i + f) / files.length; });
+    } catch (err) {
+      banner(`${file.name}: ${err.message}`);
+    }
+  }
+  bar.hidden = true;
+  input.value = '';
+  refresh();
+}
+
+// ---- Projects ----
+const countText = (c) => Object.entries(c).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(' · ') || 'belum ada sumber';
+
+function renderProjects(items, sessions) {
+  $('#project-detail').hidden = true;
+  $('#project-home').hidden = false;
+  const live = new Map(sessions.map((s) => [s.slug, s.status]));
+  $('#project-list').innerHTML = items.length ? items.map((p) => `
+    <li>
+      <div class="meta"><strong>${esc(p.slug)}</strong>${live.has(p.slug) ? `<span class="status ${esc(live.get(p.slug))}">${esc(live.get(p.slug))}</span>` : ''}
+        <span class="muted">${esc(countText(p.counts))} · ${p.renders.length} render</span></div>
+      <div class="actions"><button class="primary" data-open-project="${esc(p.slug)}">Buka</button></div>
+    </li>`).join('') : '<li class="muted">Belum ada project.</li>';
+}
+$('#project-list').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-open-project]');
+  if (!b) return;
+  openSlug = b.dataset.openProject;
+  refresh();
+});
+$('#project-create').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const slug = e.target.slug.value.trim();
+  try {
+    await post('/api/projects', { slug });
+    e.target.reset();
+    openSlug = slug;
     refresh();
-  };
-  xhr.onerror = () => {
-    bar.hidden = true;
-    banner('Upload terputus');
-  };
-  xhr.send(file);
+  } catch (err) {
+    banner(err.message);
+  }
+});
+
+const ROLE_OPTIONS = { video: [['', 'Auto'], ['speech', 'Speech'], ['broll', 'B-roll']], image: [['image', 'Image']] };
+function renderProject(p, sessions) {
+  $('#project-home').hidden = true;
+  $('#project-detail').hidden = false;
+  $('#project-title').textContent = `videos/${p.slug}/`;
+  const live = sessions.find((x) => x.slug === p.slug && x.status !== 'exited');
+  $('#project-session').textContent = live ? 'Buka terminal' : 'Mulai sesi';
+  $('#project-session').dataset.live = live ? '1' : '';
+  $('#source-list').innerHTML = p.sources.length ? p.sources.map((x) => {
+    const url = `/api/projects/${enc(p.slug)}/sources/${enc(x.id)}/file`;
+    const preview = x.kind === 'image' ? `<img src="${url}" alt="" loading="lazy">` : `<video src="${url}#t=0.5" preload="metadata" muted playsinline></video>`;
+    const opts = ROLE_OPTIONS[x.kind].map(([v, l]) => `<option value="${v}"${(x.role ?? '') === v ? ' selected' : ''}>${l}</option>`).join('');
+    const size = x.kind === 'video' ? dur(x.probe?.duration) : `${x.probe?.width ?? '?'}×${x.probe?.height ?? '?'}`;
+    return `<li class="source" data-id="${esc(x.id)}">
+      ${preview}
+      <div class="meta"><strong>${esc(x.id)} · ${esc(x.path.split('/').pop())}</strong>
+        <span class="muted">${x.origin === 'shared' ? 'shared' : 'project'} · ${esc(size)}${x.roleSource === 'detected' ? ' · deteksi agen' : ''}</span>
+        <label>Peran <select data-role${x.kind === 'image' ? ' disabled' : ''}>${opts}</select></label>
+        <label>Catatan <input data-note value="${esc(x.note)}" maxlength="500" placeholder="mis. pakai waktu bahas harga"></label></div>
+      <div class="actions"><button class="danger" data-remove="${esc(x.id)}">${x.origin === 'shared' ? 'Lepas' : 'Hapus'}</button></div>
+    </li>`;
+  }).join('') : '<li class="muted">Belum ada sumber. Upload video/gambar atau tambah dari Shared.</li>';
+}
+
+$('#project-back').addEventListener('click', () => { openSlug = ''; refresh(); });
+$('#source-upload').addEventListener('change', () => uploadFiles($('#source-upload'), `/api/projects/${enc(openSlug)}/sources`, $('#source-progress')));
+$('#source-list').addEventListener('change', async (e) => {
+  const li = e.target.closest('li[data-id]');
+  const body = e.target.matches('[data-role]') ? { role: e.target.value || 'auto' } : e.target.matches('[data-note]') ? { note: e.target.value } : null;
+  if (!li || !body) return;
+  try {
+    await api(`/api/projects/${enc(openSlug)}/sources/${enc(li.dataset.id)}`, { method: 'PATCH', body: JSON.stringify(body) });
+  } catch (err) {
+    banner(err.message);
+  }
+  refresh();
+});
+$('#source-list').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-remove]');
+  if (!b || !confirm(`${b.textContent} sumber ${b.dataset.remove}?`)) return;
+  try {
+    await api(`/api/projects/${enc(openSlug)}/sources/${enc(b.dataset.remove)}`, { method: 'DELETE' });
+    refresh();
+  } catch (err) {
+    banner(err.message);
+  }
+});
+$('#project-attach').addEventListener('click', async () => {
+  let items;
+  try {
+    items = await api('/api/shared');
+  } catch (err) {
+    return banner(err.message);
+  }
+  $('#attach-list').innerHTML = items.length ? items.map((f) => `<li><label><input type="checkbox" value="${esc(f.name)}"${f.projects.includes(openSlug) ? ' checked disabled' : ''}> ${esc(f.name)} <span class="muted">${f.kind === 'video' ? dur(f.duration) : 'image'}</span></label></li>`).join('') : '<li class="muted">Shared library kosong.</li>';
+  $('#attach-error').textContent = '';
+  $('#attach-dialog').showModal();
+});
+$('#attach-form').addEventListener('submit', async (e) => {
+  if (e.submitter?.value !== 'attach') return;
+  e.preventDefault();
+  const names = [...document.querySelectorAll('#attach-list input:checked:not(:disabled)')].map((i) => i.value);
+  if (!names.length) return $('#attach-dialog').close();
+  try {
+    await post(`/api/projects/${enc(openSlug)}/shared`, { names });
+    $('#attach-dialog').close();
+    refresh();
+  } catch (err) {
+    $('#attach-error').textContent = err.message;
+  }
+});
+$('#project-session').addEventListener('click', () => ($('#project-session').dataset.live ? openTerminal(openSlug) : openEdit(openSlug)));
+$('#project-delete').addEventListener('click', async () => {
+  if (!confirm(`Hapus permanen videos/${openSlug}/ beserta render dan sesi agennya? File di shared/ tidak ikut terhapus.`)) return;
+  try {
+    await api(`/api/projects/${enc(openSlug)}`, { method: 'DELETE' });
+    openSlug = '';
+    refresh();
+  } catch (err) {
+    banner(err.message);
+  }
+});
+
+// ---- Shared ----
+function renderShared(items) {
+  $('#shared-list').innerHTML = items.length ? items.map((f) => `
+    <li>
+      <div class="meta"><strong>${esc(f.name)}</strong><span class="muted">${f.kind === 'video' ? dur(f.duration) : 'image'} · ${mb(f.size)} · ${f.projects.length ? `dipakai: ${f.projects.map(esc).join(', ')}` : 'belum dipakai'}</span></div>
+      <div class="actions"><button class="danger" data-delete-shared="${esc(f.name)}">Hapus</button></div>
+    </li>`).join('') : '<li class="muted">Shared library kosong.</li>';
+}
+$('#shared-upload').addEventListener('change', () => uploadFiles($('#shared-upload'), '/api/shared', $('#shared-progress')));
+$('#shared-list').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-delete-shared]');
+  if (!b || !confirm(`Hapus permanen shared/${b.dataset.deleteShared}?`)) return;
+  try {
+    await api(`/api/shared/${enc(b.dataset.deleteShared)}`, { method: 'DELETE' });
+    refresh();
+  } catch (err) {
+    banner(err.message);
+  }
 });
 
 // ---- Edit ----
-let editRaw = '';
 function fillModelOptions() {
   const f = $('#edit-form');
   const rt = f.runtime.value;
@@ -96,21 +236,12 @@ function fillModelOptions() {
 }
 $('#edit-form').runtime.addEventListener('change', fillModelOptions);
 
-async function openEdit(name) {
-  let plan;
-  try {
-    plan = await api(`/api/raw/${enc(name)}/edit-plan`);
-  } catch (e) {
-    return banner(e.message);
-  }
-  if (plan.mode === 'open') return openTerminal(plan.slug);
-  editRaw = name;
+let editSlug = '';
+function openEdit(slug) {
+  editSlug = slug;
   const f = $('#edit-form');
   f.reset();
-  $('#edit-raw').textContent = name;
-  $('#edit-mode').textContent = plan.mode === 'continue' ? `Lanjutkan proyek videos/${plan.slug}/` : 'Proyek baru';
-  f.slug.value = plan.slug;
-  f.slug.readOnly = plan.mode === 'continue';
+  $('#edit-slug').textContent = `videos/${slug}/`;
   for (const o of f.runtime.options) o.disabled = state.tools[o.value] === false;
   f.runtime.value = state.tools.claude === false ? 'codex' : 'claude';
   fillModelOptions();
@@ -122,41 +253,11 @@ $('#edit-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = e.target;
   try {
-    const s = await post('/api/sessions', { raw: editRaw, slug: f.slug.value, runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, notes: f.notes.value });
+    const s = await post('/api/sessions', { slug: editSlug, runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, notes: f.notes.value });
     $('#edit-dialog').close();
     openTerminal(s.slug);
   } catch (err) {
     $('#edit-error').textContent = err.message;
-  }
-});
-
-// ---- Delete ----
-let deleteTarget = '';
-async function openDelete(name) {
-  let plan;
-  try {
-    plan = await api(`/api/raw/${enc(name)}/delete-plan`);
-  } catch (e) {
-    return banner(e.message);
-  }
-  deleteTarget = name;
-  $('#delete-items').innerHTML = [
-    `<li>raw/${esc(name)}</li>`,
-    ...plan.projects.map((p) => `<li>videos/${esc(p.slug)}/${p.renders.length ? ` (${p.renders.length} render)` : ''}</li>`),
-    ...plan.sessions.map((s) => `<li>sesi tmux studio-${esc(s)}</li>`),
-  ].join('');
-  $('#delete-error').textContent = '';
-  $('#delete-dialog').showModal();
-}
-$('#delete-form').addEventListener('submit', async (e) => {
-  if (e.submitter?.value !== 'delete') return;
-  e.preventDefault();
-  try {
-    await api(`/api/raw/${enc(deleteTarget)}`, { method: 'DELETE' });
-    $('#delete-dialog').close();
-    refresh();
-  } catch (err) {
-    $('#delete-error').textContent = err.message;
   }
 });
 
@@ -165,7 +266,7 @@ function renderSessions(items) {
   $('#session-list').innerHTML = items.length ? items.map((s) => `
     <li>
       <div class="meta"><strong>${esc(s.slug)}</strong><span class="status ${esc(s.status)}">${esc(s.status)}</span>
-        <span class="muted">${esc(s.runtime)} · ${esc(s.model)} · ${esc(s.effort)} · ${esc(s.raw)}</span></div>
+        <span class="muted">${esc(s.runtime)} · ${esc(s.model)} · ${esc(s.effort)}</span></div>
       <div class="actions"><button class="primary" data-open="${esc(s.slug)}">Show terminal</button><button data-esc="${esc(s.slug)}">Esc</button><button class="danger" data-kill="${esc(s.slug)}">Kill</button></div>
     </li>`).join('') : '<li class="muted">Tidak ada sesi.</li>';
 }

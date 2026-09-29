@@ -11,19 +11,43 @@
 <header>
   <h1>Studio</h1>
   <nav>
-    <button data-tab="raw" class="active">Raw</button>
+    <button data-tab="projects" class="active">Projects</button>
+    <button data-tab="shared">Shared</button>
     <button data-tab="sessions">Sessions</button>
     <button data-tab="results">Results</button>
   </nav>
 </header>
 <p id="banner" hidden></p>
 <main>
-  <section id="tab-raw">
-    <div class="bar">
-      <label class="btn primary">Upload<input id="upload" type="file" accept="video/mp4,video/quicktime,.mp4,.mov,.m4v" hidden></label>
-      <progress id="upload-progress" max="1" value="0" hidden></progress>
+  <section id="tab-projects">
+    <div id="project-home">
+      <form id="project-create" class="bar">
+        <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="slug-project-baru" autocapitalize="off" autocomplete="off">
+        <button class="primary">Buat project</button>
+      </form>
+      <ul id="project-list" class="list"></ul>
     </div>
-    <ul id="raw-list" class="list"></ul>
+    <div id="project-detail" hidden>
+      <div class="bar">
+        <button id="project-back">← Projects</button>
+        <strong id="project-title"></strong>
+      </div>
+      <div class="bar">
+        <label class="btn primary">Upload video/gambar<input id="source-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp" hidden></label>
+        <button id="project-attach">Tambah dari Shared</button>
+        <button id="project-session" class="primary">Mulai sesi</button>
+        <button id="project-delete" class="danger">Hapus project</button>
+        <progress id="source-progress" max="1" value="0" hidden></progress>
+      </div>
+      <ul id="source-list" class="list"></ul>
+    </div>
+  </section>
+  <section id="tab-shared" hidden>
+    <div class="bar">
+      <label class="btn primary">Upload ke Shared<input id="shared-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp" hidden></label>
+      <progress id="shared-progress" max="1" value="0" hidden></progress>
+    </div>
+    <ul id="shared-list" class="list"></ul>
   </section>
   <section id="tab-sessions" hidden><ul id="session-list" class="list"></ul></section>
   <section id="tab-results" hidden><ul id="result-list" class="list"></ul></section>
@@ -31,9 +55,7 @@
 
 <dialog id="edit-dialog">
   <form method="dialog" id="edit-form">
-    <h2>Edit <span id="edit-raw"></span></h2>
-    <p id="edit-mode" class="muted"></p>
-    <label>Slug <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off"></label>
+    <h2>Sesi agen <span id="edit-slug"></span></h2>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
     <label>Model <input name="model" list="model-options" required autocapitalize="off" autocomplete="off"></label>
     <datalist id="model-options"></datalist>
@@ -44,12 +66,12 @@
   </form>
 </dialog>
 
-<dialog id="delete-dialog">
-  <form method="dialog" id="delete-form">
-    <h2>Hapus permanen?</h2>
-    <ul id="delete-items"></ul>
-    <p class="error" id="delete-error"></p>
-    <menu><button value="cancel" formnovalidate>Batal</button><button value="delete" class="danger">Hapus</button></menu>
+<dialog id="attach-dialog">
+  <form method="dialog" id="attach-form">
+    <h2>Tambah dari Shared</h2>
+    <ul id="attach-list" class="checks"></ul>
+    <p class="error" id="attach-error"></p>
+    <menu><button value="cancel" formnovalidate>Batal</button><button value="attach" class="primary">Tambahkan</button></menu>
   </form>
 </dialog>
 

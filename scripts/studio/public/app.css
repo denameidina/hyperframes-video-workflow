@@ -45,3 +45,13 @@ pre { margin: 0; white-space: pre-wrap; max-height: 30vh; overflow: auto; backgr
 .keys button { background: #222; color: #eee; border-color: #444; flex: 0 0 auto; }
 .login { max-width: 360px; margin: 15vh auto; padding: 0 16px; display: grid; gap: 12px; }
 .login form { display: grid; gap: 10px; }
+.list > li.source { grid-template-columns: 72px 1fr; align-items: start; }
+.source .actions { grid-column: 1 / -1; }
+.source img, .source video { width: 72px; height: 128px; object-fit: cover; border-radius: 6px; background: #000; flex: none; }
+.source label { display: grid; gap: 4px; margin-top: 6px; }
+.source input, .source select, #project-create input { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg, transparent); color: var(--fg); min-width: 0; }
+#project-create { display: flex; gap: 8px; }
+#project-create input { flex: 1; }
+.checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; max-height: 50vh; overflow: auto; }
+.bar { flex-wrap: wrap; }
+.checks label { display: flex; gap: 8px; align-items: center; }
