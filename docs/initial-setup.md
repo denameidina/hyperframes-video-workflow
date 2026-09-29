@@ -15,6 +15,7 @@ HyperFrames dan siap membuat transcript dengan `vendor/whisper.cpp`.
 - `curl` atau `wget` untuk download model Whisper.
 - Koneksi internet untuk `npx hyperframes@0.7.24`, submodule, dan model.
 - Wrangler via `npx wrangler` jika akan upload final render ke Cloudflare R2/Repliz.
+- `uv` (opsional) untuk TTS lokal Supertonic; `GEMINI_TTS_API_KEY` (opsional) untuk TTS Gemini.
 
 macOS quick install:
 
@@ -123,6 +124,18 @@ npm run video -- sources <slug> [--add-shared a.mp4,b.png] [--set <id> --role sp
 npm run video -- cut <slug>          # processed.mp4 + cut-map.json dari cut-list.json
 npm run video -- migrate-sources     # clone lama dengan raw/ + source.mp4: dry run, lalu --apply
 ```
+
+## Voice (TTS) — opsional
+
+Untuk voiceover video generate ([ADR-0023](../internal/docs/adr/0023-voice-adapter-tts.md)):
+
+```bash
+brew install uv                       # Supertonic lokal berjalan lewat uv (Python 3.12, sekali pakai)
+echo 'GEMINI_TTS_API_KEY=<key>' >> .env   # Gemini 3.8 Flash TTS; bukan GEMINI_API_KEY
+npm run voice -- say --preset <p> --text "Halo semua." --out /tmp/voice-smoke
+```
+
+Panggilan Supertonic pertama mengunduh model ke `~/.cache/supertonic3` (±70 s).
 
 ## Run HyperFrames
 

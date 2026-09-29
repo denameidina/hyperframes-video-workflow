@@ -47,6 +47,9 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
 | video CLI | Scaffold + jalankan proyek HyperFrames per video; `cutout` me-matte segmen `processed.mp4` untuk mix-media; `layers` menyiapkan sumber + subjek parallax | `npm run video -- new\|check\|dev\|snapshot\|render\|cutout\|layers <slug>` | `scripts/video.mjs` |
 | Studio | Web UI lokal (localhost + Tailscale): upload/hapus raw, sesi agen Claude/Codex di tmux dengan terminal xterm.js, daftar render, publish Repliz | `npm run studio` | `scripts/studio.mjs`, [ADR-0020](../adr/0020-studio-web-ui.md) |
 | xterm.js 6.0.0 | Terminal browser untuk Studio (di-vendor, MIT) | `vendor/xterm/` di-`<script>` oleh `scripts/studio/public/index.html` | `THIRD_PARTY_NOTICES.md` |
+| Voice adapter | Voiceover TTS per paragraf (cache sha256, −16 LUFS), clone/design suara, uji dengar blind | `npm run voice -- say\|ref\|clone\|design\|voices\|test` | `scripts/voice.mjs`, `scripts/lib/voice/`, [ADR-0023](../adr/0023-voice-adapter-tts.md) |
+| Gemini 3.8 Flash TTS | TTS cloud bahasa Indonesia, voice design, voice replication | `fetch` ke `generativelanguage.googleapis.com/v1beta` dengan `GEMINI_TTS_API_KEY` | `scripts/lib/voice/providers/gemini.mjs` |
+| Supertonic 3 + uv | TTS lokal (suara stok F1–F5/M1–M5), Python 3.12 sidecar, bobot di `~/.cache/supertonic3` | `uv run --python 3.12 --with supertonic==1.3.1 …` | `scripts/lib/voice/providers/supertonic.mjs` |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
 | ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
 | Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |
@@ -66,6 +69,7 @@ Dari `package.json`:
 - `npm run publish` → `hyperframes publish` (link shareable HyperFrames).
 - `npm run repliz:publish` → `node scripts/repliz-publish.mjs` (auto-publish R2/Repliz).
 - `npm run test:repliz` → `node --test scripts/repliz-publish.test.mjs`.
+- `npm run voice` → `node scripts/voice.mjs` (adapter suara, ADR-0023); `npm run test:voice`.
 
 ## Konfigurasi HyperFrames
 
@@ -92,7 +96,8 @@ skill punya lisensi pihak ketiga; lihat `THIRD_PARTY_NOTICES.md`.
 - Tidak ada database, ORM, atau backend HTTP server.
 - Tidak ada framework frontend (React/Vue/dll). Komposisi = HTML + GSAP polos.
 - Tidak ada bundler/transpiler (TypeScript, webpack, vite).
-- Tidak ada SDK cloud; R2 murni lewat Wrangler CLI, Repliz murni lewat `fetch`.
+- Tidak ada SDK cloud; R2 murni lewat Wrangler CLI, Repliz dan Gemini TTS murni lewat `fetch`.
+- Tidak ada venv/dependency Python ter-commit; Supertonic dijalankan sekali pakai lewat `uv` (ADR-0023).
 
 ## Referensi
 

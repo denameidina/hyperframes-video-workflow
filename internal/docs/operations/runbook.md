@@ -86,6 +86,7 @@ npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (o
 npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/asset-catalog/sheets/*.webp
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
+npm run test:voice          # node --test scripts/voice.test.mjs scripts/voice-test-run.test.mjs (adapter suara, uji dengar)
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 npm run check:style-examples # lint + validate + snapshot contoh style b-roll, satu host per gaya → renders/style-examples/<gaya>/ (-- <gaya> untuk satu)
 npm run check:craft-examples # lint + validate + snapshot contoh resep craft-kit → renders/craft-examples/
@@ -95,6 +96,21 @@ npm run moodboard -- sheets [gaya]  # render sheet moodboard per gaya → docs/a
 npm run moodboard -- fetch [gaya]   # unduh still referensi asli ke moodboard/local/ (gitignored, jaringan)
 ```
 
+## Suara (TTS)
+
+Adapter suara ([ADR-0023](../adr/0023-voice-adapter-tts.md), [RD-06](../requirements/rd-06-audio.md)).
+Butuh `GEMINI_TTS_API_KEY` di `.env` untuk preset Gemini dan `uv` untuk Supertonic.
+
+```bash
+npm run voice -- say --preset <p> --file <naskah.md> --out <dir>   # voiceover.wav + voice-meta.json + words.json
+npm run voice -- ref --from shared/<take>.mp4 --at <s> --dur 20    # referensi suara Dena (10-30 s)
+npm run voice -- clone --consent <rekaman-consent.m4a>             # clone Gemini (paid tier dulu)
+npm run voice -- design --name designed-a --prompt "<deskripsi>"   # voice design id-ID
+npm run voice -- voices --lang jv                                  # daftar suara prebuilt
+npm run voice -- test build                                        # uji dengar blind -> shared/voice-tests/<run>/
+npm run voice -- test reveal <run>                                 # setelah dinilai di Studio (tab Suara)
+```
+
 ## Troubleshooting cepat
 
 - Preview blank / render gagal setelah clone → cek media lokal yang dirujuk
@@ -102,3 +118,6 @@ npm run moodboard -- fetch [gaya]   # unduh still referensi asli ke moodboard/lo
 - `npm run video -- check <slug>` error → perbaiki semua error sebelum handoff/render.
 - Publish berhenti "Missing env" → lengkapi `.env` dari `.env.example`.
 - Publish berhenti "user approval" → tambah `--approved` setelah review.
+- `voice` berhenti "GEMINI_TTS_API_KEY is not set" → isi di `.env` (bukan `GEMINI_API_KEY`).
+- `voice` berhenti "uv not found" → `brew install uv`; unduhan model Supertonic pertama ±70 s.
+- Peringatan "alignment WER" → dengarkan paragraf yang disebut, perbaiki naskah/leksikon, buat ulang.

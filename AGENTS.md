@@ -197,6 +197,13 @@ npm run video -- layers <slug> --at 12.4 --name 05-scene   # parallax source + m
 npm run test:video             # unit test the video CLI
 npm run studio                 # web UI: projects (sources upload, shared library), tmux agent sessions + terminal, renders, publish (long-running)
 npm run test:studio            # unit test the Studio server
+npm run voice -- say --preset <p> --file <naskah.md> --out <dir>  # TTS voiceover + words.json (ADR-0023)
+npm run voice -- ref --from <file> --at <s> --dur <s>   # 10-30 s reference of Dena's voice -> shared/voices/dena/
+npm run voice -- clone --consent <audio>                 # Gemini voice replication (needs the consent clip)
+npm run voice -- design --name <n> --prompt "<deskripsi>"  # Gemini voice design (id-ID)
+npm run voice -- voices [--lang jv] [--search <q>]       # list Gemini prebuilt voices
+npm run voice -- test build | test reveal <run>          # blind listening test (rate in Studio, tab Suara)
+npm run test:voice             # unit test the voice adapter and listening test
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 npx hyperframes lint --verbose  # include info-level findings
