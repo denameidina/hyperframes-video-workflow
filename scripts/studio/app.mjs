@@ -136,10 +136,10 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       const b = await readObject(req);
       agentCommand(b); // runtime, model, and effort are checked before anything is created (RD-05-23)
       await checkModel(b);
-      const { slug } = createGenerate(root, b);
+      const { slug, request } = createGenerate(root, b);
       let session = { started: true, error: null };
       try {
-        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug }), ...opt });
+        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug, format: request.format }), ...opt });
       } catch (e) {
         session = { started: false, error: e.message }; // the project stays; the panel offers "Mulai sesi"
       }
@@ -152,6 +152,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     ['POST', /^\/api\/generate\/([^/]+)\/voice$/, async (req, url, [slug]) => {
       const dir = generateDir(root, slugParam(slug));
       const s = gateStatus(dir, { slug });
+      if (s.format !== 'explainer') throw new HttpError(409, 'format musik tidak punya suara; musiknya dipotong dengan npm run video -- music');
       if (s.phase !== 'gate' || s.gate !== 1) throw new HttpError(409, 'suara hanya dibuat ulang di Gate 1');
       if ((await listSessions(opt)).find((x) => x.slug === slug)?.status === 'running') throw new HttpError(409, 'agent sedang bekerja; tunggu sampai ia berhenti di gate');
       voiceJobs.start(slug);

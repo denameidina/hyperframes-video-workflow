@@ -573,7 +573,7 @@ test('validateRequest names the bad field and creates nothing', () => {
   assert.match(err({ ...ok, style: 'mix-media' }), /^400 style:/);
   assert.match(err({ ...ok, music: 'm02-loud' }), /^400 music:/);
   const v = validateRequest(root, { ...ok, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: '60', style: 'stop-motion', music: 'm01-quiet' }, { now: () => new Date('2026-09-29T08:00:00Z') });
-  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, brief: 'Kenapa AI agent gagal', urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', createdAt: '2026-09-29T08:00:00.000Z' } });
+  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, format: 'explainer', brief: 'Kenapa AI agent gagal', text: null, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', createdAt: '2026-09-29T08:00:00.000Z' } });
   assert.equal(existsSync(join(root, 'videos/ai-baru')), false);
 });
 
@@ -583,7 +583,7 @@ test('mdSection and storyboardRows read the plan files', () => {
   assert.equal(mdSection(md, 'Music'), '- m01-quiet');
   assert.equal(mdSection(md, 'Nope'), '');
   const rows = storyboardRows('| # | time | spoken words | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 0:00.0–0:04.4 | Banyak AI | stop-motion / pop-up | Warung | `sm-08-walk-hinge` (still 2) |\n');
-  assert.deepEqual(rows, [{ n: 1, time: '0:00.0–0:04.4', words: 'Banyak AI', style: 'stop-motion / pop-up', what: 'Warung', example: 'sm-08-walk-hinge (still 2)' }]);
+  assert.deepEqual(rows, [{ n: 1, bars: null, time: '0:00.0–0:04.4', words: 'Banyak AI', style: 'stop-motion / pop-up', what: 'Warung', example: 'sm-08-walk-hinge (still 2)' }]);
 });
 
 test('app generate: options, create with a session, validation, and a failed session start', async (t) => {
@@ -842,4 +842,87 @@ test('app generate decision reports a failed or exited session; a second session
   const live = await startApp(root, {}, { ...idlePanes('g-one'), 'has-session': { code: 0, stdout: '', stderr: '' } });
   t.after(() => live.server.close());
   assert.equal((await live.call('POST', '/api/generate/g-one/session', { runtime: 'claude', model: 'opus', effort: 'high' })).status, 409);
+});
+
+// ---- music formats (ADR-0027) ----
+
+function genMusicProject(root, slug, stage) {
+  const dir = join(root, 'videos', slug);
+  mkdirSync(join(dir, 'research'), { recursive: true });
+  writeFileSync(join(dir, 'creative-brief.md'), '# Creative Brief\n\n## Workflow Settings\n\n- mode: generate\n- format: kinetic-post\n');
+  writeFileSync(join(dir, 'research/brief.md'), '# Brief (verbatim dari Dena, 2026-09-29)\n\nBukan AI-nya yang bodoh.\n');
+  writeFileSync(join(dir, 'research/request.json'), JSON.stringify({ version: 1, format: 'kinetic-post', brief: 'x', text: 'Bukan AI-nya yang bodoh', urls: [], repurpose: null, voice: null, duration: null, style: null, music: null }));
+  writeFileSync(join(dir, 'script.md'), '# Teks\n\nBUKAN\nAI-NYA\nYANG BODOH\n');
+  writeFileSync(join(dir, 'processed-audio.wav'), 'MUSIC');
+  writeFileSync(join(dir, 'beats.json'), JSON.stringify({ version: 1, track: 'm01-quiet', bpm: 120, bars: 6, duration: 12, loop: true, beats: [], downbeats: [], barList: [] }));
+  mkdirSync(join(dir, 'preview'), { recursive: true });
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'JPG');
+  writeFileSync(join(dir, 'storyboard.md'), '| # | bars | time | on-screen text | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- | --- |\n| 1 | 1–2 | 0:00–0:04 | BUKAN AI-NYA | broll-text / slam | Kata jatuh di downbeat | `tx-01-slam` |\n');
+  if (stage === 'gate2') {
+    record(dir, { gate: 1, decision: 'approve', by: 'cli' });
+    mkdirSync(join(dir, 'renders'), { recursive: true });
+    writeFileSync(join(dir, 'renders', `${slug}.mp4`), 'MP4');
+  }
+  return dir;
+}
+
+test('validateRequest per format: durations, voice only for explainer, Teks persis only for music formats', () => {
+  const root = genStudioRoot();
+  const ok = { brief: 'Bukan AI-nya yang bodoh', slug: 'post-baru', format: 'kinetic-post' };
+  const err = (body) => { try { validateRequest(root, body); return 'ok'; } catch (e) { return `${e.status} ${e.message}`; } };
+  assert.equal(err({ ...ok, duration: 12, text: 'BUKAN AI-NYA YANG BODOH' }), 'ok');
+  assert.match(err({ ...ok, format: 'reel' }), /^400 format:/);
+  assert.match(err({ ...ok, duration: 25 }), /^400 duration: bilangan bulat 8–20 atau kosong/);
+  assert.match(err({ ...ok, format: 'motion-short', duration: 12 }), /^400 duration: bilangan bulat 15–40/);
+  assert.match(err({ ...ok, voice: 'st-f2' }), /^400 voice:/);
+  assert.match(err({ ...ok, text: 'x'.repeat(1001) }), /^400 text:/);
+  assert.match(err({ brief: 'x', slug: 'ex-baru', text: 'teks' }), /^400 text:/);
+  const v = validateRequest(root, { ...ok, text: '  BUKAN\r\nAI-NYA  ' });
+  assert.deepEqual([v.request.format, v.request.text, v.request.voice], ['kinetic-post', 'BUKAN\nAI-NYA', null]);
+  assert.equal(validateRequest(root, { brief: 'x', slug: 'ex-baru' }).request.format, 'explainer');
+  assert.deepEqual(generateOptions(root).durations['motion-short'], [15, 40]);
+  assert.deepEqual(generateOptions(root).formats, ['explainer', 'kinetic-post', 'motion-short']);
+});
+
+test('app generate kinetic-post: scaffold with format, Teks persis in the brief, prompt with two gates', async (t) => {
+  const root = genStudioRoot();
+  const { server, call } = await startApp(root);
+  t.after(() => server.close());
+  const made = await call('POST', '/api/generate', { brief: 'Bukan AI-nya yang bodoh', slug: 'post-baru', format: 'kinetic-post', text: 'BUKAN AI-NYA YANG BODOH', runtime: 'claude', model: 'opus', effort: 'high' });
+  assert.equal(made.status, 201);
+  const dir = join(root, 'videos/post-baru');
+  assert.match(readFileSync(join(dir, 'creative-brief.md'), 'utf8'), /^- format: kinetic-post$/m);
+  assert.match(readFileSync(join(dir, 'research/brief.md'), 'utf8'), /## Teks persis \(wajib dipakai kata demi kata\)\n\nBUKAN AI-NYA YANG BODOH\n$/);
+  assert.equal(JSON.parse(readFileSync(join(dir, 'research/request.json'), 'utf8')).text, 'BUKAN AI-NYA YANG BODOH');
+  const prompt = readFileSync(join(root, '.studio/prompts/post-baru.md'), 'utf8');
+  assert.match(prompt, /^Buat video mode generate \(kinetic-post\) di `videos\/post-baru\/`/);
+  assert.match(prompt, /Gate 1 \(teks \+ musik \+ storyboard\) dan Gate 2 \(render\)/);
+  assert.equal((await call('GET', '/api/generate')).body.find((p) => p.slug === 'post-baru').format, 'kinetic-post');
+});
+
+test('app generate music-format detail, final-gate messages, and explainer-only script/voice routes', async (t) => {
+  const root = genStudioRoot();
+  genMusicProject(root, 'post-a', 'gate1');
+  const dir2 = genMusicProject(root, 'post-b', 'gate2');
+  const app = await startApp(root, {}, idlePanes('post-b'));
+  t.after(() => app.server.close());
+  const d1 = (await app.call('GET', '/api/generate/post-a')).body;
+  assert.deepEqual([d1.format, d1.status.gate, d1.status.finalGate], ['kinetic-post', 1, 2]);
+  assert.deepEqual(d1.beats, { track: 'm01-quiet', bpm: 120, bars: 6, duration: 12, loop: true });
+  assert.deepEqual(d1.gate1.lines, ['BUKAN', 'AI-NYA', 'YANG BODOH']);
+  assert.deepEqual([d1.gate2.rows[0].bars, d1.gate2.rows[0].words, d1.gate2.rows[0].example], ['1–2', 'BUKAN AI-NYA', 'tx-01-slam']);
+  assert.equal((await app.call('PUT', '/api/generate/post-a/script', { text: '# T\n\nBARU\n' })).status, 409);
+  assert.equal((await app.call('POST', '/api/generate/post-a/voice')).status, 409);
+  const fp = (await app.call('GET', '/api/generate/post-b')).body.status.fingerprint;
+  app.calls.length = 0;
+  assert.equal((await app.call('POST', '/api/generate/post-b/decision', { gate: 2, decision: 'approve', fingerprint: fp })).status, 200);
+  assert.match(app.calls.find((c) => c.includes('-l')).at(-1), /^Gate 2 disetujui dari Studio\. Catatan: -\. Video selesai; jangan publish ke Repliz atau R2/);
+  assert.equal(readGates(dir2).log.at(-1).gate, 2);
+});
+
+test('gateMessage uses the format\'s last gate for approval and QA', () => {
+  assert.match(gateMessage({ gate: 2, decision: 'approve', finalGate: 2 }), /^Gate 2 disetujui dari Studio\. Catatan: -\. Video selesai; jangan publish/);
+  assert.match(gateMessage({ gate: 2, decision: 'approve' }), /Lanjutkan ke fase berikutnya\.$/, 'an explainer Gate 2 continues');
+  assert.equal(gateMessage({ gate: 2, decision: 'qa', finalGate: 2 }), 'Gate 2: Dena memilih QA dulu. Jalankan fase QA (docs/agents/04-qa.md) sebagai subagent baru, lalu kembali ke Gate 2.');
+  assert.match(buildPrompt({ mode: 'generate', slug: 'a', format: 'motion-short' }), /^Buat video mode generate \(motion-short\)[\s\S]*Gate 1 \(teks \+ musik \+ storyboard\) dan Gate 2 \(render\)/);
 });

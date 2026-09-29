@@ -4,6 +4,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { DURATION, FORMATS, isMusicFormat, readFormat } from '../lib/formats.mjs';
 import { GateError, editedSinceDecision, gateStatus, isGenerate, readGates, recordDecision, sheetsOf } from '../lib/gates.mjs';
 import { readCatalog } from '../lib/music.mjs';
 import { loadVoices } from '../lib/voice/presets.mjs';
@@ -53,7 +54,7 @@ export function generateOptions(root) {
     // unreadable catalog: no music choice
   }
   const repurpose = projectSlugs(root).filter((s) => existsSync(join(root, 'videos', s, 'processed-transcript.json')));
-  return { voices, defaultVoice, styles: STYLES, music, repurpose };
+  return { voices, defaultVoice, styles: STYLES, music, repurpose, formats: FORMATS, durations: DURATION };
 }
 
 const empty = (v) => v === undefined || v === null || v === '';
@@ -65,6 +66,16 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
   const brief = typeof b.brief === 'string' ? b.brief.replace(/\r\n/g, '\n').trim() : '';
   if (!brief) bad('brief', 'wajib diisi');
   if (brief.length > 4000) bad('brief', 'maksimal 4000 karakter');
+  const format = empty(b.format) ? 'explainer' : b.format;
+  if (!FORMATS.includes(format)) bad('format', `harus salah satu dari ${FORMATS.join(', ')}`);
+  const music = isMusicFormat(format);
+  let text = null;
+  if (!empty(b.text)) {
+    if (!music) bad('text', 'Teks persis hanya untuk kinetic-post dan motion-short');
+    text = String(b.text).replace(/\r\n/g, '\n').trim();
+    if (text.length > 1000) bad('text', 'maksimal 1000 karakter');
+  }
+  if (music && !empty(b.voice)) bad('voice', `${format} tidak punya suara`);
   let slug = '';
   try {
     slug = checkSlug(b.slug);
@@ -92,12 +103,15 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
   };
   let duration = null;
   if (!empty(b.duration)) {
+    const [lo, hi] = DURATION[format];
     duration = Number(b.duration);
-    if (!Number.isInteger(duration) || duration < 30 || duration > 90) bad('duration', 'bilangan bulat 30–90 atau kosong');
+    if (!Number.isInteger(duration) || duration < lo || duration > hi) bad('duration', `bilangan bulat ${lo}–${hi} atau kosong`);
   }
   const request = {
     version: 1,
+    format,
     brief,
+    text: text || null,
     urls: urls.map(String),
     repurpose: pick('repurpose', b.repurpose, opts.repurpose),
     voice: pick('voice', b.voice, opts.voices.map((v) => v.name)),
@@ -111,8 +125,9 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
 
 export function createGenerate(root, body, { now } = {}) {
   const { slug, request } = validateRequest(root, body, { now });
-  const { dir } = scaffold({ slug, root, generate: true });
-  writeFileSync(join(dir, 'research', 'brief.md'), `# Brief (verbatim dari Dena, ${request.createdAt.slice(0, 10)})\n\n${request.brief}\n`);
+  const { dir } = scaffold({ slug, root, generate: true, format: request.format });
+  const locked = request.text ? `\n## Teks persis (wajib dipakai kata demi kata)\n\n${request.text}\n` : '';
+  writeFileSync(join(dir, 'research', 'brief.md'), `# Brief (verbatim dari Dena, ${request.createdAt.slice(0, 10)})\n\n${request.brief}\n${locked}`);
   writeFileSync(join(dir, 'research', 'request.json'), `${JSON.stringify(request, null, 2)}\n`);
   return { slug, request };
 }
@@ -126,11 +141,15 @@ export function mdSection(md, heading) {
   return (end < 0 ? rest : rest.slice(0, end)).join('\n').trim();
 }
 
+// explainer: | # | time | spoken words | style | what | example |; music formats add "bars" after "#" (ADR-0027)
 export function storyboardRows(md) {
   return String(md ?? '').split('\n')
     .filter((l) => /^\|\s*\d+\s*\|/.test(l))
     .map((l) => l.split('|').slice(1, -1).map((c) => c.trim()))
-    .map(([n, time = '', words = '', style = '', what = '', example = '']) => ({ n: Number(n), time, words, style, what, example: example.replace(/`/g, '') }));
+    .map((c) => {
+      const [n, bars, time = '', words = '', style = '', what = '', example = ''] = c.length >= 7 ? c : [c[0], null, ...c.slice(1)];
+      return { n: Number(n), bars, time, words, style, what, example: example.replace(/`/g, '') };
+    });
 }
 
 const briefLine = (dir) => {
@@ -140,6 +159,18 @@ const briefLine = (dir) => {
 const sessionOf = (sessions, slug) => {
   const s = sessions.find((x) => x.slug === slug);
   return s ? { status: s.status, runtime: s.runtime, model: s.model } : null;
+};
+
+const readFormatSafe = (dir) => {
+  try {
+    return readFormat(dir);
+  } catch {
+    return 'explainer';
+  }
+};
+const beatsSummary = (dir) => {
+  const b = readJsonFile(join(dir, 'beats.json'));
+  return b ? { track: b.track ?? null, bpm: b.bpm ?? null, bars: b.bars ?? null, duration: b.duration ?? null, loop: Boolean(b.loop) } : null;
 };
 
 export function listGenerate(root, sessions = []) {
@@ -154,7 +185,7 @@ export function listGenerate(root, sessions = []) {
       } catch (e) {
         status = { phase: 'error', gate: null, state: null, error: e.message };
       }
-      return { slug, brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
+      return { slug, format: readFormatSafe(dir), brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
     });
 }
 
@@ -183,11 +214,14 @@ export function generateDetail(root, slug, sessions = [], { voiceJobs } = {}) {
     brief: briefLine(dir),
     request: readRequest(dir),
     status,
+    format: status.format,
+    beats: beatsSummary(dir),
     session: sessionOf(sessions, slug),
     voiceJob: { running: Boolean(voiceJobs?.running(slug)) },
     gate1: {
       script,
       paragraphs: splitParagraphs(scriptBody(script)),
+      lines: scriptBody(script).split('\n').map((l) => l.trim()).filter(Boolean),
       facts: mdSection(script, 'Fakta'),
       voice: meta ? { duration: meta.duration ?? null, preset: meta.preset ?? null, wer: meta.alignment?.wer ?? null } : null,
       audio: existsSync(join(dir, 'processed-audio.wav')),
@@ -232,14 +266,15 @@ const oneLine = (s) => String(s ?? '').replace(/[\u0000-\u001f\u007f-\u009f]+/g,
 const MAX_MESSAGE = 1000;
 
 // Every message starts and ends with fixed text (so a note can never begin the line with "/" or "!", nor end a tmux
-// argument with ";"). A Gate 3 approval ends the run: the next step in Build would be the publish gate, which is Dena's.
-export function gateMessage({ gate, decision, note = '', edited = false, voiceStale = false }) {
+// argument with ";"). The last gate's approval (explainer 3, music formats 2; ADR-0027) ends the run: the next step
+// in Build would be the publish gate, which is Dena's.
+export function gateMessage({ gate, decision, note = '', edited = false, voiceStale = false, finalGate = 3 }) {
   const build = (n) => {
     let text;
-    if (decision === 'approve' && gate === 3) text = `Gate 3 disetujui dari Studio. Catatan: ${n || '-'}. Video selesai; jangan publish ke Repliz atau R2 — Dena publish sendiri dari tab Results. Berhenti di sini.`;
+    if (decision === 'approve' && gate === finalGate) text = `Gate ${gate} disetujui dari Studio. Catatan: ${n || '-'}. Video selesai; jangan publish ke Repliz atau R2 — Dena publish sendiri dari tab Results. Berhenti di sini.`;
     else if (decision === 'approve') text = `Gate ${gate} disetujui dari Studio. Catatan: ${n || '-'}. Lanjutkan ke fase berikutnya.`;
     else if (decision === 'revise') text = `Gate ${gate} revisi dari Studio: ${n}. Perbaiki di fase pemiliknya, lalu berhenti lagi di Gate ${gate}.`;
-    else if (decision === 'qa') text = `Gate 3: Dena memilih QA dulu${n ? ` (${n})` : ''}. Jalankan fase QA (docs/agents/04-qa.md) sebagai subagent baru, lalu kembali ke Gate 3.`;
+    else if (decision === 'qa') text = `Gate ${gate}: Dena memilih QA dulu${n ? ` (${n})` : ''}. Jalankan fase QA (docs/agents/04-qa.md) sebagai subagent baru, lalu kembali ke Gate ${gate}.`;
     else throw new Error(`no message for decision ${decision}`);
     if (!edited || gate !== 1) return text;
     return voiceStale
@@ -275,7 +310,7 @@ export async function decide(root, slug, body = {}, { run, now, voiceJobs, pause
   const edited = gate === 1 && editedSinceDecision(before.log, 1);
   const recorded = asHttp(() => recordDecision(dir, { gate, decision: body.decision, note: body.note, by: 'studio', fingerprint: body.fingerprint, ...(now ? { now } : {}) }));
   if (!session || session.status === 'exited') return { recorded, sent: false, error: 'tidak ada sesi agent; mulai sesi lanjut' };
-  const text = gateMessage({ gate, decision: body.decision, note: recorded.note, edited, voiceStale: before.voiceStale });
+  const text = gateMessage({ gate, decision: body.decision, note: recorded.note, edited, voiceStale: before.voiceStale, finalGate: before.finalGate });
   const target = `=${sessionName(slug)}:`;
   const exec = run || runFile;
   const typed = await exec('tmux', ['send-keys', '-t', target, '-l', text]);
@@ -288,6 +323,7 @@ export async function decide(root, slug, body = {}, { run, now, voiceJobs, pause
 // ---- script edit (RD-05-27) ----
 export async function saveScript(root, slug, text, { run, now, voiceJobs } = {}) {
   const dir = generateDir(root, slug);
+  if (isMusicFormat(readFormatSafe(dir))) throw new HttpError(409, 'teks format musik direvisi lewat catatan ke agent (storyboard ikut berubah)');
   if (typeof text !== 'string') throw new HttpError(400, 'text must be a string');
   if (Buffer.byteLength(text) > 20480) throw new HttpError(413, 'naskah maksimal 20 KB');
   if (!scriptBody(text).trim()) throw new HttpError(400, 'naskah tanpa narasi (teks sebelum ## pertama kosong)');

@@ -339,7 +339,8 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
   sheet + `storyboard.md`; G3 `renders/<slug>.mp4`); `edit` tanpa sidik jari. Format musik
   (ADR-0027): G1 = `script.md` + `processed-audio.wav` + storyboard sheet + `storyboard.md`,
   G2 = render; `gate` hanya 1|2.
-- `research/request.json` (ADR-0026): `{ version: 1, brief, urls: [], repurpose, voice, duration, style, music, createdAt }`;
+- `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, createdAt }`
+  (`text` = Teks persis atau `null`; `voice` selalu `null` untuk format musik);
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
 - `beats.json` (format musik, ADR-0027): `{ version: 1, track, file, sha256, meter: "4/4", bpm, from, bars, duration, loop, beats: [s], downbeats: [s], barList: [{ n, start, end, energy }] }`
   dalam waktu video (0 = titik potong); ditulis `npm run video -- music`. Cache analisis per

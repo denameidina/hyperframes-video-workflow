@@ -114,3 +114,17 @@ sesi agen tmux, dan publish. Owner:
   while a gate waits and the session is not busy (Setuju also not while the Gate 1 voice is
   stale), not redraw a playing player or an open script editor while it polls every 3 s,
   and open from `#generate`, `#generate/new`, and `#generate/<slug>`.
+- **RD-05-30** (Event-driven) — When Dena submits the Generate form, Studio shall accept a
+  `format` (`explainer` default, `kinetic-post`, `motion-short`), check the duration against
+  that format's range (30–90, 8–20, 15–40 s), accept a voice preset only for `explainer` and
+  "Teks persis" (at most 1000 characters) only for the music formats, scaffold with
+  `--format`, write `format` and `text` to `research/request.json` and the Teks persis to
+  `research/brief.md`, and start the agent with a prompt naming the format and its gates
+  (ADR-0027).
+- **RD-05-31** (Event-driven) — When Dena opens a music-format project, Studio shall show its
+  format and, at Gate 1, the music (`processed-audio.wav`), tempo from `beats.json` (track,
+  BPM, bars, duration, loop), the on-screen text line by line, the storyboard sheet, and the
+  scene rows with their bars; at Gate 2 the render with Revisi, QA dulu, and Setuju.
+- **RD-05-32** (Unwanted) — If a music-format project gets a script edit or a voice job,
+  then Studio shall refuse it (409); the approval at a format's last gate tells the agent the
+  video is done and not to publish, and QA dulu is offered only at that gate.
