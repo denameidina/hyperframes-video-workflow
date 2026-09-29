@@ -10,13 +10,21 @@
 //        npm run video -- migrate-sources [--apply]   (raw/ + source.mp4 -> shared/ + sources.json, once)
 // Layers spec: docs/superpowers/specs/2026-09-27-parallax-design.md
 // Multi-source spec: docs/superpowers/specs/2026-09-29-multi-source-projects-design.md (ADR-0022)
+//        npm run video -- new <slug> --generate   (generate mode: templates/dena-generate, research/, brief stub)
+//        npm run video -- voice <slug> [--preset <p>]   (script.md -> voice/, processed-audio.wav, processed-transcript.json)
+//        npm run video -- bgm <slug> --track <id> [--from <s>]   (shared/music track -> ducked bgm.wav + bgm.json)
+//        npm run video -- storyboard <slug>   (overlay-timeline.json scenes -> preview/storyboard-sheet.jpg)
+// Generate-mode spec: docs/superpowers/specs/2026-09-29-generate-mode-explainer-design.md (ADR-0025)
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseArgs } from 'node:util';
+import { parseArgs, parseEnv } from 'node:util';
+import { runBgm } from './lib/bgm.mjs';
+import { GENERATE_TEMPLATE, briefStub, voiceStep } from './lib/generate.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
+import { runStoryboard } from './lib/storyboard.mjs';
 import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
 import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, sourceFile, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
@@ -43,28 +51,34 @@ export function probeDuration(file, run = spawnSync) {
   return Math.round(d * 1000) / 1000;
 }
 
-export function resolveDuration({ duration, dir, probe = probeDuration }) {
+// The project's time base: processed.mp4 (edit) or processed-audio.wav, the voiceover (generate).
+export function resolveDuration({ duration, dir, probe = probeDuration, media = 'processed.mp4' }) {
   if (duration !== undefined) {
     const d = Number(duration);
     if (!(d > 0)) throw new Error('--duration must be > 0');
     return d;
   }
-  const media = join(dir, 'processed.mp4');
-  return existsSync(media) ? probe(media) : 10;
+  const file = join(dir, media);
+  return existsSync(file) ? probe(file) : 10;
 }
 
 const hasEntry = (p) => { try { lstatSync(p); return true; } catch { return false; } };
 
-export function scaffold({ slug, root = '.', duration, probe }) {
+export function scaffold({ slug, root = '.', duration, probe, generate = false }) {
   const dir = projectDir(slug, root);
+  if (generate && hasEntry(dir)) throw new Error(`${dir} already exists; generate mode starts a new project`);
   const index = join(dir, 'index.html');
   if (hasEntry(index)) throw new Error(`${index} already exists; refusing to overwrite`);
   mkdirSync(join(dir, 'compositions', 'broll'), { recursive: true });
   mkdirSync(join(dir, 'assets'), { recursive: true });
   mkdirSync(join(dir, SOURCES_DIR), { recursive: true });
   if (!hasEntry(join(dir, 'sources.json'))) writeManifest(dir, { version: 1, sources: [] });
-  const d = resolveDuration({ duration, dir, probe });
-  const tpl = join(root, TEMPLATE);
+  if (generate) {
+    mkdirSync(join(dir, 'research'), { recursive: true });
+    writeFileSync(join(dir, 'creative-brief.md'), briefStub(slug));
+  }
+  const d = resolveDuration({ duration, dir, probe, media: generate ? 'processed-audio.wav' : 'processed.mp4' });
+  const tpl = join(root, generate ? GENERATE_TEMPLATE : TEMPLATE);
   writeFileSync(index, fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d }));
   cpSync(join(tpl, 'hyperframes.json'), join(dir, 'hyperframes.json'));
   if (!hasEntry(join(dir, 'vendor'))) symlinkSync('../../vendor', join(dir, 'vendor'));
@@ -88,7 +102,7 @@ export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
         ? [['node', [join(root, 'scripts', 'render-blur.mjs'), '--slug', slug, '--project', dir]]]
         : [hf('render', '--quality', 'high', '-o', join(dir, 'renders', `${slug}.mp4`), dir)];
     default:
-      throw new Error(`unknown command "${cmd}" (use new, sources, cut, check, dev, snapshot, render, cutout, layers, migrate-sources)`);
+      throw new Error(`unknown command "${cmd}" (use new, sources, cut, voice, bgm, storyboard, check, dev, snapshot, render, cutout, layers, migrate-sources)`);
   }
 }
 
@@ -152,7 +166,7 @@ export function layersPlan(slug, { at, image, name, root = '.', probe = probeDur
   };
 }
 
-export function main(argv, { run = spawnSync, env = process.env, root = '.' } = {}) {
+export function main(argv, { run = spawnSync, env = process.env, root = '.', fetchImpl = fetch } = {}) {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
@@ -162,6 +176,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
       image: { type: 'string' },
       'add-shared': { type: 'string' }, set: { type: 'string' }, role: { type: 'string' }, note: { type: 'string' },
       detected: { type: 'boolean', default: false }, remove: { type: 'string' }, apply: { type: 'boolean', default: false },
+      generate: { type: 'boolean', default: false }, preset: { type: 'string' }, track: { type: 'string' },
     },
   });
   const [cmd, slug] = positionals;
@@ -177,9 +192,31 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
     return;
   }
   if (cmd === 'new') {
-    const { dir, duration } = scaffold({ slug, root, duration: values.duration });
-    console.log(`created ${dir} (${duration} s)`);
+    const { dir, duration } = scaffold({ slug, root, duration: values.duration, generate: values.generate });
+    console.log(`created ${dir} (${duration} s${values.generate ? ', generate mode' : ''})`);
     return;
+  }
+  if (cmd === 'voice' || cmd === 'bgm' || cmd === 'storyboard') {
+    const dir = projectDir(slug, root);
+    if (!existsSync(dir)) throw new Error(`${dir} not found; run npm run video -- new ${slug} --generate`);
+    if (cmd === 'voice') {
+      // .env is read into this call's env only; process.env (and every child process) stays as it was
+      const fileEnv = existsSync(join(root, '.env')) ? parseEnv(readFileSync(join(root, '.env'), 'utf8')) : {};
+      return voiceStep({ dir, root, preset: values.preset, env: { ...fileEnv, ...env }, fetchImpl, run }).then((meta) => {
+        console.log(`voice ${join(dir, 'processed-audio.wav')} (${meta.duration} s, preset ${meta.preset}${meta.alignment ? `, WER ${meta.alignment.wer}` : ''})`);
+        for (const w of meta.warnings) console.log(`warning: ${w}`);
+        return meta;
+      });
+    }
+    if (cmd === 'bgm') {
+      if (!values.track) throw new Error('bgm needs --track <id> (npm run music -- list)');
+      const meta = runBgm({ dir, root, trackId: values.track, from: values.from ?? 0, run });
+      console.log(`bgm ${join(dir, 'bgm.wav')} (${meta.track} from ${meta.from} s, ${meta.copies} cop${meta.copies === 1 ? 'y' : 'ies'}, gain ${meta.gainDb} dB)`);
+      return meta;
+    }
+    const r = runStoryboard({ dir, root, run, env, log: console.log });
+    console.log(`storyboard ${r.out} (${r.scenes} scenes)`);
+    return r;
   }
   if (cmd === 'sources') {
     const dir = projectDir(slug, root);
@@ -264,10 +301,14 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.' } = 
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  try {
-    main(process.argv.slice(2));
-  } catch (e) {
+  const fail = (e) => {
     console.error(e.message);
     process.exit(1);
+  };
+  try {
+    const r = main(process.argv.slice(2));
+    if (r?.then) r.catch(fail); // video voice is async
+  } catch (e) {
+    fail(e);
   }
 }
