@@ -128,3 +128,6 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-32** (Unwanted) — If a music-format project gets a script edit or a voice job,
   then Studio shall refuse it (409); the approval at a format's last gate tells the agent the
   video is done and not to publish, and QA dulu is offered only at that gate.
+- **RD-05-33** (Ubiquitous) — The Generate form shall show Teks persis and hide the voice
+  preset for the music formats, and show the duration range of the chosen format; the list
+  and panel shall name each project's format.

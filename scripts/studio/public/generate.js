@@ -1,4 +1,4 @@
-// Studio tab Generate (ADR-0026, RD-05-21..29): start a generate-mode video, then answer its gates.
+// Studio tab Generate (ADR-0026, ADR-0027, RD-05-21..33): start a generate-mode video, then answer its gates.
 // Plain JS, no build step; helpers come from app.js (window.studio).
 (() => {
   const { $, api, post, esc, enc, banner, dur, openTerminal } = window.studio;
@@ -9,6 +9,8 @@
   let detail = null;
   let pending = null; // { gate, decision } while the note dialog is open
   let followingVoice = ''; // slug whose voice-job log is attached
+  let durations = {}; // format -> [min, max] seconds, from /api/generate/options
+  const isMusic = (f) => f === 'kinetic-post' || f === 'motion-short';
 
   const statusText = (s) => (s.phase === 'gate' ? `${STATE[s.state] || 'Menunggu'} · Gate ${s.gate}` : PHASE[s.phase] || s.phase);
   const sessionText = (x) => (x ? x.status : 'tidak ada sesi');
@@ -45,7 +47,7 @@
     $('#gen-home').hidden = false;
     $('#gen-list').innerHTML = items.length ? items.map((p) => `
       <li>
-        <div class="meta"><strong>${esc(p.slug)}</strong><span class="status ${esc(p.session?.status || '')}">${esc(statusText(p.status))}</span>
+        <div class="meta"><strong>${esc(p.slug)}</strong><span class="status ${esc(p.session?.status || '')}">${esc(`${p.format || 'explainer'} · ${statusText(p.status)}`)}</span>
           <span class="muted">${esc(p.brief)}</span><span class="muted">Sesi: ${esc(sessionText(p.session))}</span></div>
         <div class="actions"><button class="primary" data-gen-open="${esc(p.slug)}">Buka</button></div>
       </li>`).join('') : '<li class="muted">Belum ada video generate. Tekan "Buat video".</li>';
@@ -75,16 +77,21 @@
       </section>`;
   }
 
-  function gate2(d) {
+  function storyboardCards(d) {
     const g = d.gate2;
     return `
       <section class="gen-card"><h3>Storyboard</h3>
         ${g.sheets.map((s) => `<a href="${media(d.slug, s)}" target="_blank" rel="noopener"><img class="sheet" alt="${esc(s)}" src="${media(d.slug, s, d.status.fingerprint?.[s])}"></a>`).join('') || '<p class="muted">Belum ada sheet.</p>'}
       </section>
       <section class="gen-card"><h3>Scene</h3>
-        <ol class="scenes">${g.rows.map((r) => `<li><strong>${r.n}. ${esc(r.time)}</strong> <span class="muted">${esc(r.style)}</span><span>${esc(r.what)}</span><span class="muted">“${esc(r.words)}” · ${esc(r.example)}</span></li>`).join('')}</ol>
+        <ol class="scenes">${g.rows.map((r) => `<li><strong>${r.n}. ${r.bars ? `bar ${esc(r.bars)} · ` : ''}${esc(r.time)}</strong> <span class="muted">${esc(r.style)}</span><span>${esc(r.what)}</span><span class="muted">“${esc(r.words)}” · ${esc(r.example)}</span></li>`).join('')}</ol>
       </section>
-      <section class="gen-card"><h3>Style World</h3><pre>${esc(g.styleWorld || '–')}</pre></section>
+      <section class="gen-card"><h3>Style World</h3><pre>${esc(g.styleWorld || '–')}</pre></section>`;
+  }
+
+  function gate2(d) {
+    const g = d.gate2;
+    return `${storyboardCards(d)}
       <section class="gen-card"><h3>Musik</h3><pre>${esc(g.music || '–')}</pre>
         ${g.musicTrack ? `<audio controls preload="none" src="/api/music/${enc(g.musicTrack)}/file"></audio>` : ''}</section>`;
   }
@@ -98,6 +105,21 @@
       ${g.deviations ? `<section class="gen-card"><h3>Perubahan dari rencana</h3><pre>${esc(g.deviations)}</pre></section>` : ''}
       ${g.risks ? `<section class="gen-card"><h3>Risiko</h3><pre>${esc(g.risks)}</pre></section>` : ''}
       ${g.qaReport ? '<p class="muted">Laporan QA ada: <code>qa-report.md</code> di folder proyek.</p>' : ''}`;
+  }
+
+  // kinetic-post / motion-short Gate 1: the cut music, its tempo, the on-screen text, and the storyboard (ADR-0027)
+  function musicGate1(d) {
+    const b = d.beats;
+    return `
+      <section class="gen-card"><h3>Musik</h3>
+        ${d.gate1.audio ? `<audio controls preload="none" src="${media(d.slug, 'processed-audio.wav', d.status.fingerprint?.['processed-audio.wav'])}"></audio>` : ''}
+        <p class="muted">${b ? `${esc(b.track)} · ${esc(b.bpm)} BPM · ${esc(b.bars)} bar · ${dur(b.duration)}${b.loop ? ' · loop' : ''}` : 'beats.json belum ada'}</p>
+      </section>
+      <section class="gen-card"><h3>Teks layar</h3>
+        <div id="gen-script-view">${d.gate1.lines.map((l) => `<p>${esc(l)}</p>`).join('')}
+          ${d.gate1.facts ? `<details><summary>Fakta</summary><pre>${esc(d.gate1.facts)}</pre></details>` : ''}</div>
+      </section>
+      ${storyboardCards(d)}`;
   }
 
   function running(d) {
@@ -114,16 +136,17 @@
     const s = d.status;
     const live = d.session && d.session.status !== 'exited';
     $('#gen-head').innerHTML = `<button data-gen="back">← Generate</button><strong>${esc(d.slug)}</strong>
-      <span class="status ${esc(d.session?.status || '')}">${esc(statusText(s))}</span><span class="muted">Sesi: ${esc(sessionText(d.session))}</span>
+      <span class="status ${esc(d.session?.status || '')}">${esc(`${d.format} · ${statusText(s)}`)}</span><span class="muted">Sesi: ${esc(sessionText(d.session))}</span>
       ${live ? '<button data-gen="terminal">Terminal</button>' : '<button data-gen="session" class="primary">Mulai sesi lanjut</button>'}`;
     // redraw the body only when what it shows changed: a playing player survives polling, an open editor is never
     // redrawn under Dena's typing (RD-05-29)
     const voiceBusy = Boolean(d.voiceJob?.running);
-    const key = JSON.stringify([s.phase, s.gate, s.fingerprint, s.voiceStale, voiceBusy, d.gate2.rows.length, d.gate3.render]);
+    const key = JSON.stringify([s.phase, s.gate, s.fingerprint, s.voiceStale, voiceBusy, d.gate2.rows.length, d.gate3.render, d.beats?.duration]);
     const editing = $('#gen-script-form') && !$('#gen-script-form').hidden;
     if (key !== bodyKey && !editing) {
       bodyKey = key;
-      $('#gen-body').innerHTML = s.phase === 'gate' ? { 1: gate1, 2: gate2, 3: gate3 }[s.gate](d) : running(d);
+      const views = isMusic(d.format) ? { 1: musicGate1, 2: gate3 } : { 1: gate1, 2: gate2, 3: gate3 };
+      $('#gen-body').innerHTML = s.phase === 'gate' ? views[s.gate](d) : running(d);
       if (voiceBusy) for (const b of document.querySelectorAll('[data-gen="edit"], [data-gen="voice"]')) b.disabled = true;
     }
     if (voiceBusy && followingVoice !== d.slug) followVoice(d.slug); // re-attach the log after a reload
@@ -147,7 +170,7 @@
     const canApprove = !busy && !(s.gate === 1 && s.voiceStale);
     bar.innerHTML = `${label ? `<span class="muted">${esc(label)}</span>` : ''}
       <button data-gen="revise"${busy ? ' disabled' : ''}>Revisi</button>
-      ${s.gate === 3 ? `<button data-gen="qa"${busy ? ' disabled' : ''}>QA dulu</button>` : ''}
+      ${s.gate === s.finalGate ? `<button data-gen="qa"${busy ? ' disabled' : ''}>QA dulu</button>` : ''}
       <button class="primary" data-gen="approve"${canApprove ? '' : ' disabled'}>Setuju</button>`;
   }
 
@@ -155,7 +178,7 @@
     pending = { gate, decision };
     const f = $('#gen-note-form');
     f.reset();
-    $('#gen-note-title').textContent = { approve: `Setujui Gate ${gate}`, revise: `Revisi Gate ${gate}`, qa: 'QA dulu (Gate 3)' }[decision];
+    $('#gen-note-title').textContent = { approve: `Setujui Gate ${gate}`, revise: `Revisi Gate ${gate}`, qa: `QA dulu (Gate ${gate})` }[decision];
     $('#gen-note-label').firstChild.textContent = decision === 'revise' ? 'Apa yang harus diubah? (wajib) ' : 'Catatan (opsional) ';
     f.note.required = decision === 'revise';
     $('#gen-note-error').textContent = '';
@@ -263,12 +286,24 @@
     f.effort.value = efforts.includes('high') ? 'high' : efforts[0] || '';
   }
 
+  // a music format has no voice and a shorter duration; Teks persis is only for the music formats (RD-05-33)
+  function applyFormat(f) {
+    const music = isMusic(f.format.value);
+    $('#gen-text-field').hidden = !music;
+    $('#gen-voice-field').hidden = music;
+    const [lo, hi] = durations[f.format.value] || [30, 90];
+    f.duration.min = String(lo);
+    f.duration.max = String(hi);
+    $('#gen-duration-range').textContent = `${lo}–${hi}`;
+  }
+
   async function openForm() {
     try {
       const [o, st] = await Promise.all([api('/api/generate/options'), api('/api/state')]);
       Object.assign(window.studio.state(), st);
       const f = $('#gen-form');
       f.reset();
+      durations = o.durations || {};
       slugTouched = false;
       f.repurpose.innerHTML = opt('', '—') + o.repurpose.map((s) => opt(s, s)).join('');
       f.voice.innerHTML = opt('', `otomatis${o.defaultVoice ? ` (default ${o.defaultVoice})` : ''}`) + o.voices.map((v) => opt(v.name, `${v.name} · ${v.provider}`)).join('');
@@ -277,6 +312,7 @@
       for (const o2 of f.runtime.options) o2.disabled = st.tools[o2.value] === false;
       f.runtime.value = st.tools.claude === false ? 'codex' : 'claude';
       fillModels(f);
+      applyFormat(f);
       $('#gen-error').textContent = '';
       $('#gen-dialog').showModal();
     } catch (e) {
@@ -288,6 +324,7 @@
   form.brief.addEventListener('input', () => { if (!slugTouched) form.slug.value = slugify(form.brief.value); });
   form.slug.addEventListener('input', () => { slugTouched = true; });
   form.runtime.addEventListener('change', () => fillModels(form));
+  form.format.addEventListener('change', () => applyFormat(form));
   form.model.addEventListener('change', () => {
     const rt = window.studio.state().models[form.runtime.value] || { models: [] };
     const efforts = rt.models.find((m) => m.value === form.model.value)?.efforts || [];
@@ -301,7 +338,8 @@
     const urls = f.urls.value.split('\n').map((u) => u.trim()).filter(Boolean);
     try {
       const r = await post('/api/generate', {
-        brief: f.brief.value, slug: f.slug.value.trim(), urls, repurpose: f.repurpose.value, voice: f.voice.value,
+        format: f.format.value, text: isMusic(f.format.value) ? f.text.value : '',
+        brief: f.brief.value, slug: f.slug.value.trim(), urls, repurpose: f.repurpose.value, voice: isMusic(f.format.value) ? '' : f.voice.value,
         duration: f.duration.value, style: f.style.value, music: f.music.value,
         runtime: f.runtime.value, model: f.model.value, effort: f.effort.value,
       });

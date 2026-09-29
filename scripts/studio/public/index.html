@@ -118,13 +118,19 @@
 <dialog id="gen-dialog">
   <form method="dialog" id="gen-form">
     <h2>Buat video generate</h2>
+    <label>Format <select name="format">
+      <option value="explainer">explainer · narasi, 30–90 dtk</option>
+      <option value="kinetic-post">kinetic-post · teks, 8–20 dtk, loop</option>
+      <option value="motion-short">motion-short · 15–40 dtk, kartu CTA</option>
+    </select></label>
     <label>Brief (wajib) <textarea name="brief" rows="5" maxlength="4000" required placeholder="Topik, sudut pandang, poin yang wajib ada"></textarea></label>
     <label>Slug <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off"></label>
+    <label id="gen-text-field" hidden>Teks persis (opsional, dipakai kata demi kata) <textarea name="text" rows="3" maxlength="1000" placeholder="BUKAN AI-NYA YANG BODOH"></textarea></label>
     <details><summary>Opsional (kosong = agent yang pilih)</summary>
       <label>URL sumber (satu per baris, maks 5) <textarea name="urls" rows="2" autocapitalize="off"></textarea></label>
       <label>Repurpose dari proyek <select name="repurpose"></select></label>
-      <label>Preset suara <select name="voice"></select></label>
-      <label>Durasi (detik, 30–90) <input name="duration" type="number" min="30" max="90" step="1" placeholder="otomatis"></label>
+      <label id="gen-voice-field">Preset suara <select name="voice"></select></label>
+      <label><span>Durasi (detik, <span id="gen-duration-range">30–90</span>)</span> <input name="duration" type="number" min="30" max="90" step="1" placeholder="otomatis"></label>
       <label>Style utama <select name="style"></select></label>
       <label>Musik <select name="music"></select></label>
     </details>
