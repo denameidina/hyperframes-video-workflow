@@ -87,6 +87,7 @@ npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/a
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
 npm run test:video          # node --test scripts/video.test.mjs
 npm run test:voice          # node --test scripts/voice.test.mjs scripts/voice-test-run.test.mjs (adapter suara, uji dengar)
+npm run test:music          # node --test scripts/music.test.mjs (pustaka musik)
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/
 npm run check:style-examples # lint + validate + snapshot contoh style b-roll, satu host per gaya → renders/style-examples/<gaya>/ (-- <gaya> untuk satu)
 npm run check:craft-examples # lint + validate + snapshot contoh resep craft-kit → renders/craft-examples/
@@ -109,6 +110,18 @@ npm run voice -- design --name designed-a --prompt "<deskripsi>"   # voice desig
 npm run voice -- voices --lang jv                                  # daftar suara prebuilt
 npm run voice -- test build                                        # uji dengar blind -> shared/voice-tests/<run>/
 npm run voice -- test reveal <run>                                 # setelah dinilai di Studio (tab Suara)
+```
+
+## Musik (BGM)
+
+Pustaka `shared/music/` ([ADR-0024](../adr/0024-music-library.md)): hanya `cc0`,
+`public-domain`, `pixabay`, `mixkit`. Situs yang menolak unduhan otomatis → unduh manual,
+lalu `add <file>` dengan argumen yang sama.
+
+```bash
+npm run music -- add <url|file> --source <halaman-track> --license cc0 --title "<judul>" --author "<pembuat>" --mood reflektif --energy 2 [--loopable] [--proof <file>]
+npm run music -- list --mood upbeat --min-dur 60
+npm run music -- check
 ```
 
 ## Troubleshooting cepat

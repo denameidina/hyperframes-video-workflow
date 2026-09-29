@@ -204,6 +204,10 @@ npm run voice -- design --name <n> --prompt "<deskripsi>"  # Gemini voice design
 npm run voice -- voices [--lang jv] [--search <q>]       # list Gemini prebuilt voices
 npm run voice -- test build | test reveal <run>          # blind listening test (rate in Studio, tab Suara)
 npm run test:voice             # unit test the voice adapter and listening test
+npm run music -- add <url|file> --source <page> --license cc0|public-domain|pixabay|mixkit --title <t> --author <a> --mood <m> --energy <1-5>  # BGM -> shared/music/ (ADR-0024)
+npm run music -- list [--mood <m>] [--min-dur <s>]       # BGM catalog (rejected tracks hidden)
+npm run music -- check                                   # files, sha256, license allowlist, license proofs
+npm run test:music             # unit test the music library
 npm run render:blur -- --slug <slug>  # optional final render with motion blur (4x slower)
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 npx hyperframes lint --verbose  # include info-level findings

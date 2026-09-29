@@ -50,6 +50,7 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
 | Voice adapter | Voiceover TTS per paragraf (cache sha256, −16 LUFS), clone/design suara, uji dengar blind | `npm run voice -- say\|ref\|clone\|design\|voices\|test` | `scripts/voice.mjs`, `scripts/lib/voice/`, [ADR-0023](../adr/0023-voice-adapter-tts.md) |
 | Gemini 3.8 Flash TTS | TTS cloud bahasa Indonesia, voice design, voice replication | `fetch` ke `generativelanguage.googleapis.com/v1beta` dengan `GEMINI_TTS_API_KEY` | `scripts/lib/voice/providers/gemini.mjs` |
 | Supertonic 3 + uv | TTS lokal (suara stok F1–F5/M1–M5), Python 3.12 sidecar, bobot di `~/.cache/supertonic3` | `uv run --python 3.12 --with supertonic==1.3.1 …` | `scripts/lib/voice/providers/supertonic.mjs` |
+| Music library | Katalog BGM `shared/music/` dengan allowlist lisensi, sha256, loudness, bukti lisensi | `npm run music -- add\|list\|check` | `scripts/music.mjs`, `scripts/lib/music.mjs`, [ADR-0024](../adr/0024-music-library.md) |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
 | ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
 | Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |
@@ -70,6 +71,7 @@ Dari `package.json`:
 - `npm run repliz:publish` → `node scripts/repliz-publish.mjs` (auto-publish R2/Repliz).
 - `npm run test:repliz` → `node --test scripts/repliz-publish.test.mjs`.
 - `npm run voice` → `node scripts/voice.mjs` (adapter suara, ADR-0023); `npm run test:voice`.
+- `npm run music` → `node scripts/music.mjs` (pustaka BGM, ADR-0024); `npm run test:music`.
 
 ## Konfigurasi HyperFrames
 

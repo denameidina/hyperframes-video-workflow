@@ -28,6 +28,8 @@
     "studio": "node scripts/studio.mjs",
     "test:studio": "node --test scripts/studio.test.mjs",
     "voice": "node scripts/voice.mjs",
-    "test:voice": "node --test scripts/voice-*.test.mjs"
+    "test:voice": "node --test scripts/voice-*.test.mjs",
+    "music": "node scripts/music.mjs",
+    "test:music": "node --test scripts/music.test.mjs"
   }
 }

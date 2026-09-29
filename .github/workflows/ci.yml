@@ -20,3 +20,4 @@ jobs:
       - run: npm run test:video
       - run: npm run test:studio
       - run: npm run test:voice
+      - run: npm run test:music
