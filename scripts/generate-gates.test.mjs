@@ -233,3 +233,32 @@ test('formats: durations, final gates, readFormat default and errors', () => {
   assert.throws(() => readFormat(dir), /creative-brief\.md: "reel" is not one of explainer, kinetic-post, motion-short/);
   assert.throws(() => gateStatus(dir), (e) => e.code === 'bad-file');
 });
+
+test('readFormat reads the format line in any common spelling, falls back to request.json, and never guesses', () => {
+  const { dir } = project('y');
+  const brief = (line) => writeFileSync(join(dir, 'creative-brief.md'), `# B\n\n## Workflow Settings\n\n- mode: generate\n${line}\n- visual_density: medium\n`);
+  for (const line of ['- format: kinetic-post (ADR-0027)', '- format: kinetic-post <!-- keep -->', '- Format: Kinetic-Post', '- **format**: kinetic-post', '- format: `kinetic-post`', '* format: kinetic-post']) {
+    brief(line);
+    assert.equal(readFormat(dir), 'kinetic-post', line);
+  }
+  brief('- format: reel');
+  assert.throws(() => readFormat(dir), /"reel" is not one of/);
+  brief('- format:');
+  assert.throws(() => readFormat(dir), /format line has no value/);
+  writeFileSync(join(dir, 'creative-brief.md'), '# B\n\n## Content Lane\n\n- Format: talking-head\n\n## Workflow Settings\n\n- mode: generate\n');
+  assert.equal(readFormat(dir), 'explainer', 'only the Workflow Settings section counts');
+  mkdirSync(join(dir, 'research'), { recursive: true });
+  writeFileSync(join(dir, 'research/request.json'), JSON.stringify({ version: 1, format: 'motion-short' }));
+  assert.equal(readFormat(dir), 'motion-short', 'a brief rewritten without the line keeps the Studio request');
+  brief('- format: kinetic-post');
+  assert.throws(() => readFormat(dir), /creative-brief\.md says kinetic-post but research\/request\.json says motion-short/);
+  writeFileSync(join(dir, 'research/request.json'), '{oops');
+  assert.equal(readFormat(dir), 'kinetic-post', 'an unreadable request.json is ignored');
+});
+
+test('video gate names the gates of the project\'s format', () => {
+  const { root, dir, put } = project('post', { format: 'motion-short' });
+  put('script.md', 'X\n');
+  assert.throws(() => main(['gate', 'post', 'approve', '3'], { root }), /usage: npm run video -- gate post approve <1\|2>/);
+  assert.equal(existsSync(join(dir, 'gates.json')), false);
+});

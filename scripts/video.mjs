@@ -26,7 +26,7 @@ import { parseArgs, parseEnv } from 'node:util';
 import { runBgm } from './lib/bgm.mjs';
 import { runMusic } from './lib/music/cut.mjs';
 import { GENERATE_TEMPLATE, briefStub, musicStarter, voiceStep } from './lib/generate.mjs';
-import { checkFormat, isMusicFormat } from './lib/formats.mjs';
+import { checkFormat, finalGate, isMusicFormat, readFormat } from './lib/formats.mjs';
 import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { runStoryboard } from './lib/storyboard.mjs';
@@ -87,7 +87,7 @@ export function scaffold({ slug, root = '.', duration, probe, generate = false, 
   const d = resolveDuration({ duration, dir, probe, media: generate ? 'processed-audio.wav' : 'processed.mp4' });
   const tpl = join(root, generate ? GENERATE_TEMPLATE : TEMPLATE);
   const html = fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d });
-  writeFileSync(index, generate && isMusicFormat(fmt) ? musicStarter(html) : html);
+  writeFileSync(index, generate && isMusicFormat(fmt) ? musicStarter(html, fmt) : html);
   cpSync(join(tpl, 'hyperframes.json'), join(dir, 'hyperframes.json'));
   if (!hasEntry(join(dir, 'vendor'))) symlinkSync('../../vendor', join(dir, 'vendor'));
   return { dir, duration: d, format: fmt };
@@ -216,7 +216,8 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     }
     if (!['approve', 'revise', 'qa'].includes(action)) throw new Error('gate action must be approve, revise, or qa');
     const gate = Number(n);
-    if (![1, 2, 3].includes(gate)) throw new Error(`usage: npm run video -- gate ${slug} ${action} <1|2|3> [--note "…"]`);
+    const gates = Array.from({ length: finalGate(readFormat(dir)) }, (_, k) => k + 1); // explainer 1-3, music formats 1-2
+    if (!gates.includes(gate)) throw new Error(`usage: npm run video -- gate ${slug} ${action} <${gates.join('|')}> [--note "…"]`);
     const entry = recordDecision(dir, { gate, decision: action, note: values.note ?? '', by: 'cli' });
     console.log(`gate ${entry.gate} ${action} recorded (${entry.at})`);
     return entry;

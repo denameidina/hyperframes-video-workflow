@@ -116,10 +116,10 @@ R2 from a generate session — Dena publishes from the Studio Results tab.
 
 ## Source
 
-- Mode: generate (explainer)
+- Mode: generate (<format: explainer | kinetic-post | motion-short>)
 - Research: research/brief.md, research/NN-<domain>.md, research/repurpose.md
 - Target platform:
-- Target duration: <30–90 s> — <why>
+- Target duration: <explainer 30–90 s | kinetic-post 8–20 s | motion-short 15–40 s> — <why>
 
 ## Content Lane / Premise / Audience / Emotional Promise
 
@@ -153,6 +153,7 @@ Payoff (output timestamp + line):
 ## Workflow Settings
 
 - mode: generate
+- format: <explainer | kinetic-post | motion-short> (keep the value the scaffold wrote; the gates follow it)
 - visual_density: <light|medium|heavy> (default medium)
 
 ## User Approvals
@@ -281,10 +282,20 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
    first. motion-short: the last scene is the CTA card.
 3. Music: pick a catalog track (`npm run music -- list --mood upbeat`, also `playful`,
    `tech-ringan`), then `npm run video -- music <slug> --track <id> --from <s> --bars <n>`
-   (the command names the `--bars` range that fits). Reading pace is about one word or
-   phrase per beat; when that is too fast, pick a slower track — never cram the text.
+   (the command names the `--bars` range that fits). A duration in `request.json` cannot
+   be hit exactly: pick the `--bars` whose length is closest. kinetic-post: prefer a
+   multiple of 4 bars (a phrase), so the loop joins in the harmony as well as the beat.
+   Reading pace is about one word or phrase per beat; when that is too fast, pick a slower
+   track — never cram the text. Listen to the cut: when the command warns that the
+   downbeats are uncertain or a bar is uneven, try another `--from` or another track.
 4. No `video voice`, no `processed-transcript.json`, no Gate 1 stop here: continue to
    Screen Plan.
+5. The brief follows the Brief Template with these changes: `## Hook` — the hook is the
+   first beat group of `script.md`, and the hook window ends on the downbeat where that
+   group lands (`beats.json`), not at a voice paragraph; `## Voice` becomes `## Music`
+   (track, `--from`, bars, BPM, duration, loop yes/no). `## Script Summary` in
+   `edit-decision-notes.md` lists the hook line, the open loop -> payoff (bar), the
+   number of lines and words, the track and bars, and the facts count.
 
 ### Screen Plan (music formats)
 

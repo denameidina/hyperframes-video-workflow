@@ -26,9 +26,16 @@ export const briefStub = (slug, format = 'explainer') => `# Creative Brief - ${s
 const BGM_TAG = /\n[ \t]*<audio id="bgm-audio"[^>]*><\/audio>/;
 const AUDIO_NOTE = '<!-- voiceover from npm run video -- voice (processed-audio.wav) and ducked music from npm run video -- bgm (bgm.wav) -->';
 
-// A music-driven format has one audio track: the cut music in processed-audio.wav (ADR-0027, RD-03-96).
+const PROGRESS_TAG = /\n[ \t]*<div id="progress"[^>]*>\s*<div id="progress-fill"[^>]*><\/div>\s*<\/div>/;
+const PROGRESS_TWEEN = /\n[ \t]*\/\/ the root's data-duration is the voiceover length[^\n]*\n[ \t]*tl\.to\('#progress-fill'[^\n]*/;
+
+// A music-driven format has one audio track: the cut music in processed-audio.wav (ADR-0027, RD-03-96). A kinetic-post
+// loops, so its last frame must equal its first: no progress bar filling up to the end.
 // Test roots with a minimal starter pass through unchanged; the real starter is checked in scripts/generate.test.mjs.
-export const musicStarter = (html) => html.replace(BGM_TAG, '').replace(AUDIO_NOTE, '<!-- music from npm run video -- music (processed-audio.wav): the time base of a music-driven format (ADR-0027) -->');
+export function musicStarter(html, format) {
+  const out = html.replace(BGM_TAG, '').replace(AUDIO_NOTE, '<!-- music from npm run video -- music (processed-audio.wav): the time base of a music-driven format (ADR-0027) -->');
+  return format === 'kinetic-post' ? out.replace(PROGRESS_TAG, '').replace(PROGRESS_TWEEN, '') : out;
+}
 
 // Every tag marked data-voice-duration gets data-duration = the voiceover length. HTML comments are left alone
 // (the starter's comments hold sample markup).

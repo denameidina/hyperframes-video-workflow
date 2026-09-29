@@ -226,6 +226,9 @@ test('new --generate --format: the brief names the format; a music format has no
   assert.doesNotMatch(html, /bgm\.wav|bgm-audio/);
   assert.match(html, /src="processed-audio\.wav"/);
   assert.match(html, /npm run video -- music/);
+  assert.doesNotMatch(html, /id="progress"|#progress-fill|voiceover length/, 'a kinetic-post loops: no progress bar filling up to the end');
+  const short = scaffold({ slug: 'short-a', root, generate: true, format: 'motion-short' });
+  assert.match(readFileSync(join(short.dir, 'index.html'), 'utf8'), /id="progress"[\s\S]*tl\.to\('#progress-fill'/, 'a motion-short keeps its progress bar');
   const ex = scaffold({ slug: 'ex', root, generate: true });
   assert.match(readFileSync(join(ex.dir, 'creative-brief.md'), 'utf8'), /^- format: explainer$/m);
   assert.match(readFileSync(join(ex.dir, 'index.html'), 'utf8'), /src="bgm\.wav"/);
