@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "entries": [
+    { "term": "CRM", "say": "si ar em", "only": ["supertonic"] },
+    { "term": "ERP", "say": "i ar pi", "only": ["supertonic"] },
+    { "term": "API", "say": "ei pi ai", "only": ["supertonic"] },
+    { "term": "AI", "say": "ei ai", "only": ["supertonic"] }
+  ]
+}

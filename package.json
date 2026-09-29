@@ -26,6 +26,7 @@
     "video": "node scripts/video.mjs",
     "test:video": "node --test scripts/video.test.mjs scripts/video-sources.test.mjs scripts/cut-plan.test.mjs scripts/migrate-sources.test.mjs",
     "studio": "node scripts/studio.mjs",
-    "test:studio": "node --test scripts/studio.test.mjs"
+    "test:studio": "node --test scripts/studio.test.mjs",
+    "test:voice": "node --test scripts/voice-*.test.mjs"
   }
 }
