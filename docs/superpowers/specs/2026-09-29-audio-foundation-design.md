@@ -1,6 +1,6 @@
 # Audio Foundation — Adapter Suara (TTS), Uji Dengar, dan Pustaka Musik — Design
 
-Status: approved 2026-09-29 (sub-proyek 1 dari "generate video motion design")
+Status: approved 2026-09-29 (sub-proyek 1 dari "generate video motion design"; plan docs/superpowers/plans/2026-09-29-audio-foundation.md)
 Date: 2026-09-29
 
 ## Latar belakang
