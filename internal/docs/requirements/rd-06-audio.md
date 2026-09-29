@@ -26,9 +26,10 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   −16 LUFS (clamp ±20 dB) dengan limiter 0,84.
 - **RD-06-05** (Unwanted) — If provider gagal, then the adapter shall berhenti dengan pesan
   provider itu, tidak memakai provider lain, dan tidak menulis `voiceover.wav`.
-- **RD-06-06** (Event-driven) — When Gemini menjawab 429 atau 5xx pada sintesis, the adapter
-  shall mencoba ulang maksimal 3 kali dengan jeda 1, 2, 4 s; status 4xx lain gagal tanpa
-  retry, dan pembuatan voice (`POST /v1beta/voices`) tidak pernah di-retry.
+- **RD-06-06** (Event-driven) — When Gemini menjawab 429 atau 5xx, gagal di jaringan, atau
+  tidak menjawab dalam 120 s pada sintesis, the adapter shall mencoba ulang maksimal 3 kali
+  dengan jeda 1, 2, 4 s dan pesan akhirnya menyebut `Gemini <method> <path>`; status 4xx lain
+  gagal tanpa retry, dan pembuatan voice (`POST /v1beta/voices`) tidak pernah di-retry.
 - **RD-06-07** (Unwanted) — If `GEMINI_TTS_API_KEY` kosong, then preset `gemini` shall gagal
   sebelum request apa pun dan menyebut `.env`.
 - **RD-06-08** (Ubiquitous) — Kredensial Gemini TTS shall dibaca dari `GEMINI_TTS_API_KEY`,

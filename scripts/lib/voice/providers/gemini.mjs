@@ -13,14 +13,25 @@ export function geminiKey(env = process.env) {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// 429 and 5xx are retried with 1 s, 2 s, 4 s backoff; any other error fails at once.
-export async function geminiFetch(path, { method = 'GET', body, key, fetchImpl = fetch, sleep = wait, retries = 3 } = {}) {
+export const GEMINI_TIMEOUT_MS = 120000;
+
+// 429, 5xx, network failures, and timeouts are retried with 1 s, 2 s, 4 s backoff; any other error fails at once.
+export async function geminiFetch(path, { method = 'GET', body, key, fetchImpl = fetch, sleep = wait, retries = 3, timeoutMs = GEMINI_TIMEOUT_MS } = {}) {
+  const where = `Gemini ${method} ${path.split('?')[0]}`;
   for (let attempt = 0; ; attempt++) {
-    const res = await fetchImpl(`${GEMINI_BASE}${path}`, {
-      method,
-      headers: { 'x-goog-api-key': key, 'content-type': 'application/json' },
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
+    let res;
+    try {
+      res = await fetchImpl(`${GEMINI_BASE}${path}`, {
+        method,
+        headers: { 'x-goog-api-key': key, 'content-type': 'application/json' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+    } catch (e) {
+      if (attempt >= retries) throw new Error(`${where} failed: ${e.name === 'TimeoutError' ? `no answer in ${timeoutMs / 1000} s` : e.message}`);
+      await sleep(1000 * 2 ** attempt);
+      continue;
+    }
     const text = await res.text();
     let json = null;
     try {
@@ -30,7 +41,7 @@ export async function geminiFetch(path, { method = 'GET', body, key, fetchImpl =
     }
     if (res.ok) return json;
     if (!(res.status === 429 || res.status >= 500) || attempt >= retries) {
-      throw new Error(`Gemini ${method} ${path.split('?')[0]} failed: HTTP ${res.status} ${json?.error?.message || text.slice(0, 200)}`.trim());
+      throw new Error(`${where} failed: HTTP ${res.status} ${json?.error?.message || text.slice(0, 200)}`.trim());
     }
     await sleep(1000 * 2 ** attempt);
   }

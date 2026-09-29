@@ -73,3 +73,18 @@ test('supertonicArgs pins the uv sidecar', () => {
   assert.ok(a.at(-9).endsWith('supertonic_say.py'));
   assert.deepEqual(a.slice(-8), ['--voice', 'F2', '--lang', 'id', '--speed', '1.05', '--out', 'x.wav']);
 });
+
+test('Gemini network failures and timeouts name Gemini; synthesis retries them, voice creation does not', async () => {
+  const slept = [];
+  const sleep = async (ms) => slept.push(ms);
+  const f = fakeFetch([{ throws: new TypeError('fetch failed') }, { status: 200, body: audioBody }]);
+  assert.deepEqual(await geminiSay({ text: 'Halo', model: 'm', voice: 'kore', key: 'k', fetchImpl: f, sleep }), WAV);
+  assert.deepEqual(slept, [1000]);
+  assert.ok(f.calls[0].signal instanceof AbortSignal);
+  const timeout = Object.assign(new Error('The operation was aborted due to timeout'), { name: 'TimeoutError' });
+  const slow = fakeFetch([0, 1, 2, 3].map(() => ({ throws: timeout })));
+  await assert.rejects(geminiSay({ text: 'Halo', model: 'm', voice: 'kore', key: 'k', fetchImpl: slow, sleep }), /^Error: Gemini POST \/interactions failed: no answer in 120 s$/);
+  const down = fakeFetch([{ throws: new TypeError('fetch failed') }]);
+  await assert.rejects(createVoice(designRequest({ model: 'm', name: 'a', prompt: 'x' }), { key: 'k', fetchImpl: down, sleep }), /Gemini POST \/voices failed: fetch failed/);
+  assert.equal(down.calls.length, 1);
+});

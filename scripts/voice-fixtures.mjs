@@ -24,9 +24,10 @@ export const audioBody = { steps: [{ type: 'model_output', content: [{ type: 'au
 export function fakeFetch(queue) {
   const calls = [];
   const f = async (url, opts = {}) => {
-    calls.push({ url, method: opts.method, headers: opts.headers, body: opts.body ? JSON.parse(opts.body) : undefined });
+    calls.push({ url, method: opts.method, headers: opts.headers, signal: opts.signal, body: opts.body ? JSON.parse(opts.body) : undefined });
     const r = queue.shift();
     if (!r) throw new Error(`unexpected fetch ${url}`);
+    if (r.throws) throw r.throws;
     return { ok: r.status < 400, status: r.status, text: async () => JSON.stringify(r.body ?? {}) };
   };
   f.calls = calls;
