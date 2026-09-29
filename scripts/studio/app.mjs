@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
 import { probeMedia } from '../lib/video-sources.mjs';
-import { CLAUDE_MODELS, EFFORTS, buildPrompt } from './agent.mjs';
+import { buildPrompt } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
@@ -34,11 +34,11 @@ function decode(part) {
   }
 }
 
-export function createApp({ root, env = {}, hosts, token = '', tools = {}, codex = {}, run, terminals, publisher, probe = async () => null, probeSource = probeMedia }) {
+export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, probe = async () => null, probeSource = probeMedia }) {
   const opt = run ? { run } : {};
 
   const routes = [
-    ['GET', /^\/api\/state$/, async () => ({ tools, codex, claudeModels: CLAUDE_MODELS, efforts: EFFORTS })],
+    ['GET', /^\/api\/state$/, async () => ({ tools, models: await models() })],
     ['GET', /^\/api\/shared$/, async () => listShared(root, { probe })],
     ['POST', /^\/api\/shared$/, async (req, url) => ({ name: await receiveShared(root, url.searchParams.get('name'), req) })],
     ['DELETE', /^\/api\/shared\/([^/]+)$/, async (req, url, [name]) => deleteShared(root, name)],
@@ -66,6 +66,8 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, codex
       const b = await readJson(req);
       const slug = slugParam(b.slug);
       const dir = projectPath(root, slug);
+      const known = (await models())[b.runtime]?.models?.find((m) => m.value === b.model);
+      if (known && !known.efforts.includes(b.effort)) throw new HttpError(400, `${b.model} supports effort ${known.efforts.join(', ')}`);
       const mode = existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);

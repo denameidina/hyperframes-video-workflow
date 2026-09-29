@@ -57,8 +57,7 @@
   <form method="dialog" id="edit-form">
     <h2>Sesi agen <span id="edit-slug"></span></h2>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
-    <label>Model <input name="model" list="model-options" required autocapitalize="off" autocomplete="off"></label>
-    <datalist id="model-options"></datalist>
+    <label>Model <select name="model" required></select></label>
     <label>Effort <select name="effort"></select></label>
     <label>Catatan <textarea name="notes" rows="4" placeholder="Arahan opsional untuk agen"></textarea></label>
     <p class="error" id="edit-error"></p>

@@ -10,7 +10,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { codexDefaults } from './studio/agent.mjs';
+import { claudeModels, codexModels } from './studio/agent.mjs';
 import { createApp } from './studio/app.mjs';
 import { allowedHosts } from './studio/http.mjs';
 import { Publisher } from './studio/results.mjs';
@@ -73,8 +73,12 @@ function main(argv) {
   const ts = detectTailscale();
   const addresses = ['127.0.0.1', ...(ts ? [ts.ip] : [])];
   const tools = Object.fromEntries(['tmux', 'claude', 'codex', 'ffprobe'].map((t) => [t, tryRun('sh', ['-c', `command -v ${t}`]) !== '']));
-  const codexConfig = join(homedir(), '.codex', 'config.toml');
-  const codex = codexDefaults(existsSync(codexConfig) ? readFileSync(codexConfig, 'utf8') : '');
+  const readText = (p) => (existsSync(p) ? readFileSync(p, 'utf8') : '');
+  // Read on every /api/state so a refreshed Codex cache or new Claude option shows without a restart.
+  const models = async () => ({
+    claude: claudeModels({ claudeJson: readText(join(homedir(), '.claude.json')), settings: readText(join(homedir(), '.claude', 'settings.json')) }),
+    codex: codexModels({ cache: readText(join(homedir(), '.codex', 'models_cache.json')), config: readText(join(homedir(), '.codex', 'config.toml')) }),
+  });
   const terminals = new Terminals();
   const handler = createApp({
     root,
@@ -82,7 +86,7 @@ function main(argv) {
     hosts: allowedHosts({ addresses, port, names: ts?.names || [] }),
     token: env.STUDIO_TOKEN || '',
     tools,
-    codex,
+    models,
     terminals,
     publisher: new Publisher({ root, env }),
     probe,

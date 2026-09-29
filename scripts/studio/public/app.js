@@ -20,7 +20,7 @@ async function api(path, opts = {}) {
 }
 const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(body || {}) });
 
-let state = { tools: {}, codex: {}, claudeModels: [], efforts: {} };
+let state = { tools: {}, models: {} };
 let tab = 'projects';
 let openSlug = '';
 
@@ -224,20 +224,35 @@ $('#shared-list').addEventListener('click', async (e) => {
 });
 
 // ---- Edit ----
+// Models come from the runtimes themselves (~/.codex/models_cache.json, Claude aliases + cached options).
+const runtimeModels = () => state.models[$('#edit-form').runtime.value] || { models: [] };
 function fillModelOptions() {
   const f = $('#edit-form');
-  const rt = f.runtime.value;
-  const models = rt === 'claude' ? state.claudeModels : [state.codex.model].filter(Boolean);
-  $('#model-options').innerHTML = models.map((m) => `<option value="${esc(m)}">`).join('');
-  f.model.value = rt === 'claude' ? 'opus' : state.codex.model || '';
-  const efforts = state.efforts[rt] || [];
-  f.effort.innerHTML = efforts.map((x) => `<option>${x}</option>`).join('');
-  f.effort.value = rt === 'codex' && efforts.includes(state.codex.effort) ? state.codex.effort : 'high';
+  const rt = runtimeModels();
+  f.model.innerHTML = rt.models.map((m) => `<option value="${esc(m.value)}">${esc(m.label)}</option>`).join('');
+  f.model.value = rt.default;
+  if (!f.model.value && rt.models[0]) f.model.value = rt.models[0].value;
+  fillEffortOptions();
+}
+function fillEffortOptions() {
+  const f = $('#edit-form');
+  const rt = runtimeModels();
+  const model = rt.models.find((m) => m.value === f.model.value);
+  const efforts = model?.efforts || [];
+  f.effort.innerHTML = efforts.map((x) => `<option>${esc(x)}</option>`).join('');
+  const preferred = [f.model.value === rt.default && rt.defaultEffort, model?.defaultEffort, 'high'].find((e) => e && efforts.includes(e));
+  f.effort.value = preferred || efforts[0] || '';
 }
 $('#edit-form').runtime.addEventListener('change', fillModelOptions);
+$('#edit-form').model.addEventListener('change', fillEffortOptions);
 
 let editSlug = '';
-function openEdit(slug) {
+async function openEdit(slug) {
+  try {
+    state = await api('/api/state'); // fresh model lists every time the form opens
+  } catch (e) {
+    return banner(e.message);
+  }
   editSlug = slug;
   const f = $('#edit-form');
   f.reset();

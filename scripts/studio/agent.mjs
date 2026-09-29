@@ -2,12 +2,24 @@
 import { HttpError } from './http.mjs';
 
 export const RUNTIMES = ['claude', 'codex'];
-export const CLAUDE_MODELS = ['opus', 'sonnet', 'fable', 'haiku'];
+export const CLAUDE_ALIASES = [
+  { value: 'opus', label: 'Opus' },
+  { value: 'sonnet', label: 'Sonnet' },
+  { value: 'fable', label: 'Fable' },
+  { value: 'haiku', label: 'Haiku' },
+];
 export const EFFORTS = {
   claude: ['low', 'medium', 'high', 'xhigh', 'max'],
-  codex: ['low', 'medium', 'high', 'xhigh'],
+  codex: ['low', 'medium', 'high', 'xhigh', 'max', 'ultra'],
 };
 const OPTION_RE = /^[A-Za-z0-9._:[\]-]+$/;
+const parseJson = (text) => {
+  try {
+    return JSON.parse(text || '');
+  } catch {
+    return null;
+  }
+};
 const SKILL = '`docs/skills/dena-video-editing-workflow/SKILL.md`';
 
 export function agentCommand({ runtime, model, effort }) {
@@ -37,4 +49,34 @@ export function codexDefaults(text = '') {
   const top = text.split(/^\s*\[/m)[0];
   const pick = (key) => (new RegExp(`^\\s*${key}\\s*=\\s*"([^"]*)"`, 'm').exec(top) || [])[1] || '';
   return { model: pick('model'), effort: pick('model_reasoning_effort') };
+}
+
+/* Model choices for the session form (RD-05-16). Claude Code keeps no model list on disk: its aliases,
+   plus the extra options it cached in ~/.claude.json (e.g. Fable 1M), plus the settings.json default. */
+export function claudeModels({ claudeJson = '', settings = '' } = {}) {
+  const models = CLAUDE_ALIASES.map((m) => ({ ...m, efforts: EFFORTS.claude }));
+  const add = (value, label) => {
+    if (typeof value === 'string' && OPTION_RE.test(value) && !models.some((m) => m.value === value)) models.push({ value, label, efforts: EFFORTS.claude });
+  };
+  const extra = parseJson(claudeJson)?.additionalModelOptionsCache;
+  for (const o of Array.isArray(extra) ? extra : []) add(o?.value, o?.label ? `${o.label} (${o.value})` : o?.value);
+  const setting = parseJson(settings)?.model;
+  add(setting, setting);
+  const fallback = models.some((m) => m.value === setting) ? setting : 'opus';
+  return { models, default: fallback, defaultEffort: 'high' };
+}
+
+// Codex caches its model catalog in ~/.codex/models_cache.json; only models it lists (visibility "list"), by priority.
+export function codexModels({ cache = '', config = '' } = {}) {
+  const { model, effort } = codexDefaults(config);
+  const all = parseJson(cache)?.models;
+  const models = (Array.isArray(all) ? all : [])
+    .filter((m) => m?.visibility === 'list' && typeof m.slug === 'string' && OPTION_RE.test(m.slug))
+    .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
+    .map((m) => {
+      const efforts = (m.supported_reasoning_levels || []).map((l) => l?.effort).filter((e) => EFFORTS.codex.includes(e));
+      return { value: m.slug, label: m.display_name || m.slug, efforts: efforts.length ? efforts : EFFORTS.codex.slice(0, 4), defaultEffort: m.default_reasoning_level };
+    });
+  if (model && OPTION_RE.test(model) && !models.some((m) => m.value === model)) models.unshift({ value: model, label: model, efforts: EFFORTS.codex.slice(0, 4) });
+  return { models, default: model || models[0]?.value || '', defaultEffort: effort };
 }

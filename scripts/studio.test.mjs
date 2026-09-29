@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
-import { CLAUDE_MODELS, EFFORTS, agentCommand, buildPrompt, codexDefaults, paneCommand } from './studio/agent.mjs';
+import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, paneCommand } from './studio/agent.mjs';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -59,7 +59,7 @@ test('agentCommand builds claude and codex argv', () => {
 
 test('agentCommand rejects unsafe or unknown values', () => {
   assert.throws(() => agentCommand({ runtime: 'claude', model: 'opus; rm -rf ~', effort: 'high' }), { status: 400 });
-  assert.throws(() => agentCommand({ runtime: 'codex', model: 'x', effort: 'max' }), { status: 400 });
+  assert.throws(() => agentCommand({ runtime: 'codex', model: 'x', effort: 'turbo' }), { status: 400 });
   assert.throws(() => agentCommand({ runtime: 'bash', model: 'x', effort: 'high' }), { status: 400 });
 });
 
@@ -81,8 +81,33 @@ test('buildPrompt points the agent at the project and its sources.json', () => {
 test('codexDefaults reads top-level model and effort only', () => {
   assert.deepEqual(codexDefaults('model = "gpt-6-sol"\nmodel_reasoning_effort = "xhigh"\n[profiles.x]\nmodel = "other"\n'), { model: 'gpt-6-sol', effort: 'xhigh' });
   assert.deepEqual(codexDefaults(''), { model: '', effort: '' });
-  assert.ok(CLAUDE_MODELS.includes('opus'));
-  assert.deepEqual(EFFORTS.codex, ['low', 'medium', 'high', 'xhigh']);
+  assert.ok(CLAUDE_ALIASES.some((m) => m.value === 'opus'));
+  assert.deepEqual(EFFORTS.codex, ['low', 'medium', 'high', 'xhigh', 'max', 'ultra']);
+});
+
+test('claudeModels: aliases, cached extra options, and the settings default', () => {
+  const claudeJson = JSON.stringify({ additionalModelOptionsCache: [{ value: 'claude-fable-5-1[1m]', label: 'Fable', description: '1M' }, { value: 'bad; rm', label: 'x' }] });
+  const m = claudeModels({ claudeJson, settings: JSON.stringify({ model: 'sonnet' }) });
+  assert.deepEqual(m.models.map((x) => x.value), ['opus', 'sonnet', 'fable', 'haiku', 'claude-fable-5-1[1m]']);
+  assert.equal(m.models[4].label, 'Fable (claude-fable-5-1[1m])');
+  assert.equal(m.default, 'sonnet');
+  assert.deepEqual(m.models[0].efforts, EFFORTS.claude);
+  assert.equal(claudeModels({ claudeJson: 'not json' }).default, 'opus');
+  assert.equal(claudeModels({ settings: JSON.stringify({ model: 'claude-opus-5-5' }) }).models.at(-1).value, 'claude-opus-5-5');
+});
+
+test('codexModels: listed models by priority with their own efforts', () => {
+  const cache = JSON.stringify({ models: [
+    { slug: 'gpt-6-sol', display_name: 'GPT-6-Sol', visibility: 'list', priority: 2, default_reasoning_level: 'low', supported_reasoning_levels: [{ effort: 'low' }, { effort: 'xhigh' }, { effort: 'ultra' }] },
+    { slug: 'gpt-6-astra', display_name: 'GPT-6-Astra', visibility: 'list', priority: 1, supported_reasoning_levels: [{ effort: 'medium' }] },
+    { slug: 'codex-auto-review', visibility: 'hide', priority: 0 },
+  ] });
+  const m = codexModels({ cache, config: 'model = "gpt-6-sol"\nmodel_reasoning_effort = "xhigh"\n' });
+  assert.deepEqual(m.models.map((x) => [x.value, x.label, x.efforts]), [['gpt-6-astra', 'GPT-6-Astra', ['medium']], ['gpt-6-sol', 'GPT-6-Sol', ['low', 'xhigh', 'ultra']]]);
+  assert.deepEqual([m.default, m.defaultEffort, m.models[1].defaultEffort], ['gpt-6-sol', 'xhigh', 'low']);
+  const bare = codexModels({ cache: '', config: 'model = "gpt-7"\n' });
+  assert.deepEqual(bare.models.map((x) => x.value), ['gpt-7']);
+  assert.deepEqual(codexModels({}), { models: [], default: '', defaultEffort: '' });
 });
 
 function fakeRun(responses = {}) {
@@ -265,7 +290,7 @@ async function startApp(root, overrides = {}) {
     hosts: allowedHosts({ addresses: ['127.0.0.1'], port }),
     token: '',
     tools: { tmux: true, claude: true, codex: true, ffprobe: true },
-    codex: { model: 'gpt-6-sol', effort: 'xhigh' },
+    models: async () => ({ codex: { models: [{ value: 'gpt-6-sol', label: 'GPT-6-Sol', efforts: ['low', 'ultra'] }], default: 'gpt-6-sol' } }),
     run: fake.run,
     terminals: new Terminals({ spawnImpl: () => fakeChild(), killImpl: () => {} }),
     publisher: new Publisher({ root, env: {}, spawnImpl: () => fakeChild() }),
@@ -396,6 +421,9 @@ test('app projects, sources, shared, and sessions routes', async (t) => {
 
   assert.equal((await call('POST', '/api/sessions', { slug: 'nope', runtime: 'claude', model: 'opus', effort: 'high' })).status, 404);
   assert.equal((await call('POST', '/api/sessions', { slug: 'Bad', runtime: 'claude', model: 'opus', effort: 'high' })).status, 400);
+  assert.equal((await call('GET', '/api/state')).body.models.codex.default, 'gpt-6-sol');
+  const wrongEffort = await call('POST', '/api/sessions', { slug: 'baru', runtime: 'codex', model: 'gpt-6-sol', effort: 'high' });
+  assert.deepEqual([wrongEffort.status, wrongEffort.body.error], [400, 'gpt-6-sol supports effort low, ultra']);
   const ok = await call('POST', '/api/sessions', { slug: 'baru', runtime: 'claude', model: 'opus', effort: 'high', notes: 'fokus hook' });
   assert.equal(ok.status, 200);
   assert.match(readFileSync(join(root, '.studio/prompts/baru.md'), 'utf8'), /^Edit video project `videos\/baru\/`[\s\S]*fokus hook/);

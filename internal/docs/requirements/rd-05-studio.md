@@ -47,3 +47,11 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-15** (Event-driven) — When Dena attaches shared files to a project,
   Studio shall add them to `sources.json` with `origin: "shared"` without
   copying them.
+- **RD-05-16** (Event-driven) — When Dena opens the session form, Studio shall
+  offer the model choices read from each runtime at that moment — Claude: its
+  aliases, `additionalModelOptionsCache` in `~/.claude.json`, and the
+  `~/.claude/settings.json` default; Codex: models with `visibility: "list"` in
+  `~/.codex/models_cache.json` by priority, defaulting to `~/.codex/config.toml` —
+  and limit the effort choices to the efforts that model supports.
+- **RD-05-17** (Unwanted) — If a session request names a known model with an
+  effort that model does not support, then Studio shall reject it with 400.
