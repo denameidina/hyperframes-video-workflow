@@ -1,6 +1,6 @@
 # Mode Generate — Format Explainer (Brief, URL, Repurpose) — Design
 
-Status: approved 2026-09-29 (sub-proyek 2 dari "generate video motion design")
+Status: approved 2026-09-29 (sub-proyek 2 dari "generate video motion design"; plan docs/superpowers/plans/2026-09-29-generate-mode-explainer.md)
 Date: 2026-09-29
 
 ## Latar belakang
