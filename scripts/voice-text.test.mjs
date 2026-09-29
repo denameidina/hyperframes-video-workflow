@@ -56,5 +56,7 @@ test('script helpers: body, paragraphs, tags per provider, caption words', () =>
   assert.equal(forProvider('Jujur, gue kira <short pause> gampang. <long pause> Oke <laugh> ya.', 'supertonic'), 'Jujur, gue kira, gampang. Oke ya.');
   assert.equal(forProvider('A <breath> B', 'gemini'), 'A <breath> B');
   assert.deepEqual(scriptWords(body), ['Jujur,', 'gue', 'kira', 'gampang.', 'Ternyata', 'susah.']);
-  assert.deepEqual(splitParagraphs(scriptBody('## Judul\n\n#1 masalahnya: #AIagent itu mahal.\n')), ['#1 masalahnya: #AIagent itu mahal.']);
+  assert.deepEqual(splitParagraphs(scriptBody('# Judul\n\n#1 masalahnya: #AIagent itu mahal.\n')), ['#1 masalahnya: #AIagent itu mahal.']);
+  const script = '# Naskah - demo\n\nHook dulu.\n\nIsi kedua.\n\n## Fakta\n\n- "Rp2,5 juta" — research/brief.md\n\n## Catatan\n\nbukan narasi\n';
+  assert.deepEqual(splitParagraphs(scriptBody(script)), ['Hook dulu.', 'Isi kedua.'], 'narration ends at the first ## section');
 });

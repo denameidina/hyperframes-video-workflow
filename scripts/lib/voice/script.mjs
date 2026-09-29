@@ -2,9 +2,12 @@
 export const TAG_RE = /<([a-z][a-z ]*)>/g;
 const PAUSE = { 'short pause': ',', 'long pause': '.' };
 
-// Markdown script file -> plain text: drops heading lines ("# ", "## ", ...) and HTML comments; "#1" or "#AI" stay.
+// Markdown script file -> the narration: HTML comments and "# " title lines are dropped, and the narration ends
+// at the first "## " section (## Fakta and other notes follow it). "#1" or "#AI" in a line stay.
 export function scriptBody(md) {
-  return String(md).replace(/<!--[\s\S]*?-->/g, '').split('\n').filter((l) => !/^\s*#{1,6}\s/.test(l)).join('\n');
+  const text = String(md).replace(/<!--[\s\S]*?-->/g, '');
+  const notes = text.search(/^[ \t]*##\s/m);
+  return (notes < 0 ? text : text.slice(0, notes)).split('\n').filter((l) => !/^\s*#\s/.test(l)).join('\n');
 }
 
 export function splitParagraphs(text) {

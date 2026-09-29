@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { alignWords, whisperWords } from './lib/voice/align.mjs';
+import { alignWords, spokenGroups, whisperWords } from './lib/voice/align.mjs';
 import { WHISPER } from './voice-fixtures.mjs';
 
 test('whisperWords joins tokens into words and skips special tokens', () => {
@@ -27,7 +27,7 @@ test('alignWords compares spoken forms, so written numbers match spoken ones', (
   const asr = [{ text: 'bayar', start: 0, end: 0.4 }, { text: 'Rp2,5', start: 0.4, end: 1.6 }, { text: 'juta.', start: 1.6, end: 2 }];
   const r = alignWords({ script: ['bayar', 'Rp2,5', 'juta.'], asr, duration: 2 });
   assert.equal(r.wer, 0);
-  assert.deepEqual(r.words[1], { text: 'Rp2,5', start: 0.4, end: 1.6, matched: true });
+  assert.deepEqual(r.words[1], { text: 'Rp2,5', start: 0.4, end: 1.2, matched: true }, '"Rp2,5 juta." is one group: its span is split evenly');
 });
 
 test('alignWords treats an extra transcribed word as an insertion, not a misread', () => {
@@ -37,4 +37,27 @@ test('alignWords treats an extra transcribed word as an insertion, not a misread
   assert.equal(r.wer, 0.167);
   assert.ok(r.words.every((w) => w.matched));
   assert.deepEqual(r.words[3], { text: 'gampang.', start: 1.3, end: 2.4, matched: true });
+});
+
+test('spokenGroups joins only the words whose spoken form depends on a neighbour', () => {
+  const g = (words) => spokenGroups(words).map((x) => words.slice(x.from, x.to).join(' '));
+  assert.deepEqual(g(['bayar', 'Rp', '2.500', 'per', 'bulan']), ['bayar', 'Rp 2.500', 'per', 'bulan']);
+  assert.deepEqual(g(['cuma', '2,5', 'jt', 'saja']), ['cuma', '2,5 jt', 'saja']);
+  assert.deepEqual(g(['naik', '50', '%']), ['naik', '50 %']);
+  assert.deepEqual(g(['butuh', '3', '-', '5', 'hari']), ['butuh', '3 - 5', 'hari']);
+  assert.deepEqual(g(['Jujur,', 'gue', 'kira']), ['Jujur,', 'gue', 'kira']);
+});
+
+test('alignWords matches amounts split by spaces on either side', () => {
+  const at = (words) => words.map((text, i) => ({ text, start: i * 0.5, end: i * 0.5 + 0.5 }));
+  const script = ['bayar', 'Rp', '2.500', 'per', 'bulan,', 'naik', '50', '%.'];
+  const heard = at(['bayar', 'dua', 'ribu', 'lima', 'ratus', 'rupiah', 'per', 'bulan,', 'naik', 'lima', 'puluh', 'persen.']);
+  const r = alignWords({ script, asr: heard, duration: 6 });
+  assert.equal(r.wer, 0);
+  assert.ok(r.words.every((w) => w.matched));
+  assert.deepEqual(r.words.slice(1, 3), [{ text: 'Rp', start: 0.5, end: 1.75, matched: true }, { text: '2.500', start: 1.75, end: 3, matched: true }]);
+  const written = alignWords({ script: ['cuma', 'Rp2,5', 'juta.'], asr: at(['cuma', 'Rp2,5', 'juta.']), duration: 1.5 });
+  assert.equal(written.wer, 0);
+  const spoken = alignWords({ script: ['cuma', 'Rp2,5', 'juta.'], asr: at(['cuma', 'dua', 'koma', 'lima', 'juta', 'rupiah.']), duration: 3 });
+  assert.equal(spoken.wer, 0, '"Rp2,5 juta" is read "dua koma lima juta rupiah"');
 });
