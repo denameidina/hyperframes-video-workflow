@@ -24,7 +24,7 @@
     "test:render-blur": "node --test scripts/render-blur.test.mjs",
     "render:blur": "node scripts/render-blur.mjs",
     "video": "node scripts/video.mjs",
-    "test:video": "node --test scripts/video.test.mjs scripts/video-sources.test.mjs scripts/cut-plan.test.mjs scripts/migrate-sources.test.mjs",
+    "test:video": "node --test scripts/video.test.mjs scripts/video-sources.test.mjs scripts/cut-plan.test.mjs scripts/migrate-sources.test.mjs scripts/generate-lib.test.mjs",
     "studio": "node scripts/studio.mjs",
     "test:studio": "node --test scripts/studio.test.mjs",
     "voice": "node scripts/voice.mjs",
