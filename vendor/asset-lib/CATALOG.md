@@ -702,3 +702,122 @@ Sheet: [type](../../docs/agents/references/asset-catalog/sheets/) — files `typ
 | `type.px-memory` | `.sk-type-px-memory` | parallax | media | project |
 | `type.px-label` | `.sk-type-px-label` | parallax | media | project (legacy) |
 
+## artwork (112)
+
+Sheet: [artwork](../../docs/agents/references/asset-catalog/sheets/) — files `artwork*.webp`
+
+| id | use | styles | tags | source |
+| --- | --- | --- | --- | --- |
+| `art.atelier-text-offset-plate` | `vendor/asset-lib/artwork/atelier/text/offset-plate.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-fold-banner` | `vendor/asset-lib/artwork/atelier/text/fold-banner.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-vertical-rail` | `vendor/asset-lib/artwork/atelier/text/vertical-rail.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-editorial-rule` | `vendor/asset-lib/artwork/atelier/text/editorial-rule.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-brush-swash` | `vendor/asset-lib/artwork/atelier/text/brush-swash.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-riso-field` | `vendor/asset-lib/artwork/atelier/text/riso-field.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-letter-grid` | `vendor/asset-lib/artwork/atelier/text/letter-grid.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-radial-guide` | `vendor/asset-lib/artwork/atelier/text/radial-guide.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-bracket-frame` | `vendor/asset-lib/artwork/atelier/text/bracket-frame.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-quotation` | `vendor/asset-lib/artwork/atelier/text/quotation.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-registration` | `vendor/asset-lib/artwork/atelier/text/registration.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-stamp-panel` | `vendor/asset-lib/artwork/atelier/text/stamp-panel.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-word-window` | `vendor/asset-lib/artwork/atelier/text/word-window.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-text-fold-arrow` | `vendor/asset-lib/artwork/atelier/text/fold-arrow.svg` | broll-text, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-orbit-nodes` | `vendor/asset-lib/artwork/atelier/mg/orbit-nodes.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-segmented-ring` | `vendor/asset-lib/artwork/atelier/mg/segmented-ring.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-stepped-funnel` | `vendor/asset-lib/artwork/atelier/mg/stepped-funnel.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-branch-flow` | `vendor/asset-lib/artwork/atelier/mg/branch-flow.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-radar-bloom` | `vendor/asset-lib/artwork/atelier/mg/radar-bloom.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-stacked-bars` | `vendor/asset-lib/artwork/atelier/mg/stacked-bars.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-modular-grid` | `vendor/asset-lib/artwork/atelier/mg/modular-grid.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-linked-cells` | `vendor/asset-lib/artwork/atelier/mg/linked-cells.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-balance` | `vendor/asset-lib/artwork/atelier/mg/balance.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-route-nodes` | `vendor/asset-lib/artwork/atelier/mg/route-nodes.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-sparkline` | `vendor/asset-lib/artwork/atelier/mg/sparkline.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-wave-mesh` | `vendor/asset-lib/artwork/atelier/mg/wave-mesh.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-data-capsule` | `vendor/asset-lib/artwork/atelier/mg/data-capsule.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mg-molecule` | `vendor/asset-lib/artwork/atelier/mg/molecule.svg` | motion-graphic | data, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-logic-flow` | `vendor/asset-lib/artwork/atelier/wb/logic-flow.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-feedback-loop` | `vendor/asset-lib/artwork/atelier/wb/feedback-loop.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-decision-tree` | `vendor/asset-lib/artwork/atelier/wb/decision-tree.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-hand-graph` | `vendor/asset-lib/artwork/atelier/wb/hand-graph.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-thought-cloud` | `vendor/asset-lib/artwork/atelier/wb/thought-cloud.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-notebook-tabs` | `vendor/asset-lib/artwork/atelier/wb/notebook-tabs.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-dashed-orbit` | `vendor/asset-lib/artwork/atelier/wb/dashed-orbit.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-bulb-sketch` | `vendor/asset-lib/artwork/atelier/wb/bulb-sketch.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-magnet` | `vendor/asset-lib/artwork/atelier/wb/magnet.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-speed-gauge` | `vendor/asset-lib/artwork/atelier/wb/speed-gauge.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-bridge` | `vendor/asset-lib/artwork/atelier/wb/bridge.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-check-cluster` | `vendor/asset-lib/artwork/atelier/wb/check-cluster.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-brain-circuit` | `vendor/asset-lib/artwork/atelier/wb/brain-circuit.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-wb-calendar-sketch` | `vendor/asset-lib/artwork/atelier/wb/calendar-sketch.svg` | whiteboard, mix-media | ide, kerja | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-serrated-sun` | `vendor/asset-lib/artwork/atelier/stop/serrated-sun.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-accordion` | `vendor/asset-lib/artwork/atelier/stop/accordion.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-torn-card` | `vendor/asset-lib/artwork/atelier/stop/torn-card.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-tape-chevron` | `vendor/asset-lib/artwork/atelier/stop/tape-chevron.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-paper-fan` | `vendor/asset-lib/artwork/atelier/stop/paper-fan.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-cutout-plant` | `vendor/asset-lib/artwork/atelier/stop/cutout-plant.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-ticket-window` | `vendor/asset-lib/artwork/atelier/stop/ticket-window.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-index-stack` | `vendor/asset-lib/artwork/atelier/stop/index-stack.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-paper-spiral` | `vendor/asset-lib/artwork/atelier/stop/paper-spiral.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-zigzag-fold` | `vendor/asset-lib/artwork/atelier/stop/zigzag-fold.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-open-envelope` | `vendor/asset-lib/artwork/atelier/stop/open-envelope.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-diecut-frame` | `vendor/asset-lib/artwork/atelier/stop/diecut-frame.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-folded-plane` | `vendor/asset-lib/artwork/atelier/stop/folded-plane.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-stop-cardboard-arrow` | `vendor/asset-lib/artwork/atelier/stop/cardboard-arrow.svg` | stop-motion, mix-media | kertas, benda | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-evidence-card` | `vendor/asset-lib/artwork/atelier/vox/evidence-card.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-data-bracket` | `vendor/asset-lib/artwork/atelier/vox/data-bracket.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-document-tab` | `vendor/asset-lib/artwork/atelier/vox/document-tab.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-highlight-band` | `vendor/asset-lib/artwork/atelier/vox/highlight-band.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-citation-rail` | `vendor/asset-lib/artwork/atelier/vox/citation-rail.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-magnifier` | `vendor/asset-lib/artwork/atelier/vox/magnifier.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-locator` | `vendor/asset-lib/artwork/atelier/vox/locator.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-compare-card` | `vendor/asset-lib/artwork/atelier/vox/compare-card.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-editorial-timeline` | `vendor/asset-lib/artwork/atelier/vox/editorial-timeline.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-chart-focus` | `vendor/asset-lib/artwork/atelier/vox/chart-focus.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-picture-frame` | `vendor/asset-lib/artwork/atelier/vox/picture-frame.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-source-badge` | `vendor/asset-lib/artwork/atelier/vox/source-badge.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-link-card` | `vendor/asset-lib/artwork/atelier/vox/link-card.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-vox-note-page` | `vendor/asset-lib/artwork/atelier/vox/note-page.svg` | vox, mix-media | kertas, data | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-ripped-stack` | `vendor/asset-lib/artwork/atelier/mm/ripped-stack.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-film-perforations` | `vendor/asset-lib/artwork/atelier/mm/film-perforations.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-mesh-circle` | `vendor/asset-lib/artwork/atelier/mm/mesh-circle.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-halftone-shadow` | `vendor/asset-lib/artwork/atelier/mm/halftone-shadow.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-ink-blot` | `vendor/asset-lib/artwork/atelier/mm/ink-blot.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-taped-frame` | `vendor/asset-lib/artwork/atelier/mm/taped-frame.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-tag-string` | `vendor/asset-lib/artwork/atelier/mm/tag-string.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-zigzag-sticker` | `vendor/asset-lib/artwork/atelier/mm/zigzag-sticker.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-collage-ring` | `vendor/asset-lib/artwork/atelier/mm/collage-ring.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-poster-fold` | `vendor/asset-lib/artwork/atelier/mm/poster-fold.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-grid-cut` | `vendor/asset-lib/artwork/atelier/mm/grid-cut.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-arch-window` | `vendor/asset-lib/artwork/atelier/mm/arch-window.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-news-strip` | `vendor/asset-lib/artwork/atelier/mm/news-strip.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-mm-scissor-path` | `vendor/asset-lib/artwork/atelier/mm/scissor-path.svg` | mix-media, stop-motion | kertas, media | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-mountain-back` | `vendor/asset-lib/artwork/atelier/px/mountain-back.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-ridge-mid` | `vendor/asset-lib/artwork/atelier/px/ridge-mid.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-pine-foreground` | `vendor/asset-lib/artwork/atelier/px/pine-foreground.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-cloud-veil` | `vendor/asset-lib/artwork/atelier/px/cloud-veil.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-light-beam` | `vendor/asset-lib/artwork/atelier/px/light-beam.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-terrain-lines` | `vendor/asset-lib/artwork/atelier/px/terrain-lines.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-city-back` | `vendor/asset-lib/artwork/atelier/px/city-back.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-tower-mid` | `vendor/asset-lib/artwork/atelier/px/tower-mid.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-railing-front` | `vendor/asset-lib/artwork/atelier/px/railing-front.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-sun-haze` | `vendor/asset-lib/artwork/atelier/px/sun-haze.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-floating-portal` | `vendor/asset-lib/artwork/atelier/px/floating-portal.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-depth-grid` | `vendor/asset-lib/artwork/atelier/px/depth-grid.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-palm-frame` | `vendor/asset-lib/artwork/atelier/px/palm-frame.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-px-glass-shard` | `vendor/asset-lib/artwork/atelier/px/glass-shard.svg` | parallax | tempat, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-chrome-orb` | `vendor/asset-lib/artwork/atelier/showreel/chrome-orb.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-chrome-ribbon` | `vendor/asset-lib/artwork/atelier/showreel/chrome-ribbon.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-prism-facet` | `vendor/asset-lib/artwork/atelier/showreel/prism-facet.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-iridescent-mesh` | `vendor/asset-lib/artwork/atelier/showreel/iridescent-mesh.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-glass-card` | `vendor/asset-lib/artwork/atelier/showreel/glass-card.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-extruded-star` | `vendor/asset-lib/artwork/atelier/showreel/extruded-star.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-rubber-loop` | `vendor/asset-lib/artwork/atelier/showreel/rubber-loop.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-metal-coil` | `vendor/asset-lib/artwork/atelier/showreel/metal-coil.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-optical-grid` | `vendor/asset-lib/artwork/atelier/showreel/optical-grid.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-orbital-trail` | `vendor/asset-lib/artwork/atelier/showreel/orbital-trail.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-signal-field` | `vendor/asset-lib/artwork/atelier/showreel/signal-field.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-gradient-contours` | `vendor/asset-lib/artwork/atelier/showreel/gradient-contours.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-sculpted-petal` | `vendor/asset-lib/artwork/atelier/showreel/sculpted-petal.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+| `art.atelier-showreel-split-cube` | `vendor/asset-lib/artwork/atelier/showreel/split-cube.svg` | broll-text, parallax, mix-media | media, ide | project (original Atelier vector design, 2026-09-30) |
+

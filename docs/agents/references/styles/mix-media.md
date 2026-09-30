@@ -103,6 +103,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Type | `font.permanent-marker`, `font.instrument-serif`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `mm-s1` … `mm-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/mix-media.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-mix-media](../asset-catalog/sheets/artwork-mix-media.webp). Catalog ids `art.atelier-mm-<name>`; examples: taped-frame / ripped-stack / film-perforations. `SK.asset(id).file` returns the local SVG path. Place pieces around the actual speaker matte, reserve the face zone, and step collage motion while footage stays smooth. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - The collage moves on the step grid (`SK.onTwos`, `SK.piece`); the speaker stays

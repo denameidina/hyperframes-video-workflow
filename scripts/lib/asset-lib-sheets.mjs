@@ -50,6 +50,15 @@ export function sheetPages(root) {
   const pages = [];
   const grid = (name, title, cols, cells, per) => chunk(cells, per).forEach((cs, i, all) => pages.push({ name: all.length > 1 ? `${name}-${i + 1}` : name, title: all.length > 1 ? `${title} (${i + 1}/${all.length})` : title, cols, cells: cs }));
 
+  // General layered SVG illustrations use file lookup, not fixed SK frame/doc helpers.
+  const artworks = of('artwork');
+  const families = [...new Set(artworks.map((e) => e.id.startsWith('art.atelier-showreel-') ? 'showreel' : e.styles[0]))];
+  for (const family of families) {
+    const entries = artworks.filter((e) => (e.id.startsWith('art.atelier-showreel-') ? 'showreel' : e.styles[0]) === family);
+    grid(`artwork-${family}`, `artwork — ${family} · original layered SVG (SK.asset → file)`, 3,
+      entries.map((e) => cell(`<img src="${e.file}" style="width:300px;height:225px;object-fit:contain" alt="" />`, short(e.id).replace(/^atelier-/, ''), { style: 'background:#d9d6cd' })), 15);
+  }
+
   grid('icon', 'icon — Lucide (SK.icon)', 9, of('icon').map((e) => cell(SK.icon(short(e.id), { size: 72, sw: 3 }), short(e.id))), 90);
   grid('pictogram', 'pictogram — Phosphor fill (SK.pict)', 8, of('pictogram').map((e) => cell(SK.pict(short(e.id), { size: 84 }), short(e.id))), 72);
   const doodles = of('doodle');
@@ -209,4 +218,3 @@ export async function buildSheets(root) {
     return `${pages.length} sheets → ${CATALOG_DIR}/sheets/`;
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
-

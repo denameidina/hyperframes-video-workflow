@@ -94,6 +94,7 @@ Use this instead of the generic Asset Brief for a `broll-text`,
 - Focus (parallax only): <focus depth; rack from → to on which word, or none>
 - Moodboard: <study id from `moodboard/sheets/<style>.webp`, e.g. `vx-s5`, or "none">
 - Library assets: <catalog ids from `vendor/asset-lib/CATALOG.md`, e.g. `doodle.think`, `paper.coin-stack`, `map.java`, or "none">
+- Layered Atelier artwork: 112 reusable SVGs across all seven styles and showreel materials; choose from `../asset-catalog/sheets/artwork-<style>.webp` and catalog ids `art.atelier-*`. Read the [usage contract](../../../../internal/docs/design-system/rich-style-assets.md). `SK.asset(id).file` returns the SVG path; inline once with unique instance ids when named groups need animation. Specimen diagrams require actual transcript labels/values; illustrative documents remain tagged, and mix-media uses the real speaker matte.
 - Assets: <each per-video bitmap the clip needs, or "none">
   - `assets/cutouts/NN-name.png` — <codex | cc0 | dena-footage | user> — <what it shows, tied to the transcript> — <why the library has nothing that fits>
 - In–out (host time): <start>–<end> s

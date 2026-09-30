@@ -93,6 +93,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Labels | `pict.coins`, `font.patrick-hand`, `font.archivo-black` | `../asset-catalog/sheets/pictogram.webp`, `../asset-catalog/sheets/font.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `sm-s1` … `sm-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/stop-motion.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-stop-motion](../asset-catalog/sheets/artwork-stop-motion.webp). Catalog ids `art.atelier-stop-<name>`; examples: paper-fan / open-envelope / accordion. `SK.asset(id).file` returns the local SVG path. Separate paper parts, use held two-frame poses and a consistent hard shadow; labels stay live. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - Step rate: `SK.STOP_FPS` = 15 steps per second. HyperFrames renders at 30 fps,

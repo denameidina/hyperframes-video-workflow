@@ -100,6 +100,9 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 66. [design-system/transition-assets.md](design-system/transition-assets.md) - Kontrak paket tujuh aset transisi reusable: source editable, overlay alpha, demo, dan verifikasi sambungan motion.
 67. [research/transition-expansion-sources.md](research/transition-expansion-sources.md) - Lima belas sumber primer tambahan: mask, deformasi, partikel, kamera, audio, paper/collage, depth, dan batas portabilitas.
 68. [research/transition-catalog.md](research/transition-catalog.md) - Referensi opsional 72 resep dalam 18 keluarga, 16 bundle kebutuhan aset, selection matrix dan prioritas produksi; [data JSON](research/transition-catalog.json) membedakan tujuh preset v1 tersedia dari 65 usulan.
+69. [design-system/showreel-assets.md](design-system/showreel-assets.md) - Kontrak produksi FORM / FREQUENCY: showreel 12 studi, aset SVG editable, sumber scene, audio original, klip MP4 individual, dan verifikasi.
+70. [design-system/rich-style-assets.md](design-system/rich-style-assets.md) - Pengayaan tujuh gaya dan showreel: 112 artwork SVG berlapis, catalog bersama, contact sheet dan reel studi gerak.
+71. [adr/0029-layered-svg-artwork.md](adr/0029-layered-svg-artwork.md) - Artwork SVG file-backed memakai catalog dan SK.asset tanpa mengubah helper gaya lama.
 
 ## Canonical Files
 
@@ -131,6 +134,8 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Brand (draft) | [brand/strategy](brand/strategy.md) |
 | Riset (draft) | [research/market](research/market.md) |
 | Riset pilihan transisi & kebutuhan aset | [research/transition-catalog](research/transition-catalog.md) + [sumber tambahan](research/transition-expansion-sources.md); ketersediaan export mengikuti [kontrak v1](design-system/transition-assets.md) |
+| Paket aset showreel FORM / FREQUENCY | [design-system/showreel-assets](design-system/showreel-assets.md) |
+| Pengayaan aset tujuh gaya + showreel | [design-system/rich-style-assets](design-system/rich-style-assets.md), [ADR-0029](adr/0029-layered-svg-artwork.md) |
 
 > Detail workflow video per fase hidup di `docs/agents/` (dokumen fase
 > `01-story.md` … `04-qa.md` + `docs/agents/references/`) dan

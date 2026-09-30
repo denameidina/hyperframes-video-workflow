@@ -132,7 +132,7 @@ dipin. Datanya dibekukan di repo, dan nomor versi serta checksum dicatat di
 ```json
 {
   "id": "icon.coins",
-  "kind": "icon | pictogram | doodle | paper | hand | frame | doc | map | texture | scene | font | palette | type",
+  "kind": "icon | pictogram | doodle | paper | hand | frame | doc | map | texture | scene | font | palette | type | artwork",
   "file": "vendor/asset-lib/paper/coin-stack.png",
   "inline": "SK.LIB.icons.coins",
   "styles": ["motion-graphic", "vox", "whiteboard"],
@@ -146,6 +146,7 @@ dipin. Datanya dibekukan di repo, dan nomor versi serta checksum dicatat di
 ```
 
 - Setiap entri punya `file` atau `inline`, tidak keduanya.
+- `artwork` (ADR-0029) adalah ilustrasi SVG berlapis dengan file lokal, bukan preset helper. `SK.asset(id).file` mengembalikan path; sheet dikelompokkan menurut gaya utama (keluarga showreel dikenali melalui id `art.atelier-showreel-*`). Kontrak pengayaan: `internal/docs/design-system/rich-style-assets.md`.
 - `anchor` diisi untuk tangan (ujung pena atau jari), selotip (titik tempel),
   dan scene (z tiap layer).
 - Tag topik diambil dari kosakata tetap: `ai`, `uang`, `bisnis`, `umkm`,

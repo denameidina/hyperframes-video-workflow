@@ -10283,5 +10283,1895 @@
   "source": "Codex (generated)",
   "license": "project asset (MIT)",
   "bytes": 596821
+ },
+ {
+  "id": "art.atelier-text-offset-plate",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/offset-plate.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/offset-plate.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11075
+ },
+ {
+  "id": "art.atelier-text-fold-banner",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/fold-banner.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/fold-banner.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11030
+ },
+ {
+  "id": "art.atelier-text-vertical-rail",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/vertical-rail.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/vertical-rail.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11278
+ },
+ {
+  "id": "art.atelier-text-editorial-rule",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/editorial-rule.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/editorial-rule.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11672
+ },
+ {
+  "id": "art.atelier-text-brush-swash",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/brush-swash.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/brush-swash.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11801
+ },
+ {
+  "id": "art.atelier-text-riso-field",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/riso-field.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/riso-field.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 22448
+ },
+ {
+  "id": "art.atelier-text-letter-grid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/letter-grid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/letter-grid.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11115
+ },
+ {
+  "id": "art.atelier-text-radial-guide",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/radial-guide.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/radial-guide.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 15238
+ },
+ {
+  "id": "art.atelier-text-bracket-frame",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/bracket-frame.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/bracket-frame.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11103
+ },
+ {
+  "id": "art.atelier-text-quotation",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/quotation.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/quotation.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11001
+ },
+ {
+  "id": "art.atelier-text-registration",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/registration.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/registration.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12176
+ },
+ {
+  "id": "art.atelier-text-stamp-panel",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/stamp-panel.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/stamp-panel.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11202
+ },
+ {
+  "id": "art.atelier-text-word-window",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/word-window.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/word-window.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11133
+ },
+ {
+  "id": "art.atelier-text-fold-arrow",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/text/fold-arrow.svg",
+  "use": "vendor/asset-lib/artwork/atelier/text/fold-arrow.svg",
+  "styles": [
+   "broll-text",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10969
+ },
+ {
+  "id": "art.atelier-mg-orbit-nodes",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/orbit-nodes.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/orbit-nodes.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12055
+ },
+ {
+  "id": "art.atelier-mg-segmented-ring",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/segmented-ring.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/segmented-ring.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11274
+ },
+ {
+  "id": "art.atelier-mg-stepped-funnel",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/stepped-funnel.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/stepped-funnel.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11024
+ },
+ {
+  "id": "art.atelier-mg-branch-flow",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/branch-flow.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/branch-flow.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11107
+ },
+ {
+  "id": "art.atelier-mg-radar-bloom",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/radar-bloom.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/radar-bloom.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12445
+ },
+ {
+  "id": "art.atelier-mg-stacked-bars",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/stacked-bars.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/stacked-bars.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11426
+ },
+ {
+  "id": "art.atelier-mg-modular-grid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/modular-grid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/modular-grid.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11518
+ },
+ {
+  "id": "art.atelier-mg-linked-cells",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/linked-cells.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/linked-cells.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11405
+ },
+ {
+  "id": "art.atelier-mg-balance",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/balance.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/balance.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11173
+ },
+ {
+  "id": "art.atelier-mg-route-nodes",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/route-nodes.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/route-nodes.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11248
+ },
+ {
+  "id": "art.atelier-mg-sparkline",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/sparkline.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/sparkline.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11038
+ },
+ {
+  "id": "art.atelier-mg-wave-mesh",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/wave-mesh.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/wave-mesh.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11851
+ },
+ {
+  "id": "art.atelier-mg-data-capsule",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/data-capsule.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/data-capsule.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11501
+ },
+ {
+  "id": "art.atelier-mg-molecule",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mg/molecule.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mg/molecule.svg",
+  "styles": [
+   "motion-graphic"
+  ],
+  "tags": [
+   "data",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11171
+ },
+ {
+  "id": "art.atelier-wb-logic-flow",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/logic-flow.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/logic-flow.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11160
+ },
+ {
+  "id": "art.atelier-wb-feedback-loop",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/feedback-loop.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/feedback-loop.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11300
+ },
+ {
+  "id": "art.atelier-wb-decision-tree",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/decision-tree.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/decision-tree.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11492
+ },
+ {
+  "id": "art.atelier-wb-hand-graph",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/hand-graph.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/hand-graph.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11120
+ },
+ {
+  "id": "art.atelier-wb-thought-cloud",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/thought-cloud.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/thought-cloud.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11272
+ },
+ {
+  "id": "art.atelier-wb-notebook-tabs",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/notebook-tabs.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/notebook-tabs.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11431
+ },
+ {
+  "id": "art.atelier-wb-dashed-orbit",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/dashed-orbit.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/dashed-orbit.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11217
+ },
+ {
+  "id": "art.atelier-wb-bulb-sketch",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/bulb-sketch.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/bulb-sketch.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11405
+ },
+ {
+  "id": "art.atelier-wb-magnet",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/magnet.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/magnet.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11192
+ },
+ {
+  "id": "art.atelier-wb-speed-gauge",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/speed-gauge.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/speed-gauge.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11327
+ },
+ {
+  "id": "art.atelier-wb-bridge",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/bridge.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/bridge.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11256
+ },
+ {
+  "id": "art.atelier-wb-check-cluster",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/check-cluster.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/check-cluster.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11317
+ },
+ {
+  "id": "art.atelier-wb-brain-circuit",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/brain-circuit.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/brain-circuit.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11335
+ },
+ {
+  "id": "art.atelier-wb-calendar-sketch",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/wb/calendar-sketch.svg",
+  "use": "vendor/asset-lib/artwork/atelier/wb/calendar-sketch.svg",
+  "styles": [
+   "whiteboard",
+   "mix-media"
+  ],
+  "tags": [
+   "ide",
+   "kerja"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11517
+ },
+ {
+  "id": "art.atelier-stop-serrated-sun",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/serrated-sun.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/serrated-sun.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11623
+ },
+ {
+  "id": "art.atelier-stop-accordion",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/accordion.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/accordion.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11950
+ },
+ {
+  "id": "art.atelier-stop-torn-card",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/torn-card.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/torn-card.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14802
+ },
+ {
+  "id": "art.atelier-stop-tape-chevron",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/tape-chevron.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/tape-chevron.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14751
+ },
+ {
+  "id": "art.atelier-stop-paper-fan",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/paper-fan.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/paper-fan.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11625
+ },
+ {
+  "id": "art.atelier-stop-cutout-plant",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/cutout-plant.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/cutout-plant.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11435
+ },
+ {
+  "id": "art.atelier-stop-ticket-window",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/ticket-window.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/ticket-window.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11346
+ },
+ {
+  "id": "art.atelier-stop-index-stack",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/index-stack.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/index-stack.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 19552
+ },
+ {
+  "id": "art.atelier-stop-paper-spiral",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/paper-spiral.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/paper-spiral.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11191
+ },
+ {
+  "id": "art.atelier-stop-zigzag-fold",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/zigzag-fold.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/zigzag-fold.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11062
+ },
+ {
+  "id": "art.atelier-stop-open-envelope",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/open-envelope.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/open-envelope.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13343
+ },
+ {
+  "id": "art.atelier-stop-diecut-frame",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/diecut-frame.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/diecut-frame.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12074
+ },
+ {
+  "id": "art.atelier-stop-folded-plane",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/folded-plane.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/folded-plane.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11143
+ },
+ {
+  "id": "art.atelier-stop-cardboard-arrow",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/stop/cardboard-arrow.svg",
+  "use": "vendor/asset-lib/artwork/atelier/stop/cardboard-arrow.svg",
+  "styles": [
+   "stop-motion",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "benda"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14178
+ },
+ {
+  "id": "art.atelier-vox-evidence-card",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/evidence-card.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/evidence-card.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13592
+ },
+ {
+  "id": "art.atelier-vox-data-bracket",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/data-bracket.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/data-bracket.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11049
+ },
+ {
+  "id": "art.atelier-vox-document-tab",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/document-tab.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/document-tab.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13494
+ },
+ {
+  "id": "art.atelier-vox-highlight-band",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/highlight-band.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/highlight-band.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11177
+ },
+ {
+  "id": "art.atelier-vox-citation-rail",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/citation-rail.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/citation-rail.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11372
+ },
+ {
+  "id": "art.atelier-vox-magnifier",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/magnifier.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/magnifier.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11503
+ },
+ {
+  "id": "art.atelier-vox-locator",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/locator.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/locator.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11163
+ },
+ {
+  "id": "art.atelier-vox-compare-card",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/compare-card.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/compare-card.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 15895
+ },
+ {
+  "id": "art.atelier-vox-editorial-timeline",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/editorial-timeline.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/editorial-timeline.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12014
+ },
+ {
+  "id": "art.atelier-vox-chart-focus",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/chart-focus.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/chart-focus.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13154
+ },
+ {
+  "id": "art.atelier-vox-picture-frame",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/picture-frame.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/picture-frame.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11004
+ },
+ {
+  "id": "art.atelier-vox-source-badge",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/source-badge.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/source-badge.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11239
+ },
+ {
+  "id": "art.atelier-vox-link-card",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/link-card.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/link-card.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13496
+ },
+ {
+  "id": "art.atelier-vox-note-page",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/vox/note-page.svg",
+  "use": "vendor/asset-lib/artwork/atelier/vox/note-page.svg",
+  "styles": [
+   "vox",
+   "mix-media"
+  ],
+  "tags": [
+   "kertas",
+   "data"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11747
+ },
+ {
+  "id": "art.atelier-mm-ripped-stack",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/ripped-stack.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/ripped-stack.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 17318
+ },
+ {
+  "id": "art.atelier-mm-film-perforations",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/film-perforations.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/film-perforations.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12925
+ },
+ {
+  "id": "art.atelier-mm-mesh-circle",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/mesh-circle.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/mesh-circle.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13422
+ },
+ {
+  "id": "art.atelier-mm-halftone-shadow",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/halftone-shadow.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/halftone-shadow.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 33439
+ },
+ {
+  "id": "art.atelier-mm-ink-blot",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/ink-blot.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/ink-blot.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11207
+ },
+ {
+  "id": "art.atelier-mm-taped-frame",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/taped-frame.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/taped-frame.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 15661
+ },
+ {
+  "id": "art.atelier-mm-tag-string",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/tag-string.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/tag-string.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11281
+ },
+ {
+  "id": "art.atelier-mm-zigzag-sticker",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/zigzag-sticker.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/zigzag-sticker.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11566
+ },
+ {
+  "id": "art.atelier-mm-collage-ring",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/collage-ring.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/collage-ring.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13055
+ },
+ {
+  "id": "art.atelier-mm-poster-fold",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/poster-fold.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/poster-fold.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11286
+ },
+ {
+  "id": "art.atelier-mm-grid-cut",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/grid-cut.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/grid-cut.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 13220
+ },
+ {
+  "id": "art.atelier-mm-arch-window",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/arch-window.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/arch-window.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11015
+ },
+ {
+  "id": "art.atelier-mm-news-strip",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/news-strip.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/news-strip.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14344
+ },
+ {
+  "id": "art.atelier-mm-scissor-path",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/mm/scissor-path.svg",
+  "use": "vendor/asset-lib/artwork/atelier/mm/scissor-path.svg",
+  "styles": [
+   "mix-media",
+   "stop-motion"
+  ],
+  "tags": [
+   "kertas",
+   "media"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11341
+ },
+ {
+  "id": "art.atelier-px-mountain-back",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/mountain-back.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/mountain-back.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10874
+ },
+ {
+  "id": "art.atelier-px-ridge-mid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/ridge-mid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/ridge-mid.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11514
+ },
+ {
+  "id": "art.atelier-px-pine-foreground",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/pine-foreground.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/pine-foreground.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11257
+ },
+ {
+  "id": "art.atelier-px-cloud-veil",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/cloud-veil.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/cloud-veil.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10878
+ },
+ {
+  "id": "art.atelier-px-light-beam",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/light-beam.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/light-beam.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10901
+ },
+ {
+  "id": "art.atelier-px-terrain-lines",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/terrain-lines.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/terrain-lines.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12969
+ },
+ {
+  "id": "art.atelier-px-city-back",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/city-back.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/city-back.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 22714
+ },
+ {
+  "id": "art.atelier-px-tower-mid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/tower-mid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/tower-mid.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14341
+ },
+ {
+  "id": "art.atelier-px-railing-front",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/railing-front.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/railing-front.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11443
+ },
+ {
+  "id": "art.atelier-px-sun-haze",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/sun-haze.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/sun-haze.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10958
+ },
+ {
+  "id": "art.atelier-px-floating-portal",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/floating-portal.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/floating-portal.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11135
+ },
+ {
+  "id": "art.atelier-px-depth-grid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/depth-grid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/depth-grid.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10899
+ },
+ {
+  "id": "art.atelier-px-palm-frame",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/palm-frame.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/palm-frame.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12347
+ },
+ {
+  "id": "art.atelier-px-glass-shard",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/px/glass-shard.svg",
+  "use": "vendor/asset-lib/artwork/atelier/px/glass-shard.svg",
+  "styles": [
+   "parallax"
+  ],
+  "tags": [
+   "tempat",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 10999
+ },
+ {
+  "id": "art.atelier-showreel-chrome-orb",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/chrome-orb.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/chrome-orb.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11034
+ },
+ {
+  "id": "art.atelier-showreel-chrome-ribbon",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/chrome-ribbon.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/chrome-ribbon.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11119
+ },
+ {
+  "id": "art.atelier-showreel-prism-facet",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/prism-facet.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/prism-facet.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11208
+ },
+ {
+  "id": "art.atelier-showreel-iridescent-mesh",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/iridescent-mesh.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/iridescent-mesh.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 15198
+ },
+ {
+  "id": "art.atelier-showreel-glass-card",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/glass-card.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/glass-card.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11224
+ },
+ {
+  "id": "art.atelier-showreel-extruded-star",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/extruded-star.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/extruded-star.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11327
+ },
+ {
+  "id": "art.atelier-showreel-rubber-loop",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/rubber-loop.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/rubber-loop.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11094
+ },
+ {
+  "id": "art.atelier-showreel-metal-coil",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/metal-coil.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/metal-coil.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12461
+ },
+ {
+  "id": "art.atelier-showreel-optical-grid",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/optical-grid.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/optical-grid.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 17326
+ },
+ {
+  "id": "art.atelier-showreel-orbital-trail",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/orbital-trail.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/orbital-trail.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 12749
+ },
+ {
+  "id": "art.atelier-showreel-signal-field",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/signal-field.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/signal-field.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 16024
+ },
+ {
+  "id": "art.atelier-showreel-gradient-contours",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/gradient-contours.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/gradient-contours.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 14788
+ },
+ {
+  "id": "art.atelier-showreel-sculpted-petal",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/sculpted-petal.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/sculpted-petal.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11829
+ },
+ {
+  "id": "art.atelier-showreel-split-cube",
+  "kind": "artwork",
+  "file": "vendor/asset-lib/artwork/atelier/showreel/split-cube.svg",
+  "use": "vendor/asset-lib/artwork/atelier/showreel/split-cube.svg",
+  "styles": [
+   "broll-text",
+   "parallax",
+   "mix-media"
+  ],
+  "tags": [
+   "media",
+   "ide"
+  ],
+  "source": "project (original Atelier vector design, 2026-09-30)",
+  "license": "MIT",
+  "bytes": 11237
  }
 ]

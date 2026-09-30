@@ -6,6 +6,118 @@ Paper-pack files keep their rows in `vendor/paper-pack/LICENSES.md`.
 
 | File | Source | License | Changes |
 | --- | --- | --- | --- |
+| `artwork/atelier/mg/balance.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/branch-flow.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/data-capsule.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/linked-cells.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/modular-grid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/molecule.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/orbit-nodes.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/radar-bloom.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/route-nodes.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/segmented-ring.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/sparkline.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/stacked-bars.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/stepped-funnel.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mg/wave-mesh.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; relative illustration; set real labels/values before factual use |
+| `artwork/atelier/mm/arch-window.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/collage-ring.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/film-perforations.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/grid-cut.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/halftone-shadow.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/ink-blot.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/mesh-circle.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/news-strip.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/poster-fold.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/ripped-stack.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/scissor-path.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/tag-string.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/taped-frame.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/mm/zigzag-sticker.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/px/city-back.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/cloud-veil.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/depth-grid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/floating-portal.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/glass-shard.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/light-beam.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/mountain-back.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/palm-frame.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/pine-foreground.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/railing-front.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/ridge-mid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/sun-haze.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/terrain-lines.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/px/tower-mid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; original illustrative plane, not a photograph or geographic proof |
+| `artwork/atelier/showreel/chrome-orb.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/chrome-ribbon.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/extruded-star.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/glass-card.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/gradient-contours.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/iridescent-mesh.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/metal-coil.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/optical-grid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/orbital-trail.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/prism-facet.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/rubber-loop.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/sculpted-petal.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/signal-field.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/showreel/split-cube.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; sculptural/optical design study; no physical product depicted |
+| `artwork/atelier/stop/accordion.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/cardboard-arrow.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/cutout-plant.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/diecut-frame.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/folded-plane.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/index-stack.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/open-envelope.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/paper-fan.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/paper-spiral.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/serrated-sun.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/tape-chevron.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/ticket-window.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/torn-card.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/stop/zigzag-fold.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/bracket-frame.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/brush-swash.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/editorial-rule.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/fold-arrow.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/fold-banner.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/letter-grid.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/offset-plate.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/quotation.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/radial-guide.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/registration.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/riso-field.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/stamp-panel.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/vertical-rail.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/text/word-window.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups;  |
+| `artwork/atelier/vox/chart-focus.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/citation-rail.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/compare-card.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/data-bracket.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/document-tab.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/editorial-timeline.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/evidence-card.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/highlight-band.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/link-card.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/locator.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/magnifier.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/note-page.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/picture-frame.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/vox/source-badge.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; illustrative apparatus; retain Ilustrasi tag, use genuine sources for proof |
+| `artwork/atelier/wb/brain-circuit.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/bridge.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/bulb-sketch.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/calendar-sketch.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/check-cluster.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/dashed-orbit.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/decision-tree.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/feedback-loop.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/hand-graph.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/logic-flow.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/magnet.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/notebook-tabs.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/speed-gauge.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
+| `artwork/atelier/wb/thought-cloud.svg` | project (original Atelier vector design, 2026-09-30) | MIT | 800×600 editable SVG; named data-part groups; authored pen order; draw paths sequentially |
 | `fonts/archivo-black-latin-400-normal.woff2` | fontsource @fontsource/archivo-black@5.3.0 — https://www.npmjs.com/package/@fontsource/archivo-black | OFL-1.1 | Latin subset woff2, unchanged |
 | `fonts/bebas-neue-latin-400-normal.woff2` | fontsource @fontsource/bebas-neue@5.3.0 — https://www.npmjs.com/package/@fontsource/bebas-neue | OFL-1.1 | Latin subset woff2, unchanged |
 | `fonts/bricolage-grotesque-latin-wght-normal.woff2` | fontsource @fontsource-variable/bricolage-grotesque@5.3.0 — https://www.npmjs.com/package/@fontsource-variable/bricolage-grotesque | OFL-1.1 | Latin subset woff2, unchanged |

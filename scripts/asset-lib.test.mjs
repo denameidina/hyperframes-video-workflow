@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { absolutize, shapeToPath, splitSubpaths, stringify, tokenize } from './lib/svg-path.mjs';
 import { dp, geomPath, mapSvg, ringArea } from './lib/geo-svg.mjs';
-import { buildAll, LIB, mapRegions, OUTPUTS, parseStrokeSvg, pngSize, STYLE_KEY, STYLES, TAGS } from './lib/asset-lib-build.mjs';
+import { buildAll, KINDS, LIB, mapRegions, OUTPUTS, parseStrokeSvg, pngSize, STYLE_KEY, STYLES, TAGS } from './lib/asset-lib-build.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -70,9 +70,24 @@ test('catalog ids are unique and every entry has a known kind, styles, and vocab
   const ids = catalog.map((e) => e.id);
   assert.equal(new Set(ids).size, ids.length);
   for (const e of catalog) {
+    assert.ok(KINDS.includes(e.kind), e.id);
     assert.ok(e.styles.length && e.styles.every((s) => STYLES.includes(s)), e.id);
     assert.ok(e.tags.length && e.tags.every((t) => TAGS.includes(t)), e.id);
     assert.ok(e.use, `${e.id} has no use`);
+  }
+});
+
+test('layered artwork uses local SVG lookup and appears exactly once on its family sheet', async () => {
+  const { sheetPages } = await import('./lib/asset-lib-sheets.mjs');
+  const SK = load();
+  const pages = sheetPages(ROOT).filter((p) => p.name.startsWith('artwork-'));
+  const entries = catalog.filter((e) => e.kind === 'artwork');
+  assert.ok(entries.length >= 112);
+  for (const e of entries) {
+    assert.ok(e.file.endsWith('.svg'), e.id);
+    assert.equal(SK.asset(e.id).file, e.file);
+    assert.match(read(e.file), /data-part="/);
+    assert.equal(pages.flatMap((p) => p.cells).filter((c) => c.includes(`src="${e.file}"`)).length, 1, e.id);
   }
 });
 test('every catalog file exists and is tracked in git', () => {

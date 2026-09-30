@@ -110,6 +110,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Type | `font.instrument-serif` | `../asset-catalog/sheets/font.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `px-s1` … `px-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/parallax.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-parallax](../asset-catalog/sheets/artwork-parallax.webp). Catalog ids `art.atelier-px-<name>`; examples: mountain-back / ridge-mid / pine-foreground. `SK.asset(id).file` returns the local SVG path. Combine complementary original illustration planes; keep camera travel within the existing depth budget and never present them as proof. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - One camera move per clip, eased in and out (springs such as `[3, 1]` or

@@ -15,7 +15,7 @@ import { splitSubpaths } from './svg-path.mjs';
 export const LIB = 'vendor/asset-lib';
 export const TAGS = ['ai', 'uang', 'bisnis', 'umkm', 'chat', 'kerja', 'waktu', 'orang', 'perangkat', 'keamanan', 'data', 'logistik', 'ide', 'status', 'arah', 'tempat', 'hidup', 'media', 'kertas', 'peta', 'benda'];
 export const STYLES = ['broll-text', 'motion-graphic', 'whiteboard', 'vox', 'stop-motion', 'mix-media', 'parallax'];
-export const KINDS = ['icon', 'pictogram', 'doodle', 'paper', 'hand', 'frame', 'doc', 'map', 'texture', 'scene', 'font', 'palette', 'type'];
+export const KINDS = ['icon', 'pictogram', 'doodle', 'paper', 'hand', 'frame', 'doc', 'map', 'texture', 'scene', 'font', 'palette', 'type', 'artwork'];
 export const STYLE_KEY = { text: 'broll-text', mg: 'motion-graphic', wb: 'whiteboard', vox: 'vox', stop: 'stop-motion', mm: 'mix-media', px: 'parallax' };
 // generated files at the library root; scenes/<name>/scene.json are generated too
 export const OUTPUTS = ['asset-lib.js', 'asset-lib.css', 'catalog.json', 'LICENSES.md', 'CATALOG.md'];

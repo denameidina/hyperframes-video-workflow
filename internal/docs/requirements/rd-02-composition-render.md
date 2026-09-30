@@ -191,6 +191,25 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 Production details: [transition-assets](../design-system/transition-assets.md).
 These requirements apply to the requested local pack, not a new default video format.
 
+## Paket aset showreel form-frequency (produksi lokal)
+
+- **RD-02-56** (Optional) — Where the requested form-frequency showreel pack is produced, the pack shall include a 48-second, 1920×1080, 30 fps music-driven showreel with twelve distinct four-second motion studies.
+- **RD-02-57** (Optional) — Where the pack exists, it shall include at least 36 original editable SVG assets, twelve independently editable scene sources, twelve individual MP4 scene clips, separate original music and SFX stems, a contact sheet, and a manifest with provenance and checksums.
+- **RD-02-58** (Ubiquitous) — Each showreel scene shall derive animation and procedural graphics only from its seeked local time, with fonts and runtime available locally.
+- **RD-02-59** (Event-driven) — When the showreel is delivered, its project check shall pass, every scene shall have a visually inspected snapshot, and the final MP4 shall be verified for video dimensions, duration, frame rate, and audible audio.
+
+Production scope and delivery: [showreel-assets](../design-system/showreel-assets.md). Like the transition pack, this is requested asset production rather than a Dena social-video script/voice workflow. The user requested the complete video; rendering is included. Publishing still requires explicit approval.
+
+## Pengayaan tujuh gaya + showreel (produksi lokal)
+
+- **RD-02-60** (Optional) — Where the requested style-atelier collection is produced, the shared catalog shall include at least fourteen original layered SVG artworks for each of seven production styles and fourteen compatible showreel artworks, with local files, existing style/topic tags, source, and license.
+- **RD-02-61** (Ubiquitous) — The asset library shall accept file-backed `artwork` entries through `SK.asset` and display every such entry in a family contact sheet without routing it through PNG or fixed frame/document helpers.
+- **RD-02-62** (Optional) — Where the style-atelier pack exists, it shall include a 64-second 1920×1080 30 fps reel, sixteen editable four-second scene studies and individual clips, local dependencies, separate music/SFX stems, and a portable checksum manifest.
+- **RD-02-63** (Ubiquitous) — Each demonstration scene shall use deterministic seeked time; whiteboard shall reveal authored strokes in order, paper/VOX/collage shall use held two-frame poses, and illustrative documents and speaker placeholders shall be labelled.
+- **RD-02-64** (Event-driven) — When the collection is delivered, asset-library tests and the video project check shall pass, all scene hero frames shall have been inspected, and the render, clips, audio, unique SVG hashes and portable archive shall have been verified.
+
+Production details: [rich-style-assets](../design-system/rich-style-assets.md).
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system

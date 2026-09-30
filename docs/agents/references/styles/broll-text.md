@@ -78,6 +78,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Marks on words | `frame.swash-1`, `frame.swash-2`, `frame.swash-3`, `frame.swash-4`, `doodle.burst`, `doodle.circle-loose`, `doodle.underline-wave` | `../asset-catalog/sheets/frame-1.webp`, `../asset-catalog/sheets/frame-2.webp`, `../asset-catalog/sheets/doodle-1.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `tx-s1` … `tx-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/broll-text.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-broll-text](../asset-catalog/sheets/artwork-broll-text.webp). Catalog ids `art.atelier-text-<name>`; examples: offset-plate / word-window / registration. `SK.asset(id).file` returns the local SVG path. Use these as live-type framing; reveal the words first, then the print or registration accent. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - Entrances start 0.03–0.10 s before the word (1–3 frames at 30 fps).

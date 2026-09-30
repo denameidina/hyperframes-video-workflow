@@ -110,6 +110,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Type | `font.dm-serif-display`, `font.special-elite` | `../asset-catalog/sheets/font.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `vx-s1` … `vx-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/vox.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-vox](../asset-catalog/sheets/artwork-vox.webp). Catalog ids `art.atelier-vox-<name>`; examples: note-page / editorial-timeline / magnifier. `SK.asset(id).file` returns the local SVG path. Use as illustrative editorial apparatus with an Ilustrasi tag; factual evidence still needs a genuine source capture. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - Step every graphic move on the 15-steps-per-second grid (`SK.onTwos`) — the

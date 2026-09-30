@@ -85,6 +85,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Lettering | `font.kalam`, `font.patrick-hand`, `font.permanent-marker` | `../asset-catalog/sheets/font.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `wb-s1` … `wb-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/whiteboard.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-whiteboard](../asset-catalog/sheets/artwork-whiteboard.webp). Catalog ids `art.atelier-wb-<name>`; examples: logic-flow / feedback-loop / decision-tree. `SK.asset(id).file` returns the local SVG path. Inline the SVG once, then draw the named stroke groups in authored order with SK.drawSeq and a pen tip. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - Constant pen speed: lines ~750 px/s (`SK.drawSeq` without `dur`), so long lines

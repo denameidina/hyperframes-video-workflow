@@ -81,6 +81,10 @@ new asset only when nothing here fits the line, and say why in the brief (RD-03-
 | Ground | `texture.dots` | `../asset-catalog/sheets/texture-1.webp` |
 | Moodboard: six technique studies of the references (look first, then pick a direction) | `mg-s1` … `mg-s6` in `../moodboard/moodboard.json` | `../moodboard/sheets/motion-graphic.webp` |
 
+### Atelier layered artwork
+
+Fourteen additional original SVG assets for this family: sheet [artwork-motion-graphic](../asset-catalog/sheets/artwork-motion-graphic.webp). Catalog ids `art.atelier-mg-<name>`; examples: branch-flow / orbit-nodes / segmented-ring. `SK.asset(id).file` returns the local SVG path. Stage the relation before the emphasis. Relative shapes are illustrative until supplied labels and values are applied. See the [collection and usage contract](../../../../internal/docs/design-system/rich-style-assets.md); motion studies are in `videos/style-atelier/` (local production).
+
 ## Timing
 
 - Entrances 0.4–0.6 s with a decelerating ease (`M.eo`, springs `M.SLOW`); exits
