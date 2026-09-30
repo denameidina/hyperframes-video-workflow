@@ -1,8 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { SCENE_PNG as DESIGN_PNG, SHEET_JPG } from './storyboard-fixtures.mjs';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
 import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, paneCommand } from './studio/agent.mjs';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { FORMAT, hasSession, interruptSession, killSession, listSessions, parseSessions, sessionName, startSession } from './studio/sessions.mjs';
@@ -526,6 +529,29 @@ function genStudioRoot() {
 
 // a generate project at stage 'story' (brief only) or 'gate1' (script + voiceover); later gates are reached in the
 // tests through recordDecision and real files, so their fingerprints are real
+const designHash = (bytes) => createHash('sha256').update(bytes).digest('hex');
+function actualDesign(dir) {
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), SHEET_JPG);
+  writeFileSync(join(dir, 'preview/scene.png'), DESIGN_PNG);
+  const timeline = JSON.stringify({ elements: [{ id: 'ov-001', start: 0, duration: 3, placement: 'full', storyboardFrame: 'preview/scene.png' }] });
+  writeFileSync(join(dir, 'overlay-timeline.json'), timeline);
+  if (!existsSync(join(dir, 'visual-plan.md'))) writeFileSync(join(dir, 'visual-plan.md'), '## Style World\n\nink\n');
+  writeFileSync(join(dir, 'preview/storyboard-evidence.json'), JSON.stringify({ version: 1, kind: 'actual', timelineSha256: designHash(timeline), frames: [{ id: 'ov-001', path: 'preview/scene.png', sha256: designHash(DESIGN_PNG) }], sheets: [{ path: 'preview/storyboard-sheet.jpg', sha256: designHash(readFileSync(join(dir, 'preview/storyboard-sheet.jpg'))) }] }));
+}
+
+let studioMp4;
+function tinyRender(file) {
+  if (!studioMp4) {
+    const temp = mkdtempSync(join(tmpdir(), 'studio-media-'));
+    const out = join(temp, 'tiny.mp4');
+    const made = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'color=black:s=16x16:r=10:d=0.2', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', out]);
+    assert.equal(made.status, 0, made.stderr?.toString());
+    studioMp4 = readFileSync(out);
+    rmSync(temp, { recursive: true, force: true });
+  }
+  writeFileSync(file, studioMp4);
+}
+
 function genProject(root, slug, stage) {
   const dir = join(root, 'videos', slug);
   mkdirSync(join(dir, 'research'), { recursive: true });
@@ -641,12 +667,13 @@ test('app generate list, detail per gate, media whitelist, and the generate cont
   writeFileSync(join(g1, 'preview/storyboard-sheet.jpg'), 'JPG');
   writeFileSync(join(g1, 'storyboard.md'), '| # | time | spoken words | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 0:00 | Halo | stop-motion / pop-up | Warung | `sm-08-walk-hinge` |\n');
   writeFileSync(join(g1, 'visual-plan.md'), '# Visual Plan\n\n## Style World\n\n- stop-motion\n\n## Music\n\n- Track: `m01-quiet` from 0\n\n## Timeline\n');
+  actualDesign(g1);
   const d2 = (await call('GET', '/api/generate/g-one')).body;
   assert.deepEqual([d2.status.gate, d2.gate2.sheets, d2.gate2.rows.length, d2.gate2.styleWorld, d2.gate2.musicTrack], [2, ['preview/storyboard-sheet.jpg'], 1, '- stop-motion', 'm01-quiet']);
 
   recordDecision(g1, { gate: 2, decision: 'approve', by: 'cli' });
   mkdirSync(join(g1, 'renders'), { recursive: true });
-  writeFileSync(join(g1, 'renders/g-one.mp4'), 'MP4');
+  tinyRender(join(g1, 'renders/g-one.mp4'));
   writeFileSync(join(g1, 'assembly-notes.md'), '# Assembly Notes\n\n## Deviations From Plan\n\n- ov-004 strings\n\n## Verification\n\nok\n\n## Handoff Risks\n\n- CTA intonation\n');
   const d3 = (await call('GET', '/api/generate/g-one')).body;
   assert.deepEqual([d3.status.gate, d3.gate3.render, d3.gate3.deviations, d3.gate3.risks, d3.gate3.qaReport], [3, 'g-one.mp4', '- ov-004 strings', '- CTA intonation', false]);
@@ -693,11 +720,12 @@ test('Generate shows and serves the exact blur render fingerprinted by its final
   mkdirSync(join(dir, 'preview'), { recursive: true });
   writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'JPG');
   writeFileSync(join(dir, 'storyboard.md'), '| 1 | scene |');
+  actualDesign(dir);
   record(dir, { gate: 2, decision: 'approve', by: 'cli' });
   mkdirSync(join(dir, 'renders'), { recursive: true });
-  writeFileSync(join(dir, 'renders/blur-player.mp4'), 'OLD');
+  tinyRender(join(dir, 'renders/blur-player.mp4'));
   utimesSync(join(dir, 'renders/blur-player.mp4'), 1002, 1002);
-  writeFileSync(join(dir, 'renders/blur-player-blur.mp4'), 'BLUR');
+  tinyRender(join(dir, 'renders/blur-player-blur.mp4'));
   utimesSync(join(dir, 'renders/blur-player-blur.mp4'), 1003, 1003);
   const { server, call, base } = await startApp(root);
   t.after(() => server.close());
@@ -705,7 +733,7 @@ test('Generate shows and serves the exact blur render fingerprinted by its final
   assert.equal(d.gate3.render, 'blur-player-blur.mp4');
   assert.deepEqual(Object.keys(d.status.fingerprint), ['renders/blur-player-blur.mp4']);
   const media = await fetch(`${base}/media/blur-player/${d.gate3.render}`);
-  assert.equal(await media.text(), 'BLUR');
+  assert.deepEqual(Buffer.from(await media.arrayBuffer()), readFileSync(join(dir, 'renders/blur-player-blur.mp4')));
 });
 
 test('buildPrompt generate modes point at request.json and the gate command', () => {
@@ -903,10 +931,11 @@ function genMusicProject(root, slug, stage) {
   mkdirSync(join(dir, 'preview'), { recursive: true });
   writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'JPG');
   writeFileSync(join(dir, 'storyboard.md'), '| # | bars | time | on-screen text | style / pattern | what appears | example |\n| --- | --- | --- | --- | --- | --- | --- |\n| 1 | 1–2 | 0:00–0:04 | BUKAN AI-NYA | broll-text / slam | Kata jatuh di downbeat | `tx-01-slam` |\n');
+  actualDesign(dir);
   if (stage === 'gate2') {
     record(dir, { gate: 1, decision: 'approve', by: 'cli' });
     mkdirSync(join(dir, 'renders'), { recursive: true });
-    writeFileSync(join(dir, 'renders', `${slug}.mp4`), 'MP4');
+    tinyRender(join(dir, 'renders', `${slug}.mp4`));
   }
   return dir;
 }

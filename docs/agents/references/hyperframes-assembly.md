@@ -64,6 +64,7 @@ Check that the upstream files exist and agree with each other:
 - asset filenames
 - CTA timing
 - style lane
+- art direction, actual storyboard evidence and boundary decisions for motion-design sequences
 - user constraints
 
 If `caption-beats.json` and `overlay-timeline.json` disagree, do not silently merge them. Write the conflict in `assembly-notes.md` and send it back to the owning upstream phase.
@@ -177,6 +178,12 @@ Rules:
 - avoid viewport-scaled font sizes
 - keep text inside its container on mobile and desktop preview sizes
 - keep animation deterministic
+- evaluate each scene from absolute time, recomputing its complete pose rather
+  than accumulating transforms across seeks
+- give exact boundary ownership to one scene (normally `start <= t < end`),
+  with only explicitly planned transitions overlapping
+- preserve planned end/start poses and shared anchors; give quiet reading holds
+  their intended stillness instead of adding a default bob
 
 Good motion mapping:
 
@@ -221,6 +228,9 @@ Check:
 - no text clipped by its container
 - no asset path missing
 - no timing mismatch at the first or last frame
+- actual phone-size hierarchy and readable labels during their planned holds
+- frame before/at/after each boundary has the intended scene, pose and continuity
+- late→early seek matches the same direct-seek frame
 - planned SFX cues are wired or explicitly documented as skipped
 
 If the composition uses `data-layout-allow-overflow`, document why in `assembly-notes.md`.
@@ -307,6 +317,16 @@ Create `videos/<slug>/assembly-notes.md`:
 - npx hyperframes lint --verbose:
 - warnings reviewed:
 
+## Baseline Temporal / Audio Preflight
+
+- Final file and delivery quality receipt:
+- Encoded audio profile/loudness/true peak:
+- Full playback with audio (what was checked and result):
+- Phone-size readability (inspection size, scenes and result):
+- Boundary continuity (before/at/after frames and result):
+- Late→early versus direct seeks:
+- Incomplete-review note: <none, or exact missing playback/listening/evidence>
+
 ## Handoff Risks
 
 - None, or list items QA should inspect.
@@ -340,6 +360,10 @@ Create `videos/<slug>/assembly-checklist.md`:
 - [ ] Planned SFX cues are implemented or documented
 - [ ] `npm run video -- check <slug>` passes
 - [ ] Warnings are reviewed
+- [ ] Boundary frames and late→early seeks are consistent
+- [ ] Phone-size hierarchy and text are readable
+- [ ] Delivery quality receipt is recorded
+- [ ] Full playback with audio and baseline checks are recorded, or an explicit incomplete-review note names missing evidence
 ```
 
 ## Common Failure Modes

@@ -8,7 +8,9 @@ moments get visuals, what type, where they sit, how they move, and which SFX
 cues support them.
 
 Every visual moment is chosen once, in `visual-plan.md`. This phase does not cut
-video, capture or generate asset files, author HyperFrames HTML, or render.
+video or produce final assets/animation. Generate-mode storyboard evidence may
+use local design mockups and snapshots of the intended scenes before Build;
+these are planning evidence, with the actual text, layout and artwork.
 
 ## When To Use
 
@@ -36,7 +38,7 @@ Do not use this phase when:
 When `creative-brief.md` sets `mode: generate` and format `explainer`, follow Screen Plan (generate) in
 `docs/agents/references/generate-mode.md` alongside the steps below: hybrid captions (`"rail": "hidden"`
 for beats a scene already shows), a `## Style World`, scenes that cover every second
-(treatment `full`, `example`), `## Music`, and `storyboard.md` +
+(treatment `full`, `storyboardFrame`; optional `example` annotation), `## Music`, and `storyboard.md` +
 `npm run video -- storyboard <slug>`. Gate 2 always stops for Dena's approval; R3 and R4
 do not apply (ADR-0025, RD-03-82…86). Record Dena's Gate 2 answer with
 `npm run video -- gate <slug> approve 2` when it comes from chat (Studio records its own).
@@ -145,16 +147,23 @@ unobstructed, use only project-local assets).
    when it exists): six self-made studies of the references' techniques. Name the study the
    clip leans on in the brief's `Moodboard:` line (RD-03-58).
 5. **Research links and tools.** If the user gave a URL or the transcript names
-   a tool/product/site, inspect it now and write what Build must capture in the
-   Asset Briefs For Build section, tied to the transcript window. Use URL
-   Research And Screen Capture Rules in `docs/agents/references/asset-production.md`
-   for what to research and what a useful capture looks like; Build captures.
+  a tool/product/site, inspect it now and write what Build must capture in the
+  Asset Briefs For Build section, tied to the transcript window. Use URL
+  Research And Screen Capture Rules in `docs/agents/references/asset-production.md`
+  for what to research and what a useful capture looks like; Build captures.
+   For a motion-video reference, inspect actual time-ordered action sequences
+   and record timestamped mechanisms to adapt. Metadata or a poster alone does
+   not establish its choreography; state unavailable video access explicitly.
 6. **Plan motion.** Read `docs/agents/references/motion-grammar.md` (grammar by
    format, primitives, pattern interrupts, timing, placement, density levels and
    Visual Density Mapping, sound/motion coordination, Dena-specific motion
    rules) and HyperFrames Compatibility Notes in
    `docs/agents/references/hyperframes-assembly.md`. Tracks and z-index follow
-   `internal/docs/design-system/visual-system.md`.
+   `internal/docs/design-system/visual-system.md`. Record art direction using
+   `visual-planning.md`: concept, focal hierarchy, type/hero scale, palette and
+   material roles, and phone-size readability. Decide every scene boundary,
+   its shared anchor or reason for a cut, end/start poses, and audio bridge.
+   Give dense text a quiet reading hold; perpetual idle motion is not required.
 7. **Write the plan.** Use the Visual Plan Template in
    `docs/agents/references/visual-planning.md` for `visual-plan.md`, and the
    Overlay Timeline Format in `docs/agents/references/motion-grammar.md` for
@@ -177,6 +186,10 @@ All in `videos/<slug>/`:
 - `publish-captions.md`
 - `visual-plan.md` (with `## Gate 2 Result`)
 - `overlay-timeline.json`
+- Generate: actual scene images linked by `storyboardFrame`,
+  `preview/storyboard-evidence.json`, and storyboard sheets; a library reference
+  sheet is separate and cannot satisfy the design gate.
+- Optional: `art-direction/design.md`, a short proxy animatic for complex continuity
 - Optional: `caption-review-notes.md`, `caption-style-preview.html`
 
 ## Gate 2 - Visual Plan Review (conditional)
@@ -221,6 +234,8 @@ Timeline row plus its Asset Brief gives Build:
 - required/optional flag
 - placement and track
 - motion in/out and SFX cue
+- focal hierarchy, reading hold and phone-size check
+- boundary continuity decision and incoming/outgoing poses
 - privacy/provenance expectation (real capture vs. generated, never presented
   as proof when generated)
 - what not to cover or obscure

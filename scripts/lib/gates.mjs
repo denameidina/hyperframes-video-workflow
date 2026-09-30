@@ -2,15 +2,19 @@
 // append-only decision log videos/<slug>/gates.json. This module is the only writer of gates.json; Studio and
 // `npm run video -- gate` both go through it. Node 22+ built-ins (ADR-0007).
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { finalGate, isMusicFormat, readFormat } from './formats.mjs';
+import { EVIDENCE_FILE, inspectStoryboardEvidence } from './storyboard.mjs';
+import { isPlayableRender } from './render-quality.mjs';
 
 export const GATES_FILE = 'gates.json';
 export const DECISIONS = ['approve', 'revise', 'qa', 'edit'];
 const BY = ['studio', 'cli'];
 const SHEET_RE = /^storyboard-sheet(-\d+)?\.jpg$/;
 const MAX_NOTE = 2000;
+const DESIGN_PATHS = ['art-direction/design.md', 'art-direction.md', 'design.md'];
 
 export class GateError extends Error {
   constructor(code, message) {
@@ -28,7 +32,7 @@ export function isGenerate(dir) {
 const hashes = new Map();
 function sha(file) {
   const st = statSync(file);
-  const key = `${st.size}:${st.mtimeMs}:${st.ino}`;
+  const key = `${st.size}:${st.mtimeMs}:${st.ctimeMs}:${st.ino}`;
   const hit = hashes.get(file);
   if (hit?.key === key) return hit.hash;
   const hash = createHash('sha256').update(readFileSync(file)).digest('hex');
@@ -54,36 +58,69 @@ function readyFile(file) {
 
 // Shared by gate fingerprints and the Studio player (RD-03-101, RD-05-34).
 // Prefer the newest completed normal/blur output; normal wins a timestamp tie.
-export function finalRender(dir, slug = basename(dir)) {
+const playable = new WeakMap();
+function cachedPlayable(file, run) {
+  const st = statSync(file);
+  const key = `${st.size}:${st.mtimeMs}:${st.ctimeMs}:${st.ino}`;
+  let cache = playable.get(run);
+  if (cache?.get(file) === key) return true;
+  if (!isPlayableRender(file, { run })) { cache?.delete(file); return false; }
+  if (!cache) { cache = new Map(); playable.set(run, cache); }
+  cache.set(file, key);
+  return true;
+}
+
+export function finalRender(dir, slug = basename(dir), { run = spawnSync } = {}) {
   return [`${slug}.mp4`, `${slug}-blur.mp4`]
     .map((name) => ({ name, file: join(dir, 'renders', name) }))
-    .filter(({ file }) => readyFile(file))
+    .filter(({ file }) => readyFile(file) && cachedPlayable(file, run))
     .sort((a, b) => statSync(b.file).mtimeMs - statSync(a.file).mtimeMs)[0]?.name ?? null;
 }
 
-// The files a gate approves (RD-03-89, RD-03-95). visual-plan.md is left out on purpose: the agent writes
-// the mode-specific "Gate 1/2 Result" into it after approval, which would reopen the gate.
-export function gateFiles(dir, gate, slug = basename(dir), format = readFormat(dir)) {
+// Approval records are excluded, while all creative sections retain their meaning and hash.
+export function normalizeCreativePlan(text) {
+  let result = false;
+  let fence = null;
+  return String(text).replace(/\r\n/g, '\n').split('\n').filter((line) => {
+    const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+    const inFence = Boolean(fence);
+    if (marker && !fence) fence = marker[1];
+    else if (marker && marker[1][0] === fence?.[0] && marker[1].length >= fence.length && !marker[2].trim()) fence = null;
+    if (!marker && !inFence && /^#{1,2}\s+/.test(line)) result = /^##\s+Gate\s+[12]\s+Result\s*#*\s*$/.test(line);
+    return !result;
+  }).map((line) => line.trimEnd()).join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function designFiles(dir, run) {
+  const evidence = inspectStoryboardEvidence(dir, { run });
+  if (!evidence.ready) throw new GateError(evidence.code, evidence.message);
+  return [...sheetsOf(dir), 'storyboard.md', 'visual-plan.md', 'overlay-timeline.json', EVIDENCE_FILE,
+    ...evidence.frames.map((frame) => frame.path), ...DESIGN_PATHS.filter((path) => existsSync(join(dir, path)))];
+}
+
+// Design gates approve actual scene evidence and creative dependencies (RD-03-106).
+export function gateFiles(dir, gate, slug = basename(dir), format = readFormat(dir), { run } = {}) {
   if (isMusicFormat(format)) {
-    if (gate === 1) return ['script.md', 'processed-audio.wav', ...sheetsOf(dir), 'storyboard.md'];
-    if (gate === 2) return [`renders/${finalRender(dir, slug) ?? `${slug}.mp4`}`];
+    if (gate === 1) return ['script.md', 'processed-audio.wav', ...designFiles(dir, run)];
+    if (gate === 2) return [`renders/${finalRender(dir, slug, { run }) ?? `${slug}.mp4`}`];
     throw new GateError('bad-gate', `a ${format} project has Gate 1 and Gate 2 (got ${gate})`);
   }
   if (gate === 1) return ['script.md', 'processed-audio.wav'];
-  if (gate === 2) return [...sheetsOf(dir), 'storyboard.md'];
-  if (gate === 3) return [`renders/${finalRender(dir, slug) ?? `${slug}.mp4`}`];
+  if (gate === 2) return designFiles(dir, run);
+  if (gate === 3) return [`renders/${finalRender(dir, slug, { run }) ?? `${slug}.mp4`}`];
   throw new GateError('bad-gate', `gate must be 1, 2, or 3 (got ${gate})`);
 }
 
-export function fingerprint(dir, gate, slug = basename(dir), format = readFormat(dir)) {
-  const files = gateFiles(dir, gate, slug, format);
+export function fingerprint(dir, gate, slug = basename(dir), format = readFormat(dir), { run } = {}) {
+  if (gate === finalGate(format) && !finalRender(dir, slug, { run })) throw new GateError('missing-file', 'a playable final video is required before this gate');
+  const files = gateFiles(dir, gate, slug, format, { run });
   if (gate !== finalGate(format) && (isMusicFormat(format) || gate === 2) && !sheetsOf(dir).length) {
     throw new GateError('missing-file', `${dir}/preview/storyboard-sheet.jpg is required before this gate`);
   }
   for (const file of files) {
     if (!readyFile(join(dir, file))) throw new GateError('missing-file', `${join(dir, file)} must be a nonempty regular file before this gate`);
   }
-  return Object.fromEntries(files.map((f) => [f, sha(join(dir, f))]));
+  return Object.fromEntries(files.map((f) => [f, f === 'visual-plan.md' ? createHash('sha256').update(normalizeCreativePlan(readFileSync(join(dir, f), 'utf8'))).digest('hex') : sha(join(dir, f))]));
 }
 
 export function readGates(dir) {
@@ -105,7 +142,7 @@ function sameFingerprint(a, b) {
   return ka.length === kb.length && ka.every((k, i) => k === kb[i] && a[k] === b[k]);
 }
 
-export function gateStatus(dir, { slug = basename(dir) } = {}) {
+export function gateStatus(dir, { slug = basename(dir), run } = {}) {
   const { log } = readGates(dir);
   const generate = isGenerate(dir);
   let format = 'explainer';
@@ -120,10 +157,11 @@ export function gateStatus(dir, { slug = basename(dir) } = {}) {
   const running = (phase) => ({ ...base, phase, gate: null, state: null, voiceStale: false, fingerprint: null, last: log.at(-1) || null });
   if (base.mode !== 'generate') return running(null);
   const has = (f) => readyFile(join(dir, f));
-  const storyboardReady = () => has('storyboard.md') && sheetsOf(dir).length > 0 && sheetsOf(dir).every(has);
+  const storyboardReady = () => has('storyboard.md') && has('visual-plan.md') &&
+    DESIGN_PATHS.every((path) => !existsSync(join(dir, path)) || has(path)) && inspectStoryboardEvidence(dir, { run }).ready;
   // null when the gate is approved for the files on disk now; otherwise the waiting status
   const at = (gate) => {
-    const fp = fingerprint(dir, gate, slug, format);
+    const fp = fingerprint(dir, gate, slug, format, { run });
     const mine = log.filter((e) => e.gate === gate && e.decision !== 'edit' && sameFingerprint(e.fingerprint, fp));
     const last = mine.at(-1);
     if (last?.decision === 'approve') return null;
@@ -137,7 +175,7 @@ export function gateStatus(dir, { slug = basename(dir) } = {}) {
     if (!storyboardReady()) return running('screen-plan');
     const g1 = at(1);
     if (g1) return g1;
-    if (!finalRender(dir, slug)) return running('build');
+    if (!finalRender(dir, slug, { run })) return running('build');
     return at(2) || running('done');
   }
   const g1 = at(1);
@@ -145,11 +183,11 @@ export function gateStatus(dir, { slug = basename(dir) } = {}) {
   if (!storyboardReady()) return running('screen-plan');
   const g2 = at(2);
   if (g2) return g2;
-  if (!finalRender(dir, slug)) return running('build');
+  if (!finalRender(dir, slug, { run })) return running('build');
   return at(3) || running('done');
 }
 
-export function recordDecision(dir, { gate, decision, note = '', by, fingerprint: shown, now = () => new Date() }) {
+export function recordDecision(dir, { gate, decision, note = '', by, fingerprint: shown, now = () => new Date(), run }) {
   if (!isGenerate(dir)) throw new GateError('not-generate', `${dir} is not a generate-mode project (creative-brief.md has no "mode: generate")`);
   if (!DECISIONS.includes(decision)) throw new GateError('bad-decision', `decision must be one of ${DECISIONS.join(', ')}`);
   if (!BY.includes(by)) throw new GateError('bad-decision', 'by must be studio or cli');
@@ -165,7 +203,7 @@ export function recordDecision(dir, { gate, decision, note = '', by, fingerprint
   const last = finalGate(format);
   if (decision === 'qa' && gate !== last) throw new GateError('bad-decision', `qa is a Gate ${last} decision only`);
   if (decision === 'edit' && (gate !== 1 || isMusicFormat(format))) throw new GateError('bad-decision', 'edit is an explainer Gate 1 entry only');
-  const status = gateStatus(dir);
+  const status = gateStatus(dir, { run });
   if (status.phase !== 'gate' || status.gate !== gate) {
     const where = status.phase === 'gate' ? `Gate ${status.gate}` : status.phase;
     throw new GateError('not-waiting', `Gate ${gate} is not waiting for a decision (now: ${where})`);

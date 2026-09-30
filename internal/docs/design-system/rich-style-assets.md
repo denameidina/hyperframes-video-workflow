@@ -6,7 +6,7 @@ Date: 2026-09-30
 
 The user requested enrichment of all seven style-library families plus the FORM / FREQUENCY assets, for richer future videos. This is reusable asset production and a demonstration reel, under the same local-production boundary as [showreel-assets](showreel-assets.md). Social script/voice gates do not apply. Production and local rendering are authorized; publishing is separate.
 
-Owning requirements: RD-02-60–64 in [composition-render](../requirements/rd-02-composition-render.md). Catalog integration: [ADR-0029](../adr/0029-layered-svg-artwork.md). Existing style contracts in `docs/agents/references/styles/` remain authoritative for actual Dena edits.
+Owning requirements: RD-02-60–70 in [composition-render](../requirements/rd-02-composition-render.md). Catalog integration: [ADR-0029](../adr/0029-layered-svg-artwork.md); delivery and seek corrections: [ADR-0030](../adr/0030-motion-quality-delivery.md). Existing style contracts in `docs/agents/references/styles/` remain authoritative for actual Dena edits.
 
 ## Deliverables
 
@@ -55,6 +55,24 @@ Run the shared asset library build, regenerate catalog sheets, and run `npm run 
 - Delivery: `shared/showreels/style-atelier/` and `shared/showreels/style-atelier.zip`. Contains the reel, sixteen clips, 154 vectors, original audio, portable editable source, independent studies, previews, licenses and checksum manifest. Manifest hashes and ZIP integrity are verified. Everything remains local for user review.
 
 ## Production learning
+
+### Audit correction, 2026-09-30
+
+The initial repeated-seek check above covered one pose and did not establish
+backward-seek correctness for every scene. The audit reproduced a stale headline
+transform in scene 02 and mixed outgoing/incoming content at exact cut endpoints.
+The shared builder `scripts/create-style-atelier-composition.py` now assigns the
+headline transform at every time, isolates each mount, and excludes the outgoing
+cut instant. Material/finale additionally animate ribbon highlights, prism facet
+lighting, extrusion/bevel response and separate petals/orbits. These remain
+authored 2D vector material studies, not a physical 3D simulation.
+
+Run `node --test scripts/style-atelier-composition.test.mjs` for all fifteen cuts
+at ±1 frame, backward seeks and independent part response. Regenerate source with
+`python3 scripts/create-style-atelier-composition.py [project-directory]`.
+The portable `tools/build.py` uses the same source and falls back to bundled SVGs.
+The old Atelier MP4/clips are historical delivery; source fixes do not imply
+those files were rerendered. This remediation produces one new explainer proof.
 
 - Landscape style-kit clips must pass `W:1920,H:1080` to `SK.clip`, and explicitly use `ox:960,oy:540` for `SK.layer`/`SK.camera`; their default origins assume portrait dimensions. Artwork geometry inside transparent SVG margins needs separate framing checks from the outer file bounds.
 - Font-role classes should be mutually exclusive. Applying both `.sk-mono` and `.sk-serif`/`.sk-hand` allowed the later rule to override the intended font and widened specimen labels. The generator now chooses one role per label.

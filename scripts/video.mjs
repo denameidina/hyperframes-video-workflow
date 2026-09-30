@@ -19,7 +19,7 @@
 // Generate-mode spec: docs/superpowers/specs/2026-09-29-generate-mode-explainer-design.md (ADR-0025)
 // Node 22+, built-in modules only (ADR-0007).
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, parseEnv } from 'node:util';
@@ -30,6 +30,7 @@ import { checkFormat, finalGate, isMusicFormat, readFormat } from './lib/formats
 import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { runStoryboard } from './lib/storyboard.mjs';
+import { deliverRender, projectRenderExpectation, selectAudioProfile } from './lib/render-quality.mjs';
 import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
 import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, sourceFile, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
@@ -95,7 +96,7 @@ export function scaffold({ slug, root = '.', duration, probe, generate = false, 
 
 const hf = (...args) => ['npx', ['--yes', HYPERFRAMES, ...args]];
 
-export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
+export function commandsFor(cmd, slug, { at, blur = false, root = '.', pending } = {}) {
   const dir = projectDir(slug, root);
   switch (cmd) {
     case 'check':
@@ -108,7 +109,7 @@ export function commandsFor(cmd, slug, { at, blur = false, root = '.' } = {}) {
     case 'render':
       return blur
         ? [['node', [join(root, 'scripts', 'render-blur.mjs'), '--slug', slug, '--project', dir]]]
-        : [hf('render', '--quality', 'high', '-o', join(dir, 'renders', `${slug}.mp4`), dir)];
+        : [hf('render', '--fps', '30', '--quality', 'high', '-o', pending ?? join(dir, 'renders', `.${slug}.pending.mp4`), dir)];
     default:
       throw new Error(`unknown command "${cmd}" (use new, sources, cut, voice, bgm, storyboard, check, dev, snapshot, render, cutout, layers, migrate-sources)`);
   }
@@ -186,6 +187,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       detected: { type: 'boolean', default: false }, remove: { type: 'string' }, apply: { type: 'boolean', default: false },
       generate: { type: 'boolean', default: false }, preset: { type: 'string' }, track: { type: 'string' },
       format: { type: 'string' }, bars: { type: 'string' },
+      reference: { type: 'boolean', default: false },
     },
   });
   const [cmd, slug] = positionals;
@@ -210,7 +212,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     if (!existsSync(dir)) throw new Error(`${dir} not found`);
     const [, , action, n] = positionals;
     if (!action) {
-      const status = gateStatus(dir, { slug });
+      const status = gateStatus(dir, { slug, run });
       console.log(formatGateStatus(status, slug));
       return status;
     }
@@ -218,7 +220,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     const gate = Number(n);
     const gates = Array.from({ length: finalGate(readFormat(dir)) }, (_, k) => k + 1); // explainer 1-3, music formats 1-2
     if (!gates.includes(gate)) throw new Error(`usage: npm run video -- gate ${slug} ${action} <${gates.join('|')}> [--note "…"]`);
-    const entry = recordDecision(dir, { gate, decision: action, note: values.note ?? '', by: 'cli' });
+    const entry = recordDecision(dir, { gate, decision: action, note: values.note ?? '', by: 'cli', run });
     console.log(`gate ${entry.gate} ${action} recorded (${entry.at})`);
     return entry;
   }
@@ -252,8 +254,8 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       console.log(`bgm ${join(dir, 'bgm.wav')} (${meta.track} from ${meta.from} s, ${meta.copies} cop${meta.copies === 1 ? 'y' : 'ies'}, gain ${meta.gainDb} dB)`);
       return meta;
     }
-    const r = runStoryboard({ dir, root, run: childRun, env: childEnv, log: console.log });
-    console.log(`storyboard ${r.outs.join(', ')} (${r.scenes} scenes)`);
+    const r = runStoryboard({ dir, root, run: childRun, env: childEnv, referenceOnly: values.reference, log: console.log });
+    console.log(`storyboard${r.referenceOnly ? ' reference-only' : ''} ${r.outs.join(', ')} (${r.scenes} scenes)`);
     return r;
   }
   if (cmd === 'sources') {
@@ -326,15 +328,35 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     console.log(`layers ${src} + ${fg}`);
     return;
   }
-  const cmds = commandsFor(cmd, slug, { at: values.at, blur: values.blur, root });
+  let cmds = commandsFor(cmd, slug, { at: values.at, blur: values.blur, root });
   const dir = projectDir(slug, root);
   if (!existsSync(join(dir, 'index.html'))) throw new Error(`${join(dir, 'index.html')} not found; run npm run video -- new ${slug}`);
   if (cmd === 'render') mkdirSync(join(dir, 'renders'), { recursive: true });
   const childEnv = { ...env };
   delete childEnv.GEMINI_API_KEY; // snapshot would otherwise send frames to Gemini for --describe
-  for (const [c, a] of cmds) {
-    const r = run(c, a, { stdio: 'inherit', env: childEnv });
-    if (r.status !== 0) throw new Error(`${c} ${a.slice(0, 3).join(' ')} exited with ${r.status}`);
+  delete childEnv.GEMINI_TTS_API_KEY;
+  const childRun = (c, a, o = {}) => run(c, a, { ...o, env: childEnv });
+  let renderWork, pending;
+  try {
+    let expected, profile;
+    if (cmd === 'render' && !values.blur) {
+      expected = projectRenderExpectation(dir);
+      profile = selectAudioProfile(dir);
+      renderWork = mkdtempSync(join(dir, 'renders', `.${slug}.render-`));
+      pending = join(renderWork, 'pending.mp4');
+      cmds = commandsFor(cmd, slug, { root, pending });
+    }
+    for (const [c, a] of cmds) {
+      const r = childRun(c, a, { stdio: 'inherit' });
+      if (r.status !== 0 || r.error) throw new Error(`${c} ${a.slice(0, 3).join(' ')} exited with ${r.status}`);
+    }
+    if (cmd === 'render' && !values.blur) {
+      const receipt = deliverRender({ pending, final: join(dir, 'renders', `${slug}.mp4`), expected, profile, run: childRun, toolchain: { hyperframes: HYPERFRAMES }, encode: { quality: 'high', fps: 30, blur: false } });
+      console.log(`render ${join(dir, 'renders', `${slug}.mp4`)} (validated; quality receipt written)`);
+      return receipt;
+    }
+  } finally {
+    if (renderWork) rmSync(renderWork, { recursive: true, force: true });
   }
 }
 

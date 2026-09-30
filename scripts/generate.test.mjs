@@ -1,14 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { briefStub } from './lib/generate.mjs';
-import { exampleStill } from './lib/storyboard.mjs';
+import { exampleStill, runStoryboard } from './lib/storyboard.mjs';
 import { readManifest, snapshots } from './lib/style-examples.mjs';
 import { main, resolveDuration, scaffold } from './video.mjs';
 import { fakeMedia } from './voice-fixtures.mjs';
+import { SCENE_PNG, SHEET_JPG } from './storyboard-fixtures.mjs';
 
 const REPO = process.cwd();
 
@@ -138,6 +140,70 @@ test('video bgm refuses before the voiceover exists, rejected tracks, and a fail
 
 // ---------- storyboard ----------
 
+const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
+
+test('production storyboard uses actual project frames without an example and hashes its evidence', () => {
+  const { root, dir } = storyboardRoot();
+  mkdirSync(join(dir, 'preview/scenes'), { recursive: true });
+  writeFileSync(join(dir, 'preview/scenes/one.png'), SCENE_PNG);
+  writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify({ elements: [
+    { id: 'ov-001', start: 0, duration: 3, placement: 'full', storyboardFrame: 'preview/scenes/one.png', text: 'BUKAN AI-NYA' },
+  ] }));
+  const calls = [], pages = [];
+  const r = runStoryboard({ dir, root, env: {}, run: storyboardRun(root, calls, (html) => pages.push(html)) });
+  assert.deepEqual(r.outs.map((o) => o.split('/').at(-1)), ['storyboard-sheet.jpg']);
+  assert.match(pages[0], /ACTUAL SCENE/);
+  assert.match(pages[0], /ov-001/);
+  assert.equal(calls.filter((c) => c[0] === 'node').length, 0, 'no example render fallback');
+  const evidence = JSON.parse(readFileSync(join(dir, 'preview/storyboard-evidence.json'), 'utf8'));
+  assert.equal(evidence.kind, 'actual');
+  assert.equal(evidence.timelineSha256, digest(readFileSync(join(dir, 'overlay-timeline.json'))));
+  assert.deepEqual(evidence.frames, [{ id: 'ov-001', path: 'preview/scenes/one.png', sha256: digest(SCENE_PNG) }]);
+  assert.deepEqual(evidence.sheets, [{ path: 'preview/storyboard-sheet.jpg', sha256: digest(SHEET_JPG) }]);
+});
+
+test('production storyboard rejects missing, invalid, escaping or symlinked-outside scene frames before rendering', () => {
+  const { root, dir } = storyboardRoot();
+  writeFileSync(join(root, 'outside.png'), SCENE_PNG);
+  symlinkSync(join(root, 'outside.png'), join(dir, 'linked.png'));
+  writeFileSync(join(dir, 'fake.png'), 'not an image');
+  const calls = [];
+  for (const frame of [undefined, 'missing.png', 'fake.png', '../../outside.png', join(root, 'outside.png'), 'linked.png']) {
+    writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify({ elements: [
+      { id: 'ov-bad', start: 0, duration: 3, placement: 'full', example: 'wb-01-flow', storyboardFrame: frame },
+    ] }));
+    assert.throws(() => runStoryboard({ dir, root, run: storyboardRun(root, calls) }), /ov-bad.*storyboardFrame|storyboardFrame.*ov-bad/);
+  }
+  assert.equal(calls.length, 0);
+  assert.equal(existsSync(join(dir, 'preview/storyboard-sheet.jpg')), false);
+});
+
+test('production storyboard refuses to certify a timeline changed during snapshot generation', () => {
+  const { root, dir } = storyboardRoot();
+  mkdirSync(join(dir, 'preview'), { recursive: true });
+  writeFileSync(join(dir, 'preview/one.png'), SCENE_PNG);
+  const timeline = { elements: [{ id: 'ov-001', start: 0, duration: 3, placement: 'full', storyboardFrame: 'preview/one.png' }] };
+  writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify(timeline));
+  const run = storyboardRun(root, [], () => {
+    timeline.elements[0].duration = 4;
+    writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify(timeline));
+  });
+  assert.throws(() => runStoryboard({ dir, root, env: {}, run }), /timeline changed during storyboard/);
+  assert.equal(existsSync(join(dir, 'preview/storyboard-evidence.json')), false);
+});
+
+test('production storyboard rejects an image with a valid header but undecodable pixels', () => {
+  const { root, dir } = storyboardRoot();
+  mkdirSync(join(dir, 'preview'), { recursive: true });
+  writeFileSync(join(dir, 'preview/corrupt.png'), SCENE_PNG.subarray(0, 33));
+  writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify({ elements: [
+    { id: 'ov-001', start: 0, duration: 3, placement: 'full', storyboardFrame: 'preview/corrupt.png' },
+  ] }));
+  const calls = [];
+  assert.throws(() => runStoryboard({ dir, root, env: {}, run: storyboardRun(root, calls) }), /ov-001.*storyboardFrame.*decode/);
+  assert.equal(calls.filter((call) => call[0] === 'npx').length, 0);
+});
+
 const TIMELINE = {
   elements: [
     { id: 'ov-001', type: 'hook-card', track: 5, start: 0, duration: 3, placement: 'top-card' },
@@ -179,14 +245,19 @@ function storyboardRun(root, calls, onPage = () => {}) {
       return { status: 0 };
     }
     if (cmd === 'ffmpeg') {
-      writeFileSync(args.at(-1), 'jpg');
+      if (args.includes('null')) {
+        const decoderEnv = { ...process.env, ...opts.env };
+        delete decoderEnv.GEMINI_API_KEY; delete decoderEnv.GEMINI_TTS_API_KEY;
+        return spawnSync(cmd, args, { ...opts, env: decoderEnv });
+      }
+      writeFileSync(args.at(-1), SHEET_JPG);
       return { status: 0 };
     }
     return { status: 1 };
   };
 }
 
-test('video storyboard renders missing stills, snapshots the sheet, and writes preview/storyboard-sheet.jpg', () => {
+test('reference storyboard renders missing example stills and labels its separate sheet', () => {
   const { root, dir } = storyboardRoot();
   assert.throws(() => main(['storyboard', 'demo'], { root, env: {}, run: fakeMedia().run }), /overlay-timeline\.json not found; the Screen Plan phase writes it first/);
   writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify(TIMELINE));
@@ -194,26 +265,30 @@ test('video storyboard renders missing stills, snapshots the sheet, and writes p
   writeFrames(root, 'whiteboard');
   const calls = [];
   const pages = [];
-  const r = main(['storyboard', 'demo'], { root, env: { GEMINI_API_KEY: 'k' }, run: storyboardRun(root, calls, (html) => pages.push(html)) });
+  const r = runStoryboard({ dir, root, referenceOnly: true, env: { GEMINI_API_KEY: 'k' }, run: storyboardRun(root, calls, (html) => pages.push(html)) });
   assert.equal(r.scenes, 2);
-  assert.deepEqual(r.outs.map((o) => o.split('/').at(-1)), ['storyboard-sheet.jpg']);
+  assert.deepEqual(r.outs.map((o) => o.split('/').at(-1)), ['storyboard-reference-sheet.jpg']);
+  assert.match(pages[0], /REFERENCE ONLY/);
   assert.match(pages[0], /<b>2<\/b> 0:03\.0–0:07\.0 · mg-01-count<br \/>70%/);
-  assert.equal(readFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'utf8'), 'jpg');
+  assert.deepEqual(readFileSync(join(dir, 'preview/storyboard-reference-sheet.jpg')), SHEET_JPG);
+  assert.equal(existsSync(join(dir, 'preview/storyboard-evidence.json')), false);
   assert.deepEqual(calls.filter((c) => c[0] === 'node').map((c) => c.at(-1)), ['motion-graphic'], 'only the style with a missing still is rendered');
   assert.equal(exampleStill(REPO, 'mg-01-count').style, 'motion-graphic');
 });
 
-test('video storyboard splits more than 28 scenes over several sheets and removes stale pages', () => {
+test('reference storyboard splits more than 28 scenes and removes only stale reference pages', () => {
   const { root, dir } = storyboardRoot();
   const elements = Array.from({ length: 30 }, (_, i) => ({ id: `ov-${i}`, type: 'broll-text', track: i % 2 ? 7 : 4, start: i * 3, duration: 3, placement: 'full', example: 'tx-07-zoom-grid' }));
   writeFileSync(join(dir, 'overlay-timeline.json'), JSON.stringify({ elements }));
   writeFrames(root, 'broll-text');
   mkdirSync(join(dir, 'preview'), { recursive: true });
-  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'old single sheet');
+  writeFileSync(join(dir, 'preview/storyboard-reference-sheet.jpg'), 'old single sheet');
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'actual sheet');
   const pages = [];
-  const r = main(['storyboard', 'demo'], { root, env: {}, run: storyboardRun(root, [], (html) => pages.push(html)) });
-  assert.deepEqual(r.outs.map((o) => o.split('/').at(-1)), ['storyboard-sheet-1.jpg', 'storyboard-sheet-2.jpg']);
-  assert.equal(existsSync(join(dir, 'preview/storyboard-sheet.jpg')), false);
+  const r = runStoryboard({ dir, root, referenceOnly: true, env: {}, run: storyboardRun(root, [], (html) => pages.push(html)) });
+  assert.deepEqual(r.outs.map((o) => o.split('/').at(-1)), ['storyboard-reference-sheet-1.jpg', 'storyboard-reference-sheet-2.jpg']);
+  assert.equal(existsSync(join(dir, 'preview/storyboard-reference-sheet.jpg')), false);
+  assert.equal(readFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'utf8'), 'actual sheet');
   assert.equal((pages[0].match(/class="tile"/g) || []).length, 28);
   assert.match(pages[1], /<b>29<\/b> 1:24\.0–1:27\.0 · tx-07-zoom-grid/);
 });
@@ -254,6 +329,6 @@ test('video storyboard shows a row\'s on-screen text when it has one (music form
   ] }));
   writeFrames(root, 'broll-text');
   const pages = [];
-  main(['storyboard', 'demo'], { root, env: {}, run: storyboardRun(root, [], (html) => pages.push(html)) });
+  runStoryboard({ dir, root, referenceOnly: true, env: {}, run: storyboardRun(root, [], (html) => pages.push(html)) });
   assert.match(pages[0], /<b>1<\/b> 0:00\.0–0:02\.0 · tx-01-slam<br \/>BUKAN AI-NYA/);
 });

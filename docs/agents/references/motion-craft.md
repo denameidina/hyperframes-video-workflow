@@ -38,10 +38,38 @@ CSS, or assets were copied. Only the observed techniques below were reused.
 10. **Rubber band.** Lines and bars overshoot their full size, then relax.
 11. **Impact recoil.** When a headline lands, the whole group is pushed a few
     pixels and springs back with `back.out`.
-12. **Never freeze.** During a hold the object keeps a slow `sine.inOut` bob.
+12. **Let the idea settle.** A quiet hold gives the viewer time to read or see a
+    relationship. Use a slow bob only when it belongs to the subject or material;
+    still text, resting objects and resolved diagrams can stay still.
 
-Rhythm: entrance in the first ~1.4 s, a hold that stays alive, then an exit.
+Rhythm follows the line: staged entrance, a readable hold, then a meaningful exit.
 Stagger siblings by 0.035–0.13 s; do not start everything on the same frame.
+Richness comes from hierarchy, part animation, cause and response, and continuity
+across scenes. Applying the same arrive/bob/exit chain to every object does not
+replace those decisions. Keep secondary action quieter than the focal action.
+
+## Action and response, beyond arrival recipes
+
+When a focal object passes several waypoints in one action, do not restart
+an ease-in/out curve at every point: that forces it to brake at each transit
+point. Plan a continuous curve/tangent and preserve travel velocity until an
+actual stop. Anticipation belongs before departure; contact, compression,
+shadow and delayed part recovery belong at the arrival.
+
+Give animated illustration agency. Content being assembled, the actor's action
+and the receiver's response should belong to the same event: cells align because
+data is gathered; a payload causes overload; a test stamp confirms a handoff.
+An expressive face or articulated limb is useful when it communicates that
+event. Adding a bob or sheen to an otherwise static poster does not do this.
+Preserve object identity when promising a transformation; newly instantiated
+lookalike cards do not show scattered data becoming organized data.
+
+Review anticipation, transit, contact and settle at phone size. A tiny squash
+that disappears at 360 px width, a path disconnected from the traveler, and a
+completed layout sampled only at rest are insufficient evidence. Keep technical
+seek/contrast checks separate from the user's assessment of motion quality.
+The [Threads reference analysis](../../../internal/docs/research/threads-motion-reference-2026-09-30.md)
+records the concrete revision that exposed these gaps.
 
 ## Loading
 

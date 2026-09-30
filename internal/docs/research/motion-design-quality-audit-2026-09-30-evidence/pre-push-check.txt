@@ -1,0 +1,16 @@
+npm warn Unknown user config "side-effects-cache". This will stop working in the next major version of npm.
+
+> check
+> npx --yes hyperframes@0.7.24 lint && npx --yes hyperframes@0.7.24 validate && npx --yes hyperframes@0.7.24 inspect
+
+npm warn Unknown user config "side-effects-cache". This will stop working in the next major version of npm.
+◆  Linting videos/index.html
+
+◇  0 errors, 0 warnings
+npm warn Unknown user config "side-effects-cache". This will stop working in the next major version of npm.
+◆  Validating videos in headless Chrome
+◇  No console errors
+npm warn Unknown user config "side-effects-cache". This will stop working in the next major version of npm.
+◆  Inspecting layout for videos (9 timeline samples)
+
+◇  0 layout issues across 9 sample(s)

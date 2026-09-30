@@ -343,6 +343,28 @@ For `family-vlog`:
 
 More assets is not automatically better. The right asset at the right second is the goal.
 
+## Art Direction and Actual Scene Evidence
+
+Before Build, record the sequence's visual concept and focal hierarchy in
+`visual-plan.md` (`## Art Direction`), or a linked `art-direction/design.md`, `art-direction.md` or `design.md` for
+a larger sequence. All present supported design files enter the gate fingerprint. Name the hero, supporting information and background; state
+their type/object scale, palette/material roles and contrast. One style preset
+alone is not an art direction. Show the actual scene text and artwork at phone
+size (for example 360 × 640), and record whether the focal message, diagram
+labels and CTA can be read during their planned holds.
+
+For every scene boundary, give the shared anchor or the narrative reason for
+a cut, end/start poses, direction, scale, continuity of background/material,
+timing and audio bridge. Stage parts and relationships around one focal action.
+Quiet reading holds can stay still. For complex continuity, a short proxy
+animatic with the locked audio can expose the timing before full animation.
+
+Generate scenes supply a local `storyboardFrame` PNG/JPEG/WebP depicting the
+intended scene, made as a design mockup or an actual composition snapshot.
+Keep the path inside `videos/<slug>/`; missing images, path escapes and outside
+symlinks are rejected. The closest library example is optional stylistic
+annotation. A reference-only sheet cannot approve the designed scene.
+
 ## Visual Plan Template
 
 Create `videos/<slug>/visual-plan.md`. It replaces the old asset plan and motion
@@ -383,6 +405,21 @@ replace the generic brief below.
 - Safe area concerns:
 - Privacy constraints:
 - Generated media policy:
+
+## Art Direction
+
+- Visual concept / metaphor:
+- Focal hierarchy (hero, supporting information, background):
+- Type and hero scale:
+- Palette and material roles:
+- Phone-size readability check (size, scenes inspected, result):
+- Intentional quiet holds and reading windows:
+- Design document: <art-direction/design.md when used>
+
+## Boundary Decisions
+
+| From → To | Shared anchor or cut reason | End pose → Start pose | Direction / Scale / Material | Timing / Tracks | Audio bridge |
+| --- | --- | --- | --- | --- | --- |
 
 ## Visual Decision Log
 

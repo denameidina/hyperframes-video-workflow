@@ -127,8 +127,9 @@ Story:        creative-brief.md (mode: generate), metadata.json, research/, scri
               edit-decision-notes.md (ends with ## Script Summary)
 Screen Plan:  caption-plan.md, caption-beats.json (rail), publish-captions.md,
               visual-plan.md (## Style World, ## Music, ## Gate 2 Result),
-              overlay-timeline.json (scene rows: placement full, example),
-              storyboard.md, preview/storyboard-sheet.jpg
+              overlay-timeline.json (scene rows: placement full, storyboardFrame; example optional),
+              storyboard.md, actual local scene frames, preview/storyboard-sheet*.jpg,
+              preview/storyboard-evidence.json; art direction in visual-plan.md or a supported design.md / art-direction.md / art-direction/design.md
 Build:        bgm.wav, bgm.json, assets/asset-manifest.json (when assets exist),
               assembly-notes.md, assembly-checklist.md
 ```
@@ -146,8 +147,11 @@ and `processed-transcript.json`; Screen Plan skips `caption-beats.json`; Build h
 
 Build always writes assembly notes/checklist, assets/manifest when used, and
 the render. Only explainer adds separate `bgm.wav` + `bgm.json`. Required gate
-files must be nonempty regular files; final review uses the newest normal/blur
-render (normal wins a timestamp tie).
+files must be nonempty regular files; design review requires current actual
+scene evidence (reference sheets cannot satisfy approval). Final review uses
+the newest playable normal/blur render (normal wins a timestamp tie). Build
+records baseline full playback with audio, phone-size/boundary checks, or an
+explicit incomplete-review note; independent QA stays optional.
 
 Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
 

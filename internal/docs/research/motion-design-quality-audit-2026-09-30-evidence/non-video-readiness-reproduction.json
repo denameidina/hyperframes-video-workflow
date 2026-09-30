@@ -1,0 +1,7 @@
+{
+  "fixture": "11-byte text file, not a video",
+  "nonVideoSelected": "demo.mp4",
+  "nonVideoFingerprintAccepted": {
+    "renders/demo.mp4": "f8a69ede5e62175fdb7dabb3dc7ef0b22d72e608aa5c3b836f2b18e1b86e1297"
+  }
+}

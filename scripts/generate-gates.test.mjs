@@ -1,15 +1,33 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { briefStub } from './lib/generate.mjs';
 import { main } from './video.mjs';
-import { GateError, editedSinceDecision, fingerprint, formatGateStatus, gateStatus, readGates, recordDecision, sheetsOf } from './lib/gates.mjs';
+import { GateError, editedSinceDecision, finalRender, fingerprint, formatGateStatus, gateStatus, normalizeCreativePlan, readGates, recordDecision, sheetsOf } from './lib/gates.mjs';
 import { DURATION, finalGate, readFormat } from './lib/formats.mjs';
+import { inspectStoryboardEvidence } from './lib/storyboard.mjs';
+import { SCENE_PNG as PNG, OTHER_SCENE_PNG, SHEET_JPG } from './storyboard-fixtures.mjs';
 
 const T0 = new Date('2026-09-29T08:00:00Z');
 const now = () => T0;
+const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
+const fixtureDir = mkdtempSync(join(tmpdir(), 'gate-media-'));
+const fixtureFile = join(fixtureDir, 'tiny.mp4');
+const made = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'color=black:s=16x16:r=10:d=0.2', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', fixtureFile]);
+assert.equal(made.status, 0, made.stderr?.toString());
+const MP4 = readFileSync(fixtureFile);
+rmSync(fixtureDir, { recursive: true, force: true });
+
+function designProof(dir, put) {
+  put('preview/scenes/one.png', PNG);
+  put('visual-plan.md', '## Style World\n\nink and paper\n\n## Music\n\ntrack-a from 0\n');
+  put('overlay-timeline.json', JSON.stringify({ elements: [{ id: 'ov-001', start: 0, duration: 3, placement: 'full', storyboardFrame: 'preview/scenes/one.png' }] }));
+  put('preview/storyboard-evidence.json', JSON.stringify({ version: 1, kind: 'actual', timelineSha256: digest(readFileSync(join(dir, 'overlay-timeline.json'))), frames: [{ id: 'ov-001', path: 'preview/scenes/one.png', sha256: digest(PNG) }], sheets: sheetsOf(dir).map((path) => ({ path, sha256: digest(readFileSync(join(dir, path))) })) }));
+}
 
 // a generate project under a temp root; put(f, text, secondsAfterEpoch) sets the mtime so voiceStale is deterministic
 function project(slug = 'demo', { generate = true, format } = {}) {
@@ -19,7 +37,9 @@ function project(slug = 'demo', { generate = true, format } = {}) {
   writeFileSync(join(dir, 'creative-brief.md'), generate ? briefStub(slug, format) : '# Creative Brief\n\n- gate_cut: off\n');
   const put = (f, text = f, at = 1000) => {
     mkdirSync(join(dir, f, '..'), { recursive: true });
-    writeFileSync(join(dir, f), text);
+    let bytes = f.endsWith('.mp4') && text ? Buffer.concat([MP4, Buffer.from(String(text))]) : text;
+    if (/^preview\/storyboard-sheet(-\d+)?\.jpg$/.test(f) && text) bytes = Buffer.concat([SHEET_JPG, Buffer.from(String(text))]);
+    writeFileSync(join(dir, f), bytes);
     utimesSync(join(dir, f), at, at);
   };
   return { root, dir, put };
@@ -41,6 +61,7 @@ test('gateStatus walks story -> Gate 1 -> screen-plan -> Gate 2 -> build -> Gate
   assert.deepEqual(status(dir), ['screen-plan', null, null]);
   put('preview/storyboard-sheet.jpg', 'S');
   put('storyboard.md', '| 1 | 0:00 |');
+  designProof(dir, put);
   assert.deepEqual(status(dir), ['gate', 2, 'waiting']);
   recordDecision(dir, { gate: 2, decision: 'approve', by: 'studio', now });
   assert.deepEqual(status(dir), ['build', null, null]);
@@ -76,6 +97,7 @@ test('revise shows revising until the artifacts change; qa keeps Gate 3 open', (
   recordDecision(dir, { gate: 1, decision: 'approve', by: 'studio', now });
   put('preview/storyboard-sheet.jpg', 'S');
   put('storyboard.md', '| 1 | scene |');
+  designProof(dir, put);
   recordDecision(dir, { gate: 2, decision: 'approve', by: 'studio', now });
   put('renders/demo.mp4', 'R');
   recordDecision(dir, { gate: 3, decision: 'qa', by: 'studio', now });
@@ -202,10 +224,11 @@ test('a music-driven format walks story -> screen-plan -> Gate 1 (text + music +
   assert.deepEqual(status(dir), ['screen-plan', null, null]);
   put('preview/storyboard-sheet.jpg', 'S');
   put('storyboard.md', '| 1 | 1 | 0:00 | BUKAN |');
+  designProof(dir, put);
   assert.deepEqual(status(dir), ['gate', 1, 'waiting']);
   const s = gateStatus(dir);
   assert.deepEqual([s.format, s.finalGate, s.voiceStale], ['kinetic-post', 2, false]);
-  assert.deepEqual(Object.keys(s.fingerprint).sort(), ['preview/storyboard-sheet.jpg', 'processed-audio.wav', 'script.md', 'storyboard.md']);
+  assert.deepEqual(Object.keys(s.fingerprint).sort(), ['overlay-timeline.json', 'preview/scenes/one.png', 'preview/storyboard-evidence.json', 'preview/storyboard-sheet.jpg', 'processed-audio.wav', 'script.md', 'storyboard.md', 'visual-plan.md']);
   assert.equal(code(() => recordDecision(dir, { gate: 1, decision: 'qa', by: 'cli', now })), 'bad-decision');
   assert.equal(code(() => recordDecision(dir, { gate: 1, decision: 'edit', by: 'studio', now })), 'bad-decision');
   recordDecision(dir, { gate: 1, decision: 'approve', by: 'studio', now });
@@ -278,9 +301,12 @@ for (const format of ['explainer', 'kinetic-post', 'motion-short']) {
     put('storyboard.md', '');
     assert.deepEqual(status(dir), ['screen-plan', null, null]);
     put('storyboard.md', '| 1 | scene |');
+    designProof(dir, put);
     put('preview/storyboard-sheet.jpg', '');
+    designProof(dir, put);
     assert.deepEqual(status(dir), ['screen-plan', null, null]);
     put('preview/storyboard-sheet.jpg', 'Sheet');
+    designProof(dir, put);
     assert.deepEqual(status(dir), ['gate', gate, 'waiting']);
   });
 
@@ -291,6 +317,7 @@ for (const format of ['explainer', 'kinetic-post', 'motion-short']) {
     if (format === 'explainer') recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
     put('preview/storyboard-sheet.jpg', 'Sheet');
     put('storyboard.md', '| 1 | scene |');
+    designProof(dir, put);
     recordDecision(dir, { gate: format === 'explainer' ? 2 : 1, decision: 'approve', by: 'cli', now });
     put('renders/blur-blur.mp4', 'Render', 1002);
     const s = gateStatus(dir);
@@ -308,6 +335,7 @@ test('a newer render variant reopens the final gate; empty renders and directori
   recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
   put('preview/storyboard-sheet.jpg', 'Sheet');
   put('storyboard.md', '| 1 | scene |');
+  designProof(dir, put);
   recordDecision(dir, { gate: 2, decision: 'approve', by: 'cli', now });
   put('renders/demo.mp4', 'Normal', 1002);
   recordDecision(dir, { gate: 3, decision: 'approve', by: 'cli', now });
@@ -320,4 +348,158 @@ test('a newer render variant reopens the final gate; empty renders and directori
   rmSync(join(dir, 'renders/demo-blur.mp4'));
   mkdirSync(join(dir, 'renders/demo-blur.mp4'));
   assert.deepEqual(status(dir), ['build', null, null]);
+});
+
+test('a reference or legacy example sheet cannot satisfy a new design approval', () => {
+  const { dir, put } = project('post', { format: 'kinetic-post' });
+  put('script.md', 'Text');
+  put('processed-audio.wav', 'Audio');
+  put('storyboard.md', '| 1 | scene |');
+  put('preview/storyboard-reference-sheet.jpg', 'Reference');
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+  put('preview/storyboard-sheet.jpg', 'Legacy example');
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+  assert.throws(() => fingerprint(dir, 1), (e) => e.code === 'missing-file');
+  assert.throws(() => recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now }), (e) => e.code === 'not-waiting');
+});
+
+test('creative plan sections are fingerprinted; only Gate 1/2 Result sections are excluded', () => {
+  const { dir, put } = project('post', { format: 'kinetic-post' });
+  put('script.md', 'Text');
+  put('processed-audio.wav', 'Audio');
+  put('storyboard.md', '| 1 | scene |');
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  designProof(dir, put);
+  const plan = '## Style World\n\nink\n\n## Gate 1 Result\n\n- approved\n\n### Notes\n\napproval only\n\n## Music\n\ntrack-a\n\n## Creative Result\n\nhero size 500\n';
+  put('visual-plan.md', plan);
+  put('art-direction/design.md', 'Focal hierarchy: hero then type');
+  const fp = fingerprint(dir, 1);
+  recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+  put('visual-plan.md', plan.replace('approved', 'approved by Dena').replace('approval only', 'logged today'));
+  assert.deepEqual(fingerprint(dir, 1), fp);
+  assert.deepEqual(status(dir), ['build', null, null]);
+  put('visual-plan.md', plan.replace('hero size 500', 'hero size 700'));
+  assert.deepEqual(status(dir), ['gate', 1, 'waiting'], 'unrelated Result sections remain creative');
+  put('visual-plan.md', plan.replace('track-a', 'track-b'));
+  assert.notEqual(fingerprint(dir, 1)['visual-plan.md'], fp['visual-plan.md']);
+  put('visual-plan.md', plan);
+  put('art-direction/design.md', 'Focal hierarchy: type then hero');
+  assert.deepEqual(status(dir), ['gate', 1, 'waiting']);
+});
+
+test('creative code examples containing a Gate Result heading stay in the plan hash', () => {
+  const plan = '## Strategy\n\n```md\n## Gate 2 Result\ncreative example stays here\n```\n\n## Music\n\ntrack-a\n';
+  assert.equal(normalizeCreativePlan(plan), plan.trim());
+  assert.notEqual(normalizeCreativePlan(plan), normalizeCreativePlan(plan.replace('creative example stays here', 'new creative example')));
+  const unclosed = '## Strategy\n\n~~~md\n## Gate 1 Result\nunfinished creative example\n## Music\ntrack-a';
+  assert.equal(normalizeCreativePlan(unclosed), unclosed, 'an unclosed fence cannot turn literal headings into approval sections');
+});
+
+test('changed timeline, frames or sheet make actual storyboard evidence stale until regenerated', () => {
+  const { dir, put } = project('post', { format: 'motion-short' });
+  put('script.md', 'Text');
+  put('processed-audio.wav', 'Audio');
+  put('storyboard.md', '| 1 | scene |');
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  designProof(dir, put);
+  recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+  put('overlay-timeline.json', readFileSync(join(dir, 'overlay-timeline.json'), 'utf8').replace('"duration":3', '"duration":4'));
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+  assert.throws(() => fingerprint(dir, 1), (e) => e.code === 'stale-evidence');
+  designProof(dir, put);
+  put('preview/scenes/one.png', Buffer.concat([PNG, Buffer.from('new')]));
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+  designProof(dir, put);
+  put('preview/storyboard-sheet.jpg', 'New sheet');
+  assert.deepEqual(status(dir), ['screen-plan', null, null]);
+});
+
+test('the final gate selects playable media and ignores a newer corrupt variant', () => {
+  const { dir, put } = project();
+  put('renders/demo.mp4', 'good', 1000);
+  mkdirSync(join(dir, 'renders'), { recursive: true });
+  writeFileSync(join(dir, 'renders/demo-blur.mp4'), 'not media');
+  utimesSync(join(dir, 'renders/demo-blur.mp4'), 2000, 2000);
+  assert.equal(finalRender(dir), 'demo.mp4');
+  writeFileSync(join(dir, 'renders/demo.mp4'), 'also not media');
+  assert.equal(finalRender(dir), null);
+});
+
+test('each supported art-direction path participates in the design fingerprint', () => {
+  const { dir, put } = project('post', { format: 'kinetic-post' });
+  put('script.md', 'Text');
+  put('processed-audio.wav', 'Audio');
+  put('storyboard.md', '| 1 | scene |');
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  designProof(dir, put);
+  for (const path of ['design.md', 'art-direction.md', 'art-direction/design.md']) {
+    put(path, 'Hero first');
+    recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+    put(path, 'Type first');
+    assert.deepEqual(status(dir), ['gate', 1, 'waiting'], path);
+  }
+});
+
+test('playability successes are cached per runner and file state, while failures can recover', () => {
+  const { dir, put } = project();
+  put('renders/demo.mp4', 'good');
+  let calls = 0;
+  const run = (...args) => { calls++; return spawnSync(...args); };
+  assert.equal(finalRender(dir, 'demo', { run }), 'demo.mp4');
+  const first = calls;
+  assert.ok(first > 0);
+  assert.equal(finalRender(dir, 'demo', { run }), 'demo.mp4');
+  assert.equal(calls, first, 'unchanged candidate does not probe/decode again');
+  put('renders/demo.mp4', 'new bytes');
+  assert.equal(finalRender(dir, 'demo', { run }), 'demo.mp4');
+  assert.ok(calls > first, 'file rewrite invalidates cache');
+  let unavailable = true;
+  const recovering = (...args) => { calls++; return unavailable ? { status: 1 } : spawnSync(...args); };
+  assert.equal(finalRender(dir, 'demo', { run: recovering }), null);
+  unavailable = false;
+  assert.equal(finalRender(dir, 'demo', { run: recovering }), 'demo.mp4', 'a failed probe is not cached');
+});
+
+test('matching evidence hashes cannot certify a broken frame or a broken sheet', () => {
+  const { dir, put } = project('post', { format: 'kinetic-post' });
+  put('script.md', 'Text');
+  put('processed-audio.wav', 'Audio');
+  put('storyboard.md', '| 1 | scene |');
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  designProof(dir, put);
+  const original = readFileSync(join(dir, 'preview/storyboard-evidence.json'), 'utf8');
+  writeFileSync(join(dir, 'preview/scenes/one.png'), PNG.subarray(0, 33));
+  let evidence = JSON.parse(original);
+  evidence.frames[0].sha256 = digest(readFileSync(join(dir, evidence.frames[0].path)));
+  writeFileSync(join(dir, 'preview/storyboard-evidence.json'), JSON.stringify(evidence));
+  assert.deepEqual(status(dir), ['screen-plan', null, null], 'bad pixels cannot become an approved scene');
+  designProof(dir, put);
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'not an image');
+  evidence = JSON.parse(readFileSync(join(dir, 'preview/storyboard-evidence.json'), 'utf8'));
+  evidence.sheets[0].sha256 = digest(readFileSync(join(dir, evidence.sheets[0].path)));
+  writeFileSync(join(dir, 'preview/storyboard-evidence.json'), JSON.stringify(evidence));
+  assert.deepEqual(status(dir), ['screen-plan', null, null], 'a sheet with a matching hash still needs an image decode');
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), PNG);
+  evidence.sheets[0].sha256 = digest(PNG);
+  writeFileSync(join(dir, 'preview/storyboard-evidence.json'), JSON.stringify(evidence));
+  assert.deepEqual(status(dir), ['screen-plan', null, null], 'production sheets must be JPEG images, even if other formats decode');
+});
+
+test('successful storyboard decodes are cached by image content and runner, with changed bytes rechecked', () => {
+  const { dir, put } = project();
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  designProof(dir, put);
+  let calls = 0;
+  const run = (...args) => { calls++; return spawnSync(...args); };
+  assert.equal(inspectStoryboardEvidence(dir, { run }).ready, true);
+  const first = calls;
+  assert.ok(first >= 2, 'both frame and sheet are decoded');
+  assert.equal(inspectStoryboardEvidence(dir, { run }).ready, true);
+  assert.equal(calls, first);
+  writeFileSync(join(dir, 'preview/scenes/one.png'), OTHER_SCENE_PNG);
+  const evidence = JSON.parse(readFileSync(join(dir, 'preview/storyboard-evidence.json'), 'utf8'));
+  evidence.frames[0].sha256 = digest(readFileSync(join(dir, evidence.frames[0].path)));
+  writeFileSync(join(dir, 'preview/storyboard-evidence.json'), JSON.stringify(evidence));
+  assert.equal(inspectStoryboardEvidence(dir, { run }).ready, true);
+  assert.equal(calls, first + 1, 'only changed pixels are decoded again');
 });

@@ -4,6 +4,23 @@ Rules for motion, pattern interrupts, placement, density, SFX cues, and the
 `overlay-timeline.json` format. Loaded by `docs/agents/02-screen-plan.md` in the
 visual step.
 
+## Scene Continuity Decisions
+
+Screen Plan records a decision for every adjacent scene pair in the art
+direction or `visual-plan.md`: shared anchor (shape, word, object, camera or
+material), outgoing/end pose, incoming/start pose, direction and scale,
+overlap/track choice, and audio bridge. A cut is a valid decision when its
+reason follows the story. Do not give every boundary an unrelated entrance.
+
+Plan one focal action at a time, then a secondary response: a document becomes
+a queue item, a line reaches a node before the node reacts, or a hero word
+becomes the next diagram's anchor. Let important text settle for its reading
+window. Intentional quiet holds are valid; idle bobbing and decorative movement
+are not mandatory (RD-03-104/109).
+
+For complex handoffs, a short proxy animatic with locked audio and start/end
+poses can test continuity before full animation (RD-03-105).
+
 ## Connected Asset Transitions (Optional Research Reference)
 
 For transitions connecting text, illustrations, screenshots, or cut-outs across
@@ -451,8 +468,11 @@ Each element needs:
 - `motion`
 - `purpose`
 - `notes`
-- generate mode scene rows also use `placement: "full"` and carry `example`, the id of
-  the style example the scene leans on (`generate-mode.md`)
+- generate mode scene rows also use `placement: "full"` and carry
+  `storyboardFrame`, the project-local PNG/JPEG/WebP of that intended scene.
+  `example` and `exampleStill` are optional style-reference annotations;
+  `video storyboard --reference` requires them and writes a separate reference sheet
+  (`generate-mode.md`). Production never substitutes that example for the scene.
 
 Use processed-video time.
 

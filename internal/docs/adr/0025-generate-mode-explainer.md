@@ -2,6 +2,11 @@
 Status: accepted
 Date: 2026-09-29
 
+Amended 2026-09-30 by [ADR-0030](0030-motion-quality-delivery.md): production
+storyboards now require actual project-local scene frames and creative evidence
+fingerprints. Example stills below describe the original decision and are now
+reference-only; `storyboardFrame` replaces mandatory `example` for production.
+
 ## Context
 
 Workflow 4 fase (ADR-0008) hanya mengedit footage Dena: Story memotong

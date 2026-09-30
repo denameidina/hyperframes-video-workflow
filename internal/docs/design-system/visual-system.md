@@ -1,6 +1,6 @@
 # Visual System
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: sistem visual komposisi video Dena (warna, tipografi, kartu,
 caption, layer/track, z-index, safe area). Diturunkan dari starter `templates/dena-video/index.html` +
@@ -86,6 +86,26 @@ Dari `index.html` (nilai aktual) dan `docs/agents/references/hyperframes-assembl
 - `proof-card-slide` (0.25–0.45s, track 4).
 - `punch-zoom` base video (scale 1.0→1.04–1.08, 0.2–0.4s).
 - `progress-bar` deterministik. `flash-cut` < 0.12s. `cta-morph` hold 2–4s.
+
+## Art direction dan kesinambungan (ADR-0030)
+
+Sebelum full animation, Screen Plan menetapkan satu metafora utama, peran warna,
+hero scale, display/support type, material, dan pose baca di `design.md` atau
+`art-direction.md`. Frame storyboard memakai copy/artwork/layout proyek aktual;
+sheet contoh style hanya referensi. Periksa hierarki dalam preview 360×640:
+penonton harus menangkap satu fokus dan pesan utama tanpa zoom.
+
+Rich motion dibangun dari staging, perubahan hubungan antarobjek, respons bagian
+sekunder dan material/cahaya. Gunakan diam untuk membaca setelah informasi
+selesai. Untuk setiap sambungan, tulis carrier/pose/arah yang diteruskan, atau
+alasan hard cut. Jika durasi scene berubah, transisi dan cue audio ikut berubah.
+Tidak perlu bobbing terus-menerus pada elemen yang sudah selesai menjelaskan.
+
+Mount scene memakai `isolation:isolate` untuk menahan z-index anak. Pada runtime
+0.7.24 yang memasukkan kedua endpoint, hard cut harus memberi satu pemilik frame
+tepat di cut (misalnya outgoing `data-duration` berakhir 0.000001 s sebelum cut,
+tanpa kehilangan sampel 30/120 fps). Overlap hanya untuk transisi yang dirancang.
+Periksa boundary pada cut dan ±1 frame, serta fresh/forward/backward seek.
 
 ## Motion b-roll (motion-kit)
 

@@ -210,6 +210,33 @@ Production scope and delivery: [showreel-assets](../design-system/showreel-asset
 
 Production details: [rich-style-assets](../design-system/rich-style-assets.md).
 
+## Render quality remediation (audit 2026-09-30)
+
+- **RD-02-65** (Ubiquitous) — Every animated property shall be derived from local
+  time on every update; seeking late then back shall produce the same pose as a
+  fresh seek to that time.
+- **RD-02-66** (Ubiquitous) — Adjacent full-frame scene mounts shall isolate their
+  paint order and give each boundary frame one outgoing/incoming owner unless an
+  explicitly planned overlap is present; a cut shall not show outgoing text over
+  incoming artwork.
+- **RD-02-67** (Event-driven) — When a normal or blur render completes, the CLI
+  shall validate decodable video, expected dimensions/frame rate/duration, and
+  audio when the composition declares audio, before atomically replacing the
+  final MP4; failure shall preserve the previous final and discard the pending file.
+  Each render/delivery shall use an exclusively owned workfile through validation
+  and promotion so an overlapping run cannot substitute unvalidated bytes or a
+  mismatched receipt.
+- **RD-02-68** (Ubiquitous) — The final blur encode shall explicitly use libx264,
+  CRF 16, preset slow, yuv420p, BT.709 metadata and faststart, preserving the
+  audio stream without another lossy audio encode at the blend stage.
+- **RD-02-69** (Event-driven) — When a delivery is accepted, the CLI shall write
+  a quality receipt with file hash, measured streams/audio, selected audio profile,
+  toolchain versions and checks; byte identity across encoder versions shall not
+  be claimed from pixel/seek determinism alone.
+- **RD-02-70** (Optional) — Where a material hero implies changing depth/light,
+  its named parts shall be animated to show deliberate deformation, occlusion or
+  highlight motion, or the project shall explicitly choose a flat 2D treatment.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system

@@ -11,7 +11,10 @@ Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
 
 - Komposisi HyperFrames harus deterministik: **tanpa** `Date.now()`,
   `Math.random()`, timer, `fetch`/network runtime, atau interaksi user
-  (`index.html`, AGENTS.md, semua agent docs). Render sama → output byte-stabil.
+  (`index.html`, AGENTS.md, semua agent docs). Pose pada timestamp yang sama
+  harus sama setelah seek maju/mundur; setiap properti animasi dihitung dari waktu.
+  Kesamaan byte MP4 lintas versi encoder/OS tidak dijamin. Receipt mencatat
+  toolchain, parameter encode, hash delivery dan hasil ukur audio/video (ADR-0030).
 - Aset harus lokal (di `videos/<slug>/assets/`); tidak ada remote image/live
   fetch di render path.
 - Satu timeline GSAP `paused`, terdaftar di `window.__timelines[<composition-id>]`.
@@ -66,11 +69,15 @@ Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
 Dari fase Story (`docs/agents/references/cut-and-pacing.md`) / style guide / fase QA:
 
 - Highpass `70–100 Hz`.
-- Integrated loudness `-16` s/d `-14 LUFS`.
-- True peak `-1.5` s/d `-1.0 dBFS` pada master; **sisakan ~2 dBFS headroom**
-  sebelum melapisi SFX agar hit bass di bawah kata terkeras tidak clip.
-- Ukur render final untuk sample clipped (`astats` peak count).
+- Delivery AAC: speech/explainer **−16 LUFS ±1 LU**; format musik/showreel
+  **−17 LUFS ±1 LU**; **true peak ≤−1 dBTP**. Profil lebih tenang harus
+  eksplisit dalam `render-profile.json` dan dicatat dalam receipt.
+- Sisakan headroom pada source master; ukuran final sesudah AAC menjadi penentu.
+  CLI memeriksa decode, mengukur loudness/true peak dan memaster audio dengan
+  video stream-copy bila perlu sebelum promosi atomik (RD-06-33/34).
 - SFX audible di HP tapi di bawah speech, tidak pernah menutup kata.
+- Timbre/onset harus mendukung aksi visual; cue sintetis dan substitusi dicatat.
+  Ukuran loudness tidak menggantikan uji dengar.
 
 ## Pacing (target terukur)
 

@@ -103,6 +103,10 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 69. [design-system/showreel-assets.md](design-system/showreel-assets.md) - Kontrak produksi FORM / FREQUENCY: showreel 12 studi, aset SVG editable, sumber scene, audio original, klip MP4 individual, dan verifikasi.
 70. [design-system/rich-style-assets.md](design-system/rich-style-assets.md) - Pengayaan tujuh gaya dan showreel: 112 artwork SVG berlapis, catalog bersama, contact sheet dan reel studi gerak.
 71. [adr/0029-layered-svg-artwork.md](adr/0029-layered-svg-artwork.md) - Artwork SVG file-backed memakai catalog dan SK.asset tanpa mengubah helper gaya lama.
+72. [research/motion-design-quality-audit-2026-09-30.md](research/motion-design-quality-audit-2026-09-30.md) - Audit baseline kualitas output motion design beserta bukti; implementasi ditelusuri di [remediation](operations/motion-quality-remediation.md).
+73. [adr/0030-motion-quality-delivery.md](adr/0030-motion-quality-delivery.md) - Actual storyboard evidence, normalized creative fingerprints, validated atomic render/audio delivery, dan satu pilot rich-motion; [implementation plan](../../docs/superpowers/plans/2026-09-30-motion-quality-remediation.md).
+74. [operations/motion-quality-remediation.md](operations/motion-quality-remediation.md) - Peta penutupan sepuluh temuan audit, regresi tooling/source, dan satu proof explainer untuk review.
+75. [research/threads-motion-reference-2026-09-30.md](research/threads-motion-reference-2026-09-30.md) - Analisis video referensi pengguna, mekanik karakter/causal assembly, dan revisi atas pilot yang ditolak karena kaku.
 
 ## Canonical Files
 
@@ -121,7 +125,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Studio web UI (EARS) | [requirements/rd-05-studio](requirements/rd-05-studio.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
 | Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0028) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0030) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
@@ -166,7 +170,7 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - **mode generate** — motion design tanpa footage Dena: explainer memakai TTS (ADR-0025); kinetic-post/motion-short memakai musik/beat tanpa suara (ADR-0027).
 - **script.md** — naskah mode generate; narasi = teks sebelum section `## ` pertama, `## Fakta` memberi sumber tiap fakta.
 - **style world** — satu style utama + palet (+ maksimal 2 aksen) untuk seluruh video generate.
-- **storyboard sheet** — `preview/storyboard-sheet.jpg`: still contoh style per scene dengan nomor, waktu, dan kata (G2 explainer; G1 format musik).
+- **storyboard sheet** — `preview/storyboard-sheet.jpg`: frame proyek aktual per scene dengan nomor, waktu, dan kata; reference style sheets terpisah dan tidak memenuhi gate (ADR-0030).
 - **receipt** — `videos/<slug>/repliz-publish.json` (metadata + hasil publish).
 - **publishKey** — sha256 ringkasan seluruh run `{r2Key, targetAccounts, description, title}`; disimpan di receipt tapi tidak lagi dipakai untuk keputusan skip (lihat `targetKey`, ADR-0011).
 - **targetKey** — sha256 per target account `{r2Key, platform, accountId, description, title, replies}`; menentukan apakah satu platform di-reuse, dijadwalkan ulang, atau `blocked` (ADR-0011).

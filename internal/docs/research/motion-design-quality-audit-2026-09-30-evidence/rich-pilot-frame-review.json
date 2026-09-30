@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "file": "renders/ai-agent-gagal-rich.mp4",
+  "sha256": "1d9016e148cd9eceff5e834990ea10c16a86f6ede210bea9156a570bd6ea68bd",
+  "reviewScope": "decoded final phone-size hero and boundary frames plus technical audio/video delivery",
+  "heroFrameCount": 15,
+  "boundaryFrameCount": 27,
+  "boundaryCount": 9,
+  "frameOwnership": "one scene per sampled source boundary; decoded final boundaries visually clear",
+  "phoneSize": "360x640",
+  "nativeSeekComparisons": 26,
+  "nativeSeekMatches": true,
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "duration": 49.8
+  },
+  "audio": {
+    "integratedLufs": -16.04,
+    "truePeakDbtp": -3.33
+  },
+  "fullPlaybackReviewed": false,
+  "manualListeningReviewed": false,
+  "userReview": "pending",
+  "note": "Temporal source states and decoded MP4 sampled frames were inspected. Full audiovisual playback/manual listening is not claimed; user will review the one rendered video."
+}

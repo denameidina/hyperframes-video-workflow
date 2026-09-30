@@ -45,6 +45,44 @@ npm run video -- layers <slug> (--at <s> | --image <file>) --name NN-scene  # su
 npm run check                     # hanya untuk template root index.html
 ```
 
+Setiap render normal/blur memakai direktori kerja unik dalam `renders/`, sehingga
+proses yang tumpang tindih tidak menulis atau menghapus output satu sama lain.
+Delivery memindahkan MP4 selesai ke file miliknya dalam direktori unik **sebelum**
+validasi; penulisan ulang path incoming tidak dapat mengubah kandidat yang diuji.
+Keduanya memeriksa root
+`data-width`/`data-height`/`data-duration`, 30 fps (blur langsung menerima `--fps`),
+jumlah frame, durasi stream, dan decode penuh sebelum mengganti master secara
+atomik. Audio yang dinyatakan pada audio/video tanpa `muted` di komposisi lokal
+harus muncul sebagai AAC stereo 48 kHz; proyek tanpa audio tetap boleh dirender.
+Output parsial dihapus pada kegagalan, master dan receipt sebelumnya dipertahankan.
+Promosi MP4 dan receipt dijaga lock eksklusif `<final>.mp4.delivery.lock` selama
+operasi file; contender gagal tanpa menyentuh pasangan yang sedang dipromosikan.
+Lock dilepas pada sukses maupun error. Jika proses dimatikan paksa saat promosi,
+hapus lock tertinggal hanya setelah PID yang tertulis di dalamnya sudah berhenti.
+
+Pengukuran loudness/true peak memakai **AAC yang sudah diencode dalam MP4**.
+Default speech/explainer ialah −16 LUFS ±1 LU; kinetic-post, motion-short,
+music/showreel ialah −17 LUFS ±1 LU; true peak paling tinggi −1 dBTP. Mix di luar
+profil dimaster lewat FFmpeg loudnorm dua pass dengan video `copy`, lalu MP4 baru
+diukur dan didecode lagi. Jika tetap di luar profil, delivery ditolak. Jalur blur
+secara eksplisit memakai libx264 CRF 16, preset slow, yuv420p, BT.709 (termasuk
+VUI x264), faststart, serta audio `copy` pada pass blend.
+
+Target yang lebih tenang dapat dinyatakan di `videos/<slug>/render-profile.json`:
+
+```json
+{"name":"quiet-gallery","targetLufs":-20,"toleranceLu":1,"truePeakDbtp":-2}
+```
+
+`targetLufs` didukung dari −40 LUFS sampai default format (hanya boleh lebih
+tenang), `toleranceLu` lebih dari 0 hingga 1 LU, dan `truePeakDbtp` dari −9 hingga
+−1 dBTP mengikuti rentang FFmpeg loudnorm. File/profil yang tidak valid ditolak
+sebelum render. Delivery menulis `<final>.mp4.quality.json`: SHA-256, bytes,
+expected/actual stream, hasil pengukuran audio sebelum/sesudah mastering, profil
+dan sumbernya, profil encode, versi Node/FFmpeg/ffprobe/HyperFrames, serta hasil
+check. Ini receipt kualitas media; determinisme seek/pixel tidak menjamin byte
+MP4 identik antara versi encoder.
+
 > `npm run video -- dev <slug>` (dan `npm run dev`) memblokir sampai dihentikan. Di agent/automation jalankan sebagai
 > background process, jangan foreground (akan timeout & server mati).
 
@@ -92,6 +130,7 @@ npm run test:asset-lib       # node --test scripts/asset-lib.test.mjs (pustaka a
 npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (offline)
 npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/asset-catalog/sheets/*.webp
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
+node --test scripts/render-quality.test.mjs # fixture video/AAC nyata, atomic delivery, profile, corrupt payload
 npm run test:video          # CLI, sources, cut, generate, gate, music-cut
 npm run test:studio         # server/route/terminal/Generate Studio
 npm run test:voice          # node --test scripts/voice-*.test.mjs (adapter suara, uji dengar)
@@ -115,7 +154,8 @@ npm run moodboard -- fetch [gaya]   # unduh still referensi asli ke moodboard/lo
 npm run video -- new <slug> --generate [--format kinetic-post|motion-short]  # starter generate + research/ + brief (format default explainer)
 npm run video -- music <slug> --track <id> [--from <s>] --bars <n>  # format musik: potong bar utuh -> processed-audio.wav + beats.json (baca peringatannya)
 npm run video -- voice <slug> [--preset <p>]           # script.md -> processed-audio.wav + processed-transcript.json
-npm run video -- storyboard <slug>                     # Gate 2 sheet -> preview/storyboard-sheet.jpg
+npm run video -- storyboard <slug>                     # actual project frames -> preview/storyboard-sheet.jpg + evidence
+npm run video -- storyboard <slug> --reference         # sheet referensi berlabel; tidak memenuhi gate produksi
 npm run video -- bgm <slug> --track <id> --from <s>    # BGM ter-duck -> bgm.wav + bgm.json
 ```
 

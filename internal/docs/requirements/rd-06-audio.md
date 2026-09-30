@@ -145,6 +145,20 @@ BGM. Owner: `scripts/voice.mjs`, `scripts/lib/voice/`, `scripts/music.mjs`,
   atau ffmpeg gagal, then the CLI shall berhenti tanpa mengubah `processed-audio.wav`;
   cache yang rusak, sha-nya beda, atau dari versi analyzer lain dianalisis ulang.
 
+## Final delivery audio (audit remediation)
+
+- **RD-06-33** (Event-driven) — When a rendered MP4 contains audio, delivery
+  validation shall measure the encoded AAC, target speech/explainer at −16 LUFS
+  and music/showreel at −17 LUFS (tolerance ±1 LU), and require true peak ≤−1 dBTP;
+  an explicit project profile may select a quieter target and shall be recorded.
+- **RD-06-34** (Unwanted) — If a final mix is outside its profile, then the
+  delivery pipeline shall master the pending audio, remeasure the encoded output,
+  and reject promotion if the target still fails; video shall be copied unchanged
+  during audio mastering.
+- **RD-06-35** (Ubiquitous) — Planned SFX shall name action, material/timbre,
+  onset and mix role; substitute sounds shall be marked and shall not be claimed
+  as convincing without a listening review of the final mix.
+
 ## Referensi
 
 - Studio (tab Suara, Musik): [rd-05-studio](rd-05-studio.md) RD-05-18…20

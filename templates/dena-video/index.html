@@ -75,10 +75,10 @@
         -webkit-text-stroke: 2px #000;
       }
       /* motion b-roll mounts (track 4), below captions and cards */
-      .broll { position: absolute; inset: 0; z-index: 22; }
+      .broll { position: absolute; inset: 0; z-index: 22; isolation: isolate; }
       /* mix-media: matted speaker (track 6) above the collage, front layer (track 7) above the speaker */
       .cutout { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 24; object-fit: cover; }
-      .broll-front { position: absolute; inset: 0; z-index: 26; }
+      .broll-front { position: absolute; inset: 0; z-index: 26; isolation: isolate; }
     </style>
   </head>
   <body>

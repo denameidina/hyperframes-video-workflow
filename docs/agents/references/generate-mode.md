@@ -196,22 +196,31 @@ mode. `mix-media` and `parallax-stage` are not available (they need Dena's foota
 
 ### Scenes
 
-- Split the voiceover into scenes of 2–8 s, one idea or sentence each, with boundaries in
+- Split the voiceover into scenes of 2–8 s by default, one idea or sentence each, with boundaries in
   the pauses between sentences (`words.json`). Scenes cover `0` to the end of the voiceover
   without gaps; neighbouring scenes may overlap 0.2–0.4 s for a transition.
-- Every scene develops over its whole duration; nothing freezes after its entrance.
+- A continuous sequence may exceed 8 s when one shared diagram or causal action
+  needs uninterrupted relationships. Write the rationale, timed information
+  changes and quiet reading poses in the plan; repeating a static layout does
+  not qualify. Keep the staged beats tied to the spoken meaning.
+- Each scene stages the idea around a focal action and secondary response. A
+  resolved diagram or important text may hold quietly for reading; no mandatory
+  bobbing or perpetual movement. Record art direction and every boundary decision
+  using `visual-planning.md`, including type/hero scale and phone-size checks.
 - Accent styles take at most ±30% of the video. Two neighbouring scenes may share a style
   only with different patterns, unless they are one sequence (the same board continuing,
   a numbered series).
 - Not applicable: "2 s of face between cutaways", cutaway ≤ 10 s, at most 3 types per video.
 - Each scene is a Timeline row with a Style B-roll Brief (`styles/README.md`), treatment
-  **`full`**, and an `Example:` line: the id of the closest style example, e.g.
+  **`full`**. An optional `Example:` line names the closest style example, e.g.
   `wb-03-mind-map`. Prefer an example whose treatment is `cutaway` (full frame): split and
   panel examples show a placeholder face in the storyboard.
 - In `overlay-timeline.json` a scene row has `type` = the style, `track` 4 or 7
   (alternating), `placement: "full"`, `assetRef` = the clip's Planned file, and
-  `example` = the example id. The storyboard shows the example's first still; when a later
-  still matches the scene better (e.g. the finished 4-panel fold), add `exampleStill: n`
+  `storyboardFrame` = a project-relative local PNG/JPEG/WebP depicting the
+  intended scene's real text, artwork and layout, e.g.
+  `preview/storyboard/scene-01.png`. `example` is optional stylistic annotation.
+  For reference-only output, `exampleStill: n` selects a later example still
   (1-based, from the example's `stills` in `examples.json`).
 
 ### Music
@@ -223,22 +232,48 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
 ### Storyboard and Gate 2 (always)
 
 1. `storyboard.md`: one row per scene —
-   `| # | time | spoken words | style / pattern | what appears | example |`.
+   `| # | time | spoken words | style / pattern | what appears | example | frame |`.
+   Design an actual local frame for each row, with its own text, layout and
+   artwork. A planning mockup can precede final animation. For complex
+   continuity, optionally provide a short proxy animatic with locked audio.
 2. `npm run video -- storyboard <slug>` → `preview/storyboard-sheet.jpg` (each scene's
-   example still with its number, time, and words; styles without cached stills are
-   rendered once with `npm run check:style-examples -- <style>`). More than 28 scenes
-   make `storyboard-sheet-1.jpg`, `-2.jpg`, … (numbers continue).
+   actual `storyboardFrame` with its number, time, optional reference and words).
+   More than 28 scenes make `storyboard-sheet-1.jpg`, `-2.jpg`, … (numbers continue).
+   It writes `preview/storyboard-evidence.json`: version 1, `kind: "actual"`,
+   `timelineSha256`, `frames: [{id,path,sha256}]`, and `sheets: [{path,sha256}]`.
+   Missing/invalid frames or paths outside the project fail; no library fallback.
+   Every linked frame, timeline and sheet hash must still match at the gate.
+   Both scene frames and completed JPG sheets must decode; matching hashes alone
+   cannot certify broken image pixels. Successful decodes are cached by content
+   hash and subprocess runner, and changed bytes are checked again.
 3. Check triggers R1, R2, R5, R6 as in edit mode; R1's sources are `script.md ## Fakta`
    and `research/`. R3 and R4 do not apply.
 4. Stop. Show Dena the sheet, `storyboard.md`, the style world, and the music. She
    approves or changes; record it in `## Gate 2 Result` and, when she answered in chat,
    with `npm run video -- gate <slug> approve 2` (or `revise 2 --note "…"`).
 
+`npm run video -- storyboard <slug> --reference` is a separate planning aid:
+it requires `example`, reuses/renders example stills, and writes explicitly
+labelled `preview/storyboard-reference-sheet*.jpg`. It never writes actual
+evidence or satisfies design approval. Legacy example-only production sheets
+must be migrated: supply actual `storyboardFrame` paths, regenerate production
+sheets/evidence, and obtain a new design approval. Old logs remain intact.
+
+Design fingerprints include `storyboard.md`, all production sheets,
+`overlay-timeline.json`, actual evidence/frames, `visual-plan.md` creative
+content, and all present art-direction files (`art-direction/design.md`,
+`art-direction.md`, `design.md`). Only the exact
+`## Gate 1 Result` / `## Gate 2 Result` sections and their subsection content
+are excluded from the plan hash. Other sections, including creative sections
+named Result, remain covered. Timing, style, music selection or actual frame
+changes reopen review; logging approval alone does not.
+
 ## Build (generate)
 
 1. **Readiness.** `script.md`, `processed-audio.wav`, `processed-transcript.json`,
    `caption-beats.json`, `visual-plan.md` (with `## Style World`, `## Music`,
-   `## Gate 2 Result`), `overlay-timeline.json`, `storyboard.md`. No `processed.mp4`.
+   `## Gate 2 Result`), `overlay-timeline.json`, `storyboard.md`, actual storyboard
+   frames/sheets and current `preview/storyboard-evidence.json`. No `processed.mp4`.
 2. **Music.** `npm run video -- bgm <slug> --track <id> --from <s>` → `bgm.wav` (cut or
    looped to the voiceover, faded, about −30 LUFS, ducked under the voice) and `bgm.json`.
 3. **Assets.** Library first (`vendor/asset-lib/`); a capture (`vox`) or Codex bitmap only
@@ -254,7 +289,8 @@ why it fits the brief's emotional promise. SFX stay required as in edit mode.
 6. **Captions.** Build rail captions from `caption-beats.json`, skipping beats with
    `"rail": "hidden"`; hook and CTA cards as in edit mode.
 7. **Verify and render** as in edit mode: Still Check per scene, `npm run video -- check
-   <slug>`, `npm run video -- render <slug>`, **Gate 3** (record a chat answer with
+   <slug>`, baseline temporal/audio preflight from `quality-gates.md`,
+   `npm run video -- render <slug>`, **Gate 3** (record a chat answer with
    `npm run video -- gate <slug> approve|revise|qa 3`).
 
 ## Music-driven formats: kinetic-post and motion-short (ADR-0027)
@@ -303,9 +339,9 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
   `publish-captions.md` is still written (the kinetic-post CTA lives there).
 - Scenes follow the bars in `beats.json`: every text line enters on a beat; scene changes
   and the payoff word land on downbeats.
-- `storyboard.md`: `| # | bars | time | on-screen text | style / pattern | what appears | example |`.
+- `storyboard.md`: `| # | bars | time | on-screen text | style / pattern | what appears | example | frame |`.
   Each scene row in `overlay-timeline.json` carries `text` (its on-screen words); then
-  `npm run video -- storyboard <slug>`.
+  `storyboardFrame` links its actual local image; then `npm run video -- storyboard <slug>`.
 - **Gate 1**: stop and show Dena `script.md`, the music (`processed-audio.wav`, track, BPM,
   bars), the storyboard sheet, `storyboard.md`, and the style world. Record a chat answer
   with `npm run video -- gate <slug> approve 1` (or `revise 1 --note "…"`).
@@ -315,7 +351,8 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
 - Screen Plan records the approved text/music/storyboard in `## Gate 1 Result`
   of `visual-plan.md`. Build requires that result, `script.md`,
   `processed-audio.wav`, `beats.json`, `storyboard.md`, nonempty storyboard
-  sheets, `publish-captions.md`, and `overlay-timeline.json`. It does not require
+  sheets and current actual evidence/frames, `publish-captions.md`, and
+  `overlay-timeline.json`. It does not require
   `processed.mp4`, `voice/`, transcripts, caption-beats, or separate BGM.
 - `processed-audio.wav` (the music) on track 10 is the only music: no `video bgm`, no
   ducking. SFX sparingly, only accents the music does not already hit.
@@ -327,8 +364,11 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
 
 For every generate format, each file a gate fingerprints must be a nonempty
 regular file, including `storyboard.md` and every discovered storyboard sheet.
-The final gate and Studio player select the same newest normal/blur render by
+The final gate and Studio player select the same newest playable normal/blur render by
 mtime; `<slug>.mp4` wins a tie. A changed selected file reopens final review.
+Corrupt, empty or non-video files do not become review candidates. Build records
+baseline full playback with audio, phone-size readability, boundaries and seek
+checks, or an explicit incomplete-review note. Independent QA stays optional.
 
 ## QA (generate)
 

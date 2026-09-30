@@ -323,22 +323,24 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   memakai `"rail": "hidden"` dan tidak dirender di rail.
 - **RD-03-83** (Ubiquitous) — Di mode generate, fase Screen Plan shall menulis
   `## Style World` (satu style utama + palet, maksimal 2 aksen) dan baris scene
-  (`placement: "full"`, track 4/7 bergantian, `example`) yang menutup `0` sampai akhir
-  voiceover tanpa celah, masing-masing 2–8 s, dengan style aksen maksimal 30% durasi.
+  (`placement: "full"`, track 4/7 bergantian, `storyboardFrame`; `example` opsional
+  sebagai anotasi referensi) yang menutup `0` sampai akhir
+  voiceover tanpa celah, default masing-masing 2–8 s, dengan style aksen maksimal 30% durasi.
+  A continuous sequence may exceed 8 s when one shared diagram or causal action
+  requires continuity; Screen Plan shall document its rationale, timed information
+  changes and reading holds. A static repeated layout alone shall not qualify.
 - **RD-03-84** (Event-driven) — When baris scene sudah ada, fase Screen Plan shall menulis
   `storyboard.md`, menjalankan `npm run video -- storyboard <slug>`, dan berhenti di Gate 2
   untuk persetujuan Dena, terlepas ada pemicu R1–R6 atau tidak.
 - **RD-03-85** (Unwanted) — If `overlay-timeline.json` tidak ada atau sebuah baris scene
-  tidak punya `example`, then `video storyboard` shall gagal dengan pesan yang menyebut
+  tidak punya `storyboardFrame` aktual, then production `video storyboard` shall gagal dengan pesan yang menyebut
   fase pemiliknya atau id barisnya.
-- **RD-03-86** (Event-driven) — When `video storyboard` berjalan, the CLI shall memakai
-  still pertama contoh itu, atau still ke-n bila baris scene memberi `exampleStill` (n mulai
-  1; di luar jumlah still contoh → gagal dengan id contohnya), dari cache
-  `renders/style-examples/<style>/` (dicocokkan per indeks snapshot; set
-  yang jumlahnya tidak sama dianggap basi), me-render still sebuah style hanya bila ada
-  yang hilang, dan menulis `preview/storyboard-sheet.jpg` — atau `storyboard-sheet-N.jpg`
-  per 28 scene bila lebih — berisi nomor scene, waktu, id contoh, dan kata yang
-  diucapkan, tanpa `GEMINI_API_KEY`/`GEMINI_TTS_API_KEY` di env proses anak.
+- **RD-03-86** (Event-driven) — When production `video storyboard` berjalan, the CLI
+  shall memakai frame aktual lokal dari `storyboardFrame`, menulis
+  `preview/storyboard-sheet.jpg` (atau `storyboard-sheet-N.jpg` per 28 scene), dan
+  manifest hash input. Mode `--reference` shall mempertahankan contoh style/
+  `exampleStill` di sheet berlabel reference yang tidak memenuhi approval gate;
+  child processes shall tidak menerima kunci API Gemini.
 - **RD-03-87** (Ubiquitous) — Di mode generate, fase Build shall tidak memasang base
   video, mewarnai `.bg-fill` dengan latar style world, memutar `processed-audio.wav`
   (track 10) dan `bgm.wav` (track 9), dan memasang scene di track 4 dan 7.
@@ -349,7 +351,8 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   agent (`scripts/lib/gates.mjs`, ADR-0026).
 - **RD-03-89** (Event-driven) — When sebuah gate disetujui, the system shall mencatat sidik
   jari sha256 file gate itu (G1 `script.md` + `processed-audio.wav`; G2 semua storyboard
-  sheet + `storyboard.md`; G3 render); bila salah satu file berubah, gate itu kembali
+  sheet + `storyboard.md` + timeline + actual frames/manifest + plan kreatif
+  ternormalisasi + art direction bila ada; G3 render playable); bila salah satu file berubah, gate itu kembali
   menunggu.
 - **RD-03-90** (Unwanted) — If keputusan membawa sidik jari yang berbeda dari artefak
   sekarang, gate yang diputuskan bukan gate yang menunggu, `revise` tanpa catatan, `qa` di
@@ -374,7 +377,8 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   berbeda menghasilkan error — tidak pernah menebak (ADR-0027).
 - **RD-03-95** (State-driven) — While format-nya `kinetic-post` atau `motion-short`, the
   system shall memakai dua gate: Gate 1 (sidik jari `script.md`, `processed-audio.wav`,
-  semua storyboard sheet, `storyboard.md`) dan Gate 2 (render), dengan urutan `story` →
+  semua storyboard sheet, `storyboard.md`, dependency kreatif RD-03-106) dan Gate 2
+  (render playable), dengan urutan `story` →
   `screen-plan` → Gate 1 → `build` → Gate 2 → `done`; `qa` hanya di Gate 2 dan entri `edit`
   tidak berlaku.
 - **RD-03-96** (Event-driven) — When `npm run video -- new <slug> --generate --format <f>`
@@ -402,7 +406,7 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   regular file, then the gate shall not accept a decision or a partial fingerprint;
   missing script/audio returns to Story, missing `storyboard.md` or any discovered
   storyboard sheet returns to Screen Plan, and missing final render returns to Build.
-- **RD-03-101** (Ubiquitous) — The final gate shall use the newest nonempty regular
+- **RD-03-101** (Ubiquitous) — The final gate shall use the newest playable, decodable regular
   `renders/<slug>.mp4` or `renders/<slug>-blur.mp4`, by modification time (normal render
   wins a tie), and fingerprint that actual path; changing the chosen render reopens
   the final gate. Explainer uses Gate 3; music formats use Gate 2.
@@ -413,6 +417,48 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   `beats.json`, `storyboard.md`, storyboard sheets and `overlay-timeline.json`;
   it shall not require voice, transcripts, caption-beats, or separate BGM.
   Edit/explainer continue to record `## Gate 2 Result`.
+
+## Professional motion quality remediation (audit 2026-09-30)
+
+- **RD-03-103** (Event-driven) — When a production storyboard is generated,
+  each scene shall supply a project-local `storyboardFrame` depicting that scene's
+  intended text, layout and artwork; the sheet shall not substitute a library example.
+  A separate reference-only sheet may use examples but shall not qualify as design approval.
+- **RD-03-104** (Ubiquitous) — Screen Plan shall record the visual concept, focal
+  hierarchy, typography/hero scale, palette/material roles, phone-size readability
+  and scene-boundary decisions, including intentional holds, in its art direction.
+- **RD-03-105** (Optional) — Where a scene sequence has complex continuity,
+  Screen Plan shall provide a short proxy animatic with the locked audio and
+  start/end poses before full animation; approval can use the existing design gate.
+- **RD-03-106** (Event-driven) — When a design gate is fingerprinted, it shall
+  include the timeline, actual storyboard frames/manifest, art-direction document
+  when present, and normalized creative plan excluding approval-result sections;
+  changes to timing, style or audio selection shall invalidate the old approval.
+- **RD-03-107** (Event-driven) — When a final render is offered for review, Build
+  shall record full playback with audio and phone-size/boundary checks, or an explicit
+  incomplete-review note; optional independent QA shall remain optional.
+- **RD-03-108** (Unwanted) — If a final MP4 is empty, corrupt, undecodable or lacks
+  a video stream, then it shall not be selected or accepted by the final review gate.
+- **RD-03-109** (Ubiquitous) — Motion richness shall use staged relationships,
+  meaningful transitions and secondary response; quiet reading holds are valid
+  and shall not require perpetual bobbing or decorative movement.
+- **RD-03-110** (Event-driven) — When a user supplies a motion-video reference,
+  Screen Plan shall record timestamped observations from the actual video and
+  the mechanisms to adapt; metadata, posters or static frames alone shall not be
+  reported as evidence of its temporal choreography. Unavailable video access
+  shall be reported explicitly.
+- **RD-03-111** (State-driven) — While a focal object travels through multiple
+  waypoints in one action, Build shall preserve the planned velocity and tangent
+  continuity through transit points, brake only at planned stops, and couple its
+  receiver or material response to the arrival time.
+- **RD-03-112** (Event-driven) — When reviewing a rich-motion proof, Build shall
+  inspect action sequences including anticipation, transit, contact and settle
+  at phone size; technical validation and isolated reading-pose frames shall not
+  be reported as proof of aesthetic acceptance.
+
+RD-03-103 reinforces the actual-frame production-sheet behavior in RD-03-86;
+library examples remain supported only for a labelled reference sheet. RD-03-106
+extends RD-03-89/95; RD-03-108 strengthens RD-03-100/101 beyond file existence.
 
 ## Referensi
 

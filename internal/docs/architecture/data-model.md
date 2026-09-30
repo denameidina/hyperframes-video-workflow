@@ -35,6 +35,9 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Katalog musik | `shared/music/catalog.json` + `licenses/` (di-ignore) | JSON | `npm run music`, Studio |
 | Naskah (generate) | `videos/<slug>/script.md`, `research/` | Markdown | Story (mode generate) |
 | Storyboard (generate) | `videos/<slug>/storyboard.md`, `preview/storyboard-sheet.jpg` | Markdown + JPG | Screen Plan (mode generate) |
+| Bukti storyboard aktual | `videos/<slug>/preview/storyboard-evidence.json`, frame lokal per scene | JSON + PNG/JPEG/WebP | Screen Plan |
+| Profil delivery | `videos/<slug>/render-profile.json` (opsional) | JSON | Screen Plan/Build |
+| Receipt kualitas render | `videos/<slug>/renders/<file>.mp4.quality.json` | JSON | CLI render |
 | BGM (generate) | `videos/<slug>/bgm.wav`, `bgm.json` | WAV + JSON | Build (`npm run video -- bgm`) |
 | Musik terpotong (format musik) | `videos/<slug>/processed-audio.wav`, `beats.json` | WAV + JSON | Story (`npm run video -- music`) |
 | Cache analisis beat | `shared/music/beats/<id>.json` | JSON | `scripts/lib/music/cut.mjs` |
@@ -341,20 +344,34 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
   `{ source: "voice/voiceover.wav", model: "<provider>/<model>/<voice>", language: "id", note, segments: [{ start, end, text }], words: [{ start, end, text }] }`
   (`segments` = paragraf).
 - `caption-beats.json`: field opsional `rail` = `"shown"` (default) | `"hidden"`.
-- `overlay-timeline.json`: baris scene `placement: "full"`, `track` 4/7, `example`
-  (id contoh style, mis. `wb-03-mind-map`).
+- `overlay-timeline.json`: baris scene `placement: "full"`, `track` 4/7,
+  `storyboardFrame: "preview/storyboard/scene-01.png"` (path relatif aktual lokal);
+  `example` opsional sebagai id referensi style, mis. `wb-03-mind-map`.
 - `storyboard.md`: `| # | time | spoken words | style / pattern | what appears | example |`;
-  `preview/storyboard-sheet.jpg` dari `npm run video -- storyboard`.
+  `preview/storyboard-sheet.jpg` dari `npm run video -- storyboard` memakai
+  actual project frames. `--reference` menghasilkan
+  `preview/storyboard-reference-sheet*.jpg`, terpisah dari approval evidence.
+- `preview/storyboard-evidence.json` (ADR-0030):
+  `{ version: 1, kind: "actual", timelineSha256, frames: [{ id, path, sha256 }], sheets: [{ path, sha256 }] }`.
+  Hash dari raw timeline/frame/sheet bytes; semua frame wajib berada dalam
+  project termasuk setelah resolving symlink. Perubahan dependency membuat
+  evidence basi dan dikembalikan ke Screen Plan sampai sheet diregenerasi.
 - `bgm.json`: `{ version: 1, track, file, sha256, from, duration, copies, gainDb, duck: { threshold, ratio, attack, release } }`, di samping `bgm.wav`.
 - `gates.json` (ADR-0026): `{ version: 1, log: [{ gate: 1|2|3, decision: "approve"|"revise"|"qa"|"edit", note, at, by: "studio"|"cli", fingerprint: { "<file>": "<sha256>" } | null }] }`.
   Satu-satunya penulis: `scripts/lib/gates.mjs` (log, hanya ditambah, atomik). Persetujuan
   berlaku untuk sidik jari file gate (G1 `script.md` + `processed-audio.wav`; G2 storyboard
-  sheet + `storyboard.md`; G3 render final); `edit` tanpa sidik jari. Format musik
+  sheet + `storyboard.md` + `overlay-timeline.json` + evidence + actual frames +
+  `visual-plan.md` ternormalisasi + art-direction/design docs bila ada;
+  G3 render playable); `edit` tanpa sidik jari. Format musik
   (ADR-0027): G1 = `script.md` + `processed-audio.wav` + storyboard sheet + `storyboard.md`,
-  G2 = render; `gate` hanya 1|2.
+  dependency kreatif yang sama, G2 = render playable; `gate` hanya 1|2.
   Semua file wajib berupa file reguler tidak kosong; fingerprint parsial ditolak.
+  Normalisasi `visual-plan.md` hanya membuang section exact `## Gate 1 Result`
+  / `## Gate 2 Result` sampai heading level 1/2 berikutnya, whitespace ujung
+  baris dan blank lines berlebih. Isi keputusan kreatif tetap di-hash.
   Render final dipilih bersama oleh gate dan Studio: file terbaru menurut mtime
-  dari `renders/<slug>.mp4`/`renders/<slug>-blur.mp4`; normal menang jika seri.
+  dari `renders/<slug>.mp4`/`renders/<slug>-blur.mp4` yang lolos probe + decode;
+  normal menang jika seri. File pending/invalid tidak dipilih.
 - `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, createdAt }`
   (`text` = Teks persis atau `null`; `voice` selalu `null` untuk format musik);
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
@@ -374,6 +391,30 @@ sebagai sub-composition. Elemen `<audio>` boleh punya
 `data-volume`. Detail track & z-index di
 [design-system/visual-system](../design-system/visual-system.md) dan
 [frontend/composition-implementation](../frontend/composition-implementation.md).
+
+## Delivery render (ADR-0030)
+
+- `render-profile.json` opsional:
+  `{ name, targetLufs, toleranceLu, truePeakDbtp }`. Default speech/explainer
+  −16 LUFS ±1; music/showreel −17 LUFS ±1; peak ≤−1 dBTP. Override untuk hasil
+  lebih tenang harus eksplisit. `toleranceLu` >0 sampai 1; target tidak lebih keras
+  dari default format dan ≥−40 LUFS; `truePeakDbtp` −9 sampai −1, sesuai rentang
+  loudnorm yang didukung.
+- CLI menulis render ke workspace unik milik run; delivery menangkap file
+  candidate ke workspace miliknya sebelum validasi dan mempertahankan ownership
+  sampai promosi. Lock eksklusif singkat melindungi pasangan MP4/receipt/rollback.
+  Validasi membaca dimensi/durasi
+  root, FPS CLI dan audio yang dideklarasikan di host/reachable sub-compositions.
+  Setelah probe/decode dan pengukuran encoded AAC lulus, file dipromosikan atomik.
+  Master lama dipertahankan bila validation/mastering/promotion gagal.
+- `<final>.quality.json`:
+  `{ schemaVersion: 1, file, sha256, bytes, expected: { width, height, duration, fps, audio }, video, audio, profile, beforeAudio, mastered, encode, toolchain, checks }`.
+  `video` memuat probe stream plus `fps`/`duration`; `audio` memuat probe stream
+  plus `integratedLufs`, `truePeakDbtp`, `loudnessRangeLu`, `thresholdLufs`,
+  `targetOffsetLu` (null untuk silent composition). `toolchain` mencatat versi
+  Node/FFmpeg/FFprobe/HyperFrames; `checks` mencatat probe, dimensi, frame rate,
+  durasi, declaredAudio, decode dan audioProfile. Ini receipt teknis delivery,
+  bukan persetujuan user atau bukti full audiovisual QA.
 
 ## Referensi
 

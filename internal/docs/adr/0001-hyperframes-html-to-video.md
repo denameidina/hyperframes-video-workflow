@@ -2,6 +2,10 @@
 Status: accepted (reverse-engineered)
 Date: 2026-07-20
 
+Determinism clarification (2026-09-30, [ADR-0030](0030-motion-quality-delivery.md)):
+the contract requires repeatable time-to-pose/decoded media for a pinned toolchain,
+not identical MP4 bytes across encoder/OS versions. See [NFR](../architecture/nfr.md).
+
 ## Context
 
 Repo perlu memproduksi video sosial vertikal (9:16) yang presisi, dapat diulang,

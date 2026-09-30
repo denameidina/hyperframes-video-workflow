@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { HYPERFRAMES, checkSlug, commandsFor, cutoutPlan, fillTemplate, layersPlan, main, resolveDuration, scaffold } from './video.mjs';
@@ -76,7 +77,7 @@ test('commandsFor builds pinned hyperframes calls on videos/<slug>', () => {
   assert.deepEqual(commandsFor('check', 'demo'), [hf('lint', 'videos/demo'), hf('validate', 'videos/demo'), hf('inspect', 'videos/demo')]);
   assert.deepEqual(commandsFor('dev', 'demo'), [hf('preview', 'videos/demo')]);
   assert.deepEqual(commandsFor('snapshot', 'demo', { at: '1.5,3' }), [hf('snapshot', '--at', '1.5,3', '-o', 'videos/demo/snapshots', 'videos/demo')]);
-  assert.deepEqual(commandsFor('render', 'demo'), [hf('render', '--quality', 'high', '-o', 'videos/demo/renders/demo.mp4', 'videos/demo')]);
+  assert.deepEqual(commandsFor('render', 'demo'), [hf('render', '--fps', '30', '--quality', 'high', '-o', 'videos/demo/renders/.demo.pending.mp4', 'videos/demo')]);
   assert.deepEqual(commandsFor('render', 'demo', { blur: true }), [['node', ['scripts/render-blur.mjs', '--slug', 'demo', '--project', 'videos/demo']]]);
 });
 
@@ -103,6 +104,78 @@ test('main refuses to run on a project that does not exist', () => {
   const root = tempRoot();
   assert.throws(() => main(['check', 'ghost'], { root, env: {}, run: () => ({ status: 0 }) }), /npm run video -- new ghost/);
   rmSync(root, { recursive: true, force: true });
+});
+
+function renderRoot(t) {
+  const root = tempRoot(); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const { dir } = scaffold({ slug: 'demo', root, duration: '3' });
+  writeFileSync(join(dir, 'index.html'), '<main data-composition-id="demo" data-width="160" data-height="96" data-duration="3"></main>');
+  mkdirSync(join(dir, 'renders'), { recursive: true });
+  return { root, dir, final: join(dir, 'renders/demo.mp4'), pending: join(dir, 'renders/.demo.pending.mp4') };
+}
+
+test('normal CLI rejects a non-video pending render without replacing the old master', (t) => {
+  const f = renderRoot(t); writeFileSync(f.final, 'old master');
+  const run = (cmd, args, opts) => {
+    if (cmd === 'npx') { writeFileSync(args[args.indexOf('-o') + 1], 'new but invalid'); return { status: 0 }; }
+    return spawnSync(cmd, args, opts);
+  };
+  assert.throws(() => main(['render', 'demo'], { root: f.root, env: process.env, run }), /probe/);
+  assert.equal(readFileSync(f.final, 'utf8'), 'old master');
+  assert.equal(existsSync(f.pending), false);
+});
+
+test('normal CLI removes interrupted output and preserves the old quality receipt', (t) => {
+  const f = renderRoot(t); writeFileSync(f.final, 'old master'); writeFileSync(`${f.final}.quality.json`, 'old receipt');
+  const run = (_cmd, args) => { writeFileSync(args[args.indexOf('-o') + 1], 'partial'); return { status: 1 }; };
+  assert.throws(() => main(['render', 'demo'], { root: f.root, env: {}, run }), /exited with 1/);
+  assert.equal(readFileSync(f.final, 'utf8'), 'old master');
+  assert.equal(readFileSync(`${f.final}.quality.json`, 'utf8'), 'old receipt');
+  assert.equal(existsSync(f.pending), false);
+});
+
+test('normal CLI refuses to reuse a stale pending output when rendering writes nothing', (t) => {
+  const f = renderRoot(t); writeFileSync(f.pending, 'stale'); writeFileSync(f.final, 'old master');
+  const run = (cmd, _args, opts) => {
+    if (cmd === 'npx') { assert.equal(existsSync(_args[_args.indexOf('-o') + 1]), false, 'this run starts with a fresh pending file'); return { status: 0 }; }
+    return spawnSync(cmd, _args, opts);
+  };
+  assert.throws(() => main(['render', 'demo'], { root: f.root, env: process.env, run }), /ENOENT/);
+  assert.equal(readFileSync(f.final, 'utf8'), 'old master'); assert.equal(readFileSync(f.pending, 'utf8'), 'stale', 'a run ignores and does not delete unrelated pending files');
+});
+
+test('normal CLI delivers a real fixture through validation and writes its receipt', { skip: spawnSync('ffmpeg', ['-version']).status !== 0 }, (t) => {
+  const f = renderRoot(t);
+  const fixture = join(f.dir, 'fixture.mp4');
+  const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=s=160x96:r=30:d=3', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', fixture], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  const run = (cmd, args, opts) => {
+    assert.equal(opts.env.GEMINI_API_KEY, undefined);
+    assert.equal(opts.env.GEMINI_TTS_API_KEY, undefined);
+    if (cmd === 'npx') { copyFileSync(fixture, args[args.indexOf('-o') + 1]); return { status: 0 }; }
+    return spawnSync(cmd, args, opts);
+  };
+  const receipt = main(['render', 'demo'], { root: f.root, env: { ...process.env, GEMINI_API_KEY: 'strip', GEMINI_TTS_API_KEY: 'strip' }, run });
+  assert.equal(receipt.checks.decode, true);
+  assert.equal(receipt.video.width, 160);
+  assert.deepEqual(JSON.parse(readFileSync(`${f.final}.quality.json`, 'utf8')), receipt);
+  assert.equal(existsSync(f.pending), false);
+});
+
+test('overlapping normal renders write into unique workspaces and clean only their own output', (t) => {
+  const f = renderRoot(t); const outputs = [];
+  const render = () => main(['render', 'demo'], { root: f.root, env: process.env, run });
+  const run = (cmd, args, opts) => {
+    if (cmd === 'npx') {
+      const out = args[args.indexOf('-o') + 1]; outputs.push(out); writeFileSync(out, 'partial');
+      if (outputs.length === 1) { assert.throws(render, /exited with 1/); assert.equal(readFileSync(out, 'utf8'), 'partial', 'the second render does not remove the first render output'); }
+      return { status: 1 };
+    }
+    return spawnSync(cmd, args, opts);
+  };
+  assert.throws(render, /exited with 1/);
+  assert.equal(outputs.length, 2); assert.notEqual(outputs[0], outputs[1]);
+  assert.ok(outputs.every((out) => !existsSync(out)));
 });
 
 // ---- cutout (sub-project 2b) ----

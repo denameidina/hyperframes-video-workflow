@@ -123,7 +123,11 @@ Do not create `final-approval.md` unless the verdict is `pass`.
 | kinetic-post / motion-short | text + music + storyboard document/sheets | final render | — |
 
 Generate gates require all fingerprinted files to be nonempty regular files.
-Final review uses the newest normal/blur MP4 by mtime (normal wins a tie), and
+Design approval also requires current actual scene evidence; reference-only or
+legacy example sheets cannot satisfy it. Creative plan, timeline, frame/evidence
+and optional art-direction changes invalidate design approval; Gate Result
+sections alone do not. See `generate-mode.md` for migration and hash coverage.
+Final review uses the newest playable normal/blur MP4 by mtime (normal wins a tie), and
 Studio plays that exact file. Mode-specific readiness is in `generate-mode.md`.
 
 ## Render Gate
@@ -131,12 +135,26 @@ Studio plays that exact file. Mode-specific readiness is in `generate-mode.md`.
 Before final render:
 
 1. Run `npm run video -- check <slug>`.
-2. Preview keyframes: first frame, `1.5s`, `3s`, first caption, densest caption, first overlay, most complex motion, CTA, final frame.
+2. Preview keyframes: first frame, `1.5s`, `3s`, first caption, densest caption, first overlay, most complex motion, CTA, final frame. Downscale actual frames to phone size and confirm focal hierarchy, labels, captions and CTA stay readable.
 3. Confirm no private data is visible.
-4. Confirm audio sync and end cut.
+4. Inspect every scene boundary at the frame before, at, and after it, including
+   intended overlap, start/end poses and shared anchors. Check late→early seeks
+   against direct seeks so state does not accumulate. Confirm audio sync and end cut.
 5. Render only after blockers are gone.
 
-After render, do a basic export sanity check before user review: file exists, duration is plausible, audio is present when expected, and the first/last frames are not blank. The full QA phase waits until the user chooses QA first.
+After render, record baseline temporal/audio preflight in `assembly-notes.md`:
+
+- playable export with plausible duration, expected audio and nonblank first/last frames
+- delivery quality receipt and encoded audio loudness/true-peak result
+- full playback with audio: pacing, missing words, audible SFX, music balance and sync
+- phone-size readability and every boundary/continuity check
+- late→early seek consistency in the composition preview
+
+State the file and checks actually inspected. If full playback/listening or any
+check could not be completed, write an explicit incomplete-review note naming
+the missing evidence; do not imply it was reviewed from stills or level scans.
+This baseline accompanies every rendered handoff. Independent QA and its
+artifacts remain optional and run only when the user chooses QA first.
 
 ## Publish Gate
 

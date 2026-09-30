@@ -63,9 +63,10 @@ const TIMELINE = {
   ],
 };
 
-test('sceneRows keeps full-frame scenes in time order and names rows without an example', () => {
+test('sceneRows keeps full-frame scenes in time order; examples are optional production annotations', () => {
   assert.deepEqual(sceneRows(TIMELINE).map((e) => e.id), ['ov-002', 'ov-003']);
-  assert.throws(() => sceneRows({ elements: [{ id: 'ov-009', placement: 'full', start: 0 }] }), /without "example" \(Screen Plan fills it\): ov-009/);
+  assert.equal(sceneRows({ elements: [{ id: 'ov-009', placement: 'full', start: 0 }] })[0].id, 'ov-009');
+  assert.throws(() => sceneRows({ elements: [{ id: 'ov-009', placement: 'full', start: 0 }] }, { referenceOnly: true }), /without "example" \(Screen Plan fills it\): ov-009/);
   assert.throws(() => sceneRows({ elements: [] }), /no scene rows/);
 });
 

@@ -142,13 +142,15 @@ motion, match Dena default style, reuse existing project structure).
    when the treatment is split, then run the Still Check at the brief's key-word
    times and fix what it shows before step 5.
 5. **Verify.** Run `npm run video -- check <slug>` and fix every error; review warnings. Preview
-   keyframes as listed in the Render Gate of
+   keyframes, phone-size hierarchy, each boundary and late→early seeks as listed in the Render Gate of
    `docs/skills/dena-video-editing-workflow/references/quality-gates.md`.
 6. **Write handoff notes.** `assembly-notes.md` and `assembly-checklist.md`
    (formats in `docs/agents/references/hyperframes-assembly.md`).
 7. **Render.** `npm run video -- render <slug>` (writes `videos/<slug>/renders/<slug>.mp4`; add `--blur` for a final render with motion blur, which writes `<slug>-blur.mp4`), then the export sanity check from the Render
-   Gate (file exists, duration plausible, audio present, first/last frames not
-   blank).
+   Gate: playable video, duration, expected audio, nonblank endpoints and the
+   delivery quality receipt. Record full playback with audio and phone-size/
+   boundary checks, or an explicit incomplete-review note in `assembly-notes.md`.
+   This baseline preflight does not require the optional independent QA phase.
 8. **Gate 3.** Apply Gate 3 below.
 
 Library assets from the brief come from `vendor/asset-lib/` (already loaded by the starter):
@@ -183,6 +185,8 @@ Stop after the render and send it to the user with:
 - `assembly-notes.md`
 - `assembly-checklist.md`
 - latest verification command output summary
+- delivery quality receipt and baseline temporal/audio preflight, including any
+  incomplete playback/listening check
 - unresolved warnings
 - known visual risks
 - key moments the user should inspect
