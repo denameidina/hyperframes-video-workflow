@@ -95,6 +95,12 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 63. [adr/0028-durable-publish-receipts.md](adr/0028-durable-publish-receipts.md) - Receipt atomik per hasil scheduling dan pelestarian riwayat seluruh target.
 64. [operations/audit-remediation.md](operations/audit-remediation.md) - Rencana perbaikan audit 2026-09-30 dan bukti penutupannya.
 
+### Motion research
+65. [research/motion-linked-transitions.md](research/motion-linked-transitions.md) - Riset sumber primer transisi antar-aset teks, ilustrasi, screenshot, dan cut-out; referensi studio, teknik kontinuitas, dan persiapan aset (rekomendasi, bukan perubahan workflow).
+66. [design-system/transition-assets.md](design-system/transition-assets.md) - Kontrak paket tujuh aset transisi reusable: source editable, overlay alpha, demo, dan verifikasi sambungan motion.
+67. [research/transition-expansion-sources.md](research/transition-expansion-sources.md) - Lima belas sumber primer tambahan: mask, deformasi, partikel, kamera, audio, paper/collage, depth, dan batas portabilitas.
+68. [research/transition-catalog.md](research/transition-catalog.md) - Referensi opsional 72 resep dalam 18 keluarga, 16 bundle kebutuhan aset, selection matrix dan prioritas produksi; [data JSON](research/transition-catalog.json) membedakan tujuh preset v1 tersedia dari 65 usulan.
+
 ## Canonical Files
 
 Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
@@ -124,6 +130,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Bisnis (draft) | [business/brd](business/brd.md) |
 | Brand (draft) | [brand/strategy](brand/strategy.md) |
 | Riset (draft) | [research/market](research/market.md) |
+| Riset pilihan transisi & kebutuhan aset | [research/transition-catalog](research/transition-catalog.md) + [sumber tambahan](research/transition-expansion-sources.md); ketersediaan export mengikuti [kontrak v1](design-system/transition-assets.md) |
 
 > Detail workflow video per fase hidup di `docs/agents/` (dokumen fase
 > `01-story.md` … `04-qa.md` + `docs/agents/references/`) dan

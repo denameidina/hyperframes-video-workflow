@@ -1,0 +1,3133 @@
+{
+  "catalog_version": "research-2026-09-30",
+  "status": "Optional design reference; not a runtime registry or production manifest",
+  "scope": "72 design recipes in 18 overlapping/composable families: 7 existing v1 presets, 65 proposals. Four audio recipes are bridges, not visual overlays.",
+  "source_date": "2026-09-30",
+  "sources": [
+    {
+      "id": "P01",
+      "title": "GSAP Flip",
+      "url": "https://gsap.com/docs/v3/Plugins/Flip/",
+      "verified_note": "Menangkap posisi/ukuran/rotasi sebelum perubahan layout dan menginterpolasikan keadaan; bukan solusi transform 3D."
+    },
+    {
+      "id": "P02",
+      "title": "GSAP DrawSVG",
+      "url": "https://gsap.com/docs/v3/Plugins/DrawSVGPlugin/",
+      "verified_note": "Mengungkap sebagian stroke SVG; fill membutuhkan mask atau teknik lain."
+    },
+    {
+      "id": "P03",
+      "title": "GSAP MorphSVG",
+      "url": "https://gsap.com/docs/v3/Plugins/MorphSVGPlugin/",
+      "verified_note": "Morph path vector; jumlah titik awal/akhir dapat berbeda, pemetaan segmen tetap perlu diperiksa."
+    },
+    {
+      "id": "P04",
+      "title": "GSAP MotionPath",
+      "url": "https://gsap.com/docs/v3/Plugins/MotionPathPlugin/",
+      "verified_note": "Gerak mengikuti path, alignment dan rotasi arah; alignment dihitung pada awal animasi."
+    },
+    {
+      "id": "P05",
+      "title": "IBM animation tips",
+      "url": "https://www.ibm.com/design/language/animation/tips-and-techniques/",
+      "verified_note": "Referensi konsistensi, ritme, momentum dan keterbacaan; aturan brand IBM tidak otomatis menjadi aturan Dena."
+    },
+    {
+      "id": "P06",
+      "title": "Carbon choreography",
+      "url": "https://carbondesignsystem.com/elements/motion/choreography/",
+      "verified_note": "Shared elements, urutan dan hubungan spasial mengarahkan perhatian; usulan video di sini adalah adaptasi."
+    },
+    {
+      "id": "P07",
+      "title": "MDN View Transition API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API",
+      "verified_note": "Snapshot old/new view menjelaskan kontinuitas state browser; belum diuji untuk render seek HyperFrames."
+    },
+    {
+      "id": "P08",
+      "title": "Adobe text animation",
+      "url": "https://helpx.adobe.com/after-effects/desktop/animating-text/text-animation/animating-text.html",
+      "verified_note": "Animator teks dan seleksi karakter memberi kontrol bagian teks; port HTML memerlukan layout sendiri."
+    },
+    {
+      "id": "P09",
+      "title": "GSAP SplitText",
+      "url": "https://gsap.com/docs/v3/Plugins/SplitText/",
+      "verified_note": "Memisahkan baris/kata/karakter dan menyediakan masking; font/layout harus stabil sebelum pengukuran."
+    },
+    {
+      "id": "P10",
+      "title": "Adobe match cuts",
+      "url": "https://www.adobe.com/in/creativecloud/video/discover/match-cut.html",
+      "verified_note": "Kesamaan visual, aksi, komposisi atau suara menghubungkan scene; pasangan shot direncanakan."
+    },
+    {
+      "id": "A01",
+      "title": "Animasi mask dan shape path",
+      "url": "https://helpx.adobe.com/uk/after-effects/desktop/animate-in-after-effects/animate-shape-paths-and-masks/animating-shape-paths-masks.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A02",
+      "title": "Displacement, turbulence, dan deformasi",
+      "url": "https://helpx.adobe.com/lu_en/after-effects/desktop/apply-effects-and-animation-presets/list-of-effects/distort-effects.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A03",
+      "title": "Partikel dan pecahan",
+      "url": "https://helpx.adobe.com/lt/after-effects/desktop/apply-effects-and-animation-presets/list-of-effects/simulation-effects.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A04",
+      "title": "Kamera, dolly, dan ruang",
+      "url": "https://helpx.adobe.com/lu_en/after-effects/desktop/work-with-layers/camera-layer/cameras-lights-points-interest.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A05",
+      "title": "Audio mendahului atau meneruskan gambar",
+      "url": "https://helpx.adobe.com/nl/premiere/desktop/edit-projects/trim-clips/perform-j-cuts-and-l-cuts.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A06",
+      "title": "Morph mesh dengan shape keys",
+      "url": "https://docs.blender.org/manual/id/3.2/animation/shape_keys/introduction.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A07",
+      "title": "Cloth dan permukaan yang terikat",
+      "url": "https://docs.blender.org/manual/id/5.0/physics/cloth/settings/shape.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A08",
+      "title": "Komposit alpha",
+      "url": "https://docs.blender.org/manual/en/latest/compositing/types/color/alpha_over.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A09",
+      "title": "State dan transisi yang logis",
+      "url": "https://rive.app/docs/editor/state-machine/transitions",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A14",
+      "title": "Gradient, iris, strip, dan card wipe",
+      "url": "https://helpx.adobe.com/th_en/after-effects/desktop/apply-effects-and-animation-presets/list-of-effects/transition-effects.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A15",
+      "title": "Depth, mask objek, dan data render",
+      "url": "https://docs.blender.org/manual/en/4.5/render/layers/passes.html",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A10",
+      "title": "BUCK, HBO “Between the World & Me”",
+      "url": "https://buck.co/work/hbo-btw",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A11",
+      "title": "BUCK, Riot Games Lunar New Year",
+      "url": "https://buck.co/work/riot-games-lunar-new-year",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A12",
+      "title": "BUCK, UW Health Masterpieces",
+      "url": "https://buck.co/work/uw-health-masterpieces",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    },
+    {
+      "id": "A13",
+      "title": "BUCK, IBM Leadership Agenda",
+      "url": "https://buck.co/work/ibm-leadership-agenda",
+      "verified_note": "Evidence and access limits in transition-expansion-sources.md; recipe is design synthesis."
+    }
+  ],
+  "additional_sources_document": "internal/docs/research/transition-expansion-sources.md",
+  "families": [
+    {
+      "id": "identity",
+      "name": "Identitas / shared element",
+      "execution_mode": "content",
+      "cost": "rendah",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P01",
+        "P06",
+        "P07"
+      ],
+      "bundle_refs": [
+        "B01"
+      ],
+      "motion_window_proposal": "0.35–0.8 s",
+      "connection_contract": "Identitas, pusat, ukuran, crop dan radius A → B; sisakan hold setelah landing.",
+      "local_capability_note": "Frame/editable content v1; varian lain membutuhkan layout A/B.",
+      "local_reference": "docs/agents/references/motion-broll-planning.md"
+    },
+    {
+      "id": "match",
+      "name": "Graphic match",
+      "execution_mode": "content",
+      "cost": "rendah",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P05",
+        "P10"
+      ],
+      "bundle_refs": [
+        "B02"
+      ],
+      "motion_window_proposal": "cut–0.45 s",
+      "connection_contract": "Samakan silhouette atau komposisi pada frame potong; match cut boleh tanpa tween.",
+      "local_capability_note": "Primitive shape lokal; match antar konten tetap perlu aset pasangan.",
+      "local_reference": "docs/agents/references/styles/motion-graphic.md"
+    },
+    {
+      "id": "momentum",
+      "name": "Momentum dan lintasan",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P04",
+        "P05"
+      ],
+      "bundle_refs": [
+        "B03"
+      ],
+      "motion_window_proposal": "0.25–0.65 s",
+      "connection_contract": "Kecepatan dan arah keluar A diteruskan oleh B; fase deselerasi menghasilkan landing.",
+      "local_capability_note": "GSAP core tersedia; MotionPath plugin perlu diperiksa/dibundel bila dipilih.",
+      "local_reference": "vendor/motion-kit/motion-kit.js"
+    },
+    {
+      "id": "occlusion",
+      "name": "Penutupan / object wipe",
+      "execution_mode": "overlay",
+      "cost": "rendah",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "A01",
+        "A08"
+      ],
+      "bundle_refs": [
+        "B04"
+      ],
+      "motion_window_proposal": "0.35–0.8 s",
+      "connection_contract": "Potong saat seluruh area konten tertutup; buktikan coverage pada frame hasil decode.",
+      "local_capability_note": "Paper wipe v1 tersedia; bentuk occluder lain membutuhkan produksi baru.",
+      "local_reference": "docs/agents/references/styles/mix-media.md"
+    },
+    {
+      "id": "camera",
+      "name": "Kamera pada kanvas 2D",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P05",
+        "A04"
+      ],
+      "bundle_refs": [
+        "B01",
+        "B02"
+      ],
+      "motion_window_proposal": "0.5–1.2 s",
+      "connection_contract": "Posisi fokus dan skala kamera A/B; gerak selesai pada subjek yang disebut.",
+      "local_capability_note": "SK.cam tersedia; bukan kamera perspektif 3D.",
+      "local_reference": "vendor/style-kit/style-kit.js"
+    },
+    {
+      "id": "vector",
+      "name": "Evolusi bentuk vector",
+      "execution_mode": "geometry",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "illustration"
+      ],
+      "source_refs": [
+        "P03",
+        "A06"
+      ],
+      "bundle_refs": [
+        "B05"
+      ],
+      "motion_window_proposal": "0.4–0.9 s",
+      "connection_contract": "Path/subpath dan orientasi dipetakan; endpoint sama dengan bentuk B tanpa pop.",
+      "local_capability_note": "Morph v1 authored; plugin MorphSVG belum otomatis dipasang oleh katalog.",
+      "local_reference": "internal/docs/design-system/transition-assets.md"
+    },
+    {
+      "id": "semantic",
+      "name": "Handoff makna",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P05",
+        "P06"
+      ],
+      "bundle_refs": [
+        "B06"
+      ],
+      "motion_window_proposal": "0.4–0.9 s",
+      "connection_contract": "Kata, angka atau hubungan yang sama muncul dalam fungsi berikutnya; makna harus benar.",
+      "local_capability_note": "Semantic label v1 tersedia; data dan pasangan per adegan tetap perlu authored.",
+      "local_reference": "docs/agents/references/styles/vox.md"
+    },
+    {
+      "id": "type",
+      "name": "Tipografi sebagai penghubung",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "source_refs": [
+        "P08",
+        "P09"
+      ],
+      "bundle_refs": [
+        "B07"
+      ],
+      "motion_window_proposal": "0.3–0.8 s",
+      "connection_contract": "Baseline, kata bersama dan panjang glyph; teks terbaca sebelum dan sesudah transisi.",
+      "local_capability_note": "Helper teks ada; glyph mask/split perlu layout deterministik.",
+      "local_reference": "docs/agents/references/styles/broll-text.md"
+    },
+    {
+      "id": "paper",
+      "name": "Kertas fisik / replacement",
+      "execution_mode": "geometry",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "A07",
+        "A12"
+      ],
+      "bundle_refs": [
+        "B08"
+      ],
+      "motion_window_proposal": "0.4–1.0 s",
+      "connection_contract": "Engsel/robekan dan bayangan mengikuti material; pose stepped atau simulasi dipilih eksplisit.",
+      "local_capability_note": "SK.torn/onTwos/piece ada; mesh realistis membutuhkan pre-render baru.",
+      "local_reference": "docs/agents/references/styles/stop-motion.md"
+    },
+    {
+      "id": "line",
+      "name": "Garis / draw / erase",
+      "execution_mode": "geometry",
+      "cost": "rendah",
+      "media": [
+        "text",
+        "illustration",
+        "screenshot"
+      ],
+      "source_refs": [
+        "P02",
+        "A01"
+      ],
+      "bundle_refs": [
+        "B09"
+      ],
+      "motion_window_proposal": "0.3–0.9 s",
+      "connection_contract": "Tip stroke terakhir menjadi awal elemen B; fill reveal memakai mask terpisah.",
+      "local_capability_note": "SK.drawSeq, SK.highlight, pose tangan tersedia; path baru disiapkan.",
+      "local_reference": "docs/agents/references/styles/whiteboard.md"
+    },
+    {
+      "id": "ui",
+      "name": "Kontinuitas antarmuka",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "screenshot",
+        "text",
+        "illustration"
+      ],
+      "source_refs": [
+        "P01",
+        "P06",
+        "A09"
+      ],
+      "bundle_refs": [
+        "B10"
+      ],
+      "motion_window_proposal": "0.35–0.8 s",
+      "connection_contract": "State UI, cursor hotspot dan slot layout konsisten; aksi menghasilkan state yang benar.",
+      "local_capability_note": "Motion-broll ada; bukan otomatisasi browser atau bukti UI asli.",
+      "local_reference": "docs/agents/references/motion-broll-planning.md"
+    },
+    {
+      "id": "depth",
+      "name": "Kedalaman / multiplane",
+      "execution_mode": "depth",
+      "cost": "tinggi",
+      "media": [
+        "cutout",
+        "screenshot",
+        "illustration"
+      ],
+      "source_refs": [
+        "A04",
+        "A11",
+        "A15"
+      ],
+      "bundle_refs": [
+        "B11"
+      ],
+      "motion_window_proposal": "0.6–1.3 s",
+      "connection_contract": "2–5 layer, depth, focus, overscan dan plate tertutup lubangnya; caption di layer tenang.",
+      "local_capability_note": "SK.layer/camera/dof/dollyZoom ada; sumber layer harus disiapkan.",
+      "local_reference": "docs/agents/references/styles/parallax.md"
+    },
+    {
+      "id": "material",
+      "name": "Tekstur / luma / distorsi",
+      "execution_mode": "compositor",
+      "cost": "tinggi",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "A01",
+        "A02",
+        "A14"
+      ],
+      "bundle_refs": [
+        "B12"
+      ],
+      "motion_window_proposal": "0.4–1.0 s",
+      "connection_contract": "Matte dan displacement adalah kanal berbeda; state B selesai bersih dan terbaca.",
+      "local_capability_note": "Ada tekstur lokal; compositor/shader per resep belum diverifikasi di HyperFrames.",
+      "local_reference": "docs/agents/references/asset-catalog/sheets/texture-1.webp"
+    },
+    {
+      "id": "assembly",
+      "name": "Pecahan / assemble",
+      "execution_mode": "geometry",
+      "cost": "tinggi",
+      "media": [
+        "illustration",
+        "text",
+        "screenshot",
+        "cutout"
+      ],
+      "source_refs": [
+        "A03",
+        "P05"
+      ],
+      "bundle_refs": [
+        "B13"
+      ],
+      "motion_window_proposal": "0.5–1.2 s",
+      "connection_contract": "Setiap fragmen punya asal, tujuan, urutan dan seed tetap; B utuh setelah settle.",
+      "local_capability_note": "Authored fragment sederhana mungkin HTML; simulasi baru membutuhkan bake/pre-render.",
+      "local_reference": "vendor/asset-lib/src/items.json"
+    },
+    {
+      "id": "time",
+      "name": "Waktu / editorial loop",
+      "execution_mode": "content",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "P10",
+        "P05",
+        "A11"
+      ],
+      "bundle_refs": [
+        "B08",
+        "B10"
+      ],
+      "motion_window_proposal": "0.25–0.9 s",
+      "connection_contract": "Pose dan fase A/B sesuai; loop menyamakan frame serta audio boundary.",
+      "local_capability_note": "Replacement helper ada; footage reversal/speed dan loop perlu keputusan editorial.",
+      "local_reference": "docs/agents/references/styles/stop-motion.md"
+    },
+    {
+      "id": "audio",
+      "name": "Audio sebagai jembatan",
+      "execution_mode": "audio",
+      "cost": "rendah",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "A05",
+        "P05"
+      ],
+      "bundle_refs": [
+        "B14"
+      ],
+      "motion_window_proposal": "0.15–1.2 s overlap",
+      "connection_contract": "Envelope, sumber suara dan kata tetap jelas; J/L memerlukan audio scene, bukan hanya whoosh.",
+      "local_capability_note": "7 SFX v1 ada; bridge per scene membutuhkan source audio dan mix.",
+      "local_reference": "docs/agents/references/motion-grammar.md"
+    },
+    {
+      "id": "mask",
+      "name": "Reveal geometris / rank map",
+      "execution_mode": "compositor",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "source_refs": [
+        "A01",
+        "A14"
+      ],
+      "bundle_refs": [
+        "B15"
+      ],
+      "motion_window_proposal": "0.3–0.8 s",
+      "connection_contract": "Scene A/B dimasking menurut pivot/arah/rank; endpoint hanya B, tanpa crop residu.",
+      "local_capability_note": "clip-path dasar ada; rank-map sampling perlu implementasi dan uji baru.",
+      "local_reference": "vendor/style-kit/style-kit.js"
+    },
+    {
+      "id": "modular",
+      "name": "Kartu / panel dua sisi",
+      "execution_mode": "geometry",
+      "cost": "sedang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "source_refs": [
+        "A14",
+        "P01",
+        "A13"
+      ],
+      "bundle_refs": [
+        "B16"
+      ],
+      "motion_window_proposal": "0.4–1.0 s",
+      "connection_contract": "Front A/back B, UV/crop, hinge dan urutan panel cocok; final grid utuh.",
+      "local_capability_note": "CSS 3D primitive ada; resep dua sisi dan crop-grid belum diproduksi.",
+      "local_reference": "docs/agents/references/styles/stop-motion.md"
+    }
+  ],
+  "asset_bundles": [
+    {
+      "id": "B01",
+      "name": "Frame dan viewport",
+      "deliverables": "SVG frame; alpha border; editable content slots; crop/focal rectangles; pivots",
+      "family_refs": [
+        "identity",
+        "camera"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B02",
+      "name": "Bentuk dan match guides",
+      "deliverables": "Circle/rect/contour SVG; bounding boxes; composition anchors; endpoint comparison overlay",
+      "family_refs": [
+        "match",
+        "camera"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B03",
+      "name": "Lintasan dan momentum",
+      "deliverables": "SVG routes; ribbon/carrier; start/end tangents; direction and velocity profile; overscan notes",
+      "family_refs": [
+        "momentum"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B04",
+      "name": "Occluder dan coverage",
+      "deliverables": "Paper/prop/hand/panel silhouettes; cover matte; shadow layer; coverage frame index per aspect",
+      "family_refs": [
+        "occlusion"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B05",
+      "name": "Vector states",
+      "deliverables": "Editable state paths; subpath correspondence; pivot; intermediate poses; endpoint labels",
+      "family_refs": [
+        "vector"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B06",
+      "name": "Label dan data handoff",
+      "deliverables": "Editable chip; word/node/object anchors; number units/domain; real source references",
+      "family_refs": [
+        "semantic"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B07",
+      "name": "Typography kit",
+      "deliverables": "Licensed local fonts; editable word spans; glyph outlines when needed; baselines; counter/line masks",
+      "family_refs": [
+        "type"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B08",
+      "name": "Paper mechanics kit",
+      "deliverables": "Front/back textures; torn edges; crease/hinge pivots; crumple replacement poses; contact shadows",
+      "family_refs": [
+        "paper",
+        "time"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B09",
+      "name": "Draw/erase kit",
+      "deliverables": "Ordered stroke paths; tip coordinates; filled reveal matte; flat hand/eraser poses; local paper backdrop",
+      "family_refs": [
+        "line"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B10",
+      "name": "UI continuity kit",
+      "deliverables": "Real source captures; separated cards; cursor with hotspot; slots/viewport rectangles; state IDs; demo labels",
+      "family_refs": [
+        "ui",
+        "time"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B11",
+      "name": "Depth kit",
+      "deliverables": "2–5 alpha layers; reconstructed clean plate; depth/focus values; overscan; camera endpoints",
+      "family_refs": [
+        "depth"
+      ],
+      "priority": "P2"
+    },
+    {
+      "id": "B12",
+      "name": "Material masks kit",
+      "deliverables": "Grayscale luma sequences; alpha mattes; displacement channels separately; edge policy; clean endpoint frames",
+      "family_refs": [
+        "material"
+      ],
+      "priority": "P2"
+    },
+    {
+      "id": "B13",
+      "name": "Fragment kit",
+      "deliverables": "Sprites/tiles/cutouts; per-part crop/UV; origin/target transforms; fixed seed; assembly ordering",
+      "family_refs": [
+        "assembly"
+      ],
+      "priority": "P2"
+    },
+    {
+      "id": "B14",
+      "name": "Audio bridges kit",
+      "deliverables": "Contact transients; material-specific cues; source ambience; speech pre-roll/tails; mix envelopes and provenance",
+      "family_refs": [
+        "audio"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B15",
+      "name": "Geometric/rank reveal kit",
+      "deliverables": "Iris/radial/strip masks; grayscale reveal order maps; pivot/angle; threshold/softness; open/closed endpoint validation",
+      "family_refs": [
+        "mask"
+      ],
+      "priority": "P1"
+    },
+    {
+      "id": "B16",
+      "name": "Two-sided panel kit",
+      "deliverables": "Front A/back B textures; UV/crop grids; hinge pivots; backface policy; perspective; flip-order maps and contact shadows",
+      "family_refs": [
+        "modular"
+      ],
+      "priority": "P2"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "TR-01-01",
+      "family": "identity",
+      "name": "Frame handoff v1",
+      "intent": "Teks → screenshot dalam bingkai yang sama",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Frame SVG",
+        "dua content slot",
+        "crop rect"
+      ],
+      "bundle_refs": [
+        "B01"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Pusat dan frame tetap; isi berganti pada state yang direncanakan",
+      "reject_when": "Frame tidak cocok dengan crop sumber",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft click",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/01-shared-element.webm",
+      "source_refs": [
+        "P01",
+        "P06",
+        "P07"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-01-02",
+      "family": "identity",
+      "name": "Hero thumbnail expand",
+      "intent": "Detail kecil → bukti besar",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Capture resolusi tinggi",
+        "thumbnail rect",
+        "full rect"
+      ],
+      "bundle_refs": [
+        "B01"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Objek yang sama membesar tanpa loncat anchor",
+      "reject_when": "Capture pecah pada zoom",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "short rise",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "P07"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-01-03",
+      "family": "identity",
+      "name": "Persistent badge rehome",
+      "intent": "Status yang sama pindah antar adegan",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Badge terpisah",
+        "anchor A/B",
+        "palette token"
+      ],
+      "bundle_refs": [
+        "B01"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Badge bertahan saat konteks berubah",
+      "reject_when": "Status baru berbeda arti dengan badge lama",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft tick",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "P07"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-01-04",
+      "family": "identity",
+      "name": "Subject carryover",
+      "intent": "Cut-out yang sama masuk konteks baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Alpha cutout",
+        "clean plates A/B",
+        "pivot"
+      ],
+      "bundle_refs": [
+        "B01"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Silhouette subjek tetap sambil latar berganti",
+      "reject_when": "Matte rambut buruk atau skala subjek berubah kasar",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "optional room tone",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "P07"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-02-01",
+      "family": "match",
+      "name": "Circle node match v1",
+      "intent": "Bentuk lingkaran → simpul diagram",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Circle SVG",
+        "node target",
+        "ukuran/posisi"
+      ],
+      "bundle_refs": [
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Circle bertemu node pada pose matching",
+      "reject_when": "Node kecil sehingga sambungan tak terbaca",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "pop",
+      "motion_window_proposal": "cut–0.45 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/02-shape-match.webm",
+      "source_refs": [
+        "P05",
+        "P10"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-02-02",
+      "family": "match",
+      "name": "Silhouette object match",
+      "intent": "Ikon → objek ilustrasi dengan contour sejenis",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Dua silhouette",
+        "bounding box",
+        "outline overlay untuk review"
+      ],
+      "bundle_refs": [
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Contour dominan bertemu pada cut",
+      "reject_when": "Kemiripan bentuk hanya kebetulan tanpa makna",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "tap",
+      "motion_window_proposal": "cut–0.45 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P10"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-02-03",
+      "family": "match",
+      "name": "Composition match",
+      "intent": "Foto/UI → scene dengan tata letak sama",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "A/B",
+        "anchor tiga elemen dominan",
+        "crop guide"
+      ],
+      "bundle_refs": [
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Pola ruang dan focal point sejajar",
+      "reject_when": "Pasangan mengesankan dua bukti yang sebenarnya berbeda",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "none",
+      "motion_window_proposal": "cut–0.45 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P10"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-02-04",
+      "family": "match",
+      "name": "Colour-field match",
+      "intent": "Bidang dominan A → bidang dominan B",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Swatch asli",
+        "area mask",
+        "crop A/B"
+      ],
+      "bundle_refs": [
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Bidang warna mengisi lokasi sama saat cut",
+      "reject_when": "Warna mengubah arti chart/status",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "short tonal bridge",
+      "motion_window_proposal": "cut–0.45 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P10"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-03-01",
+      "family": "momentum",
+      "name": "Momentum ribbon v1",
+      "intent": "Aset bergerak diteruskan oleh aset berikut",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Ribbon SVG",
+        "content groups",
+        "direction vector"
+      ],
+      "bundle_refs": [
+        "B03"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "A keluar dan B masuk dengan arah/ritme konsisten",
+      "reject_when": "Sekadar overlay sementara konten diam",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "passing whoosh",
+      "motion_window_proposal": "0.25–0.65 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/03-motion-match.webm",
+      "source_refs": [
+        "P04",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-03-02",
+      "family": "momentum",
+      "name": "Path relay",
+      "intent": "Titik/cursor membawa perhatian ke asset B",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Route SVG",
+        "carrier",
+        "start/end tangent"
+      ],
+      "bundle_refs": [
+        "B03"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Tangent akhir carrier sejajar dengan gerak B",
+      "reject_when": "Lintasan melintasi caption atau wajah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "zip",
+      "motion_window_proposal": "0.25–0.65 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P04",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-03-03",
+      "family": "momentum",
+      "name": "Whip pan match",
+      "intent": "Perpindahan cepat dalam ruang yang searah",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Kanvas A/B",
+        "overscan",
+        "authored blur timing"
+      ],
+      "bundle_refs": [
+        "B03"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "A/B punya gerak searah; cut pada fase tercepat",
+      "reject_when": "Footage tanpa gerak cocok atau teks perlu dibaca",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "short whoosh",
+      "motion_window_proposal": "0.25–0.65 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P04",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-03-04",
+      "family": "momentum",
+      "name": "Impact transfer",
+      "intent": "Objek A menabrak pemicu lalu B muncul",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Collider SVG",
+        "contact pivot",
+        "squash/recoil poses"
+      ],
+      "bundle_refs": [
+        "B03"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Kontak pada frame yang sama dengan onset B",
+      "reject_when": "Bounce tidak sesuai benda atau narasi",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "impact tick",
+      "motion_window_proposal": "0.25–0.65 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P04",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-04-01",
+      "family": "occlusion",
+      "name": "Paper cover v1",
+      "intent": "Pergantian scene di balik kertas",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Oversized paper alpha",
+        "coverage mask",
+        "A/B"
+      ],
+      "bundle_refs": [
+        "B04"
+      ],
+      "execution_mode": "overlay",
+      "handoff_check": "Cut hanya pada full coverage terdokumentasi",
+      "reject_when": "Kertas masih menyisakan celah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "paper swipe",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/04-object-wipe.webm",
+      "source_refs": [
+        "A01",
+        "A08"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-04-02",
+      "family": "occlusion",
+      "name": "Foreground prop wipe",
+      "intent": "Benda adegan menjadi penutup",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Cutout prop",
+        "clean silhouette",
+        "coverage trajectory"
+      ],
+      "bundle_refs": [
+        "B04"
+      ],
+      "execution_mode": "overlay",
+      "handoff_check": "Prop menutup bidang konten sebelum swap",
+      "reject_when": "Prop tak terkait konteks",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "passing cloth/object sound",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A08"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-04-03",
+      "family": "occlusion",
+      "name": "Hand palm cover",
+      "intent": "Gestur tangan mengantar adegan baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Flat hand poses",
+        "hotspot",
+        "cover matte"
+      ],
+      "bundle_refs": [
+        "B04"
+      ],
+      "execution_mode": "overlay",
+      "handoff_check": "Telapak menutup target crop dan membuka B",
+      "reject_when": "Pose berbeda dari gaya ilustrasi",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "hand swipe",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A08"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-04-04",
+      "family": "occlusion",
+      "name": "Panel shutter",
+      "intent": "Panel modular menutup lalu membuka B",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Panel strips SVG",
+        "stagger map",
+        "matte"
+      ],
+      "bundle_refs": [
+        "B04"
+      ],
+      "execution_mode": "overlay",
+      "handoff_check": "Semua panel tertutup sebelum konten diganti",
+      "reject_when": "Gap antar panel bocor atau terlalu banyak gerak",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "sequential clicks",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A08"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-05-01",
+      "family": "camera",
+      "name": "Portal camera v1",
+      "intent": "Masuk detail melalui bukaan",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Portal SVG",
+        "content mount A/B",
+        "focal anchor"
+      ],
+      "bundle_refs": [
+        "B01",
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Detail B mengisi bukaan saat kamera landing",
+      "reject_when": "Bukaan hanya menambah ornamen",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "rise then settle",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/05-camera-handoff.webm",
+      "source_refs": [
+        "P05",
+        "A04"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-05-02",
+      "family": "camera",
+      "name": "Zoom into screenshot region",
+      "intent": "Konteks → detail bukti",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Real capture",
+        "region rect",
+        "scale limit",
+        "source label"
+      ],
+      "bundle_refs": [
+        "B01",
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Landing tepat pada region yang disebut",
+      "reject_when": "Zoom mengaburkan provenance atau pixel detail",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "subtle zoom",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "A04"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-05-03",
+      "family": "camera",
+      "name": "Canvas pan continuation",
+      "intent": "Dua bagian dari satu papan besar",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Wide canvas",
+        "layout A/B",
+        "path camera"
+      ],
+      "bundle_refs": [
+        "B01",
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "B berada dalam koordinat papan yang sama",
+      "reject_when": "Scene tak berhubungan dipaksa menjadi ruang sama",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "none or air shift",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "A04"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-05-04",
+      "family": "camera",
+      "name": "Frame tunnel",
+      "intent": "Perjalanan melewati frame bertingkat",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Nested frames",
+        "authored scale/focus",
+        "final content"
+      ],
+      "bundle_refs": [
+        "B01",
+        "B02"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Frame terakhir berimpit dengan framing B",
+      "reject_when": "Terlalu banyak frame menyita waktu pesan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "layered rise",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "A04"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-06-01",
+      "family": "vector",
+      "name": "Underline to arrow v1",
+      "intent": "Penekanan kata → jalur penjelasan",
+      "media": [
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Path underline/arrow",
+        "common pivot",
+        "target node"
+      ],
+      "bundle_refs": [
+        "B05"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Garis yang sama selesai sebagai arah B",
+      "reject_when": "Arrow mengarah ke hubungan yang salah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "pen zip",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/06-shape-morph.webm",
+      "source_refs": [
+        "P03",
+        "A06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-06-02",
+      "family": "vector",
+      "name": "Icon state morph",
+      "intent": "Proses → hasil dengan ikon berganti",
+      "media": [
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Path state A/B",
+        "segment map",
+        "final label"
+      ],
+      "bundle_refs": [
+        "B05"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "B terbaca sebagai ikon yang dimaksud",
+      "reject_when": "Morph menghasilkan silhouette aneh",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "small chime",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P03",
+        "A06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-06-03",
+      "family": "vector",
+      "name": "Blob to container",
+      "intent": "Bentuk abstrak → wadah konten",
+      "media": [
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Closed path states",
+        "content mask",
+        "endpoint frame"
+      ],
+      "bundle_refs": [
+        "B05"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Blob menetap jadi container sebelum isi terbaca",
+      "reject_when": "Gaya evidence/serius tidak cocok elastisitas",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft plop",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P03",
+        "A06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-06-04",
+      "family": "vector",
+      "name": "Line to chart",
+      "intent": "Jalur → struktur data",
+      "media": [
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Polyline states",
+        "scale/axes",
+        "real data mapping"
+      ],
+      "bundle_refs": [
+        "B05"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Endpoint cocok chart yang berlabel",
+      "reject_when": "Data hanya dibuat agar morph bagus",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "tick",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P03",
+        "A06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-07-01",
+      "family": "semantic",
+      "name": "Label to laptop v1",
+      "intent": "Nama objek → objeknya",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Label chip",
+        "laptop vector",
+        "label/object anchors"
+      ],
+      "bundle_refs": [
+        "B06"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Label mengantar laptop pada noun landing",
+      "reject_when": "Objek tak sesuai kata di naskah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "tap",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "implemented-v1",
+      "verified_asset_path": "shared/transitions/motion-linked-v1/exports/07-semantic-handoff.webm",
+      "source_refs": [
+        "P05",
+        "P06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-07-02",
+      "family": "semantic",
+      "name": "Keyword to diagram node",
+      "intent": "Klaim verbal → bagian diagram",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Editable keyword",
+        "node label",
+        "route SVG"
+      ],
+      "bundle_refs": [
+        "B06"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Kata yang sama tetap terlihat saat pindah peran",
+      "reject_when": "Diagram memberi causal claim tanpa dasar",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "pen tick",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-07-03",
+      "family": "semantic",
+      "name": "Number to bar",
+      "intent": "Angka → besar visual yang proporsional",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Numeric text",
+        "chart bar",
+        "domain/units",
+        "source"
+      ],
+      "bundle_refs": [
+        "B06"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Nilai dan skala tetap benar setelah handoff",
+      "reject_when": "Nilai/denominator belum terverifikasi",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "count tick",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-07-04",
+      "family": "semantic",
+      "name": "Tool label to capture",
+      "intent": "Nama tool → UI asli",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Label",
+        "real capture",
+        "source/date",
+        "focal rect"
+      ],
+      "bundle_refs": [
+        "B06"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Nama tetap terbaca dan fokus menuju fungsi disebut",
+      "reject_when": "Mock UI disajikan sebagai bukti",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "click",
+      "motion_window_proposal": "0.4–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P05",
+        "P06"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-08-01",
+      "family": "type",
+      "name": "Shared word bridge",
+      "intent": "Kalimat A → kalimat B berbagi kata",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Dua teks",
+        "shared-word anchor",
+        "final baselines"
+      ],
+      "bundle_refs": [
+        "B07"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Satu kata bertahan; bagian lain berubah",
+      "reject_when": "Kata bersama tidak membawa makna",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "none",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P08",
+        "P09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-08-02",
+      "family": "type",
+      "name": "Glyph counter portal",
+      "intent": "Masuk lewat lubang huruf menuju gambar",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Glyph outline berlisensi",
+        "counter mask",
+        "destination"
+      ],
+      "bundle_refs": [
+        "B07"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Counter mengisi frame lalu B menetap",
+      "reject_when": "Caption penuh atau glyph kehilangan keterbacaan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "short rise",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P08",
+        "P09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-08-03",
+      "family": "type",
+      "name": "Baseline roll replace",
+      "intent": "Istilah lama → istilah baru di slot yang sama",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Word groups",
+        "line mask",
+        "font metrics"
+      ],
+      "bundle_refs": [
+        "B07"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Baseline B berada tepat di slot A",
+      "reject_when": "Panjang kata memecah layout",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft type tick",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P08",
+        "P09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-08-04",
+      "family": "type",
+      "name": "Outline to image fill",
+      "intent": "Judul memperkenalkan visual dalam huruf",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Outlined title",
+        "image fill",
+        "expand matte",
+        "full image"
+      ],
+      "bundle_refs": [
+        "B07"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Isi huruf berlanjut sebagai image B",
+      "reject_when": "Evidence kecil tak terbaca dalam huruf",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft reveal",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P08",
+        "P09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-09-01",
+      "family": "paper",
+      "name": "Tear reveal",
+      "intent": "Cara lama dibuka untuk hasil baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Torn cover",
+        "irregular edge",
+        "reveal matte",
+        "backside shadow"
+      ],
+      "bundle_refs": [
+        "B08"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Robekan membuka B dari titik yang masuk akal",
+      "reject_when": "Straight edge tampak seperti slide biasa",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "paper rip",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A07",
+        "A12"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-09-02",
+      "family": "paper",
+      "name": "Fold unfold panels",
+      "intent": "Satu konsep → beberapa bagian",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Hinged panels",
+        "front/back textures",
+        "crease",
+        "per-item content"
+      ],
+      "bundle_refs": [
+        "B08"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Panel final mendatar, urutan mengikuti jumlah yang disebut",
+      "reject_when": "Lipatan menutupi bagian yang belum dibaca",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "crease",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A07",
+        "A12"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-09-03",
+      "family": "paper",
+      "name": "Crumple away",
+      "intent": "Buang state lama lalu tunjukkan pengganti",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Replacement crumple poses atau mesh bake",
+        "clean B"
+      ],
+      "bundle_refs": [
+        "B08"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Sisa A keluar; B punya hold",
+      "reject_when": "Kertas datar sekadar diskalakan tanpa material cue",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "crumple",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A07",
+        "A12"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-09-04",
+      "family": "paper",
+      "name": "Sticker peel reveal",
+      "intent": "Lepas label untuk membuka fakta",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Sticker front/back",
+        "peeled corner",
+        "contact shadow",
+        "mask"
+      ],
+      "bundle_refs": [
+        "B08"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Label terangkat dari corner dan fakta B tetap diam",
+      "reject_when": "Foto nyata/bukti ikut melengkung palsu",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "peel",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A07",
+        "A12"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-10-01",
+      "family": "line",
+      "name": "Draw connector handoff",
+      "intent": "Ide A dihubungkan ke B",
+      "media": [
+        "text",
+        "illustration",
+        "screenshot"
+      ],
+      "required_assets": [
+        "Stroke SVG",
+        "ordered path",
+        "endpoint",
+        "optional flat hand"
+      ],
+      "bundle_refs": [
+        "B09"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Tip stroke mencapai node B saat onset label",
+      "reject_when": "Banyak garis serentak membingungkan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "pen scratch",
+      "motion_window_proposal": "0.3–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P02",
+        "A01"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-10-02",
+      "family": "line",
+      "name": "Erase correct redraw",
+      "intent": "Koreksi pemahaman lama",
+      "media": [
+        "text",
+        "illustration",
+        "screenshot"
+      ],
+      "required_assets": [
+        "Old/new strokes",
+        "erase matte",
+        "hand/eraser hotspot"
+      ],
+      "bundle_refs": [
+        "B09"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Old stroke terhapus lokal lalu B digambar",
+      "reject_when": "Hapus seluruh board menghilangkan konteks",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "eraser rub",
+      "motion_window_proposal": "0.3–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P02",
+        "A01"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-10-03",
+      "family": "line",
+      "name": "Marker band to panel",
+      "intent": "Sorotan kata menjadi panel bukti",
+      "media": [
+        "text",
+        "illustration",
+        "screenshot"
+      ],
+      "required_assets": [
+        "Highlight SVG",
+        "panel rect",
+        "anchored text"
+      ],
+      "bundle_refs": [
+        "B09"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Band meluas menjadi ruang B; kata tetap terbaca",
+      "reject_when": "Menyorot semua teks sekaligus",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "marker swish",
+      "motion_window_proposal": "0.3–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P02",
+        "A01"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-10-04",
+      "family": "line",
+      "name": "Scribble matte reveal",
+      "intent": "Sketsa membuka ilustrasi",
+      "media": [
+        "text",
+        "illustration",
+        "screenshot"
+      ],
+      "required_assets": [
+        "Scribble stroke",
+        "thickness",
+        "reveal matte",
+        "B"
+      ],
+      "bundle_refs": [
+        "B09"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Matte benar-benar mengungkap isi, bukan hanya stroke dekoratif",
+      "reject_when": "Isi B tetap terlihat sebelum reveal",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "scribble",
+      "motion_window_proposal": "0.3–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P02",
+        "A01"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-11-01",
+      "family": "ui",
+      "name": "Cursor click expand",
+      "intent": "Aksi UI → detail UI",
+      "media": [
+        "screenshot",
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Cursor vector",
+        "measured hotspot",
+        "before/after capture",
+        "target rect"
+      ],
+      "bundle_refs": [
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Click mendahului state change dan fokus tetap pada target",
+      "reject_when": "Aksi tool direkayasa tanpa label demo",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "click",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "A09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-11-02",
+      "family": "ui",
+      "name": "Drag card to slot",
+      "intent": "Pemindahan file/item dalam workflow",
+      "media": [
+        "screenshot",
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Separate card",
+        "source/destination slot",
+        "drag route",
+        "pointer"
+      ],
+      "bundle_refs": [
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Card tiba di slot lalu state sukses muncul",
+      "reject_when": "Capture datar tidak bisa memisahkan card dengan bersih",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "drop tick",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "A09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-11-03",
+      "family": "ui",
+      "name": "Grid reflow",
+      "intent": "Daftar → kelompok atau hasil filter",
+      "media": [
+        "screenshot",
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Separate cards",
+        "A/B rects",
+        "persistent item IDs"
+      ],
+      "bundle_refs": [
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Item mempertahankan identitas saat layout berubah",
+      "reject_when": "Produk UI tidak mendukung state yang diperagakan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "light shuffle",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "A09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-11-04",
+      "family": "ui",
+      "name": "Scroll to anchored proof",
+      "intent": "Ringkasan → detail di halaman yang sama",
+      "media": [
+        "screenshot",
+        "text",
+        "illustration"
+      ],
+      "required_assets": [
+        "Tall real capture",
+        "viewport mask",
+        "heading/source anchors"
+      ],
+      "bundle_refs": [
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Scroll landing pada heading bukti",
+      "reject_when": "Screenshot terlalu pendek atau konteks dipotong menyesatkan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "optional wheel cue",
+      "motion_window_proposal": "0.35–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P01",
+        "P06",
+        "A09"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-12-01",
+      "family": "depth",
+      "name": "Multiplane pass through",
+      "intent": "Masuk dari foreground ke scene belakang",
+      "media": [
+        "cutout",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "2–5 layers",
+        "clean plate",
+        "depth/perspective",
+        "overscan"
+      ],
+      "bundle_refs": [
+        "B11"
+      ],
+      "execution_mode": "depth",
+      "handoff_check": "Foreground lewat kamera lalu fokus B menetap",
+      "reject_when": "Plate punya lubang bekas subjek",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "passing whoosh",
+      "motion_window_proposal": "0.6–1.3 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A04",
+        "A11",
+        "A15"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-12-02",
+      "family": "depth",
+      "name": "Near object depth wipe",
+      "intent": "Objek dekat menyembunyikan cut",
+      "media": [
+        "cutout",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Alpha foreground",
+        "blur/depth map",
+        "covered A/B"
+      ],
+      "bundle_refs": [
+        "B11"
+      ],
+      "execution_mode": "depth",
+      "handoff_check": "Occluder near menutup frame sebelum swap",
+      "reject_when": "Blur mengaburkan caption",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "low whoosh",
+      "motion_window_proposal": "0.6–1.3 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A04",
+        "A11",
+        "A15"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-12-03",
+      "family": "depth",
+      "name": "Rack focus handoff",
+      "intent": "Perhatian pindah dari A ke B tanpa cut besar",
+      "media": [
+        "cutout",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Separate layers A/B",
+        "focus depths",
+        "sharp text layer"
+      ],
+      "bundle_refs": [
+        "B11"
+      ],
+      "execution_mode": "depth",
+      "handoff_check": "B tajam saat disebut; A turun prioritas",
+      "reject_when": "Kedua bukti perlu dibaca bersamaan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "none",
+      "motion_window_proposal": "0.6–1.3 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A04",
+        "A11",
+        "A15"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-12-04",
+      "family": "depth",
+      "name": "Layer peel to context",
+      "intent": "Detail → konteks berlapis",
+      "media": [
+        "cutout",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Layer stack",
+        "ordered peel route",
+        "reconstructed hidden areas"
+      ],
+      "bundle_refs": [
+        "B11"
+      ],
+      "execution_mode": "depth",
+      "handoff_check": "Lapisan keluar satu per satu dan B lengkap",
+      "reject_when": "Tidak ada informasi nyata di lapisan bawah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft paper taps",
+      "motion_window_proposal": "0.6–1.3 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A04",
+        "A11",
+        "A15"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-13-01",
+      "family": "material",
+      "name": "Ink luma reveal",
+      "intent": "Pergeseran bab dengan tekstur organik",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Animated grayscale ink matte",
+        "A/B",
+        "endpoints"
+      ],
+      "bundle_refs": [
+        "B12"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "Threshold selesai bersih; B tanpa residue",
+      "reject_when": "Tekstur menyamarkan detail bukti",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "wet swish",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A02",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-13-02",
+      "family": "material",
+      "name": "Directional displacement",
+      "intent": "Bergeser melalui medan distorsi",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Displacement map",
+        "two scene inputs",
+        "UV edge policy"
+      ],
+      "bundle_refs": [
+        "B12"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "A/B kembali normal sebelum membaca",
+      "reject_when": "Hanya alpha overlay tetapi berharap memindahkan pixel konten",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "digital sweep",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A02",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-13-03",
+      "family": "material",
+      "name": "Liquid bridge",
+      "intent": "Bentuk cair membawa warna ke scene baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Blob/matte sequence",
+        "optional displacement",
+        "colour endpoint"
+      ],
+      "bundle_refs": [
+        "B12"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "B terbuka pada bentuk terakhir; endpoint bersih",
+      "reject_when": "Screenshot/teks bukti dibengkokkan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft liquid",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A02",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-13-04",
+      "family": "material",
+      "name": "Texture rub replacement",
+      "intent": "Material lama digosok menjadi material baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Grain/rub matte",
+        "two plates",
+        "reveal progression"
+      ],
+      "bundle_refs": [
+        "B12"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "Reveal lokal sesuai arah gesek",
+      "reject_when": "Footage real tertutup grain terus menerus",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "dry rub",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A02",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-14-01",
+      "family": "assembly",
+      "name": "Tile assemble",
+      "intent": "Bagian tersebar membentuk konten B",
+      "media": [
+        "illustration",
+        "text",
+        "screenshot",
+        "cutout"
+      ],
+      "required_assets": [
+        "Content split grid",
+        "per-tile UV/crop",
+        "target rects",
+        "order"
+      ],
+      "bundle_refs": [
+        "B13"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Semua tile kembali tepat tanpa seam",
+      "reject_when": "Teks terpecah terlalu lama",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "small sequential taps",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A03",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-14-02",
+      "family": "assembly",
+      "name": "Fragment scatter reform",
+      "intent": "A pecah lalu menjadi bentuk B",
+      "media": [
+        "illustration",
+        "text",
+        "screenshot",
+        "cutout"
+      ],
+      "required_assets": [
+        "Authored fragments",
+        "source/target map",
+        "seed",
+        "pivots"
+      ],
+      "bundle_refs": [
+        "B13"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Fragmen berhenti sebagai silhouette B yang jelas",
+      "reject_when": "Fragmen random tanpa tujuan/sulit direproduksi",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "scatter then settle",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A03",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-14-03",
+      "family": "assembly",
+      "name": "Line particles to node",
+      "intent": "Jalur data berakhir pada satu simpul",
+      "media": [
+        "illustration",
+        "text",
+        "screenshot",
+        "cutout"
+      ],
+      "required_assets": [
+        "Particle sprites",
+        "path",
+        "seed",
+        "node target"
+      ],
+      "bundle_refs": [
+        "B13"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Partikel berkumpul tepat di node B",
+      "reject_when": "Jumlah partikel menutupi label",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "tiny ticks",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A03",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-14-04",
+      "family": "assembly",
+      "name": "Cutout inventory stack",
+      "intent": "Beberapa objek membentuk satu paket konsep",
+      "media": [
+        "illustration",
+        "text",
+        "screenshot",
+        "cutout"
+      ],
+      "required_assets": [
+        "Alpha object set",
+        "stack anchors",
+        "shadows",
+        "final label"
+      ],
+      "bundle_refs": [
+        "B13"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Object menyusun kelompok B dengan satu focal point",
+      "reject_when": "Tumpukan objek generic tak sesuai naskah",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "paper/object taps",
+      "motion_window_proposal": "0.5–1.2 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A03",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-15-01",
+      "family": "time",
+      "name": "Replacement pose match",
+      "intent": "Pergantian gambar lewat pose sama",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "A/B drawings",
+        "pose landmarks",
+        "cadence map"
+      ],
+      "bundle_refs": [
+        "B08",
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Pose matching pada pergantian frame",
+      "reject_when": "Footage manusia dipaksa menjadi puppet tanpa alasan",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "optional tick",
+      "motion_window_proposal": "0.25–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P10",
+        "P05",
+        "A11"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-15-02",
+      "family": "time",
+      "name": "Freeze frame to card",
+      "intent": "Momen footage menjadi objek grafis",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Exact frame export",
+        "timestamp",
+        "frame card",
+        "next layout"
+      ],
+      "bundle_refs": [
+        "B08",
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Frame yang sama tetap saat live berhenti lalu mengecil",
+      "reject_when": "Still bukan frame sumber sehingga continuity palsu",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "shutter subtle",
+      "motion_window_proposal": "0.25–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P10",
+        "P05",
+        "A11"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-15-03",
+      "family": "time",
+      "name": "Reverse gesture bridge",
+      "intent": "Pembatalan membawa balik ke state awal",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Reversible motion poses",
+        "intent label",
+        "original state"
+      ],
+      "bundle_refs": [
+        "B08",
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Gerak balik selesai di state yang benar",
+      "reject_when": "Membalik ujaran/aksi bukti dan mengubah arti",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "reverse swish",
+      "motion_window_proposal": "0.25–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P10",
+        "P05",
+        "A11"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-15-04",
+      "family": "time",
+      "name": "Seamless loop handoff",
+      "intent": "Penutup kembali ke pembuka",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "First/last layout",
+        "matched carrier phase",
+        "audio tail"
+      ],
+      "bundle_refs": [
+        "B08",
+        "B10"
+      ],
+      "execution_mode": "content",
+      "handoff_check": "Pose, velocity dan audio boundary cocok",
+      "reject_when": "CTA terpotong atau frame reset terlihat",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "loop-safe bed",
+      "motion_window_proposal": "0.25–0.9 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "P10",
+        "P05",
+        "A11"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-16-01",
+      "family": "audio",
+      "name": "J cut scene preview",
+      "intent": "Suara B mengantar sebelum visual B",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Scene B audio pre-roll",
+        "A/B media",
+        "word boundaries"
+      ],
+      "bundle_refs": [
+        "B14"
+      ],
+      "execution_mode": "audio",
+      "handoff_check": "Audio B mulai saat A masih tampil; visual B menyusul",
+      "reject_when": "Voiceover jadi dobel atau konteks suara keliru",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "source sound B",
+      "motion_window_proposal": "0.15–1.2 s overlap",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A05",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-16-02",
+      "family": "audio",
+      "name": "L cut thought carry",
+      "intent": "Kalimat A berlanjut saat visual B muncul",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Scene A audio tail",
+        "B visual",
+        "clear transcript relation"
+      ],
+      "bundle_refs": [
+        "B14"
+      ],
+      "execution_mode": "audio",
+      "handoff_check": "Audio A tetap jelas di atas B lalu selesai",
+      "reject_when": "B membantah/mengaburkan ujaran A",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "source speech A",
+      "motion_window_proposal": "0.15–1.2 s overlap",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A05",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-16-03",
+      "family": "audio",
+      "name": "Impact cue bridge",
+      "intent": "Aksen suara menyatukan landing visual",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Transient WAV",
+        "motion contact marker",
+        "mix envelope"
+      ],
+      "bundle_refs": [
+        "B14"
+      ],
+      "execution_mode": "audio",
+      "handoff_check": "Puncak transient tepat pada kontak/landing",
+      "reject_when": "Whoosh panjang menggantikan cue kontak",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "tick/knock",
+      "motion_window_proposal": "0.15–1.2 s overlap",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A05",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-16-04",
+      "family": "audio",
+      "name": "Ambience continuity",
+      "intent": "Ruang tetap terasa terhubung antar visual",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Licensed/source room tone",
+        "loopable tail",
+        "crossfade envelopes"
+      ],
+      "bundle_refs": [
+        "B14"
+      ],
+      "execution_mode": "audio",
+      "handoff_check": "Bed mulus melewati pergantian scene",
+      "reject_when": "Ambience mengesankan lokasi nyata yang berbeda",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "room tone",
+      "motion_window_proposal": "0.15–1.2 s overlap",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A05",
+        "P05"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-17-01",
+      "family": "mask",
+      "name": "Iris focus reveal",
+      "intent": "Pusat perhatian membuka konteks B",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Circle/shape matte",
+        "pivot focal",
+        "A/B",
+        "open/close endpoints"
+      ],
+      "bundle_refs": [
+        "B15"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "B muncul dari subjek yang disebut dan mask berakhir full frame",
+      "reject_when": "Pivot hanya di tengah default tanpa alasan isi",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft aperture",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-17-02",
+      "family": "mask",
+      "name": "Radial sweep",
+      "intent": "Progres/putaran membuka tahap berikut",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Radial matte",
+        "center/angle",
+        "clockwise semantic",
+        "A/B"
+      ],
+      "bundle_refs": [
+        "B15"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "Sektor membuka B sesuai urutan; final tanpa seam",
+      "reject_when": "Arah putaran menyesatkan urutan data",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "short sweep",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-17-03",
+      "family": "mask",
+      "name": "Rank-map ordered reveal",
+      "intent": "Bagian A berganti B menurut urutan luminance",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Grayscale rank map",
+        "neutral policy",
+        "threshold/softness",
+        "A/B"
+      ],
+      "bundle_refs": [
+        "B15"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "Urutan reveal terkontrol lalu B sepenuhnya terbuka",
+      "reject_when": "Map dibuat sebagai texture acak tanpa hierarchy",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "texture matched cue",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-17-04",
+      "family": "mask",
+      "name": "Strip blinds reveal",
+      "intent": "Bidang modular berganti tanpa menggerakkan isi",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration",
+        "cutout"
+      ],
+      "required_assets": [
+        "Strip mask",
+        "thickness/gap",
+        "reveal angle",
+        "A/B"
+      ],
+      "bundle_refs": [
+        "B15"
+      ],
+      "execution_mode": "compositor",
+      "handoff_check": "Semua strip mencapai endpoint dan isi B tidak terpotong",
+      "reject_when": "Strip membuat judder atau menghalangi detail kecil",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft shutter",
+      "motion_window_proposal": "0.3–0.8 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A01",
+        "A14"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-18-01",
+      "family": "modular",
+      "name": "Single card flip",
+      "intent": "Dua state pada depan-belakang kartu",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Front A/back B textures",
+        "hinge",
+        "perspective",
+        "backside visibility"
+      ],
+      "bundle_refs": [
+        "B16"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Pergantian sisi pada edge-on; B final tegak dan utuh",
+      "reject_when": "Dua sisi memakai crop berbeda yang meloncat",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "card flick",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A14",
+        "P01",
+        "A13"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-18-02",
+      "family": "modular",
+      "name": "Mosaic flip wave",
+      "intent": "Kumpulan bagian menjadi satu gambar baru",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Grid tiles",
+        "per-tile crop A/B",
+        "hinge",
+        "rank map",
+        "stagger"
+      ],
+      "bundle_refs": [
+        "B16"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Wave selesai menjadi B tanpa grid seams",
+      "reject_when": "Tile kecil membuat pesan tak terbaca",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "sequential flicks",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A14",
+        "P01",
+        "A13"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-18-03",
+      "family": "modular",
+      "name": "Accordion panel turn",
+      "intent": "Konten memanjang berpindah lewat panel terlipat",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Panel slices A/B",
+        "connected hinges",
+        "front/back normals",
+        "shadow"
+      ],
+      "bundle_refs": [
+        "B16"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Engsel berurutan; panel final merata pada B",
+      "reject_when": "Panel saling tembus atau tekstur mirrored",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "fold clicks",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A14",
+        "P01",
+        "A13"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    },
+    {
+      "id": "TR-18-04",
+      "family": "modular",
+      "name": "Carousel face handoff",
+      "intent": "Pergantian beberapa kartu dalam urutan ruang",
+      "media": [
+        "text",
+        "screenshot",
+        "illustration"
+      ],
+      "required_assets": [
+        "Separate cards",
+        "orbit positions",
+        "camera perspective",
+        "focal index"
+      ],
+      "bundle_refs": [
+        "B16"
+      ],
+      "execution_mode": "geometry",
+      "handoff_check": "Kartu B landing frontal; urutan spatial konsisten",
+      "reject_when": "Memutar seluruh screenshot membuat bukti tak terbaca",
+      "fallback": "Direct cut dengan hold/readable framing; bila hubungan perlu diterangkan, label atau connector statis.",
+      "sfx": "soft rotation",
+      "motion_window_proposal": "0.4–1.0 s",
+      "status": "research-proposal",
+      "verified_asset_path": null,
+      "source_refs": [
+        "A14",
+        "P01",
+        "A13"
+      ],
+      "evidence": "Design synthesis; source refs support the mechanism, not this exact recipe or HyperFrames render compatibility."
+    }
+  ]
+}

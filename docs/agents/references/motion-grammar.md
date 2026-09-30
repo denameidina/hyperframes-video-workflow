@@ -4,6 +4,17 @@ Rules for motion, pattern interrupts, placement, density, SFX cues, and the
 `overlay-timeline.json` format. Loaded by `docs/agents/02-screen-plan.md` in the
 visual step.
 
+## Connected Asset Transitions (Optional Research Reference)
+
+For transitions connecting text, illustrations, screenshots, or cut-outs across
+scenes, consult the [transition catalog](../../../internal/docs/research/transition-catalog.md)
+selection matrix, then only the shortlisted family sections. The
+[JSON reference](../../../internal/docs/research/transition-catalog.json) lists
+recipe IDs, asset needs, handoff checks, fallbacks and implementation status.
+Proposed recipes need asset production and render validation; existing v1
+exports follow the [asset contract](../../../internal/docs/design-system/transition-assets.md).
+This reference adds choices without changing the timeline schema or production gates.
+
 ## Motion Layer Responsibilities
 
 The Screen Plan phase (visual step) designs timing and behavior for:

@@ -163,6 +163,34 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
   an entrance recipe at any time, the craft-kit shall render that recipe's first
   frame at frame 0, including after seeking back to 0.
 
+## Paket aset transisi motion-linked-v1 (produksi lokal)
+
+- **RD-02-48** (Optional) — Where the motion-linked-v1 asset pack is produced,
+  the pack shall contain seven presets: shared-element, shape-match,
+  motion-match, object-wipe, camera-handoff, shape-morph, semantic-handoff.
+- **RD-02-49** (Optional) — Where the pack exists, each preset shall use a
+  1080×1920, 30 fps, 3-second timebase and one deterministic, paused, registered timeline.
+- **RD-02-50** (Event-driven) — When a preset is exported as WebM, its first
+  and last frame shall have alpha zero at every pixel, and its frame at 1.5 s
+  shall contain visible pixels.
+- **RD-02-51** (State-driven) — While object-wipe hides the cut at local 1.5 s,
+  its foreground shall cover all 1080×1920 pixels with alpha 255.
+- **RD-02-52** (Optional) — Where the pack exists, its manifest shall identify
+  each source, WebM, duration, active interval, cut/landing time, connection
+  anchor, and usage limitations.
+- **RD-02-53** (Optional) — Where the pack exists, it shall include editable
+  SVG carriers, local runtime/fonts, seven local SFX files, and a labelled MP4
+  demonstration of all seven presets.
+- **RD-02-54** (Optional) — Where sample UI is shown in the demonstration,
+  it shall be labelled as a sample and kept separate from proof captures and
+  transition carriers.
+- **RD-02-55** (Event-driven) — When the pack is handed off, both demo and
+  overlay project checks shall pass and snapshots of all seven techniques
+  shall have been visually inspected.
+
+Production details: [transition-assets](../design-system/transition-assets.md).
+These requirements apply to the requested local pack, not a new default video format.
+
 ## Verifikasi
 
 - **RD-02-13** (Event-driven) — When file `.html` komposisi diubah, the system
