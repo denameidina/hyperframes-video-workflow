@@ -20,7 +20,8 @@ Root composition:
 Timed elements:
 
 - Every timed element needs `data-start`, `data-duration`, and `data-track-index`.
-- Every visible timed element needs `class="clip"`.
+- Visible timed clips need `class="clip"`; mounts with `data-composition-src`
+  omit it because the framework manages sub-composition visibility separately.
 - Timed clips should be direct children of the composition root unless HyperFrames docs explicitly allow the chosen pattern.
 - Every important clip needs a stable `id`.
 - Use seconds for timing.
@@ -320,7 +321,7 @@ Create `videos/<slug>/assembly-checklist.md`:
 
 - [ ] Root has stable `data-composition-id`
 - [ ] Root has `data-width`, `data-height`, `data-duration`
-- [ ] Every timed visible element has `class="clip"`
+- [ ] Visible timed clips have `class="clip"`; `data-composition-src` mounts omit it
 - [ ] Every timed element has `data-start`, `data-duration`, `data-track-index`
 - [ ] Same-track clips do not overlap
 - [ ] Main video is muted
@@ -455,7 +456,7 @@ The Screen Plan phase (visual step) should keep the plan easy to implement in Hy
 
 Every planned timed element should map cleanly to:
 
-- `class="clip"`
+- `class="clip"` for ordinary clips; omit it on `data-composition-src` mounts
 - `data-start`
 - `data-duration`
 - `data-track-index`
@@ -483,4 +484,3 @@ Avoid:
 - huge layered blur effects
 - dozens of simultaneous moving elements
 - CSS that may render inconsistently
-

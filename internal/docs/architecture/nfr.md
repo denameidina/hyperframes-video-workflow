@@ -1,6 +1,6 @@
 # Non-Functional Requirements (NFR)
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: kualitas terukur yang harus dipenuhi produksi video + publish.
 Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
@@ -21,16 +21,24 @@ Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
 - Tidak ada secret di git: `.env`, access/secret key Repliz, Cloudflare API token,
   R2 credential/signed URL, footage privat. Enforced oleh `.gitignore` +
   `SECURITY.md` + secret scan di release checklist.
-- Receipt publish tidak menyimpan secret; hanya `descriptionHash`/`publishKey`
-  (sha256) dan `scheduleId`/status.
+- Receipt publish menyimpan metadata `post` termasuk caption/title, URL publik,
+  hash (`descriptionHash`, `titleHash`, `publishKey`, `targetKey`), dan riwayat
+  `scheduleId`/status. Credential tidak disimpan; receipt live tetap privat.
 - Detail: [security-standard](../security/security-standard.md).
 
 ## Idempotensi publish
 
-- Publish ulang dengan input identik harus di-skip. Kunci idempotensi
-  (`makePublishKey`) = sha256 dari `{ r2Key, targetAccounts (sorted), description }`.
-- Skip terjadi bila `!force && receipt.publishKey === publishKey && receipt.schedules.length > 0`.
-- `--force` menimpa (re-upload R2 + buat schedule baru).
+- Idempotensi berlaku per `platform:accountId`. `makeTargetKey` meng-hash
+  `{ r2Key, platform, accountId, description, title, replies }` dari payload
+  platform yang sudah disanitasi. Akun baru/berstatus `error` dijadwalkan;
+  riwayat non-error dengan key sama digunakan kembali. Konten berubah pada
+  riwayat non-error diblok tanpa `--force`; receipt lama tanpa `targetKey`
+  digunakan kembali dan diberi key saat ini (ADR-0011).
+- `makePublishKey({r2Key,targetAccounts,description,title})` hanya ringkasan run.
+  Jika tidak ada target baru, tidak ada upload/POST baru; schedule non-terminal
+  yang digunakan kembali tetap dipoll melalui GET lalu hasilnya disimpan.
+- Riwayat target yang diblok atau sementara dinonaktifkan tetap disimpan.
+  `--force` re-upload dan menjadwalkan ulang target aktif saja (ADR-0028).
 
 ## Approval gate (wajib)
 
@@ -46,6 +54,11 @@ Semua angka diambil dari kode/spec nyata, bukan target abstrak. Diturunkan dari
 - R2 public URL tidak reachable (bukan 200/206) → throw.
 - Kegagalan sebagian multi-akun: `scheduleId` sukses dipertahankan, akun gagal
   ditandai `error`, akun lain tetap jalan.
+- Setiap hasil POST di-checkpoint atomik sebelum POST berikutnya dan sebelum
+  polling. Gagal menulis checkpoint menghentikan run; gagal polling tetap
+  menyisakan ID untuk resume. POST yang responsnya hilang belum dapat dijamin
+  idempoten oleh layanan eksternal; cek Repliz sebelum rerun eksplisit karena
+  target `error` akan dijadwalkan lagi, bahkan tanpa `--force`.
 - Poll timeout `120s` → receipt disimpan non-terminal, cetak resume command.
 
 ## Kualitas audio (target terukur)
@@ -96,9 +109,13 @@ Dari fase Story (`docs/agents/references/cut-and-pacing.md`) / style guide / fas
 
 ## CI
 
-- `.github/workflows/ci.yml`: pada PR + push `main`, jalankan `npm run test:repliz`
-  di Node 24. Tidak ada langkah lint HTML di CI (lint komposisi dijalankan lokal
-  via `npm run check`).
+- `.github/workflows/ci.yml`: pada PR + push `main`, Node 24 + Python 3 menjalankan
+  `npm test` (`node --test scripts/*.test.mjs`), dengan FFmpeg di-install untuk
+  tes integrasi cut: publish, video/generate/gate,
+  Studio, voice/music, motion/style/craft, asset-lib, render-blur, dan hooks.
+  Semua efek publish memakai test doubles; tidak ada upload/publish live.
+- CI tidak lint HTML video lokal yang di-ignore. Perubahan HTML video diperiksa
+  dengan `npm run video -- check <slug>`; template root dengan `npm run check`.
 
 ## Referensi
 

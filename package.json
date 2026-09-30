@@ -5,6 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "test": "node --test scripts/*.test.mjs",
+    "test:hooks": "node --test scripts/doc-hooks.test.mjs",
     "dev": "npx --yes hyperframes@0.7.24 preview",
     "check": "npx --yes hyperframes@0.7.24 lint && npx --yes hyperframes@0.7.24 validate && npx --yes hyperframes@0.7.24 inspect",
     "render": "npx --yes hyperframes@0.7.24 render",

@@ -29,7 +29,7 @@ For each configured target account, compare against the matching
 
 - No prior entry, prior `status === "error"`, or `--force` → schedule it.
 - Prior entry with the same `targetKey` and a non-error status → reuse the
-  prior entry verbatim; no new Repliz call.
+  prior entry; no new POST. A non-terminal entry may make GET polling calls.
 - Prior entry with a **different** `targetKey` (content changed since that
   target's last success) and no `--force` → `blocked`: do not schedule, do not
   touch that target, surface it in the CLI output and in `receipt.blocked[]`
@@ -37,8 +37,9 @@ For each configured target account, compare against the matching
 
 R2 upload, `verifyPublicUrl`, and `validateAccounts` only run when at least one
 target needs scheduling. If everything is reused (or blocked) and nothing is
-new, `runPublish` returns `{ skipped: true, receipt, blocked }` without any
-network call, exactly like the old whole-run skip did for the unchanged case.
+new, `runPublish` returns `{ skipped: true, receipt, blocked }` without upload
+or new POST; pending reused schedules are refreshed through GET polling.
+Receipt persistence/history is amended by [ADR-0028](0028-durable-publish-receipts.md).
 
 `makePublishKey`/`shouldSkipPublish` (ADR-0006) stay exported and tested as
 pure functions — they are no longer read by `runPublish`'s control flow, but

@@ -185,7 +185,7 @@ Check the composition contract:
 
 - root has stable `data-composition-id`
 - root has `data-width`, `data-height`, and `data-duration`
-- every timed visible element has `class="clip"`
+- visible timed clips have `class="clip"`; mounts with `data-composition-src` omit it
 - every timed element has `data-start`, `data-duration`, and `data-track-index`
 - same-track clips do not overlap
 - video is muted
@@ -599,7 +599,7 @@ Assign to:
 - For every clip in `compositions/broll/`, each state change lands on its word (±0.2 s against `processed-transcript.json`).
 - The cursor stays inside the frame at every zoom, including mid-morph.
 - Text is readable at phone size in every settled state.
-- Treatment rules hold: no face cover in 0–3 s without approval, 2 s of face between cutaways, cutaways ≤ 10 s.
+- Treatment rules hold: no face cover in 0–hook_end without approval, 2 s of face between cutaways, cutaways ≤ 10 s.
 - One accent colour; no invented numbers; illustrative parts match the brief.
 
 ## Style B-roll Review
@@ -634,4 +634,3 @@ A QA pass is complete only when:
 - report and punch list are written
 
 If any of these are missing, do not approve the edit.
-

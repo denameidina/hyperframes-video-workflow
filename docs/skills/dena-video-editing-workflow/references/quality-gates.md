@@ -84,7 +84,7 @@ For `.html` composition work:
 
 - root has `data-composition-id`, `data-width`, `data-height`, `data-duration`
 - every timed element has `data-start`, `data-duration`, `data-track-index`
-- every visible timed element has `class="clip"`
+- visible timed clips have `class="clip"`; `data-composition-src` mounts omit it
 - same-track clips do not overlap
 - video is muted
 - separate audio element exists
@@ -116,9 +116,15 @@ Do not create `final-approval.md` unless the verdict is `pass`.
 
 ## Phase Gates
 
-- Gate 1 (cut review, optional): `docs/agents/01-story.md`.
-- Gate 2 (visual plan, conditional on R1–R6): `docs/agents/02-screen-plan.md`.
-- Gate 3 (final review, mandatory): `docs/agents/03-build.md`.
+| Format | Gate 1 | Gate 2 | Gate 3 |
+| --- | --- | --- | --- |
+| edit | optional cut review | visual plan, on R1–R6 | final render |
+| generate/explainer | script + voice | storyboard document + sheets | final render |
+| kinetic-post / motion-short | text + music + storyboard document/sheets | final render | — |
+
+Generate gates require all fingerprinted files to be nonempty regular files.
+Final review uses the newest normal/blur MP4 by mtime (normal wins a tie), and
+Studio plays that exact file. Mode-specific readiness is in `generate-mode.md`.
 
 ## Render Gate
 

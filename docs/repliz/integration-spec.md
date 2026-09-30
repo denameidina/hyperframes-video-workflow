@@ -162,17 +162,20 @@ platform, accountId, description, title, replies})` terhadap entry
 `platform:accountId` yang sama di `schedules[]` receipt sebelumnya.
 
 - Tidak ada entry sebelumnya, entry berstatus `error`, atau `--force` → jadwalkan.
-- Entry ada, `targetKey` sama, status bukan `error` → reuse entry lama apa
-  adanya, tidak ada call baru.
+- Entry ada, `targetKey` sama, status bukan `error` → reuse entry lama,
+  tanpa POST baru; pending/process tetap dipoll lewat GET.
 - Entry ada, `targetKey` beda (caption/judul/Threads-reply berubah untuk
   platform yang sudah sukses), tanpa `--force` → `blocked`: platform itu
   **tidak** dijadwalkan ulang, dicatat di `receipt.blocked[]` dan dicetak di
   CLI dengan pesan yang mengarahkan ke `--force`.
 
 Upload R2 + validasi akun hanya dijalankan bila ada minimal satu target yang
-akan dijadwalkan. Bila semua target ter-reuse dan tidak ada yang `blocked`,
-publish berhenti tanpa network call sama sekali (identik dengan perilaku skip
-lama untuk kasus rerun yang benar-benar tidak berubah).
+akan dijadwalkan. Bila tidak ada target baru (semua reuse atau blocked),
+publish skip tanpa upload/POST baru, tetapi reused pending/process tetap
+dipoll lewat GET. Riwayat blocked dan akun sementara nonaktif tetap disimpan.
+Setiap hasil scheduling di-checkpoint atomik sebelum akun berikutnya/polling;
+gagal polling tetap menyisakan ID untuk resume. Detail durability:
+[ADR-0028](../../internal/docs/adr/0028-durable-publish-receipts.md).
 
 ## Cloudflare R2 Upload Requirement
 
@@ -343,7 +346,7 @@ npm run render
 # Pilihan user: publish as-is, QA dulu, atau revisi.
 # Jika user memilih QA dulu, jalankan fase QA (docs/agents/04-qa.md) lalu kembali ke gate review ini.
 # Setelah user approve/confirm hasil edit untuk publish:
-npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 Minimal script behavior:
@@ -353,11 +356,11 @@ Minimal script behavior:
 3. Baca metadata publish dari `videos/<slug>/repliz-publish.json` atau fallback `videos/<slug>/publish-captions.md`; hentikan publish jika `description` kosong, jika target YouTube aktif dan `title` tidak bisa di-resolve, atau jika target Threads aktif dan salah satu bubble `post.threads` melebihi 150 karakter.
 4. Bentuk target account dari `REPLIZ_FACEBOOK_ACCOUNT_ID`, `REPLIZ_YOUTUBE_ACCOUNT_ID`, `REPLIZ_TIKTOK_ACCOUNT_ID`, `REPLIZ_INSTAGRAM_ACCOUNT_ID`, dan `REPLIZ_THREADS_ACCOUNT_ID`.
 5. Bagi target per `platform:accountId` menjadi *dijadwalkan* (baru/error/`--force`), *reuse* (`targetKey` sama dengan entry sukses sebelumnya), atau *blocked* (`targetKey` beda dari entry sukses sebelumnya, tanpa `--force`) — lihat Per-Target Publish Idempotency di atas.
-6. Bila ada target yang perlu dijadwalkan: upload `--file` ke R2 dengan Wrangler, lalu bentuk `videoUrl` dari public R2 URL. Bila tidak ada (semua reuse, tidak ada yang blocked), berhenti tanpa network call.
-7. Validasi accountId lewat Repliz hanya untuk target yang akan dijadwalkan.
-8. Buat schedule untuk tiap target yang akan dijadwalkan.
-9. Poll status sampai terminal `success/error` atau timeout, untuk schedule baru saja.
-10. Simpan receipt lokal: gabungan entry yang di-reuse (apa adanya) + entry baru (dengan `targetKey` baru), plus `blocked[]` bila ada.
+6. Poll reused pending/process lewat ID lama; tanpa target baru, simpan status/key/blocked yang berubah lalu skip tanpa upload/POST.
+7. Bila ada target baru: upload `--file` ke R2, verifikasi URL publik, lalu validasi seluruh accountId yang akan dijadwalkan sebelum POST pertama.
+8. Buat schedule per target dan checkpoint setiap hasil dengan `targetKey` sebelum POST berikutnya atau polling; gagal checkpoint menghentikan run.
+9. Poll schedule baru sampai terminal `success/error` atau timeout, lalu checkpoint final.
+10. Receipt menggabungkan seluruh riwayat target (termasuk blocked/nonaktif) dan hasil terbaru untuk target yang sama; bukan hanya reused + baru.
 
 Default `scheduleAt`:
 
@@ -411,16 +414,19 @@ Do not store Repliz access keys, Repliz secret keys, Cloudflare API tokens, full
 ## Failure Rules
 
 - Missing env: fail before network call.
-- Missing `--file`: fail before network call.
+- Missing `--file` argument: fail before network call. Missing media on disk fails before a new upload (a reused pending schedule may already have made GET polling calls).
 - Missing `--approved`: fail before R2 upload or Repliz scheduling.
 - No target account IDs configured: fail before network call.
 - Wrangler missing or not authenticated: fail before creating Repliz schedules.
 - R2 upload failure: fail before creating Repliz schedules.
 - R2 public URL is not reachable with HTTP 200/206: fail before creating Repliz schedules.
-- Account missing/disconnected: fail before creating any schedules for that account (other accounts still proceed).
+- Account missing/disconnected: account validation throws before any new schedule POST in that run; R2 may already have been uploaded.
 - One account schedule fails in a multi-account publish: keep successful `scheduleId`s in receipt and mark failed account with error message.
 - A Threads post or reply bubble exceeds 150 characters: fail before R2 upload or Repliz scheduling, naming which bubble and its length.
 - Poll timeout: keep receipt as non-terminal and print command to resume status check.
+- Poll failure: keep checkpointed pending IDs and resume them through GET on ordinary rerun.
+- Receipt write failure: stop before scheduling another target; retain the prior complete receipt through atomic replacement.
+- A POST response lost before its ID is received: store an error; inspect Repliz before explicit rerun (error entries are retried even without `--force`). No retry POST occurs inside the same run.
 - A target whose content changed since its last successful publish, without `--force`: do not schedule it; record it in `receipt.blocked[]` and print it, but still proceed with any other target that needs scheduling.
 
 ## Acceptance Criteria

@@ -1,6 +1,6 @@
 # RD-03 Video Editing Workflow
 Status: accepted
-Date: 2026-09-26
+Date: 2026-09-30
 
 Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`,
 `docs/skills/dena-video-editing-workflow/SKILL.md`. Keputusan:
@@ -17,8 +17,13 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   perbaikan teknis sempit.
 - **RD-03-03** (Unwanted) — If fase Build hendak dimulai sebelum
   `creative-brief.md`, `edit-decision-notes.md`, `caption-beats.json`, dan
-  `visual-plan.md` dengan bagian `Gate 2 Result` ada, then the system shall
-  menolak dan kembali ke fase hulu yang kurang.
+  `visual-plan.md` dengan bagian hasil gate sesuai format ada, then the system shall
+  menolak dan kembali ke fase hulu yang kurang. `caption-beats.json` berlaku
+  untuk edit dan explainer; format musik tidak membuatnya (RD-03-98), memakai
+  `script.md`, `processed-audio.wav`, `beats.json`, `storyboard.md`, dan sheet
+  storyboard beserta Gate 1 yang telah disetujui sebagai kesiapan format musik.
+  Edit/explainer memakai `Gate 2 Result`; format musik memakai `Gate 1 Result`
+  (RD-03-102).
 - **RD-03-04** (Ubiquitous) — Setiap fase hilir shall membaca artifact fase hulu
   di `videos/<slug>/`, bukan dokumen fase hulu.
 
@@ -51,6 +56,10 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   batasan QA dari user bila ada.
 
 ## Handoff artifacts
+
+Ketentuan dasar RD-03-03/13 berlaku untuk mode edit. Mode generate explainer
+memakai penggantian artifact RD-03-75…87; format musik memakai RD-03-94…99 dan
+tidak memerlukan transcript, voice, caption-beats, atau BGM terpisah.
 
 - **RD-03-13** (Ubiquitous) — The system shall menghasilkan artifact milik tiap
   fase di `videos/<slug>/` bila slug ada: Story (`creative-brief.md`,
@@ -162,7 +171,8 @@ Domain: disiplin workflow 4 fase untuk video sosial Dena. Owner: `docs/agents/*`
   visual, then fase Screen Plan shall mengurangi tipenya sebelum Gate 2.
 - **RD-03-39** (Ubiquitous) — Fase Build shall memproduksi setiap bitmap di
   `Assets:` sebelum menulis clip-nya dan mencatatnya di `asset-manifest.json`
-  dengan `provenance` (`generated`, `cc0`, `dena-footage`, atau `user`).
+  dengan `provenance` sesuai sumber (`generated`, `cc0`, `dena-footage`, `user`,
+  `screenshot`, `reconstructed`, atau `pd-archive`; enum lengkap di data-model).
 - **RD-03-40** (Unwanted) — If sebuah aset perlu menampilkan Dena, then fase
   Build shall memotongnya dari footage Dena (`remove-background`) dan tidak
   pernah meng-generate kemiripannya.
@@ -387,6 +397,22 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   `processed-audio.wav` sebagai satu-satunya musik (tanpa `video bgm` dan ducking), membuat
   kinetic-post loop (frame terakhir = keadaan frame pertama, tanpa fade ke hitam) dan
   motion-short berakhir dengan kartu CTA di bar terakhir, lalu berhenti di Gate 2.
+
+- **RD-03-100** (Unwanted) — If a required gate artifact is missing, empty, or not a
+  regular file, then the gate shall not accept a decision or a partial fingerprint;
+  missing script/audio returns to Story, missing `storyboard.md` or any discovered
+  storyboard sheet returns to Screen Plan, and missing final render returns to Build.
+- **RD-03-101** (Ubiquitous) — The final gate shall use the newest nonempty regular
+  `renders/<slug>.mp4` or `renders/<slug>-blur.mp4`, by modification time (normal render
+  wins a tie), and fingerprint that actual path; changing the chosen render reopens
+  the final gate. Explainer uses Gate 3; music formats use Gate 2.
+
+- **RD-03-102** (State-driven) — While the format is `kinetic-post` or
+  `motion-short`, Screen Plan shall record `## Gate 1 Result` in `visual-plan.md`
+  and Build shall require that result plus `script.md`, `processed-audio.wav`,
+  `beats.json`, `storyboard.md`, storyboard sheets and `overlay-timeline.json`;
+  it shall not require voice, transcripts, caption-beats, or separate BGM.
+  Edit/explainer continue to record `## Gate 2 Result`.
 
 ## Referensi
 

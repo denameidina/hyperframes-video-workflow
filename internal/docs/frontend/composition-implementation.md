@@ -44,6 +44,9 @@ menyusunnya. Aturan umum ada di
   deterministik.
 - Scene: mount `.broll` bergantian di track 4 dan 7; caption, hook/CTA card, dan SFX sama
   dengan starter edit.
+- `--format kinetic-post` / `motion-short` memakai starter tanpa `#bgm-audio`;
+  `processed-audio.wav` adalah musik terpotong dari `video music` + `beats.json`.
+  Tidak ada caption rail/beats atau suara TTS; teks layar mengikuti beat.
 
 ## Aturan implementasi
 
@@ -51,6 +54,9 @@ menyusunnya. Aturan umum ada di
 - `class="clip"` pada elemen ber-waktu; mount sub-composition tanpa `class="clip"`.
 - Setelah edit: `npm run video -- check <slug>`; render:
   `npm run video -- render <slug> [--blur]`.
+- Gate final dan player Studio menggunakan normal/blur terbaru menurut mtime
+  (normal menang jika seri), dengan fingerprint nama file aktual. Explainer
+  memakai G3; format musik G2; file kosong/nonregular tidak siap direview.
 
 ## Referensi
 

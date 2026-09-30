@@ -1,6 +1,6 @@
 # RD-01 Publish Pipeline
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Domain: auto-publish render final ke Cloudflare R2 + schedule Repliz multi-platform.
 Owner: `scripts/repliz-publish.mjs`. Uji: `scripts/repliz-publish.test.mjs`.
@@ -195,6 +195,22 @@ re-publish ke platform yang sudah sukses.
   dan `blocked[]` bila ada.
 - **RD-01-30** (Ubiquitous) — The system shall tidak menyimpan access/secret key,
   Cloudflare API token, header Basic Auth penuh, atau signed URL di receipt.
+
+- **RD-01-39** (Ubiquitous) — The system shall retain every prior schedule entry,
+  including blocked and currently unconfigured targets, keyed by `platform:accountId`;
+  only a new result for the same target shall replace that entry (ADR-0028).
+- **RD-01-40** (Event-driven) — When a scheduling request returns a result, the system
+  shall atomically checkpoint it in the receipt before the next scheduling request or
+  polling, including `scheduleId`, `status: "pending"`, and `targetKey` on success.
+- **RD-01-41** (Unwanted) — If receipt checkpointing fails, then the system shall stop
+  before scheduling another target and propagate the persistence error without
+  relabeling the successful remote request as a scheduling failure.
+- **RD-01-42** (Unwanted) — If polling fails after scheduling succeeds, then the system
+  shall leave the checkpointed pending IDs on disk so an ordinary retry polls those
+  IDs without a new POST for those targets.
+- **RD-01-43** (Ubiquitous) — Every receipt write shall use a temporary sibling file
+  and atomic rename; skipped runs shall persist updated blocked/legacy-target metadata
+  while retaining prior history, without upload or account validation.
 
 ## Referensi
 

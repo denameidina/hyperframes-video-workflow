@@ -52,7 +52,7 @@ terstruktur dan gate approval sebelum publish.
 
 Memproduksi video sosial Dena secara konsisten pada bar kualitas terdokumentasi
 (caption cakupan penuh, kecepatan 1.2x default, audio pada target LUFS, render
-deterministik lulus `npm run check`) dengan effort manusia minimal dan tanpa
+deterministik lulus `npm run video -- check <slug>`) dengan effort manusia minimal dan tanpa
 publish tak-disetujui. Target pertumbuhan/leads numerik: **draft — menunggu
 input**.
 

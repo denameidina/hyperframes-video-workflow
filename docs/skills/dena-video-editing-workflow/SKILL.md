@@ -69,6 +69,12 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 
 ## Non-Negotiables
 
+The verbatim transcript hook, 1.2x processed speed, and spoken-word captions
+below apply to footage edits. Generate explainer uses the approved script's
+first paragraph and TTS at its natural speed with hybrid captions; music
+formats use on-screen text and beats, with no voice or caption rail. Follow
+`docs/agents/references/generate-mode.md` for those branches.
+
 - Use Indonesian by default and preserve Dena's natural register.
 - Treat reference videos as ingredients, not costumes.
 - Keep Dena positioned as a credible AI systems builder, senior developer, founder/operator.
@@ -86,7 +92,7 @@ Use this when fixing a previous Dena edit, or when the user says the result was 
 - Keep every layer editable until final render.
 - For HyperFrames work, read `/hyperframes` and the routed HyperFrames skill before editing `.html`.
 - After any video `.html` edit, run `npm run video -- check <slug>` (root template: `npm run check`) and fix errors before handoff. Never edit the root `index.html` for a video (ADR-0010).
-- After final render, stop for user review (Gate 3). Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
+- After final render, stop for user review (Gate 3 for edit/explainer, Gate 2 for music formats). Offer publish as-is, QA first, or revisions. Do not upload to R2 or schedule Repliz until the user explicitly approves.
 - Repliz publish must use `--approved`; R2 uses Wrangler with `CLOUDFLARE_ACCOUNT_ID`, bucket from `R2_BUCKET`, and `https://<r2-public-domain>`.
 
 ## Handoff Contract
@@ -132,6 +138,17 @@ text) + `processed-audio.wav` + `beats.json` (`npm run video -- music`) instead 
 and `processed-transcript.json`; Screen Plan skips `caption-beats.json`; Build has no
 `bgm.wav`; gates are 1 (text + music + storyboard) and 2 (render).
 
+| Mode/format | Story time base | Screen Plan | Review gates |
+| --- | --- | --- | --- |
+| edit | sources/transcripts + cut artifacts + processed.mp4 | caption-plan/beats, publish-captions, visual-plan (`Gate 2 Result`), overlay-timeline | G1 optional cut; G2 on R1–R6; G3 render |
+| generate/explainer | research, script, voice, processed-audio + processed-transcript | caption-plan/beats, publish-captions, visual-plan (`Gate 2 Result`), overlay-timeline, storyboard doc/sheets | G1 script/voice; G2 storyboard; G3 render |
+| generate/kinetic-post or motion-short | research, screen text script, processed-audio + beats | publish-captions, visual-plan (`Gate 1 Result`), overlay-timeline, storyboard doc/sheets; no caption-beats | G1 text/music/storyboard; G2 render |
+
+Build always writes assembly notes/checklist, assets/manifest when used, and
+the render. Only explainer adds separate `bgm.wav` + `bgm.json`. Required gate
+files must be nonempty regular files; final review uses the newest normal/blur
+render (normal wins a timestamp tie).
+
 Only create QA artifacts when the user chooses QA first or explicitly asks for QA. Only create `final-approval.md` after QA passes.
 
 ## If Inputs Are Missing
@@ -140,7 +157,7 @@ Do not invent missing upstream decisions.
 
 - Missing direction, transcript, hook, or cut: run the Story phase.
 - Missing caption timing or captions: run the Screen Plan phase (captions step).
-- Missing `visual-plan.md` or its Gate 2 Result: run the Screen Plan phase (visual step).
+- Missing `visual-plan.md` or its mode-specific gate result: run the Screen Plan phase (visual step).
 - Missing assets, assembly notes, checklist, or render: run the Build phase.
 - User chose QA first and QA evidence is missing: run the QA phase as a fresh-context subagent.
 

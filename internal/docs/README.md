@@ -1,6 +1,6 @@
 # Internal Docs — Source of Truth Index
 Status: operating standard
-Date: 2026-08-25
+Date: 2026-09-30
 
 Ini index + registry Source of Truth repo **hyperframes-video-workflow**
 (workspace produksi video sosial Dena Meidina + CLI auto-publish R2/Repliz).
@@ -90,6 +90,11 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 60. [security/security-standard.md](security/security-standard.md) - Aturan secret, model kredensial publish, secret scan.
 61. [security/audit-2026-07-20.md](security/audit-2026-07-20.md) - Audit awal: tidak ada secret asli ter-track (pass).
 
+### Audit remediation additions
+62. [requirements/rd-07-documentation-hooks.md](requirements/rd-07-documentation-hooks.md) - EARS hook Codex/Claude, path Git, pembaruan dokumen kanonik, dan pengecualian mekanis.
+63. [adr/0028-durable-publish-receipts.md](adr/0028-durable-publish-receipts.md) - Receipt atomik per hasil scheduling dan pelestarian riwayat seluruh target.
+64. [operations/audit-remediation.md](operations/audit-remediation.md) - Rencana perbaikan audit 2026-09-30 dan bukti penutupannya.
+
 ## Canonical Files
 
 Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
@@ -106,7 +111,8 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
 | Studio web UI (EARS) | [requirements/rd-05-studio](requirements/rd-05-studio.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0027) |
+| Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0028) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |
@@ -139,18 +145,18 @@ Pakai istilah ini secara konsisten di semua doc & kode:
   hook tuntas, tanpa batas detik tetap); jendela hook = `00:00.00`–`hook_end`.
 - **track (data-track-index)** — layer tumpang-tindih **temporal**, bukan paint order.
 - **z-index** — urutan **paint** (siapa di atas siapa).
-- **clip** — kelas wajib (`class="clip"`) tiap elemen ber-waktu.
+- **clip** — kelas wajib (`class="clip"`) pada clip ber-waktu biasa; mount `data-composition-src` tanpa class itu.
 - **composition-id** — `data-composition-id` root, kunci `window.__timelines`.
 - **fase (phase)** — tahap workflow: Story → Screen Plan → Build → QA opsional (ADR-0008).
 - **handoff artifact** — file output milik satu fase di `videos/<slug>/`.
 - **Visual Decision Log** — log wajib fase Screen Plan di `visual-plan.md` untuk tiap peluang visual-support.
-- **Gate 1 / Gate 2 / Gate 3** — review cut (opsional), rencana visual (kondisional R1–R6), review render (wajib); di mode generate: naskah + suara (wajib), storyboard (wajib), render.
-- **mode generate** — video motion design tanpa footage Dena (`mode: generate`, ADR-0025): naskah + TTS sebagai sumbu waktu.
+- **Gate 1 / Gate 2 / Gate 3** — edit: cut opsional, visual kondisional R1–R6, render wajib; generate/explainer: naskah + suara, storyboard, render; generate/format musik: G1 teks + musik + storyboard, G2 render (tanpa G3).
+- **mode generate** — motion design tanpa footage Dena: explainer memakai TTS (ADR-0025); kinetic-post/motion-short memakai musik/beat tanpa suara (ADR-0027).
 - **script.md** — naskah mode generate; narasi = teks sebelum section `## ` pertama, `## Fakta` memberi sumber tiap fakta.
 - **style world** — satu style utama + palet (+ maksimal 2 aksen) untuk seluruh video generate.
-- **storyboard sheet** — `preview/storyboard-sheet.jpg`: still contoh style per scene dengan nomor, waktu, dan kata (Gate 2 mode generate).
+- **storyboard sheet** — `preview/storyboard-sheet.jpg`: still contoh style per scene dengan nomor, waktu, dan kata (G2 explainer; G1 format musik).
 - **receipt** — `videos/<slug>/repliz-publish.json` (metadata + hasil publish).
-- **publishKey** — sha256 ringkasan seluruh run `{r2Key, targetAccounts, description}`; disimpan di receipt tapi tidak lagi dipakai untuk keputusan skip (lihat `targetKey`, ADR-0011).
+- **publishKey** — sha256 ringkasan seluruh run `{r2Key, targetAccounts, description, title}`; disimpan di receipt tapi tidak lagi dipakai untuk keputusan skip (lihat `targetKey`, ADR-0011).
 - **targetKey** — sha256 per target account `{r2Key, platform, accountId, description, title, replies}`; menentukan apakah satu platform di-reuse, dijadwalkan ulang, atau `blocked` (ADR-0011).
 - **r2Key** — object key R2 `<prefix>/<slug>/<file>`.
 - **approval / `--approved`** — gate manusia wajib sebelum upload/scheduling.
@@ -165,4 +171,5 @@ Pakai istilah ini secara konsisten di semua doc & kode:
 - Update doc yang tersentuh **dalam commit yang sama** dengan kodenya.
 - Doc baru **wajib** ter-link dari Reading Order di file ini.
 - Keputusan arsitektural baru → ADR baru (`adr/NNNN-*.md`, Status accepted).
-- Bila perubahan murni mekanis, nyatakan eksplisit "no docs update needed".
+- Bila perubahan murni mekanis tidak memerlukan docs, tulis satu baris jawaban
+  akhir agent `no docs update needed: <alasan tidak kosong>` (RD-07).

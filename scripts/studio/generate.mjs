@@ -2,10 +2,10 @@
 // detail the review panel shows, and the /media whitelist for its files. Gate state and decisions go through
 // scripts/lib/gates.mjs, the only writer of gates.json.
 import { spawn } from 'node:child_process';
-import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DURATION, FORMATS, isMusicFormat, readFormat } from '../lib/formats.mjs';
-import { GateError, editedSinceDecision, gateStatus, isGenerate, readGates, recordDecision, sheetsOf } from '../lib/gates.mjs';
+import { GateError, editedSinceDecision, finalRender, gateStatus, isGenerate, readGates, recordDecision, sheetsOf } from '../lib/gates.mjs';
 import { readCatalog } from '../lib/music.mjs';
 import { loadVoices } from '../lib/voice/presets.mjs';
 import { scriptBody, splitParagraphs } from '../lib/voice/script.mjs';
@@ -13,14 +13,30 @@ import { checkSlug, scaffold } from '../video.mjs';
 import { projectSlugs } from './files.mjs';
 import { HttpError } from './http.mjs';
 import { JobRunner } from './jobs.mjs';
-import { projectPath, rendersOf } from './projects.mjs';
+import { projectPath } from './projects.mjs';
 import { listSessions, runFile, sessionName } from './sessions.mjs';
 
 export const STYLES = ['motion-broll', 'broll-text', 'motion-graphic', 'whiteboard', 'stop-motion', 'vox', 'parallax'];
 const RESERVED = new Set(['options', 'new']); // /api/generate/options and #generate/new
 const MEDIA_RE = /^(processed-audio\.wav|preview\/storyboard-sheet(-\d+)?\.jpg)$/;
 
-const readText = (f) => (existsSync(f) ? readFileSync(f, 'utf8') : '');
+const hasContent = (f) => {
+  try {
+    const st = statSync(f);
+    return st.isFile() && st.size > 0;
+  } catch (e) {
+    if (e.code === 'ENOENT' || e.code === 'ENOTDIR') return false;
+    throw e;
+  }
+};
+const readText = (f) => {
+  try {
+    return hasContent(f) ? readFileSync(f, 'utf8') : '';
+  } catch (e) {
+    if (['ENOENT', 'ENOTDIR', 'EISDIR'].includes(e.code)) return '';
+    throw e;
+  }
+};
 const readJsonFile = (f) => {
   try {
     return existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null;
@@ -212,7 +228,7 @@ export function generateDetail(root, slug, sessions = [], { voiceJobs } = {}) {
     // no catalog: no music preview
   }
   const notes = readText(join(dir, 'assembly-notes.md'));
-  const render = rendersOf(root, slug).includes(`${slug}.mp4`) ? `${slug}.mp4` : null;
+  const render = finalRender(dir, slug);
   return {
     slug,
     brief: briefLine(dir),
@@ -228,10 +244,10 @@ export function generateDetail(root, slug, sessions = [], { voiceJobs } = {}) {
       lines: scriptBody(script).split('\n').map((l) => l.trim()).filter(Boolean),
       facts: mdSection(script, 'Fakta'),
       voice: meta ? { duration: meta.duration ?? null, preset: meta.preset ?? null, wer: meta.alignment?.wer ?? null } : null,
-      audio: existsSync(join(dir, 'processed-audio.wav')),
+      audio: hasContent(join(dir, 'processed-audio.wav')),
     },
     gate2: {
-      sheets: sheetsOf(dir),
+      sheets: sheetsOf(dir).filter((file) => hasContent(join(dir, file))),
       rows: storyboardRows(readText(join(dir, 'storyboard.md'))),
       styleWorld: mdSection(plan, 'Style World'),
       music,
@@ -249,12 +265,12 @@ export function generateDetail(root, slug, sessions = [], { voiceJobs } = {}) {
 // RD-05-24: only the voiceover and the storyboard sheets; renders keep /media/<slug>/<file> (results.mjs).
 export function generateMediaPath(root, slug, file) {
   const dir = generateDir(root, slug);
-  if (!MEDIA_RE.test(file) || !existsSync(join(dir, file))) throw new HttpError(404, 'not found');
+  if (!MEDIA_RE.test(file) || !hasContent(join(dir, file))) throw new HttpError(404, 'not found');
   return join(dir, file);
 }
 
 // ---- decisions (RD-05-25..26) ----
-const GATE_STATUS = { stale: 409, 'not-waiting': 409, 'voice-stale': 409, 'note-required': 400, 'bad-decision': 400, 'bad-note': 400, 'bad-gate': 400, 'not-generate': 404, 'bad-file': 500 };
+const GATE_STATUS = { stale: 409, 'not-waiting': 409, 'voice-stale': 409, 'missing-file': 409, 'note-required': 400, 'bad-decision': 400, 'bad-note': 400, 'bad-gate': 400, 'not-generate': 404, 'bad-file': 500 };
 
 function asHttp(fn) {
   try {

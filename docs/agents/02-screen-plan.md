@@ -33,7 +33,7 @@ Do not use this phase when:
 
 ## Mode generate
 
-When `creative-brief.md` sets `mode: generate`, follow Screen Plan (generate) in
+When `creative-brief.md` sets `mode: generate` and format `explainer`, follow Screen Plan (generate) in
 `docs/agents/references/generate-mode.md` alongside the steps below: hybrid captions (`"rail": "hidden"`
 for beats a scene already shows), a `## Style World`, scenes that cover every second
 (treatment `full`, `example`), `## Music`, and `storyboard.md` +
@@ -42,6 +42,8 @@ do not apply (ADR-0025, RD-03-82…86). Record Dena's Gate 2 answer with
 `npm run video -- gate <slug> approve 2` when it comes from chat (Studio records its own).
 In `kinetic-post` / `motion-short` there are no captions; scenes follow `beats.json`, rows
 carry `text`, and Gate 1 shows text + music + storyboard together (ADR-0027).
+Use Screen Plan (music formats) in that reference instead of the caption steps
+below; record approval in `## Gate 1 Result` of `visual-plan.md` and in `gates.json`.
 
 ## Core Principles
 

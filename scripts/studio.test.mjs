@@ -663,6 +663,51 @@ test('app generate list, detail per gate, media whitelist, and the generate cont
   assert.match(readFileSync(join(root, '.studio/prompts/g-story.md'), 'utf8'), /^Lanjutkan proyek mode generate `videos\/g-story\/`\. Jalankan `npm run video -- gate g-story`/);
 });
 
+test('Generate remains readable when required artifacts are directories or empty files', async (t) => {
+  const root = genStudioRoot();
+  const story = genProject(root, 'g-invalid-story', 'story');
+  mkdirSync(join(story, 'script.md'));
+  mkdirSync(join(story, 'processed-audio.wav'));
+  const screen = genProject(root, 'g-invalid-screen', 'gate1');
+  record(screen, { gate: 1, decision: 'approve', by: 'cli' });
+  mkdirSync(join(screen, 'storyboard.md'));
+  mkdirSync(join(screen, 'preview/storyboard-sheet.jpg'), { recursive: true });
+  writeFileSync(join(screen, 'preview/storyboard-sheet-2.jpg'), '');
+  const { server, call, base } = await startApp(root);
+  t.after(() => server.close());
+  const d1 = await call('GET', '/api/generate/g-invalid-story');
+  assert.equal(d1.status, 200);
+  assert.deepEqual([d1.body.status.phase, d1.body.gate1.script, d1.body.gate1.audio], ['story', '', false]);
+  const d2 = await call('GET', '/api/generate/g-invalid-screen');
+  assert.equal(d2.status, 200);
+  assert.deepEqual([d2.body.status.phase, d2.body.gate2.rows, d2.body.gate2.sheets], ['screen-plan', [], []]);
+  for (const file of ['g-invalid-story/processed-audio.wav', 'g-invalid-screen/preview/storyboard-sheet.jpg', 'g-invalid-screen/preview/storyboard-sheet-2.jpg']) {
+    assert.equal((await fetch(`${base}/media/${file}`)).status, 404);
+  }
+});
+
+test('Generate shows and serves the exact blur render fingerprinted by its final gate', async (t) => {
+  const root = genStudioRoot();
+  const dir = genProject(root, 'blur-player', 'gate1');
+  record(dir, { gate: 1, decision: 'approve', by: 'cli' });
+  mkdirSync(join(dir, 'preview'), { recursive: true });
+  writeFileSync(join(dir, 'preview/storyboard-sheet.jpg'), 'JPG');
+  writeFileSync(join(dir, 'storyboard.md'), '| 1 | scene |');
+  record(dir, { gate: 2, decision: 'approve', by: 'cli' });
+  mkdirSync(join(dir, 'renders'), { recursive: true });
+  writeFileSync(join(dir, 'renders/blur-player.mp4'), 'OLD');
+  utimesSync(join(dir, 'renders/blur-player.mp4'), 1002, 1002);
+  writeFileSync(join(dir, 'renders/blur-player-blur.mp4'), 'BLUR');
+  utimesSync(join(dir, 'renders/blur-player-blur.mp4'), 1003, 1003);
+  const { server, call, base } = await startApp(root);
+  t.after(() => server.close());
+  const d = (await call('GET', '/api/generate/blur-player')).body;
+  assert.equal(d.gate3.render, 'blur-player-blur.mp4');
+  assert.deepEqual(Object.keys(d.status.fingerprint), ['renders/blur-player-blur.mp4']);
+  const media = await fetch(`${base}/media/blur-player/${d.gate3.render}`);
+  assert.equal(await media.text(), 'BLUR');
+});
+
 test('buildPrompt generate modes point at request.json and the gate command', () => {
   assert.match(buildPrompt({ mode: 'generate', slug: 'a' }), /^Buat video mode generate \(explainer\) di `videos\/a\/`\. Brief Dena ada di `research\/brief\.md`/);
   const c = buildPrompt({ mode: 'generate-continue', slug: 'a', notes: 'Keputusan terakhir: Gate 1 revise — CTA' });

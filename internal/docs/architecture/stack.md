@@ -1,6 +1,6 @@
 # Stack
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: teknologi, runtime, dependency, dan tooling repo ini. Diturunkan
 dari `package.json`, `.github/workflows/ci.yml`, `.gitmodules`, `index.html`,
@@ -21,7 +21,7 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
   (`.github/workflows/ci.yml`). Tidak ada engine pin di `package.json`.
 - **ES Modules** — `package.json` menyetel `"type": "module"`; semua script
   Node pakai `import` (`scripts/repliz-publish.mjs`).
-- **Bahasa implementasi:** JavaScript (`.mjs`) untuk CLI; HTML + CSS + JavaScript
+- **Bahasa implementasi:** Python 3 untuk hook dokumentasi; JavaScript (`.mjs`) untuk CLI/Studio; HTML + CSS + JavaScript
   inline (GSAP) untuk komposisi (`index.html`).
 
 ## Dependency strategy: zero local npm deps
@@ -40,7 +40,7 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
 | Komponen | Peran | Cara dipanggil | Sumber |
 | --- | --- | --- | --- |
 | HyperFrames 0.7.24 | Render HTML → MP4, preview, lint, validate, inspect, publish | `npx --yes hyperframes@0.7.24 <cmd>` | `package.json` |
-| GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di template/starter dan tiap `videos/<slug>/index.html` | `index.html:7` |
+| GSAP | Animation runtime komposisi (timeline paused, seek-safe) | Vendored `vendor/gsap.min.js`, di-`<script>` di template/starter dan tiap `videos/<slug>/index.html` | `index.html` |
 | motion-kit | Engine motion b-roll: satu shape morph + kursor, spring closed-form, frame = fungsi waktu lokal clip | Vendored `vendor/motion-kit/`, di-`<script>` + `<link>` di `index.html`; clip memanggil `M.clip()` | `docs/agents/references/motion-broll-authoring.md` |
 | style-kit | Engine style b-roll (broll-text, motion-graphic, whiteboard, stop-motion, vox, mix-media, parallax): draw-on, boil, handwriting, count-up, kamera, langkah on twos, sobekan, tangan, highlighter, peta (`SK.geo`), lapisan 3D (`SK.layer`, `SK.camera`, `SK.dof`, `SK.dollyZoom`); frame = fungsi waktu lokal clip | Vendored `vendor/style-kit/` (+ font OFL Anton, Caveat), dimuat setelah motion-kit; clip memanggil `SK.clip()` | `docs/agents/references/styles/README.md` |
 | render-blur | Pass motion blur opsional: render 4× fps → ffmpeg `tmix` → fps asal, audio disalin | `npm run render:blur -- --slug <slug>` | `scripts/render-blur.mjs` |
@@ -53,10 +53,10 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
 | Music library | Katalog BGM `shared/music/` dengan allowlist lisensi, sha256, loudness, bukti lisensi | `npm run music -- add\|list\|check` | `scripts/music.mjs`, `scripts/lib/music.mjs`, [ADR-0024](../adr/0024-music-library.md) |
 | whisper.cpp | Transkripsi audio → JSON word-level, lokal, offline | Git submodule `vendor/whisper.cpp`, model `ggml-large-v3-turbo` | `.gitmodules`, `docs/initial-setup.md` |
 | ffmpeg / ffprobe | Audit media, ekstrak/normalisasi audio, silence/volume detect | Dipanggil manual di fase Story | `docs/agents/references/cut-and-pacing.md` |
-| Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs:274` |
+| Cloudflare R2 | Object storage publik untuk MP4 final | `npx wrangler r2 object put` (remote) | `scripts/repliz-publish.mjs` |
 | Wrangler | Auth + upload R2 (bukan S3 key) | `npx wrangler login`, `npx wrangler r2 ...` | `docs/repliz/integration-spec.md` |
 | Repliz API | Schedule post multi-platform | `fetch` ke `REPLIZ_API_BASE_URL`, HTTP Basic Auth | `scripts/repliz-publish.mjs` |
-| node:test | Unit test CLI publish | `node --test scripts/repliz-publish.test.mjs` | `package.json` |
+| node:test | Seluruh tes lokal, termasuk CLI, Studio, engine, dan hook Python | `npm test` (`node --test scripts/*.test.mjs`) | `package.json` |
 | GitHub Actions | CI test on PR + push ke `main` | `.github/workflows/ci.yml` | CI |
 
 ## npm scripts (kontrak command)
@@ -70,6 +70,8 @@ Dari `package.json`:
 - `npm run publish` → `hyperframes publish` (link shareable HyperFrames).
 - `npm run repliz:publish` → `node scripts/repliz-publish.mjs` (auto-publish R2/Repliz).
 - `npm run test:repliz` → `node --test scripts/repliz-publish.test.mjs`.
+- `npm test` → seluruh `scripts/*.test.mjs`, sama dengan CI (Node 24 + Python 3).
+- `npm run test:hooks` → tes hook Python dalam repo Git sementara.
 - `npm run voice` → `node scripts/voice.mjs` (adapter suara, ADR-0023); `npm run test:voice`.
 - `npm run music` → `node scripts/music.mjs` (pustaka BGM, ADR-0024); `npm run test:music`.
 
@@ -95,7 +97,9 @@ skill punya lisensi pihak ketiga; lihat `THIRD_PARTY_NOTICES.md`.
 
 ## Yang TIDAK ada di stack
 
-- Tidak ada database, ORM, atau backend HTTP server.
+- Tidak ada database atau ORM. Studio menjalankan backend HTTP lokal bawaan
+  `node:http` dengan filesystem dan tmux sebagai state; kontrak route di
+  [API Contract](api-contract.md#5-studio-http-lokal).
 - Tidak ada framework frontend (React/Vue/dll). Komposisi = HTML + GSAP polos.
 - Tidak ada bundler/transpiler (TypeScript, webpack, vite).
 - Tidak ada SDK cloud; R2 murni lewat Wrangler CLI, Repliz dan Gemini TTS murni lewat `fetch`.

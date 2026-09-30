@@ -56,6 +56,11 @@ Every asset must say where it came from:
 - `generated`
 - `designed`
 - `reference-analysis`
+- `cc0` (license proof required)
+- `dena-footage` (processed source time/range)
+- `user` (style-brief user file)
+- `reconstructed` (generated repair plate; prompt summary; never proof)
+- `pd-archive` (asset-page public-domain proof required)
 
 If generated, include the prompt or short prompt summary.
 

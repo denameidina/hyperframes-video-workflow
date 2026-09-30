@@ -107,7 +107,7 @@ Use this instead of the generic Asset Brief for a `motion-broll` row in
 - Purpose:
 - Required: <yes | no>
 - Privacy notes:
-- Do not cover: <e.g. Dena's face in 0–3 s, the caption area>
+- Do not cover: <e.g. Dena's face in 0–hook_end, the caption area>
 - Planned file: `compositions/broll/NN-name.html`
 - Placement / Track: <treatment> / track 4
 - Treatment: <cutaway | split | panel> — <reason>

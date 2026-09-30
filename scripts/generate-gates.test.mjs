@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { briefStub } from './lib/generate.mjs';
@@ -75,6 +75,7 @@ test('revise shows revising until the artifacts change; qa keeps Gate 3 open', (
   assert.deepEqual(status(dir), ['gate', 1, 'waiting']);
   recordDecision(dir, { gate: 1, decision: 'approve', by: 'studio', now });
   put('preview/storyboard-sheet.jpg', 'S');
+  put('storyboard.md', '| 1 | scene |');
   recordDecision(dir, { gate: 2, decision: 'approve', by: 'studio', now });
   put('renders/demo.mp4', 'R');
   recordDecision(dir, { gate: 3, decision: 'qa', by: 'studio', now });
@@ -261,4 +262,62 @@ test('video gate names the gates of the project\'s format', () => {
   put('script.md', 'X\n');
   assert.throws(() => main(['gate', 'post', 'approve', '3'], { root }), /usage: npm run video -- gate post approve <1\|2>/);
   assert.equal(existsSync(join(dir, 'gates.json')), false);
+});
+
+for (const format of ['explainer', 'kinetic-post', 'motion-short']) {
+  test(`${format} cannot approve a missing or empty storyboard artifact`, () => {
+    const { dir, put } = project('complete', { format });
+    put('script.md', 'Text', 1000);
+    put('processed-audio.wav', 'Audio', 1001);
+    if (format === 'explainer') recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+    const gate = format === 'explainer' ? 2 : 1;
+    put('preview/storyboard-sheet.jpg', 'Sheet');
+    assert.deepEqual(status(dir), ['screen-plan', null, null]);
+    assert.throws(() => recordDecision(dir, { gate, decision: 'approve', by: 'cli', now }), (e) => e.code === 'not-waiting');
+    assert.throws(() => fingerprint(dir, gate), (e) => e.code === 'missing-file');
+    put('storyboard.md', '');
+    assert.deepEqual(status(dir), ['screen-plan', null, null]);
+    put('storyboard.md', '| 1 | scene |');
+    put('preview/storyboard-sheet.jpg', '');
+    assert.deepEqual(status(dir), ['screen-plan', null, null]);
+    put('preview/storyboard-sheet.jpg', 'Sheet');
+    assert.deepEqual(status(dir), ['gate', gate, 'waiting']);
+  });
+
+  test(`${format} reviews a blur-only render and fingerprints the selected filename`, () => {
+    const { dir, put } = project('blur', { format });
+    put('script.md', 'Text', 1000);
+    put('processed-audio.wav', 'Audio', 1001);
+    if (format === 'explainer') recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+    put('preview/storyboard-sheet.jpg', 'Sheet');
+    put('storyboard.md', '| 1 | scene |');
+    recordDecision(dir, { gate: format === 'explainer' ? 2 : 1, decision: 'approve', by: 'cli', now });
+    put('renders/blur-blur.mp4', 'Render', 1002);
+    const s = gateStatus(dir);
+    assert.deepEqual([s.phase, s.gate], ['gate', format === 'explainer' ? 3 : 2]);
+    assert.deepEqual(Object.keys(s.fingerprint), ['renders/blur-blur.mp4']);
+    recordDecision(dir, { gate: s.gate, decision: 'approve', by: 'cli', now });
+    assert.equal(gateStatus(dir).phase, 'done');
+  });
+}
+
+test('a newer render variant reopens the final gate; empty renders and directories cannot satisfy it', () => {
+  const { dir, put } = project();
+  put('script.md', 'Text', 1000);
+  put('processed-audio.wav', 'Audio', 1001);
+  recordDecision(dir, { gate: 1, decision: 'approve', by: 'cli', now });
+  put('preview/storyboard-sheet.jpg', 'Sheet');
+  put('storyboard.md', '| 1 | scene |');
+  recordDecision(dir, { gate: 2, decision: 'approve', by: 'cli', now });
+  put('renders/demo.mp4', 'Normal', 1002);
+  recordDecision(dir, { gate: 3, decision: 'approve', by: 'cli', now });
+  put('renders/demo-blur.mp4', 'Blur', 1003);
+  assert.deepEqual(status(dir), ['gate', 3, 'waiting']);
+  assert.deepEqual(Object.keys(gateStatus(dir).fingerprint), ['renders/demo-blur.mp4']);
+  put('renders/demo.mp4', 'New normal', 1003);
+  assert.deepEqual(Object.keys(gateStatus(dir).fingerprint), ['renders/demo.mp4'], 'normal wins a timestamp tie');
+  put('renders/demo.mp4', '');
+  rmSync(join(dir, 'renders/demo-blur.mp4'));
+  mkdirSync(join(dir, 'renders/demo-blur.mp4'));
+  assert.deepEqual(status(dir), ['build', null, null]);
 });

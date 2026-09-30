@@ -1,6 +1,6 @@
 # Runbook
 Status: operating standard
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: perintah operasional harian (setup, preview, check, render,
 publish). Diturunkan dari `package.json`, `README.md`, `docs/initial-setup.md`,
@@ -28,7 +28,8 @@ cmake --build vendor/whisper.cpp/build -j --config Release
 sh vendor/whisper.cpp/models/download-ggml-model.sh large-v3-turbo
 ```
 
-Pastikan folder kerja ada: `mkdir -p raw videos references renders` (+ `.gitkeep`).
+Pastikan folder kerja ada: `mkdir -p shared videos references renders` (+ `.gitkeep`).
+Root `index.html` adalah template kosong; video aktif selalu di `videos/<slug>/`.
 
 ## Loop editing harian
 
@@ -54,15 +55,19 @@ Referensi HyperFrames tanpa jaringan: `npx hyperframes docs <topic>` (topik:
 ## Transkripsi satu video
 
 ```bash
-ffmpeg -y -i videos/<slug>/<input-media> -ar 16000 -ac 1 -c:a pcm_s16le videos/<slug>/audio.wav
+npm run video -- sources <slug>    # baca id/path speech dari sources.json
+mkdir -p videos/<slug>/transcripts
+ffmpeg -y -i videos/<slug>/sources/<input-media> -ar 16000 -ac 1 -c:a pcm_s16le videos/<slug>/transcripts/<id>-audio.wav
 vendor/whisper.cpp/build/bin/whisper-cli \
   -m vendor/whisper.cpp/models/ggml-large-v3-turbo.bin \
-  -f videos/<slug>/audio.wav -l id \
+  -f videos/<slug>/transcripts/<id>-audio.wav -l id \
   --prompt "Dena Meidina, HyperFrames, Codex, AGENTS.md, skills, motion overlay, transcript cut, IG, TikTok, AI workflow" \
-  -oj -ojf -of videos/<slug>/transcript-large-v3-turbo
+  -oj -ojf -of videos/<slug>/transcripts/<id>-whisper
 ```
 
-Normalisasi hasil ke `videos/<slug>/transcript.json`. Ingat: cut berbasis
+Normalisasi hasil ke `videos/<slug>/transcripts/<id>.json`; sumber reusable
+memakai input `shared/<file>` dari manifest. Setelah cut, Story membuat
+`processed-transcript.json` dalam waktu processed. Ingat: cut berbasis
 amplitudo, bukan word-level timing (lihat
 [rd-04](../requirements/rd-04-transcription-setup.md)).
 
@@ -77,6 +82,8 @@ npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slu
 ## Test
 
 ```bash
+npm test                   # semua scripts/*.test.mjs; sama dengan CI
+npm run test:hooks         # regresi hook Python dalam repo Git sementara
 npm run test:repliz          # node --test scripts/repliz-publish.test.mjs
 npm run test:motion-kit      # node --test scripts/motion-kit.test.mjs
 npm run test:craft-kit       # node --test scripts/craft-kit.test.mjs (resep koreografi craft-kit, paritas CK.add/CK.at)
@@ -85,7 +92,8 @@ npm run test:asset-lib       # node --test scripts/asset-lib.test.mjs (pustaka a
 npm run asset-lib -- build   # bangun ulang output vendor/asset-lib dari src/ (offline)
 npm run asset-lib -- sheets  # render contact sheet → docs/agents/references/asset-catalog/sheets/*.webp
 npm run test:render-blur     # node --test scripts/render-blur.test.mjs
-npm run test:video          # node --test scripts/video.test.mjs
+npm run test:video          # CLI, sources, cut, generate, gate, music-cut
+npm run test:studio         # server/route/terminal/Generate Studio
 npm run test:voice          # node --test scripts/voice-*.test.mjs (adapter suara, uji dengar)
 npm run test:music          # node --test scripts/music.test.mjs (pustaka musik)
 npm run check:broll-examples # lint + validate + snapshot contoh motion b-roll → renders/broll-examples/

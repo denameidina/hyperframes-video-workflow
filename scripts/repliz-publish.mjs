@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { execFile } from "node:child_process";
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -446,7 +446,7 @@ export async function validateAccounts({ config, targetAccounts, fetchImpl = fet
   return accounts;
 }
 
-export async function createSchedules({ config, targetAccounts, post, videoUrl, now = new Date(), fetchImpl = fetch }) {
+export async function createSchedules({ config, targetAccounts, post, videoUrl, now = new Date(), fetchImpl = fetch, onSchedule = async () => {} }) {
   const schedules = [];
   for (const target of targetAccounts) {
     try {
@@ -478,6 +478,9 @@ export async function createSchedules({ config, targetAccounts, post, videoUrl, 
         error: error.message,
       });
     }
+    // Persistence is outside the API catch: if the checkpoint fails, stop before the
+    // next POST without turning an already-created remote schedule into an "error" retry.
+    await onSchedule(schedules.map((schedule) => ({ ...schedule })));
   }
   return schedules;
 }
@@ -543,7 +546,13 @@ export function loadConfig(env) {
 async function writeReceipt(slugDir, receipt) {
   await mkdir(slugDir, { recursive: true });
   const receiptPath = path.join(slugDir, "repliz-publish.json");
-  await writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);
+  const temporaryPath = `${receiptPath}.${randomUUID()}.part`;
+  try {
+    await writeFile(temporaryPath, `${JSON.stringify(receipt, null, 2)}\n`, { flag: "wx" });
+    await rename(temporaryPath, receiptPath);
+  } finally {
+    await rm(temporaryPath, { force: true }).catch(() => {});
+  }
 }
 
 export async function runPublish({
@@ -597,12 +606,14 @@ export async function runPublish({
   // new, previously errored, or `--force` is set; content that changed for an
   // already-succeeded target is left alone (`blocked`) unless the caller passes `--force`.
   const priorByTarget = new Map((existingReceipt?.schedules || []).map((schedule) => [`${schedule.platform}:${schedule.accountId}`, schedule]));
+  const targetKeys = new Map();
   const toSchedule = [];
   const reused = [];
   const blocked = [];
   for (const target of targetAccounts) {
     const payload = buildSchedulePayload({ accountId: target.accountId, platform: target.platform, post, videoUrl, now });
     const targetKey = makeTargetKey({ r2Key, platform: target.platform, accountId: target.accountId, description: payload.description, title: payload.title, replies: payload.replies });
+    targetKeys.set(`${target.platform}:${target.accountId}`, targetKey);
     const prior = priorByTarget.get(`${target.platform}:${target.accountId}`);
 
     if (args.force || !prior || prior.status === "error") {
@@ -624,11 +635,15 @@ export async function runPublish({
     ? await pollSchedules({ config, schedules: nonTerminalReused, fetchImpl, sleep })
     : [];
   const reusedFinal = reused.map((schedule) => refreshedReused.find((updated) => updated.scheduleId === schedule.scheduleId) || schedule);
+  // Keep the entire history, including blocked and temporarily disabled targets.
+  // Dropping one makes the next run mistake it for an account that was never scheduled.
+  const history = new Map(priorByTarget);
+  for (const schedule of reusedFinal) history.set(`${schedule.platform}:${schedule.accountId}`, schedule);
 
   if (!toSchedule.length) {
     const { blocked: _oldBlocked, ...receiptWithoutBlocked } = existingReceipt || {};
-    const receipt = { ...receiptWithoutBlocked, schedules: reusedFinal, ...(blocked.length ? { blocked } : {}) };
-    if (refreshedReused.length) await writeReceipt(args.slug, receipt);
+    const receipt = { ...receiptWithoutBlocked, schedules: [...history.values()], ...(blocked.length ? { blocked } : {}) };
+    if (JSON.stringify(receipt) !== JSON.stringify(existingReceipt)) await writeReceipt(args.slug, receipt);
     return { skipped: true, receipt, blocked };
   }
 
@@ -643,27 +658,9 @@ export async function runPublish({
   await verifyPublicUrl(videoUrl, fetchImpl);
   await validateAccounts({ config, targetAccounts: toSchedule, fetchImpl });
 
-  const newSchedules = await createSchedules({
-    config,
-    targetAccounts: toSchedule,
-    post,
-    videoUrl,
-    now,
-    fetchImpl,
-  });
-  const polledNew = await pollSchedules({
-    config,
-    schedules: newSchedules,
-    fetchImpl,
-    sleep,
-  });
-  const stampedNew = polledNew.map((schedule) => {
-    const payload = buildSchedulePayload({ accountId: schedule.accountId, platform: schedule.platform, post, videoUrl, now });
-    const targetKey = makeTargetKey({ r2Key, platform: schedule.platform, accountId: schedule.accountId, description: payload.description, title: payload.title, replies: payload.replies });
-    return { ...schedule, targetKey };
-  });
-
-  const receipt = {
+  const { blocked: _oldBlocked, ...receiptWithoutBlocked } = existingReceipt || {};
+  const receiptBase = {
+    ...receiptWithoutBlocked,
     post,
     r2Bucket: config.r2Bucket,
     r2Key,
@@ -672,11 +669,33 @@ export async function runPublish({
     titleHash: sha256(post.title),
     publishKey,
     createdAt: now.toISOString(),
-    schedules: [...reusedFinal, ...stampedNew],
     ...(blocked.length ? { blocked } : {}),
   };
-
-  await writeReceipt(args.slug, receipt);
+  const checkpoint = async (schedules) => {
+    for (const schedule of schedules) {
+      const key = `${schedule.platform}:${schedule.accountId}`;
+      history.set(key, { ...schedule, targetKey: targetKeys.get(key) });
+    }
+    const receipt = { ...receiptBase, schedules: [...history.values()] };
+    await writeReceipt(args.slug, receipt);
+    return receipt;
+  };
+  const newSchedules = await createSchedules({
+    config,
+    targetAccounts: toSchedule,
+    post,
+    videoUrl,
+    now,
+    fetchImpl,
+    onSchedule: checkpoint,
+  });
+  const polledNew = await pollSchedules({
+    config,
+    schedules: newSchedules,
+    fetchImpl,
+    sleep,
+  });
+  const receipt = await checkpoint(polledNew);
   return { skipped: false, receipt, blocked };
 }
 

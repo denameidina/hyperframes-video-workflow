@@ -19,7 +19,7 @@ Canonical Files); behavior change → write/update EARS first
 ([ears-standard](internal/docs/requirements/ears-standard.md)); architectural
 decision → new ADR (`internal/docs/adr/NNNN-*.md`); a new doc must be linked from
 the README index; update touched docs in the same commit as the code, or state
-"no docs update needed" for purely mechanical changes.
+`no docs update needed: <nonempty reason>` on its own final assistant line for purely mechanical changes (RD-07).
 
 **Definition of Done:** implementation matches docs; touched docs updated in the
 same commit; tests run (or blocked with explicit reason); no stale paths/terms;
@@ -28,7 +28,7 @@ final report names the docs that changed.
 **Enforcement:** Stop hook `.claude/hooks/ensure-docs-updated.py` blocks
 completion when implementation files (`scripts/`, `index.html`, `compositions/`,
 `docs/agents/`) are staged with no docs (`internal/docs/`, `AGENTS.md`,
-`CLAUDE.md`) staged.
+`CLAUDE.md`) staged. Both runtime hooks accept the explicit mechanical exception above; Codex also checks unstaged/untracked changes and canonical learning docs. Details: [agent-documentation-workflow](internal/docs/operations/agent-documentation-workflow.md).
 
 ## Initial Setup After Clone
 
@@ -71,7 +71,7 @@ Use it as the source of truth for Dena's IG/TikTok style, voice, hook patterns, 
 - Do not generate AI slop. Generated assets must be specific to the transcript, visually credible, and rejected if they look generic, fake, or detached from the workflow.
 - Designed recuts need purposeful motion and audible but speech-safe SFX cues. Missing or too-quiet SFX is a QA issue.
 - CTA must be non-promissory by default. Do not imply "gue akan kirim/bahas/share source later" unless the user explicitly asks for that promise.
-- Generate mode (ADR-0025, `mode: generate`): a motion-design explainer from a topic, URL, or rewritten older video, with no footage of Dena. The hook is paragraph 1 of the script Dena approved at Gate 1 (script + voice); the TTS voiceover is never sped up to 1.2x; captions are hybrid (every word, hidden on the rail where a scene already shows it); Gate 2 always stops with the storyboard sheet. Rules: `docs/agents/references/generate-mode.md`. Two music-driven formats, `kinetic-post` (8–20 s, loop) and `motion-short` (15–40 s, CTA card), have no voice: `npm run video -- music` cuts the music on bars, and there are two gates (text + music + storyboard, then render; ADR-0027).
+- Generate explainer (ADR-0025, `mode: generate`, `format: explainer`): a motion-design explainer from a topic, URL, or rewritten older video, with no footage of Dena. The hook is paragraph 1 of the script Dena approved at Gate 1 (script + voice); the TTS voiceover is never sped up to 1.2x; captions are hybrid (every word, hidden on the rail where a scene already shows it); Gate 2 always stops with the storyboard sheet. Rules: `docs/agents/references/generate-mode.md`. Two music-driven formats, `kinetic-post` (8–20 s, loop) and `motion-short` (15–40 s, CTA card), have no voice: `npm run video -- music` cuts the music on bars, and there are two gates (text + music + storyboard, then render; ADR-0027).
 
 ## Dena Workflow Discipline
 
@@ -85,12 +85,16 @@ Use that skill as the router, then read the phase document for the current phase
 
 ### Phase Order
 
+The numbered list below is the default footage-edit branch. Generate uses the
+format-specific artifacts and gates in `docs/agents/references/generate-mode.md`: explainer
+G1 script/voice, G2 storyboard, G3 render; music formats G1 text/music/storyboard, G2 render.
+
 1. `docs/agents/01-story.md` — direction, transcript, hook locked from the transcript, cut, `processed.mp4`. Gate 1 (cut review) is optional: on only when the user asks or `creative-brief.md` sets `gate_cut: on`.
 2. `docs/agents/02-screen-plan.md` — captions, then one visual plan (`visual-plan.md`). Gate 2 stops only when a timeline row matches a risk trigger R1–R6.
 3. `docs/agents/03-build.md` — asset production, HyperFrames assembly in `videos/<slug>/`, `npm run video -- check <slug>`, render. Gate 3: stop for user review after render.
 4. `docs/agents/04-qa.md` — optional. Runs only when the user chooses QA first or asks for a readiness, punch-list, or regression review, and always as a fresh-context subagent.
 
-Run the phases in order unless the user explicitly requests a narrow technical fix. Do not start Build before the Story and Screen Plan artifacts exist, including the `Gate 2 Result` section of `visual-plan.md`.
+Run the phases in order unless the user explicitly requests a narrow technical fix. Do not start Build before the Story and Screen Plan artifacts exist, including the mode-specific result in `visual-plan.md`: `Gate 2 Result` for edit/explainer, `Gate 1 Result` for music formats.
 
 ### Routing Rules
 
@@ -117,13 +121,13 @@ Run the phases in order unless the user explicitly requests a narrow technical f
 - Screen Plan: `caption-plan.md`, `caption-beats.json`, `publish-captions.md`, `visual-plan.md`, `overlay-timeline.json`
 - Build: `assets/asset-manifest.json` (when assets exist), `assembly-notes.md`, `assembly-checklist.md`, render MP4
 - Optional QA: `qa-report.md`, `qa-punch-list.md`, and `final-approval.md` only after QA passes
-- Generate mode (ADR-0025): Story writes `research/`, `script.md`, `voice/`, `processed-audio.wav` instead of the cut artifacts; Screen Plan adds `storyboard.md` + `preview/storyboard-sheet.jpg`; Build adds `bgm.wav` + `bgm.json` (full chain: Handoff Contract in `docs/skills/dena-video-editing-workflow/SKILL.md`)
+- Generate explainer (ADR-0025): Story writes `research/`, `script.md`, `voice/`, `processed-audio.wav` instead of the cut artifacts; Screen Plan adds `storyboard.md` + `preview/storyboard-sheet.jpg`; Build adds `bgm.wav` + `bgm.json` (full chain: Handoff Contract in `docs/skills/dena-video-editing-workflow/SKILL.md`). Music formats use script + processed-audio + beats, skip voice/transcripts/caption-beats/separate BGM, and add storyboard doc/sheets plus `Gate 1 Result` before Build (ADR-0027)
 
 ### Repliz/R2 Auto Publish Gate
 
 Auto publish is documented in `docs/repliz/integration-spec.md`.
 
-- After final render, stop and ask the user to review the edited video (Gate 3).
+- After final render, stop and ask the user to review the edited video (Gate 3 edit/explainer; Gate 2 kinetic-post/motion-short).
 - At the review gate, offer: publish as-is, run QA first, or request revisions.
 - Do not upload to Cloudflare R2 or schedule Repliz until the user explicitly approves/confirms.
 - If the user chooses publish as-is, QA artifacts are not required.
@@ -170,6 +174,8 @@ npm run dev          # start the preview server (long-running — keep it alive 
 npm run check        # lint + validate + inspect
 npm run render       # render to MP4
 npm run publish      # publish and get a shareable link
+npm test            # all local tests, same as CI (Node + Python + Git; no live publishing)
+npm run test:hooks  # documentation hooks in temporary Git repositories
 npm run test:repliz  # unit test R2/Repliz CLI without real network
 npm run test:motion-kit        # unit test motion b-roll engine
 npm run test:craft-kit         # unit test craft-kit choreography recipes (CK.add/CK.at parity)
@@ -253,7 +259,7 @@ https://hyperframes.heygen.com/llms.txt
 - `shared/` — reusable raw videos/images (ignored), referenced from any project's `sources.json` (ADR-0022)
 - `compositions/` — sub-compositions for the root template only
 - `meta.json` — project metadata (id, name)
-- `transcript.json` — whisper word-level transcript (if generated)
+- `videos/<slug>/transcripts/<id>.json` — source word-level transcripts (`id` in `sources.json`); `processed-transcript.json` uses processed time
 
 ## Linting — ALWAYS RUN AFTER CHANGES
 
@@ -268,7 +274,7 @@ Fix all errors before presenting the result. Inspect warnings should be reviewed
 ## Key Rules
 
 1. Every timed element needs `data-start`, `data-duration`, and `data-track-index`
-2. Elements with timing **MUST** have `class="clip"` — the framework uses this for visibility control
+2. Timed clips use `class="clip"`; mounts with `data-composition-src` omit it because sub-composition visibility is managed separately (RD-02-04)
 3. Timelines must be paused and registered on `window.__timelines`:
    ```js
    window.__timelines = window.__timelines || {};

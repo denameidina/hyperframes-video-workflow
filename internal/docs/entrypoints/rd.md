@@ -1,6 +1,6 @@
 # RD (Entrypoint)
 Status: accepted
-Date: 2026-08-25
+Date: 2026-09-30
 
 Pintu masuk ringkas ke requirement per domain (EARS). Kanonik: file `rd-NN-*.md`
 di `requirements/`.
@@ -17,5 +17,7 @@ di `requirements/`.
 - [RD-05 Studio Web UI](../requirements/rd-05-studio.md) — web UI lokal: project, sesi agen, publish, tab Suara/Musik; tab Generate (RD-05-21…33): form + panel review gate, per format.
 - [RD-06 Audio](../requirements/rd-06-audio.md) — adapter suara TTS, uji dengar blind, pustaka musik,
   `video voice` / `video bgm` untuk mode generate, `video music` untuk format musik (RD-06-29…32).
+- [RD-07 Documentation Hooks](../requirements/rd-07-documentation-hooks.md) — parsing Git,
+  learning kanonik, dan pengecualian mekanis eksplisit dari agent.
 
 Standar penulisan → [ears-standard](../requirements/ears-standard.md).

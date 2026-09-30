@@ -7,6 +7,7 @@ HyperFrames dan siap membuat transcript dengan `vendor/whisper.cpp`.
 
 - Node.js 22+ dan npm/npx.
 - Git.
+- Python 3 (tes hook dokumentasi).
 - CMake.
 - C/C++ build tools:
   - macOS: Xcode Command Line Tools.
@@ -15,7 +16,8 @@ HyperFrames dan siap membuat transcript dengan `vendor/whisper.cpp`.
 - `curl` atau `wget` untuk download model Whisper.
 - Koneksi internet untuk `npx hyperframes@0.7.24`, submodule, dan model.
 - Wrangler via `npx wrangler` jika akan upload final render ke Cloudflare R2/Repliz.
-- `uv` (opsional) untuk TTS lokal Supertonic; `GEMINI_TTS_API_KEY` (opsional) untuk TTS Gemini.
+- `uv` untuk TTS lokal Supertonic atau analisis beat format musik;
+  `GEMINI_TTS_API_KEY` untuk TTS Gemini. Keduanya opsional untuk editing footage biasa.
 
 macOS quick install:
 
@@ -97,21 +99,12 @@ Output JSON akan dibuat di `/tmp/dena-transcript.json`.
 
 ## Restore Local Media
 
-Git tidak menyimpan file raw, working media, references, dan render. Untuk
-komposisi aktif, pulihkan file ini sebelum preview/render:
-
-```text
-videos/0702-2/processed-compact-plus.mp4
-videos/0702-2/audio-compact-sync.m4a
-videos/0702-2/assets/editing-bottleneck.svg
-videos/0702-2/assets/tool-stack.svg
-videos/0702-2/assets/workflow-pipeline.svg
-videos/0702-2/assets/monitor-proof-blurred.jpg
-videos/0702-2/assets/transcript-cut-flow.svg
-```
-
-Minta folder `videos/0702-2/` dari pemilik project, atau regenerate lewat
-workflow agent di `docs/agents/`.
+Git tidak menyimpan `shared/`, proyek `videos/`, references, dan render pribadi.
+Root `index.html` adalah template kosong, sehingga clone tidak memerlukan media
+video tertentu untuk mengecek template. Untuk video, pulihkan `videos/<slug>/`
+beserta sumber di `shared/` yang dirujuk `sources.json`, media di HTML, dan aset
+di manifest; atau buat proyek melalui workflow `docs/agents/`. `raw/` adalah
+layout lama dan tidak lagi di-ignore sebagai folder.
 
 ## Video Sources
 
@@ -139,28 +132,30 @@ Panggilan Supertonic pertama mengunduh model ke `~/.cache/supertonic3` (±70 s).
 
 ## Run HyperFrames
 
-Preview:
+Untuk satu proyek video:
 
 ```bash
-npm run dev
+npm run video -- dev <slug>       # long-running; jalankan di background
 ```
 
 Check sebelum render/handoff:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 Render:
 
 ```bash
-npm run render
+npm run video -- render <slug> [--blur]
 ```
 
-Publish:
+Template root saja memakai `npm run dev`, `npm run check`, `npm run render`.
+Share HyperFrames dijalankan dari cwd proyek:
 
 ```bash
-npm run publish
+cd videos/<slug>
+npx --yes hyperframes@0.7.24 publish
 ```
 
 ## Optional Repliz/R2 Auto Publish
@@ -190,7 +185,7 @@ Tidak perlu `wrangler.jsonc`, S3 access key, atau R2 secret key untuk flow ini.
 Command publish setelah user approve:
 
 ```bash
-npm run repliz:publish -- --slug videos/<slug> --file renders/final.mp4 --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 Tanpa `--approved`, script wajib berhenti sebelum upload R2 atau scheduling Repliz.

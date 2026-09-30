@@ -1,6 +1,6 @@
 # RD-05 Studio Web UI
 Status: accepted
-Date: 2026-09-28
+Date: 2026-09-30
 
 Domain: web UI lokal untuk project video (sumber per project + shared library),
 sesi agen tmux, dan publish. Owner:
@@ -15,7 +15,9 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-02** (Unwanted) — If a request's `Host` is not a listen address, or a
   mutating request's `Origin` does not match, then Studio shall reject it with 403.
 - **RD-05-03** (Optional) — Where `STUDIO_TOKEN` is set, Studio shall require a
-  valid session cookie for every route except `/login`.
+  valid session cookie for every route except `/login` and the login stylesheet
+  `/app.css`; API/media requests without it return 401, protected pages redirect
+  to `/login` with 302.
 - **RD-05-04** (Event-driven) — When Dena uploads a video or image, Studio shall
   stream it to `<dir>/.<name>.part` (dir = `shared/` or `videos/<slug>/sources/`)
   and rename it to `<dir>/<name>` only after the upload completes; an existing
@@ -132,3 +134,11 @@ sesi agen tmux, dan publish. Owner:
   preset for the music formats, show the duration range of the chosen format (clearing a
   typed duration outside it), and read a storyboard's bars column from the table header; the
   list and panel shall name each project's format (`?` when the format line is broken).
+
+- **RD-05-34** (Ubiquitous) — The Generate final-gate player shall show the exact normal
+  or blur render selected and fingerprinted by `scripts/lib/gates.mjs` (RD-03-101),
+  including its actual filename in `gate3.render`; absent/empty renders are not reviewable.
+- **RD-05-35** (Unwanted) — If a script, audio, or storyboard artifact is missing,
+  empty, or a directory, then Generate detail shall still show the owning phase's
+  incomplete status without attempting to read/preview it as a valid artifact;
+  Generate audio/sheet media requests for such paths shall return 404.

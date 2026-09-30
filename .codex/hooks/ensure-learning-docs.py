@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -26,7 +27,7 @@ LEARNING_KEYWORDS = (
     "burn token",
 )
 
-DOC_PREFIXES = ("docs/",)
+DOC_PREFIXES = ("internal/docs/", "docs/")
 DOC_EXACT = {"AGENTS.md", "CLAUDE.md"}
 DOC_SUFFIXES = (".md", ".mdx", ".rst")
 
@@ -106,19 +107,21 @@ def is_workflow(path: str) -> bool:
 
 
 def status_paths(root: Path) -> list[str]:
-    result = run(["git", "status", "--short", "--untracked-files=all"], root)
+    result = run(["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"], root)
     if result.returncode != 0:
         return []
 
     paths: list[str] = []
-    for raw in result.stdout.splitlines():
-        line = raw.strip()
-        if not line:
+    records = iter(result.stdout.split("\0"))
+    for record in records:
+        if not record:
             continue
-        path = line[3:] if len(line) > 3 else line
-        if " -> " in path:
-            path = path.split(" -> ", 1)[1]
-        paths.append(path)
+        paths.append(record[3:])
+        # -z emits the destination first, followed by the old path for a rename/copy.
+        if "R" in record[:2] or "C" in record[:2]:
+            old = next(records, "")
+            if old:
+                paths.append(old)
     return paths
 
 
@@ -129,11 +132,12 @@ def newest_doc_mtime_ns(root: Path) -> int:
         if path.exists():
             newest = max(newest, path.stat().st_mtime_ns)
 
-    docs = root / "docs"
-    if docs.exists():
-        for path in docs.rglob("*"):
-            if path.is_file() and path.suffix in {".md", ".mdx", ".rst"}:
-                newest = max(newest, path.stat().st_mtime_ns)
+    for prefix in DOC_PREFIXES:
+        docs = root / prefix
+        if docs.exists():
+            for path in docs.rglob("*"):
+                if path.is_file() and path.suffix in DOC_SUFFIXES:
+                    newest = max(newest, path.stat().st_mtime_ns)
 
     return newest
 
@@ -181,6 +185,13 @@ def block(reason: str) -> int:
     return 0
 
 
+def mechanical_exception(data: dict[str, Any]) -> bool:
+    message = data.get("last_assistant_message")
+    return isinstance(message, str) and bool(re.search(
+        r"^[ \t]*no docs update needed:[ \t]*\S[^\r\n]*$", message, re.MULTILINE | re.IGNORECASE
+    ))
+
+
 def stop(root: Path, data: dict[str, Any]) -> int:
     if data.get("stop_hook_active") is True:
         return 0
@@ -196,12 +207,12 @@ def stop(root: Path, data: dict[str, Any]) -> int:
         if not docs_updated_after_prompt:
             return block(
                 "Learning prompt detected, but no docs were updated in this turn. "
-                "Update `docs/**`, `AGENTS.md`, or `CLAUDE.md` with the learning before finishing."
+                "Update `internal/docs/**`, `docs/**`, `AGENTS.md`, or `CLAUDE.md` with the learning before finishing."
             )
         clear_state(root)
         return 0
 
-    if workflow_dirty and not docs_dirty:
+    if workflow_dirty and not docs_dirty and not mechanical_exception(data):
         shown = "\n".join(f"- {path}" for path in workflow_dirty[:12])
         return block(
             "Workflow/project files changed without docs changes. "

@@ -312,6 +312,11 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
 
 ### Build (music formats)
 
+- Screen Plan records the approved text/music/storyboard in `## Gate 1 Result`
+  of `visual-plan.md`. Build requires that result, `script.md`,
+  `processed-audio.wav`, `beats.json`, `storyboard.md`, nonempty storyboard
+  sheets, `publish-captions.md`, and `overlay-timeline.json`. It does not require
+  `processed.mp4`, `voice/`, transcripts, caption-beats, or separate BGM.
 - `processed-audio.wav` (the music) on track 10 is the only music: no `video bgm`, no
   ducking. SFX sparingly, only accents the music does not already hit.
 - kinetic-post: the last frame returns to the first frame's state (an invisible loop), no
@@ -319,6 +324,11 @@ and Gate 2 (render). Everything above applies unless this section says otherwise
 - Render → **Gate 2**; record a chat answer with
   `npm run video -- gate <slug> approve|revise|qa 2`. A Gate 2 approval ends the run: never
   publish.
+
+For every generate format, each file a gate fingerprints must be a nonempty
+regular file, including `storyboard.md` and every discovered storyboard sheet.
+The final gate and Studio player select the same newest normal/blur render by
+mtime; `<slug>.mp4` wins a tie. A changed selected file reopens final review.
 
 ## QA (generate)
 

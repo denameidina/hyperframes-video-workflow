@@ -1,6 +1,6 @@
 # RD-02 Composition & Render
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html`,
 `compositions/*.html`, CLI HyperFrames. Diturunkan dari `index.html`, AGENTS.md,
@@ -19,7 +19,9 @@ Domain: kontrak komposisi HyperFrames + render deterministik. Owner: `index.html
 - **RD-02-03** (Ubiquitous) — The system shall memberi setiap elemen ber-waktu
   atribut `data-start`, `data-duration`, dan `data-track-index`.
 - **RD-02-04** (Ubiquitous) — The system shall memberi `class="clip"` pada setiap
-  elemen ber-waktu yang tampil; framework memakainya untuk kontrol visibilitas.
+  elemen ber-waktu yang tampil selain mount `data-composition-src`; framework
+  mengelola mount tersebut sebagai sub-composition tanpa `class="clip"` agar
+  kontrol visibilitas tidak bertabrakan.
 - **RD-02-05** (Unwanted) — If dua elemen berbagi `data-track-index` sama, then
   the system shall memastikan rentang waktunya tidak tumpang tindih.
 - **RD-02-06** (Ubiquitous) — The system shall menggunakan `data-track-index`

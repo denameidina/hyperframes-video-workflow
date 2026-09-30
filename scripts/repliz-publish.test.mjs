@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
@@ -1177,4 +1177,84 @@ test("CLI help prints usage", () => {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Usage:/);
   assert.match(result.stdout, /--slug <dir>/);
+});
+
+// Real receipts on disk; only the external upload/API boundary is replaced.
+async function recoveryFixture(t) {
+  const dir = await mkdtemp(path.join(tmpdir(), "repliz-recovery-"));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, "final.mp4");
+  const receiptFile = path.join(dir, "repliz-publish.json");
+  await writeFile(file, "MP4");
+  await writeFile(receiptFile, JSON.stringify({ post: { description: "Caption v1" } }));
+  const posted = [];
+  let failPoll = false;
+  const fetchImpl = async (url, options = {}) => {
+    if (url.startsWith("https://media.example.com/")) return { status: 206 };
+    const account = /\/public\/account\/(tk_1|ig_1|th_1)$/.exec(url)?.[1];
+    if (account) return { ok: true, status: 200, json: async () => ({ id: account, type: { tk_1: "tiktok", ig_1: "instagram", th_1: "threads" }[account], isConnected: true }) };
+    if (url.endsWith("/public/schedule") && options.method === "POST") {
+      posted.push(JSON.parse(options.body).accountId);
+      return { ok: true, status: 200, json: async () => ({ scheduleId: `schedule_${posted.length}` }) };
+    }
+    if (/\/public\/schedule\/schedule_\d+$/.test(url)) {
+      if (failPoll) throw new Error("poll disconnected");
+      return { ok: true, status: 200, json: async () => ({ status: "success", postId: "post" }) };
+    }
+    throw new Error(`Unexpected URL: ${url}`);
+  };
+  const read = async () => JSON.parse(await readFile(receiptFile, "utf8"));
+  const run = (overrides = {}) => runPublish({ argv: ["--slug", dir, "--file", file, "--approved"], env: envFixture(overrides), runCommand: async () => ({}), fetchImpl, sleep: async () => {} });
+  return { dir, posted, read, run, edit: async (post) => writeFile(receiptFile, JSON.stringify({ ...await read(), post })), failPolling: () => { failPoll = true; }, resumePolling: () => { failPoll = false; } };
+}
+
+test("runPublish retains blocked history when a new platform succeeds and still blocks on the next run", async (t) => {
+  const f = await recoveryFixture(t);
+  await f.run({ REPLIZ_TIKTOK_ACCOUNT_ID: "" });
+  await f.edit({ description: "Caption v2" });
+  const second = await f.run();
+  assert.deepEqual(second.blocked.map((b) => b.platform), ["instagram"]);
+  const saved = await f.read();
+  assert.equal(saved.schedules.find((s) => s.platform === "instagram")?.scheduleId, "schedule_1");
+  assert.equal(saved.blocked[0].platform, "instagram");
+  const third = await f.run();
+  assert.equal(third.skipped, true);
+  assert.deepEqual(f.posted, ["ig_1", "tk_1"]);
+  assert.deepEqual(third.blocked.map((b) => b.platform), ["instagram"]);
+});
+
+test("runPublish retains temporarily unconfigured targets while another platform is added", async (t) => {
+  const f = await recoveryFixture(t);
+  await f.run();
+  await f.run({ REPLIZ_TIKTOK_ACCOUNT_ID: "", REPLIZ_THREADS_ACCOUNT_ID: "th_1" });
+  assert.equal((await f.read()).schedules.find((s) => s.platform === "tiktok")?.scheduleId, "schedule_1");
+  await f.run({ REPLIZ_THREADS_ACCOUNT_ID: "th_1" });
+  assert.deepEqual(f.posted, ["tk_1", "ig_1", "th_1"]);
+});
+
+test("runPublish checkpoints pending IDs before polling fails and resumes without another POST", async (t) => {
+  const f = await recoveryFixture(t);
+  f.failPolling();
+  await assert.rejects(f.run(), /poll disconnected/);
+  const saved = await f.read();
+  assert.ok(Array.isArray(saved.schedules), 'pending schedule IDs must survive the polling failure');
+  assert.deepEqual(saved.schedules.map((s) => [s.scheduleId, s.status]), [["schedule_1", "pending"], ["schedule_2", "pending"]]);
+  assert.ok(saved.schedules.every((s) => s.targetKey));
+  f.resumePolling();
+  const resumed = await f.run();
+  assert.equal(resumed.skipped, true);
+  assert.ok((await f.read()).schedules.every((s) => s.status === "success"));
+  assert.deepEqual(f.posted, ["tk_1", "ig_1"]);
+});
+
+test("createSchedules stops before the next target when checkpoint persistence fails", async () => {
+  let posts = 0;
+  const failure = new Error("disk unavailable");
+  await assert.rejects(createSchedules({
+    config: loadConfig(envFixture()), targetAccounts: [{ platform: "instagram", accountId: "ig_1" }, { platform: "tiktok", accountId: "tk_1" }],
+    post: { description: "Caption" }, videoUrl: "https://media.example.com/final.mp4",
+    fetchImpl: async () => { posts++; return { ok: true, status: 200, json: async () => ({ scheduleId: "schedule_1" }) }; },
+    onSchedule: async (schedules) => { assert.equal(schedules[0].scheduleId, "schedule_1"); throw failure; },
+  }), (e) => e === failure);
+  assert.equal(posts, 1);
 });

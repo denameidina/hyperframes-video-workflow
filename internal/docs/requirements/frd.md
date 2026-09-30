@@ -28,6 +28,7 @@ Fungsi pendukung: transkripsi lokal & setup lingkungan
 | Transkripsi & setup | [rd-04-transcription-setup](rd-04-transcription-setup.md) | whisper.cpp, setup docs |
 | Studio web UI | [rd-05-studio](rd-05-studio.md) | `scripts/studio.mjs`, `scripts/studio/` |
 | Audio: suara TTS, uji dengar, musik | [rd-06-audio](rd-06-audio.md) | `scripts/voice.mjs`, `scripts/music.mjs`, `scripts/lib/voice/` |
+| Hook dokumentasi | [rd-07-documentation-hooks](rd-07-documentation-hooks.md) | `.codex/hooks/`, `.claude/hooks/` |
 
 ## Batasan lintas domain (ubiquitous)
 

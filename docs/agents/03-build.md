@@ -14,7 +14,7 @@ visual decisions. When one of those is wrong, route it back to the owning phase.
 Use this phase when:
 
 - Story and Screen Plan artifacts exist, including `## Gate 2 Result` in
-  `visual-plan.md`.
+  `visual-plan.md` (format musik: `## Gate 1 Result`; see Mode generate).
 - Planned assets need to be captured, generated, cropped, or recorded.
 - `videos/<slug>/index.html` or `videos/<slug>/compositions/*.html` must be created or updated to match the
   plans.
@@ -32,7 +32,7 @@ Do not use this phase when:
 
 ## Mode generate
 
-When `creative-brief.md` sets `mode: generate`, follow Build (generate) in
+When `creative-brief.md` sets `mode: generate` and format `explainer`, follow Build (generate) in
 `docs/agents/references/generate-mode.md`: readiness without `processed.mp4`,
 `npm run video -- bgm <slug> --track <id> --from <s>` before assembly, one `SK.clip` per
 scene mounted on tracks 4 and 7, `.bg-fill` in the style world colour, and rail captions
@@ -41,7 +41,12 @@ without the `"rail": "hidden"` beats. Verification, render, and Gate 3 are uncha
 `npm run video -- gate <slug> approve|revise|qa 3` when it comes from chat (Studio records
 its own).
 In `kinetic-post` / `motion-short` the music is the only music track (no `video bgm`);
-kinetic-post loops, motion-short ends on a CTA card; the render is Gate 2 (ADR-0027).
+use Build (music formats) in that reference for readiness: `script.md`,
+`processed-audio.wav`, `beats.json`, storyboard document/sheets, visual plan with
+`## Gate 1 Result`, overlay timeline and publish captions. No voice, transcript,
+caption rail/beats, or separate BGM is required. kinetic-post loops, motion-short
+ends on a CTA card; the render is Gate 2 (ADR-0027). These inputs replace the
+edit-mode Inputs and Readiness below.
 
 ## Core Principle
 

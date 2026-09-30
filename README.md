@@ -11,8 +11,10 @@ credential, dan media kerja pribadi tidak disimpan di git.
 
 Catatan penting:
 
-- `raw/`, `videos/`, `references/`, dan `renders/` adalah workspace lokal yang
+- `shared/`, `videos/`, `references/`, dan `renders/` adalah workspace lokal yang
   ignored by git.
+- `raw/` adalah layout lama; migrasikan dengan `npm run video -- migrate-sources`.
+  Folder itu sendiri tidak lagi di-ignore, jadi jangan taruh file pribadi baru di sana.
 - File `.env` tidak boleh di-commit. Pakai `.env.example` sebagai template.
 - Beberapa vendored skill/assets punya lisensi pihak ketiga. Lihat
   `THIRD_PARTY_NOTICES.md`.
@@ -22,6 +24,7 @@ Catatan penting:
 - Node.js 22+.
 - npm/npx, biasanya sudah ikut saat install Node.js.
 - Git.
+- Python 3 untuk tes hook dokumentasi; FFmpeg/ffprobe untuk produksi video.
 - Koneksi internet saat pertama kali menjalankan command, karena script memakai
   `npx --yes hyperframes@0.7.24`.
 - File media lokal untuk komposisi aktif, karena file besar tidak disimpan di git.
@@ -53,43 +56,45 @@ cmake --build vendor/whisper.cpp/build -j --config Release
 sh vendor/whisper.cpp/models/download-ggml-model.sh large-v3-turbo
 ```
 
-Kalau ingin preview/render komposisi aktif, pulihkan dulu file media lokal yang
-diabaikan git. Cek path yang dipakai di `index.html`, lalu restore atau
-regenerate folder kerja terkait di `videos/<slug>/`.
+Root `index.html` adalah template kosong (ADR-0010). Untuk video, buat atau
+pulihkan `videos/<slug>/`, lalu cek media yang dirujuk oleh HTML proyek itu,
+`sources.json`, dan manifest asetnya. Sumber reusable berada di `shared/`.
 
 ## How To Run
 
-Preview lokal:
+Preview satu video:
 
 ```bash
-npm run dev
+npm run video -- dev <slug>
 ```
 
-`npm run dev` menjalankan server preview HyperFrames dan akan terus hidup sampai
+Command preview menjalankan server HyperFrames dan akan terus hidup sampai
 dihentikan. Di agent/automation, jalankan sebagai background process.
 
 Cek komposisi sebelum render atau handoff:
 
 ```bash
-npm run check
+npm run video -- check <slug>
 ```
 
 Render MP4:
 
 ```bash
-npm run render
+npm run video -- render <slug> [--blur]
 ```
 
-Publish dan ambil link:
+Untuk template root saja: `npm run dev`, `npm run check`, dan `npm run render`.
+Publish HyperFrames dari cwd proyek dan ambil link:
 
 ```bash
-npm run publish
+cd videos/<slug>
+npx --yes hyperframes@0.7.24 publish
 ```
 
 Auto publish final render ke Repliz lewat Cloudflare R2:
 
 ```bash
-npm run repliz:publish -- --slug videos/0702-2 --file renders/final.mp4 --approved
+npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
 
 Sebelum command ini, pastikan description tersedia di
@@ -133,7 +138,8 @@ Khusus macOS + tmux. Lihat `internal/docs/adr/0020-studio-web-ui.md`.
 ## Project Layout
 
 ```text
-index.html                              main HyperFrames composition
+index.html                              blank portrait template (bukan video aktif)
+templates/dena-video/                    starter untuk videos/<slug>/
 package.json                            script dev/check/render/publish
 scripts/repliz-publish.mjs              R2 upload + Repliz scheduling CLI
 hyperframes.json                        konfigurasi path dan registry HyperFrames
@@ -146,8 +152,8 @@ docs/agents/                            workflow fase 01-04 + references/
 docs/skills/dena-video-editing-workflow/SKILL.md
 vendor/gsap.min.js                      runtime GSAP lokal
 vendor/whisper.cpp/                     submodule transkripsi lokal
-raw/                                    input mentah lokal, ignored by git
-videos/                                 working media lokal, ignored by git
+shared/                                 sumber reusable lokal, ignored by git
+videos/<slug>/                          proyek video: sources/, transcripts/, assets/, renders/
 references/                             referensi lokal, ignored by git
 renders/                                output render lokal, ignored by git
 ```
@@ -157,9 +163,10 @@ renders/                                output render lokal, ignored by git
 Sebelum mengerjakan video Dena, baca file ini secara berurutan:
 
 1. `AGENTS.md`
-2. `docs/skills/dena-video-editing-workflow/SKILL.md`
-3. `docs/dena-social-video-style-guide.md`
-4. Dokumen fase yang relevan di `docs/agents/`
+2. `internal/docs/README.md` (index kanonik)
+3. `docs/skills/dena-video-editing-workflow/SKILL.md`
+4. `docs/dena-social-video-style-guide.md`
+5. Dokumen fase yang relevan di `docs/agents/`
 
 Default full workflow:
 
@@ -174,21 +181,23 @@ Jangan lompat ke assembly kecuali task memang narrow technical fix.
 
 ## HyperFrames Rules
 
-- Setiap timed element perlu `class="clip"`, `data-start`, `data-duration`, dan
-  `data-track-index`.
+- Setiap timed element perlu `data-start`, `data-duration`, dan `data-track-index`.
+  Tambahkan `class="clip"` pada clip biasa; mount `data-composition-src` tidak
+  memakai class itu karena visibility-nya dikelola sebagai sub-composition.
 - Timeline GSAP harus paused dan terdaftar di `window.__timelines`.
 - Video element memakai `muted`; audio utama memakai `<audio>` terpisah.
 - Logic komposisi harus deterministic: jangan pakai `Date.now()`,
   `Math.random()`, atau network fetch runtime.
-- Setelah mengubah `index.html` atau file composition `.html`, wajib jalankan
-  `npm run check`.
+- Setelah mengubah HTML video, jalankan `npm run video -- check <slug>`;
+  perubahan template root memakai `npm run check`.
+- `npm test` menjalankan seluruh tes lokal, termasuk hook, craft-kit, dan asset-lib.
 
 ## Git Notes
 
 Folder dan file media besar di bawah ini sengaja ignored:
 
 ```text
-raw/
+shared/
 videos/
 references/
 renders/
@@ -202,14 +211,14 @@ renders/
 ```
 
 Kalau preview blank atau render gagal setelah clone, cek dulu apakah media lokal
-yang dibutuhkan `index.html` sudah ada.
+yang dibutuhkan `videos/<slug>/index.html` sudah ada.
 
 ## Open Source Release Checklist
 
 Sebelum push public:
 
 ```bash
-npm run test:repliz
+npm test
 rg -n --hidden --glob '!.git/**' --glob '!node_modules/**' --glob '!vendor/**' \
   'REPLIZ_(ACCESS|SECRET)_KEY|CLOUDFLARE_API_TOKEN|-----BEGIN .*PRIVATE KEY-----|sk-[A-Za-z0-9_-]{20,}'
 git status --short

@@ -42,22 +42,48 @@ export function sheetsOf(dir) {
   return readdirSync(preview).filter((f) => SHEET_RE.test(f)).sort().map((f) => `preview/${f}`);
 }
 
+function readyFile(file) {
+  try {
+    const st = statSync(file);
+    return st.isFile() && st.size > 0;
+  } catch (e) {
+    if (e.code === 'ENOENT' || e.code === 'ENOTDIR') return false;
+    throw e;
+  }
+}
+
+// Shared by gate fingerprints and the Studio player (RD-03-101, RD-05-34).
+// Prefer the newest completed normal/blur output; normal wins a timestamp tie.
+export function finalRender(dir, slug = basename(dir)) {
+  return [`${slug}.mp4`, `${slug}-blur.mp4`]
+    .map((name) => ({ name, file: join(dir, 'renders', name) }))
+    .filter(({ file }) => readyFile(file))
+    .sort((a, b) => statSync(b.file).mtimeMs - statSync(a.file).mtimeMs)[0]?.name ?? null;
+}
+
 // The files a gate approves (RD-03-89, RD-03-95). visual-plan.md is left out on purpose: the agent writes
-// "## Gate 2 Result" into it after the approval, which would reopen the gate.
+// the mode-specific "Gate 1/2 Result" into it after approval, which would reopen the gate.
 export function gateFiles(dir, gate, slug = basename(dir), format = readFormat(dir)) {
   if (isMusicFormat(format)) {
     if (gate === 1) return ['script.md', 'processed-audio.wav', ...sheetsOf(dir), 'storyboard.md'];
-    if (gate === 2) return [`renders/${slug}.mp4`];
+    if (gate === 2) return [`renders/${finalRender(dir, slug) ?? `${slug}.mp4`}`];
     throw new GateError('bad-gate', `a ${format} project has Gate 1 and Gate 2 (got ${gate})`);
   }
   if (gate === 1) return ['script.md', 'processed-audio.wav'];
   if (gate === 2) return [...sheetsOf(dir), 'storyboard.md'];
-  if (gate === 3) return [`renders/${slug}.mp4`];
+  if (gate === 3) return [`renders/${finalRender(dir, slug) ?? `${slug}.mp4`}`];
   throw new GateError('bad-gate', `gate must be 1, 2, or 3 (got ${gate})`);
 }
 
 export function fingerprint(dir, gate, slug = basename(dir), format = readFormat(dir)) {
-  return Object.fromEntries(gateFiles(dir, gate, slug, format).filter((f) => existsSync(join(dir, f))).map((f) => [f, sha(join(dir, f))]));
+  const files = gateFiles(dir, gate, slug, format);
+  if (gate !== finalGate(format) && (isMusicFormat(format) || gate === 2) && !sheetsOf(dir).length) {
+    throw new GateError('missing-file', `${dir}/preview/storyboard-sheet.jpg is required before this gate`);
+  }
+  for (const file of files) {
+    if (!readyFile(join(dir, file))) throw new GateError('missing-file', `${join(dir, file)} must be a nonempty regular file before this gate`);
+  }
+  return Object.fromEntries(files.map((f) => [f, sha(join(dir, f))]));
 }
 
 export function readGates(dir) {
@@ -93,7 +119,8 @@ export function gateStatus(dir, { slug = basename(dir) } = {}) {
   const base = { mode: generate ? 'generate' : 'edit', format, finalGate: finalGate(format), log };
   const running = (phase) => ({ ...base, phase, gate: null, state: null, voiceStale: false, fingerprint: null, last: log.at(-1) || null });
   if (base.mode !== 'generate') return running(null);
-  const has = (f) => existsSync(join(dir, f));
+  const has = (f) => readyFile(join(dir, f));
+  const storyboardReady = () => has('storyboard.md') && sheetsOf(dir).length > 0 && sheetsOf(dir).every(has);
   // null when the gate is approved for the files on disk now; otherwise the waiting status
   const at = (gate) => {
     const fp = fingerprint(dir, gate, slug, format);
@@ -107,18 +134,18 @@ export function gateStatus(dir, { slug = basename(dir) } = {}) {
   if (!has('script.md') || !has('processed-audio.wav')) return running('story');
   if (isMusicFormat(format)) {
     // kinetic-post, motion-short: text + music + storyboard are one gate, the render the other (ADR-0027)
-    if (!sheetsOf(dir).length) return running('screen-plan');
+    if (!storyboardReady()) return running('screen-plan');
     const g1 = at(1);
     if (g1) return g1;
-    if (!has(`renders/${slug}.mp4`)) return running('build');
+    if (!finalRender(dir, slug)) return running('build');
     return at(2) || running('done');
   }
   const g1 = at(1);
   if (g1) return g1;
-  if (!sheetsOf(dir).length) return running('screen-plan');
+  if (!storyboardReady()) return running('screen-plan');
   const g2 = at(2);
   if (g2) return g2;
-  if (!has(`renders/${slug}.mp4`)) return running('build');
+  if (!finalRender(dir, slug)) return running('build');
   return at(3) || running('done');
 }
 

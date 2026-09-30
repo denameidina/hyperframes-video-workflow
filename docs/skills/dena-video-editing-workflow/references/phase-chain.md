@@ -29,11 +29,20 @@ Use this reference when deciding which Dena video phase to run and what artifact
 
 R2/Repliz publish still requires explicit user approval and `--approved`.
 
+## Generate Workflow
+
+Follow `docs/agents/references/generate-mode.md` for mode-specific artifacts.
+Explainer: Story script/voice → mandatory G1 → Screen Plan hybrid captions and
+storyboard → mandatory G2 → Build separate BGM/render → G3.
+kinetic-post/motion-short: Story screen text/music/`beats.json` → Screen Plan
+storyboard (no caption-beats) → G1 text/music/storyboard (`Gate 1 Result` in
+visual-plan) → Build render without separate BGM → G2. QA remains optional.
+
 ## Skip Rules
 
 Skipping is allowed only when the reason is explicit.
 
-- Skip the visual step only when no visuals are needed and no URL/tool/product context needs visual support; still write `visual-plan.md` with `skip` decisions and a Gate 2 Result.
+- In edit mode, skip the visual step only when no visuals are needed and no URL/tool/product context needs visual support; still write `visual-plan.md` with `skip` decisions and a Gate 2 Result. Generate always requires storyboard visuals.
 - Skip Build only when no HyperFrames composition is being created or changed.
 - Skip QA by default. Run it only when the user chooses QA first, asks for readiness/punch-list review, or a regression review is needed.
 
@@ -57,6 +66,6 @@ If the user says:
 - `cek cut dulu`: turn Gate 1 on for this video.
 - `audit dulu`: inspect source/reference and produce evidence before changing files.
 - `buat workflow`: create or update docs first; do not jump into editing.
-- `render final`: run required technical checks, render, then stop at Gate 3.
+- `render final`: run required technical checks, render, then stop at the format's final gate (G3 edit/explainer; G2 music).
 - `publish final` or `publish as-is`: verify explicit user approval, then use `npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`.
-- `QA first`: run the QA phase as a fresh-context subagent, then return to Gate 3.
+- `QA first`: run the QA phase as a fresh-context subagent, then return to the final review/publish gate.

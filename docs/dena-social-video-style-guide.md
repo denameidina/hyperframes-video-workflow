@@ -182,7 +182,8 @@ Suggested track indexes:
 
 Rules:
 
-- Every timed visual element needs `class="clip"`, `data-start`, `data-duration`, `data-track-index`.
+- Every timed visual element needs `data-start`, `data-duration`, `data-track-index`;
+  ordinary clips use `class="clip"`, while `data-composition-src` mounts omit it.
 - Register a paused timeline in `window.__timelines`.
 - Keep deterministic logic: no `Math.random()`, no `Date.now()`, no network fetches in render path.
 - Use local assets only inside the project.

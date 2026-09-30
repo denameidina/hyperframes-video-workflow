@@ -6,7 +6,7 @@ Gunakan checklist ini saat agent baru masuk repo setelah clone.
 
 1. Pastikan cwd adalah root repo `videos`.
 2. Baca `AGENTS.md`.
-3. Baca `README.md`.
+3. Baca `internal/docs/README.md` dan `README.md`.
 4. Baca `docs/initial-setup.md`.
 5. Jalankan `git status --short --untracked-files=all` sebelum mengubah file.
 
@@ -16,6 +16,7 @@ Gunakan checklist ini saat agent baru masuk repo setelah clone.
 node --version
 npm --version
 git --version
+python3 --version
 cmake --version
 ffmpeg -version
 ffprobe -version
@@ -69,31 +70,37 @@ vendor/whisper.cpp/build/bin/whisper-cli -h >/dev/null
 ## Transcription Command Template
 
 ```bash
-ffmpeg -y -i videos/<slug>/<input-media> \
+npm run video -- sources <slug>    # temukan path dan id sumber speech di sources.json
+mkdir -p videos/<slug>/transcripts
+ffmpeg -y -i videos/<slug>/sources/<input-media> \
   -ar 16000 -ac 1 -c:a pcm_s16le \
-  videos/<slug>/audio.wav
+  videos/<slug>/transcripts/<id>-audio.wav
 
 vendor/whisper.cpp/build/bin/whisper-cli \
   -m vendor/whisper.cpp/models/ggml-large-v3-turbo.bin \
-  -f videos/<slug>/audio.wav \
+  -f videos/<slug>/transcripts/<id>-audio.wav \
   -l id \
   --prompt "Dena Meidina, HyperFrames, Codex, AGENTS.md, skills, motion overlay, transcript cut, IG, TikTok, AI workflow" \
   -oj -ojf \
-  -of videos/<slug>/transcript-large-v3-turbo
+  -of videos/<slug>/transcripts/<id>-whisper
 ```
 
 Normalize the final transcript into:
 
 ```text
-videos/<slug>/transcript.json
+videos/<slug>/transcripts/<id>.json
 ```
+
+Untuk sumber reusable, gunakan path `shared/<file>` dari `sources.json` sebagai
+input FFmpeg. Story membuat `processed-transcript.json` setelah cut/speed;
+timestamp sumber dan timestamp processed tidak boleh dipertukarkan.
 
 ## Work Rules
 
 - For Dena social-video tasks, route through `docs/skills/dena-video-editing-workflow/SKILL.md`.
 - Use the Story phase (`docs/agents/01-story.md`) for transcript/cut work.
 - Use the Build phase (`docs/agents/03-build.md`) only when editing HyperFrames composition HTML.
-- After editing any `.html` composition, run `npm run check`.
+- After editing video HTML, run `npm run video -- check <slug>`; root template HTML uses `npm run check`.
 - Docs-only edits do not require `npm run check`.
 - Do not commit or delete local media unless explicitly asked.
 - Never upload to R2 or schedule Repliz until the user explicitly approves the final edit.

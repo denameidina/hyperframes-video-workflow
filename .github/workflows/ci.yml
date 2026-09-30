@@ -13,11 +13,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: npm run test:repliz
-      - run: npm run test:motion-kit
-      - run: npm run test:style-kit
-      - run: npm run test:render-blur
-      - run: npm run test:video
-      - run: npm run test:studio
-      - run: npm run test:voice
-      - run: npm run test:music
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm test

@@ -1,6 +1,6 @@
 # Publish Runbook (R2 + Repliz)
 Status: operating standard
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 [rd-01](../requirements/rd-01-publish-pipeline.md); kontrak:
@@ -22,7 +22,7 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 - Bila target Threads aktif (`REPLIZ_THREADS_ACCOUNT_ID`): tulis `## Threads`
   di `publish-captions.md` sebagai rantai bubble ≤150 karakter (blok pertama =
   post, sisanya reply chain) — lihat Threads Character Limits di
-  [integration-spec](../../docs/repliz/integration-spec.md). Tanpa itu, script
+  [integration-spec](../../../docs/repliz/integration-spec.md). Tanpa itu, script
   otomatis word-wrap `description` jadi rantai ≤150 karakter, tapi hasilnya
   kurang natural sebagai thread.
 - **Approval user** atas render final.
@@ -38,8 +38,11 @@ npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slu
 ```
 
 Script akan: cek `--approved` → load env → baca metadata/description → susun target
-account → upload R2 (Wrangler) → verifikasi URL publik (200/206) → validasi akun
-Repliz → buat schedule per akun → poll status → tulis receipt.
+account → partisi riwayat per target → poll ulang schedule pending yang digunakan
+kembali → upload R2 bila ada target baru → verifikasi URL publik (200/206) →
+validasi akun Repliz → buat schedule per akun dan checkpoint setiap hasil →
+poll status → checkpoint final. Riwayat target blocked/nonaktif tetap disimpan.
+Resume tanpa target baru tidak upload/POST, tetapi boleh melakukan GET polling.
 
 ## Flag
 
@@ -61,7 +64,13 @@ Repliz → buat schedule per akun → poll status → tulis receipt.
   disentuh ulang.
 - Receipt tersimpan di `videos/<slug>/repliz-publish.json`.
 
-## Kegagalan umum (semua berhenti sebelum efek keluar)
+## Kegagalan umum
+
+Approval/env/target/caption/title/bubble length dan keberadaan file diperiksa
+sebelum upload baru. Verifikasi URL publik dan validasi akun Repliz berlangsung
+setelah upload R2, sehingga kegagalannya dapat meninggalkan objek R2. Polling
+resume dapat terjadi sebelum upload baru; kegagalan pada tahap ini juga merupakan
+request eksternal. Tidak ada rollback objek/schedule otomatis.
 
 | Gejala | Sebab | Aksi |
 | --- | --- | --- |
@@ -78,7 +87,14 @@ Repliz → buat schedule per akun → poll status → tulis receipt.
 ## Multi-akun & timeout
 
 - Kegagalan satu akun tidak menggagalkan lainnya; akun gagal ditandai `error`.
-- Poll timeout 120s → receipt disimpan non-terminal; jalankan ulang untuk lanjut.
+- Setiap respons scheduling disimpan atomik sebelum akun berikutnya/polling.
+  Gagal menulis receipt menghentikan scheduling lanjutan.
+- Poll timeout 120s atau polling gagal → ID yang sudah diterima tetap di receipt;
+  jalankan ulang untuk GET/resume tanpa POST duplikat pada target tersebut.
+- Respons POST yang hilang karena gangguan jaringan tetap ambigu; cek Repliz
+  sebelum mengulang akun `error`. Jangan memakai `--force` untuk resume polling.
+- Render blur menggunakan `--file videos/<slug>/renders/<slug>-blur.mp4`;
+  pastikan file tersebut yang disetujui user.
 
 ## Keamanan
 

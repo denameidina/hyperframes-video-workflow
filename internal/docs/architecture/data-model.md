@@ -1,6 +1,6 @@
 # Data Model
 Status: accepted (reverse-engineered)
-Date: 2026-07-20
+Date: 2026-09-30
 
 Kanonik untuk: semua entitas data, file kontrak, dan bentuk JSON di repo ini.
 Repo tidak punya database — "data model" = file di working dir `videos/<slug>/`,
@@ -18,7 +18,7 @@ konfigurasi env, dan file project-level. Diturunkan dari
 | Creative brief | `videos/<slug>/creative-brief.md` | Markdown | Story |
 | Cut list | `videos/<slug>/cut-list.json` | JSON | Story |
 | Media metadata | `videos/<slug>/metadata.json` | JSON | Story |
-| Transcript | `videos/<slug>/transcript.json` | JSON (whisper) | Story |
+| Source transcripts | `videos/<slug>/transcripts/<id>.json` (`id` di `sources.json`) | JSON (whisper, waktu sumber) | Story |
 | Processed transcript | `videos/<slug>/processed-transcript.json` | JSON (whisper, waktu processed) | Story |
 | Caption beats | `videos/<slug>/caption-beats.json` | JSON | Screen Plan |
 | Asset manifest | `videos/<slug>/assets/asset-manifest.json` | JSON | Build |
@@ -50,7 +50,7 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
 `scripts/repliz-publish.mjs`.
 
 **Wajib** (publish gagal jika salah satu kosong — `loadConfig`,
-`repliz-publish.mjs:429`):
+`repliz-publish.mjs`):
 
 - `REPLIZ_API_BASE_URL` — base URL Repliz (OpenAPI tidak punya `servers`, jadi
   base URL harus dikonfigurasi).
@@ -63,7 +63,7 @@ Dari `.env.example` dan `loadConfig()` / `buildTargetAccounts()` di
 
 - `R2_PREFIX` — default `final-renders` bila kosong.
 - Target akun (platform tanpa ID akan dilewati) — `buildTargetAccounts`,
-  `repliz-publish.mjs:58`:
+  `repliz-publish.mjs`:
   - `REPLIZ_FACEBOOK_ACCOUNT_ID` → platform `facebook`
   - `REPLIZ_YOUTUBE_ACCOUNT_ID` → platform `youtube`
   - `REPLIZ_TIKTOK_ACCOUNT_ID` → platform `tiktok`
@@ -82,16 +82,16 @@ Secret tidak boleh masuk git (`.gitignore` mengabaikan `.env` + `.env.*` kecuali
 ## `repliz-publish.json` — receipt + metadata (entitas sentral)
 
 File dwifungsi: **input metadata** (dibaca `readPostMetadata`) dan **output
-receipt** (ditulis `writeReceipt`, `repliz-publish.mjs:452`).
+receipt** (ditulis `writeReceipt`, `repliz-publish.mjs`).
 
 ### Sebagai input (metadata post)
 
-`readPostMetadata` (`repliz-publish.mjs:163`) menerima dua bentuk:
+`readPostMetadata` (`repliz-publish.mjs`) menerima dua bentuk:
 
 - Root object: `{ "description": "...", "tags": [...], ... }`
 - Post object: `{ "post": { "description": "...", ... } }`
 
-Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs:22`):
+Field post (default dari `DEFAULT_POST`, `repliz-publish.mjs`):
 
 | Field | Tipe | Default | Catatan |
 | --- | --- | --- | --- |
@@ -141,7 +141,8 @@ YouTube aktif, publish berhenti sebelum upload/scheduling.
 
 ### Sebagai output (receipt)
 
-Ditulis setelah publish sukses (`repliz-publish.mjs:452`):
+Ditulis atomik melalui file sementara + rename setelah setiap hasil scheduling,
+sebelum POST berikutnya/polling, lalu setelah polling final (ADR-0028):
 
 ```json
 {
@@ -175,6 +176,11 @@ title, replies})` untuk entry itu — dipakai untuk memutuskan reuse/reschedule/
 blocked pada run berikutnya, per `platform:accountId`, bukan lewat
 `publishKey` global. `blocked` hanya muncul bila ada target yang sudah pernah
 sukses tapi kontennya berubah dan run ini tidak `--force`.
+
+`schedules[]` mempertahankan semua riwayat target, termasuk blocked dan akun
+yang sementara tidak ada di env; hasil terbaru menggantikan entry target yang
+sama. Gagal polling tidak menghapus checkpoint pending. Run skip menyimpan
+perubahan status/key legacy/blocked bila ada tanpa upload atau POST baru.
 
 Receipt **tidak boleh** menyimpan access/secret key, Cloudflare API token,
 header Basic Auth penuh, atau signed URL (lihat integration spec).
@@ -249,7 +255,11 @@ Beat: `id`, `start`, `duration`, `text`, `highlight` (atau null), `type`, `posit
 
 Per asset: `id`, `file`, `type`, `purpose`, `timestamp { start, end }`, `required`, `provenance`, `source`, `privacy`, `style`, `doNotShow[]`, `handoff`.
 Aset generated menambah `promptSummary`, `rejectedAlternatives`. Aset `user-supplied` dari sumber project menambah `sourceId` (id di `sources.json`).
-`provenance` ∈ `source-frame | source-video-segment | user-supplied | screenshot | screen-recording | web-research | generated | designed | reference-analysis`.
+`provenance` ∈ `source-frame | source-video-segment | user-supplied | screenshot | screen-recording | web-research | generated | designed | reference-analysis | cc0 | dena-footage | user | reconstructed | pd-archive`.
+`user-supplied` + `sourceId` dipakai untuk asset dari inventory proyek; `user`
+adalah file user pada brief style. `dena-footage` adalah frame/cut-out sumber Dena;
+`reconstructed` adalah plate yang ditambal (bukan bukti); `cc0` dan `pd-archive`
+wajib sumber + bukti status lisensi (lihat `asset-production.md`).
 
 ## `overlay-timeline.json` (Screen Plan)
 
@@ -269,7 +279,8 @@ Markdown dengan bagian `Inputs`, `Strategy`, `Visual Decision Log` (time, line,
 purpose, best real asset, simple asset option, imagegen candidate, decision,
 reason), `Timeline` (ID, in–out, line, visual type, placement/track, motion,
 SFX cue, illustrative, Gate 2 trigger), `Asset Briefs For Build`,
-`Conflicts And Resolutions`, `Gate 2 Result`, `Handoff`. Template:
+`Conflicts And Resolutions`, `Gate 2 Result` (edit/explainer) atau `Gate 1 Result`
+(format musik), `Handoff`. Template:
 `docs/agents/references/visual-planning.md`.
 
 ## `config/voices.json` (voice adapter, ter-track)
@@ -338,9 +349,12 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 - `gates.json` (ADR-0026): `{ version: 1, log: [{ gate: 1|2|3, decision: "approve"|"revise"|"qa"|"edit", note, at, by: "studio"|"cli", fingerprint: { "<file>": "<sha256>" } | null }] }`.
   Satu-satunya penulis: `scripts/lib/gates.mjs` (log, hanya ditambah, atomik). Persetujuan
   berlaku untuk sidik jari file gate (G1 `script.md` + `processed-audio.wav`; G2 storyboard
-  sheet + `storyboard.md`; G3 `renders/<slug>.mp4`); `edit` tanpa sidik jari. Format musik
+  sheet + `storyboard.md`; G3 render final); `edit` tanpa sidik jari. Format musik
   (ADR-0027): G1 = `script.md` + `processed-audio.wav` + storyboard sheet + `storyboard.md`,
   G2 = render; `gate` hanya 1|2.
+  Semua file wajib berupa file reguler tidak kosong; fingerprint parsial ditolak.
+  Render final dipilih bersama oleh gate dan Studio: file terbaru menurut mtime
+  dari `renders/<slug>.mp4`/`renders/<slug>-blur.mp4`; normal menang jika seri.
 - `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, createdAt }`
   (`text` = Teks persis atau `null`; `voice` selalu `null` untuk format musik);
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
@@ -353,8 +367,10 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
 ## Komposisi HyperFrames (`videos/<slug>/index.html`)
 
 Root: `data-composition-id`, `data-start`, `data-width=1080`, `data-height=1920`,
-`data-duration` (detik). Setiap elemen ber-waktu: `class="clip"`, `data-start`,
-`data-duration`, `data-track-index`, `id` stabil. Elemen `<audio>` boleh punya
+`data-duration` (detik). Setiap elemen ber-waktu: `data-start`, `data-duration`,
+`data-track-index`, `id` stabil, dan `class="clip"` pada clip biasa. Mount
+`data-composition-src` tidak memakai `class="clip"`; visibility-nya dikelola
+sebagai sub-composition. Elemen `<audio>` boleh punya
 `data-volume`. Detail track & z-index di
 [design-system/visual-system](../design-system/visual-system.md) dan
 [frontend/composition-implementation](../frontend/composition-implementation.md).

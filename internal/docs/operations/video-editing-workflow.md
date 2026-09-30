@@ -1,6 +1,6 @@
 # Video Editing Workflow (4 Fase)
 Status: operating standard
-Date: 2026-09-26
+Date: 2026-09-30
 
 Kanonik untuk: cara operasional menjalankan produksi video Dena via 4 fase.
 Aturan/kriteria: [rd-03](../requirements/rd-03-video-editing-workflow.md);
@@ -12,7 +12,9 @@ dokumen fase `docs/agents/01-story.md` … `docs/agents/04-qa.md`, referensi di
 
 Story → (Gate 1 opsional) → Screen Plan → (Gate 2 kondisional) → Build →
 Gate 3 review user → (QA opsional, subagent) → gate publish. Jangan mulai Build
-sebelum artifact Story dan Screen Plan ada, termasuk `Gate 2 Result`. Slug per
+sebelum artifact Story dan Screen Plan sesuai format ada, termasuk `Gate 2 Result`
+untuk edit/explainer atau `Gate 1 Result` untuk format musik. Ikhtisar berikut
+adalah mode edit; penggantian artifact/gate generate ada di bagian Mode generate. Slug per
 video: `videos/<slug>/`. Fase hilir membaca artifact hulu, bukan dokumen fase
 hulu; referensi dibaca hanya pada langkah yang menyebutnya.
 
@@ -60,7 +62,7 @@ proof-card-slide 0.25–0.45s, punch-zoom 0.2–0.4s, flash-cut <0.12s, cta-morp
 `visual-plan.md`, `overlay-timeline.json`.
 **Gate 2** (kondisional): berhenti hanya bila baris Timeline kena R1–R6 (angka/
 klaim tak verbatim, data asli/privat, wajah tertutup >10s atau saat kalimat
-personal, wajah tertutup di 0–3s tanpa pilihan brief, CTA berjanji, generated
+personal, wajah tertutup di `0–hook_end` tanpa pilihan brief, CTA berjanji, generated
 yang menggambarkan orang/brand nyata, atau dokumen ilustratif yang meniru media
 nyata). Referensi: `captions.md`,
 `caption-artifacts.md`, `visual-planning.md`, `motion-grammar.md`,
@@ -73,7 +75,8 @@ benar-benar dibuat) → baca skill `/hyperframes` + `/hyperframes-core` → tuli
 (`compositions/broll/*.html`) dan cek snapshot-nya di kata kunci → rakit
 `index.html` (+ `compositions/*.html` bila perlu). Kontrak: root
 `data-composition-id` + `data-width/height/duration`; tiap elemen ber-waktu
-`class="clip"` + timing; tanpa overlap track sama; timeline paused terdaftar;
+`class="clip"` pada clip biasa + timing (mount `data-composition-src` tanpa class
+itu); tanpa overlap track sama; timeline paused terdaftar;
 deterministik; video muted + audio terpisah; aset lokal. `npm run video -- check <slug>`, fix
 semua error, preview keyframe, tulis `assembly-notes.md` +
 `assembly-checklist.md`, render (opsional `npm run render:blur`). **Gate 3** (wajib): berhenti untuk review user.
@@ -104,12 +107,14 @@ satu `SK.clip` per scene di track 4/7, render → Gate 3. Tanpa percepatan 1,2x.
 Format musik (`- format: kinetic-post | motion-short`, ADR-0027): tanpa narasi. Story menulis
 teks layar di `script.md` dan memotong musik dengan `npm run video -- music` (bar utuh dari
 downbeat → `processed-audio.wav` + `beats.json`); Screen Plan tanpa caption, scene di beat,
-`storyboard.md` dengan kolom bar → **Gate 1** (teks + musik + storyboard); Build tanpa
+`storyboard.md` dengan kolom bar → **Gate 1** (teks + musik + storyboard, hasil
+ditulis di `## Gate 1 Result` pada visual-plan); Build tanpa
 `video bgm`, kinetic-post loop / motion-short kartu CTA → **Gate 2** (render). RD-03-94…99.
 
 ## Gate review/publish
 
-Setelah render Build: berhenti, minta user review (Gate 3). Tawarkan: publish
+Setelah render Build: berhenti, minta user review (Gate 3 untuk edit/explainer,
+Gate 2 untuk format musik). Tawarkan: publish
 as-is (default) / QA dulu / revisi. Publish hanya via
 `npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved`
 setelah approval; artifact QA tidak disyaratkan. Lihat

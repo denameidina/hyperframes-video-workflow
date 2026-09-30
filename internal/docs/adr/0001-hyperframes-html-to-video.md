@@ -28,9 +28,11 @@ lalu dirender ke MP4 oleh CLI HyperFrames. Timeline animasi = satu GSAP timeline
 
 ## Consequences
 
-- Kontrak ketat: tiap elemen ber-waktu butuh `class="clip"` + `data-start` +
-  `data-duration` + `data-track-index`; larangan `Date.now`/`Math.random`/network.
-- Setiap edit `.html` wajib `npm run check`.
+- Kontrak ketat: elemen ber-waktu butuh `data-start`, `data-duration`, dan
+  `data-track-index`; clip biasa memakai `class="clip"`, mount `data-composition-src`
+  tidak (klarifikasi RD-02-04). Larangan `Date.now`/`Math.random`/network.
+- HTML video diperiksa dengan `npm run video -- check <slug>`; template root
+  memakai `npm run check` (ADR-0010).
 - Bergantung pada `npx hyperframes@0.7.24` (butuh internet saat pertama).
 - Skill HyperFrames lokal (`.claude/skills/`) jadi bagian workflow.
 
