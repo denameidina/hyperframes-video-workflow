@@ -1,6 +1,6 @@
 # Internal Docs — Source of Truth Index
 Status: operating standard
-Date: 2026-09-30
+Date: 2026-10-01
 
 Ini index + registry Source of Truth repo **hyperframes-video-workflow**
 (workspace produksi video sosial Dena Meidina + CLI auto-publish R2/Repliz).
@@ -108,6 +108,9 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 74. [operations/motion-quality-remediation.md](operations/motion-quality-remediation.md) - Peta penutupan sepuluh temuan audit, regresi tooling/source, dan satu proof explainer untuk review.
 75. [research/threads-motion-reference-2026-09-30.md](research/threads-motion-reference-2026-09-30.md) - Analisis video referensi pengguna, mekanik karakter/causal assembly, dan revisi atas pilot yang ditolak karena kaku.
 
+81. [adr/0033-studio-launchagent.md](adr/0033-studio-launchagent.md) - Studio sebagai layanan launchd per akun macOS: autostart saat login dan restart otomatis.
+82. [operations/studio-service.md](operations/studio-service.md) - Instalasi LaunchAgent, status/restart/stop, log dan verifikasi Studio selalu berjalan saat akun aktif.
+
 ## Canonical Files
 
 Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
@@ -123,9 +126,10 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Disiplin workflow video (EARS) | [requirements/rd-03-video-editing-workflow](requirements/rd-03-video-editing-workflow.md) |
 | Transkripsi & setup (EARS) | [requirements/rd-04-transcription-setup](requirements/rd-04-transcription-setup.md) |
 | Studio web UI (EARS) | [requirements/rd-05-studio](requirements/rd-05-studio.md) |
+| Studio background service macOS | [operations/studio-service](operations/studio-service.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
 | Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0030) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0030, 0033) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |

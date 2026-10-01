@@ -1,10 +1,10 @@
 # RD-05 Studio Web UI
 Status: accepted
-Date: 2026-09-30
+Date: 2026-10-01
 
 Domain: web UI lokal untuk project video (sumber per project + shared library),
 sesi agen tmux, dan publish. Owner:
-`scripts/studio.mjs`, `scripts/studio/`. Keputusan:
+`scripts/studio.mjs`, `scripts/studio/`, `config/studio-launchagent.plist`. Keputusan:
 [ADR-0020](../adr/0020-studio-web-ui.md), [ADR-0022](../adr/0022-multi-source-projects.md),
 [ADR-0023](../adr/0023-voice-adapter-tts.md), [ADR-0024](../adr/0024-music-library.md),
 [ADR-0026](../adr/0026-studio-generate.md).
@@ -142,3 +142,33 @@ sesi agen tmux, dan publish. Owner:
   empty, or a directory, then Generate detail shall still show the owning phase's
   incomplete status without attempting to read/preview it as a valid artifact;
   Generate audio/sheet media requests for such paths shall return 404.
+
+## macOS background service
+
+- **RD-05-44** (Optional) — Where the per-user macOS Studio LaunchAgent is
+  installed and enabled, Studio shall start at user login with `RunAtLoad`,
+  without an open Terminal window.
+- **RD-05-45** (Unwanted) — If the registered Studio process exits while the
+  LaunchAgent is enabled, then launchd shall launch it again with `KeepAlive`
+  and a configured `ThrottleInterval` of 10 seconds.
+- **RD-05-46** (Ubiquitous) — The Studio LaunchAgent shall use absolute Node,
+  script, working-directory and log paths, port 4777, and an explicit PATH
+  containing the installed tmux, Claude, Codex and ffprobe executables; Studio
+  shall continue loading credentials from the repository `.env`, without
+  copying credential values into the plist.
+- **RD-05-47** (Event-driven) — When the user disables and unloads the Studio
+  LaunchAgent, Studio shall remain stopped through later logins until the user
+  explicitly enables it again.
+- **RD-05-48** (Ubiquitous) — The Studio service runbook shall document status,
+  restart, stop, re-enable and log commands, and distinguish login autostart
+  from availability before login or while the Mac is asleep.
+- **RD-05-49** (Ubiquitous) — Studio shall read tmux session metadata with
+  explicit UTF-8 mode (`tmux -u list-panes`), preserving all six tab separators
+  even when the LaunchAgent environment has no `LANG` or `LC_*` variables;
+  session slugs, runtime, model, effort and exited status shall match the same
+  tmux server queried from a UTF-8 terminal.
+- **RD-05-50** (Ubiquitous) — The LaunchAgent installation shall prioritize
+  the Claude and Codex executable directories selected from the user's shell
+  before the Node executable directory; before starting a session, service
+  verification shall run `claude --version` and `codex --version` with the
+  installed plist PATH and require exit status 0 for the runtime being used.

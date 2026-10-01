@@ -42,7 +42,8 @@ export function parseSessions(stdout, nowSec) {
 }
 
 export async function listSessions({ run = runFile, now = Date.now } = {}) {
-  const r = await run('tmux', ['list-panes', '-a', '-F', FORMAT]);
+  // launchd has no UTF-8 locale by default; without -u tmux replaces metadata tabs with underscores.
+  const r = await run('tmux', ['-u', 'list-panes', '-a', '-F', FORMAT]);
   if (r.code !== 0) return []; // no tmux server yet
   return parseSessions(r.stdout, Math.floor(now() / 1000));
 }

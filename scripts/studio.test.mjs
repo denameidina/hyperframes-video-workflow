@@ -120,7 +120,7 @@ function fakeRun(responses = {}) {
   const calls = [];
   const run = async (cmd, args) => {
     calls.push([cmd, ...args]);
-    return responses[args[0]] || { code: 0, stdout: '', stderr: '' };
+    return responses[args[0] === '-u' ? args[1] : args[0]] || { code: 0, stdout: '', stderr: '' };
   };
   return { run, calls };
 }
@@ -139,7 +139,17 @@ test('parseSessions keeps studio sessions and derives status', () => {
 test('listSessions returns [] when no tmux server runs', async () => {
   const { run, calls } = fakeRun({ 'list-panes': { code: 1, stdout: '', stderr: 'no server running' } });
   assert.deepEqual(await listSessions({ run }), []);
-  assert.deepEqual(calls[0], ['tmux', 'list-panes', '-a', '-F', FORMAT]);
+  assert.deepEqual(calls[0], ['tmux', '-u', 'list-panes', '-a', '-F', FORMAT]);
+});
+
+test('listSessions requests UTF-8 so launchd preserves metadata tabs', async () => {
+  const { run, calls } = fakeRun({ 'list-panes': { code: 0,
+    stdout: 'studio-badiblum-testimoni\t990\t1\tcodex\tgpt-6.1-sol\tmedium\t900\n', stderr: '' } });
+  assert.deepEqual(await listSessions({ run, now: () => 1_000_000 }), [{
+    slug: 'badiblum-testimoni', runtime: 'codex', model: 'gpt-6.1-sol',
+    effort: 'medium', started: 900, status: 'exited',
+  }]);
+  assert.deepEqual(calls[0], ['tmux', '-u', 'list-panes', '-a', '-F', FORMAT]);
 });
 
 test('startSession writes the prompt and starts a detached tmux session with metadata', async () => {
