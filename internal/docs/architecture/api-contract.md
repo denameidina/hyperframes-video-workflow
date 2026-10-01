@@ -1,6 +1,6 @@
 # API Contract
 Status: accepted (reverse-engineered)
-Date: 2026-09-30
+Date: 2026-10-01
 
 Kanonik untuk: kontrak eksternal (Repliz API, Cloudflare R2 via Wrangler, Gemini TTS)
 dan surface fungsi CLI publish serta HTTP Studio lokal. Diturunkan dari `scripts/repliz-publish.mjs`,
@@ -41,7 +41,8 @@ npx wrangler r2 object put "<R2_BUCKET>/<r2Key>" --remote --file "<file>" --cont
 
 Base URL = `REPLIZ_API_BASE_URL` (OpenAPI `docs/repliz/openapi.json`,
 `title: Repliz API`, `version: 1.0.0`, `servers: []` — makanya base URL wajib
-dari env). 53 path total; CLI ini memakai **3**.
+dari env). 53 path total; CLI publish memakai **3**, Studio calendar menambah
+read-only listing `/public/schedule`.
 
 **Auth:** HTTP Basic — `Authorization: Basic base64(REPLIZ_ACCESS_KEY:REPLIZ_SECRET_KEY)`
 (`basicAuthHeader`, `repliz-publish.mjs`). Semua request JSON pakai
@@ -137,7 +138,7 @@ testable.
 
 | Fungsi | Peran |
 | --- | --- |
-| `parseArgs(argv)` | Parse `--slug`, `--file`, `--approved`, `--force`, `--help`; wajib slug+file |
+| `parseArgs(argv)` | Parse `--slug`, `--file`, `--approved`, `--force`, `--schedule-at`, `--help`; wajib slug+file |
 | `buildTargetAccounts(env)` | Map 5 env ID (termasuk Threads) → `{platform, accountId}`, skip kosong |
 | `buildR2Key({prefix,slug,file})` | Susun object key R2 |
 | `buildPublicUrl(baseUrl,key)` | Susun public URL (encode segmen) |
@@ -309,12 +310,25 @@ audio/sheet yang kosong atau nonregular ditolak **404** (RD-05-35).
 
 ### Hasil render dan publish
 
+Kalender (ADR-0031): GET `/api/calendar?month=YYYY-MM[&sync=1]` mengembalikan
+`{month,timeZone:"Asia/Jakarta",configured,events,undated,syncedAt,stale,partial,warning}`.
+Event = `{id,slug|null,title,platform,accountId,account,status,scheduleAt,source}`;
+source `receipt` atau `repliz`. Bulan 2000–2100 wajib; bulan/sync invalid → 400.
+Default membaca receipt + snapshot memori. `sync=1` melakukan GET eksternal
+`/public/schedule?page=N&limit=100&accountIds=<id>&fromDate=<ISO>&toDate=<ISO>`
+(accountIds diulang per akun) dengan Basic Auth server-side, 30 s total, 10
+halaman maksimal, tanpa mengikuti redirect. `docs[]`, `hasNextPage`/`totalPages`
+mengatur pagination sesuai OpenAPI. Hanya akun konfigurasi yang diterima.
+Kegagalan remote tetap 200 dengan warning + receipt/snapshot berlabel stale;
+secret/transport error tidak diteruskan. Status remote tidak ditulis ulang ke
+receipt. Endpoint ini menggunakan guard Host/session yang sama dengan Studio.
+
 | Method/path | Request | Response / efek dan error khusus |
 | --- | --- | --- |
 | GET `/api/results` | — | `[{slug,file,size,mtime,publish:{createdAt,platforms:[{platform,status}]} atau null}]`, mtime terbaru dahulu |
 | GET `/media/:slug/:file` | file basename MP4 yang terdaftar di renders; optional Range | stream render normal/blur/MP4 lain; **404** bukan render yang tersedia |
 | GET `/api/results/:slug/publish-preview?file=<mp4>` | — | `{slug,file,title,description,targets:[platform]}`; read-only metadata, tanpa network publish; **404** render tidak ada |
-| POST `/api/results/:slug/publish` | `{file:<mp4 basename>}` | `{ok:true}`; mulai CLI dengan `--approved`; **404** render hilang, **409** job slug masih berjalan; keberhasilan HTTP berarti job dimulai, status akhir di SSE/receipt |
+| POST `/api/results/:slug/publish` | `{file:<mp4 basename>,scheduleAt?:<ISO with zone|now>}` | `{ok:true}`; mulai CLI dengan `--approved` dan opsional `--schedule-at`; **400** body/tanggal invalid atau kurang dari 60 s di masa depan, **404** render hilang, **409** job slug masih berjalan; keberhasilan HTTP berarti job dimulai, status akhir di SSE/receipt |
 | GET `/api/results/:slug/publish/stream` | — | SSE log/done dengan replay; **404** belum ada publish job |
 
 Mutasi create/upload/session tidak memiliki idempotency key HTTP; nama/proyek
@@ -327,9 +341,49 @@ bukan POST HTTP secara umum. Approval final Generate mengakhiri sesi; publish
 tetap aksi terpisah yang dikonfirmasi di Results. Request publish sendiri
 merupakan otorisasi publish, dan bukan permintaan membuat keputusan gate baru.
 
+Konfirmasi publish juga dapat dibuka dari Kalender setelah memilih hasil render.
+Tanggal dan jam ditampilkan WIB lalu dikirim ISO; `scheduleAt` yang tidak
+diberikan tetap memakai metadata lama. Override tidak mengubah targetKey atau
+memaksa repost. Receipt per target menyimpan scheduleAt aktual, dan jadwal
+lebih dari 60 s di masa depan dikembalikan pending tanpa menunggu polling.
+
 Static GET yang terdaftar: `/`, `/login`, `/app.js`, `/generate.js`, `/app.css`,
 serta `/vendor/xterm/xterm.js`, `xterm.css`, `addon-fit.js`. Tidak ada serving
 direktori umum, key suara, credential, atau preview arbitrer.
+
+## 6. MCP stdio lokal
+
+Entry `scripts/mcp.mjs` memakai JSON-RPC 2.0 per baris UTF-8 melalui stdin/stdout;
+stdout hanya protokol. `initialize` menegosiasikan 2024-11-05, 2025-03-26,
+2025-06-18 atau 2025-11-25, kemudian client mengirim `notifications/initialized`.
+Revisi yang tidak didukung menerima 2025-11-25. Resource-link dikembalikan sebagai
+teks path/URI untuk dua revisi sebelum 2025-06-18.
+
+Method: `ping`, `tools/list`, `tools/call`, `resources/list`,
+`resources/templates/list`, `resources/read`, `prompts/list`, `prompts/get`.
+Tool/resources list dipaginasi 100 item dengan cursor offset opak bagi client.
+Method tidak dikenal → -32601; parameter/URI/tool tidak valid → -32602;
+JSON invalid → -32700; request invalid → -32600. Error operasi tool muncul
+sebagai `result.isError: true` dengan text content, agar agent dapat memperbaiki
+argumen. JSON-RPC batch tidak didukung.
+
+Tool memiliki schema object tertutup; input berupa parameter domain, bukan
+shell/argv. Command lama mengembalikan `{id,key,keys,status,startedAt,endedAt,code,
+log,logTruncated}`; `job_get`/`job_cancel` menggunakan `{id}`. Status:
+`running`, `cancelling`, `timing_out`, `succeeded`, `failed`, `cancelled`,
+`timed_out`; key tetap terkunci selama eskalasi penghentian.
+
+Resource URI `dena://workspace/<relative-path>` memuat dokumen, artefak teks dan
+gambar kecil. Media besar mengembalikan resource link untuk dibuka di viewer
+lokal. Prompt `workflow_story|workflow_screen_plan|workflow_build|workflow_qa`
+memerlukan `{slug}` dan memuat router + phase doc yang ada.
+
+Gate/publish/sync remote/clone/delete memerlukan `human_confirmed: true` dan
+`approval_note` nonempty. Tidak ada approval otomatis. Publish membungkus
+Publisher lama dan meneruskan `--approved`; gate menulis melalui CLI pemilik.
+Seluruh schema/katalog, batas I/O dan konfigurasi client:
+[MCP runbook](../operations/mcp-runbook.md); perilaku terukur:
+[RD-08](../requirements/rd-08-mcp.md).
 
 ## Referensi
 

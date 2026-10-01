@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildTargetAccounts, readPostMetadata } from '../repliz-publish.mjs';
+import { normalizePublishTime } from '../lib/publish-time.mjs';
 import { HttpError } from './http.mjs';
 import { JobRunner } from './jobs.mjs';
 import { projectSlugs } from './files.mjs';
@@ -57,9 +58,14 @@ export class Publisher {
     return this.runner.has(slug);
   }
 
-  start(slug, file) {
+  start(slug, file, scheduleAt) {
     renderPath(this.root, slug, file);
-    return this.runner.start(slug, process.execPath, ['scripts/repliz-publish.mjs', '--slug', `videos/${slug}`, '--file', `videos/${slug}/renders/${file}`, '--approved'], { cwd: this.root, env: this.env });
+    const args = ['scripts/repliz-publish.mjs', '--slug', `videos/${slug}`, '--file', `videos/${slug}/renders/${file}`, '--approved'];
+    if (scheduleAt !== undefined) {
+      try { args.push('--schedule-at', normalizePublishTime(scheduleAt)); }
+      catch (e) { throw new HttpError(400, e.message); }
+    }
+    return this.runner.start(slug, process.execPath, args, { cwd: this.root, env: this.env });
   }
 
   follow(slug, listener) {

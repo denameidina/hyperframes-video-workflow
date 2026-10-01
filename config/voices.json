@@ -27,6 +27,7 @@
       "style": "Santai dan jujur, seperti founder yang cerita ke teman; register Jakarta, tempo sedang."
     },
     "supertonic-f2": { "provider": "supertonic", "voice": "F2", "speed": 1.05 },
+    "supertonic-f2-1.12": { "provider": "supertonic", "voice": "F2", "speed": 1.12 },
     "recorded": { "provider": "recorded" }
   }
 }

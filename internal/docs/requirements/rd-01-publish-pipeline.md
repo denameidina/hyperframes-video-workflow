@@ -1,9 +1,18 @@
 # RD-01 Publish Pipeline
 Status: accepted (reverse-engineered)
-Date: 2026-09-30
+Date: 2026-10-01
 
 Domain: auto-publish render final ke Cloudflare R2 + schedule Repliz multi-platform.
 Owner: `scripts/repliz-publish.mjs`. Uji: `scripts/repliz-publish.test.mjs`.
+
+- **RD-01-44** (Event-driven) — When an approved publish includes
+  `--schedule-at <ISO with zone|now>`, the CLI shall override post.scheduleAt
+  for that invocation, validate a timestamp as at least 60 s in the future
+  before upload/network, and persist the actual payload scheduleAt per newly
+  created target in its receipt. Existing targetKeys shall still be reused.
+- **RD-01-45** (State-driven) — While a newly created schedule is in the future
+  by more than 60 s, the CLI shall checkpoint its pending status and return
+  without waiting for that date; immediate publishing keeps existing polling.
 Kontrak API: [architecture/api-contract](../architecture/api-contract.md).
 
 ## Approval gate

@@ -510,8 +510,8 @@ test("createSchedules posts one Repliz schedule per target account", async () =>
   assert.equal(calls[0].options.method, "POST");
   assert.equal(calls[0].options.headers.Authorization, "Basic YWNjZXNzOnNlY3JldA==");
   assert.deepEqual(schedules, [
-    { accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", status: "pending" },
-    { accountId: "ig_1", platform: "instagram", scheduleId: "schedule_2", status: "pending" },
+    { accountId: "tk_1", platform: "tiktok", scheduleId: "schedule_1", scheduleAt: "2026-07-03T01:40:08.119Z", status: "pending" },
+    { accountId: "ig_1", platform: "instagram", scheduleId: "schedule_2", scheduleAt: "2026-07-03T01:40:08.119Z", status: "pending" },
   ]);
 });
 
@@ -1257,4 +1257,37 @@ test("createSchedules stops before the next target when checkpoint persistence f
     onSchedule: async (schedules) => { assert.equal(schedules[0].scheduleId, "schedule_1"); throw failure; },
   }), (e) => e === failure);
   assert.equal(posts, 1);
+});
+
+test('scheduled publish persists the exact payload date, returns pending and reuses existing targets', async (t) => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'repliz-scheduled-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'final.mp4');
+  await writeFile(file, 'MP4');
+  await writeFile(path.join(dir, 'repliz-publish.json'), JSON.stringify({ post: { description: 'Caption', scheduleAt: 'now' } }));
+  const calls = []; const bodies = [];
+  const fetchImpl = async (url, opts = {}) => {
+    calls.push(url);
+    if (url.startsWith('https://media.example.com/')) return { status: 206 };
+    if (url.includes('/public/account/')) return { ok: true, status: 200, json: async () => ({ isConnected: true, type: 'instagram' }) };
+    if (opts.method === 'POST') {
+      bodies.push(JSON.parse(opts.body));
+      return { ok: true, status: 200, json: async () => ({ scheduleId: 'future-1' }) };
+    }
+    throw Error('Future schedules must not poll');
+  };
+  const base = { env: envFixture({ REPLIZ_TIKTOK_ACCOUNT_ID: '' }), now: new Date('2026-10-01T00:00:00Z'), runCommand: async () => ({}), fetchImpl, sleep: async () => { throw Error('must not wait'); } };
+  const run = (date) => runPublish({ ...base, argv: ['--slug', dir, '--file', file, '--approved', '--schedule-at', date] });
+  const result = await run('2026-10-02T09:00:00+07:00');
+  assert.equal(result.receipt.post.scheduleAt, '2026-10-02T02:00:00.000Z');
+  assert.equal(result.receipt.schedules[0].scheduleAt, bodies[0].scheduleAt);
+  assert.equal(result.receipt.schedules[0].status, 'pending');
+  assert.equal((await run('2026-10-03T09:00:00+07:00')).skipped, true);
+  assert.equal(bodies.length, 1, 'date changes must not silently repost');
+  const saved = JSON.parse(await readFile(path.join(dir, 'repliz-publish.json'), 'utf8'));
+  assert.equal(saved.schedules[0].scheduleAt, '2026-10-02T02:00:00.000Z');
+  let effects = 0;
+  await assert.rejects(runPublish({ ...base, argv: ['--slug', dir, '--file', file, '--approved', '--schedule-at', '2026-10-01T00:00:00Z'], runCommand: async () => { effects++; }, fetchImpl: async () => { effects++; } }), /setidaknya satu menit/);
+  assert.equal(effects, 0);
+  assert.equal(parseArgs(['--slug', dir, '--file', file, '--schedule-at', 'now']).scheduleAt, 'now');
 });

@@ -5,6 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "mcp": "node scripts/mcp.mjs",
+    "test:mcp": "node --test scripts/mcp.test.mjs",
     "test": "node --test scripts/*.test.mjs",
     "test:hooks": "node --test scripts/doc-hooks.test.mjs",
     "dev": "npx --yes hyperframes@0.7.24 preview",
@@ -28,7 +30,7 @@
     "video": "node scripts/video.mjs",
     "test:video": "node --test scripts/video.test.mjs scripts/video-sources.test.mjs scripts/cut-plan.test.mjs scripts/migrate-sources.test.mjs scripts/generate-lib.test.mjs scripts/generate.test.mjs scripts/generate-gates.test.mjs scripts/music-cut.test.mjs",
     "studio": "node scripts/studio.mjs",
-    "test:studio": "node --test scripts/studio.test.mjs",
+    "test:studio": "node --test scripts/studio.test.mjs scripts/studio-calendar.test.mjs scripts/studio-ui.test.mjs",
     "voice": "node scripts/voice.mjs",
     "test:voice": "node --test scripts/voice-*.test.mjs",
     "music": "node scripts/music.mjs",

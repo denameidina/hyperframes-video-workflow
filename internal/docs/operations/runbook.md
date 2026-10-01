@@ -1,6 +1,6 @@
 # Runbook
 Status: operating standard
-Date: 2026-09-30
+Date: 2026-10-01
 
 Kanonik untuk: perintah operasional harian (setup, preview, check, render,
 publish). Diturunkan dari `package.json`, `README.md`, `docs/initial-setup.md`,
@@ -32,6 +32,11 @@ Pastikan folder kerja ada: `mkdir -p shared videos references renders` (+ `.gitk
 Root `index.html` adalah template kosong; video aktif selalu di `videos/<slug>/`.
 
 ## Loop editing harian
+
+Studio dapat berjalan otomatis tanpa Terminal melalui LaunchAgent macOS.
+Lihat [Studio background service](studio-service.md) untuk instalasi, status,
+restart dan stop. Setelah terpasang, buka <http://127.0.0.1:4777>; layanan
+dimulai setelah login dan menjalankan ulang proses yang berhenti.
 
 ```bash
 npm run video -- new <slug>       # proyek video dari starter Dena (sekali per video)

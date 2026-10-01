@@ -1,6 +1,6 @@
 # Data Model
 Status: accepted (reverse-engineered)
-Date: 2026-09-30
+Date: 2026-10-01
 
 Kanonik untuk: semua entitas data, file kontrak, dan bentuk JSON di repo ini.
 Repo tidak punya database — "data model" = file di working dir `videos/<slug>/`,
@@ -162,6 +162,7 @@ sebelum POST berikutnya/polling, lalu setelah polling final (ADR-0028):
       "accountId": "<id>",
       "platform": "tiktok|instagram|youtube|facebook|threads",
       "scheduleId": "<id>",
+      "scheduleAt": "<actual payload ISO time, optional in legacy receipts>",
       "status": "pending|process|success|error",
       "postId": "<id, jika ada>",
       "error": "<pesan, jika status error>",
@@ -187,6 +188,13 @@ perubahan status/key legacy/blocked bila ada tanpa upload atau POST baru.
 
 Receipt **tidak boleh** menyimpan access/secret key, Cloudflare API token,
 header Basic Auth penuh, atau signed URL (lihat integration spec).
+
+Kalender Studio membaca `schedules[].scheduleAt`, dengan fallback ke ISO
+`post.scheduleAt` pada receipt lama. `now` bukan tanggal tersimpan; receipt tanpa
+tanggal aktual dihitung sebagai undated hingga sinkronisasi Repliz mencocokkan
+scheduleId. Snapshot remote disimpan dalam memori per bulan (maksimal 12 bulan),
+tanpa file data baru. Override CLI `--schedule-at` tersimpan saat checkpoint,
+tanpa mengubah tanggal target lama yang di-reuse (ADR-0031).
 
 ## `publish-captions.md` — kontrak heading eksak
 
@@ -415,6 +423,28 @@ sebagai sub-composition. Elemen `<audio>` boleh punya
   Node/FFmpeg/FFprobe/HyperFrames; `checks` mencatat probe, dimensi, frame rate,
   durasi, declaredAudio, decode dan audioProfile. Ini receipt teknis delivery,
   bukan persetujuan user atau bukti full audiovisual QA.
+
+## Job MCP dan transcript sumber (ADR-0032)
+
+Job MCP adalah state **in-memory per sesi**, bukan file receipt. Bentuk respons:
+`{id,key,keys,status,startedAt,endedAt,code,log,logTruncated}`. `id` UUID; `key`
+menamai job dan `keys` memuat seluruh reservasi proyek/pustaka, termasuk media
+bersama yang sedang dipakai. Status awal `running`, terminal `succeeded|failed|cancelled|timed_out`;
+`cancelling|timing_out` mempertahankan kunci selama eskalasi penghentian proses.
+Maksimal 4 job aktif; 100 metadata job tersimpan; log respons 64 KiB terakhir.
+Output dan receipt CLI tetap berada di disk setelah sesi MCP berakhir.
+
+`transcribe` melalui MCP menyimpan Whisper mentah di
+`transcripts/<source-id>-asr/whisper.json` atau `transcripts/processed-asr/whisper.json`.
+Artifact normalized `transcripts/<source-id>.json` atau
+`processed-transcript.json` berisi `{source,language,timeBase,text,words,segments,raw}`.
+`timeBase: source|processed`; `words: [{text,start,end}]` dan
+`segments: [{text,start,end}]` memakai detik; `raw` relatif ke proyek. Penulis
+tidak mengubah timestamp sumber menjadi processed secara terselubung.
+
+I/O artefak MCP mengembalikan SHA-256 konten. Revisi memakai `expected_sha256`
+yang sama dengan file di disk; file yang berubah sejak pembacaan ditolak.
+Kontrak akses/gate: [RD-08](../requirements/rd-08-mcp.md).
 
 ## Referensi
 

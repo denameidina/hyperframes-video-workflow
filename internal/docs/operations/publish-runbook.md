@@ -1,6 +1,6 @@
 # Publish Runbook (R2 + Repliz)
 Status: operating standard
-Date: 2026-09-30
+Date: 2026-10-01
 
 Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 [rd-01](../requirements/rd-01-publish-pipeline.md); kontrak:
@@ -29,6 +29,24 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 
 ## Langkah
 
+### Dari Studio
+
+1. Buka **Hasil** untuk menonton render; klik **Atur jadwal**. Atau buka
+   **Kalender**, pilih tanggal → **Jadwalkan konten** → pilih render.
+2. Periksa tanggal/jam **WIB**, caption dan platform. Pilih **Publish sekarang**
+   bila ingin segera tayang, atau tanggal/jam minimal satu menit mendatang.
+3. Klik **Konfirmasi jadwal/publish** setelah review. Kalender tidak melakukan
+   upload atau scheduling hanya dengan memilih tanggal.
+4. Di Kalender, klik **Sinkronkan Repliz** untuk mengambil status/jadwal remote.
+   Tiap bulan disinkronkan terpisah. Tanpa sinkronisasi hanya receipt lokal dan
+   snapshot terakhir yang terlihat; warning menunjukkan data stale/parsial.
+
+Jadwal target yang sudah ada tetap digunakan kembali. Mengubah tanggal di form
+tidak memindahkan jadwal lama atau repost. Jadwal future disimpan pending dan
+CLI selesai tanpa menunggu tanggal tayang. Kalender bukan editor jadwal remote.
+
+### Dari CLI
+
 1. Render + minta user review (jangan publish tanpa approval).
 2. Smoke test tanpa jaringan (opsional): `npm run test:repliz`.
 3. Publish:
@@ -36,6 +54,10 @@ Kanonik untuk: menjalankan auto-publish render final. Perilaku detail:
 ```bash
 npm run repliz:publish -- --slug videos/<slug> --file videos/<slug>/renders/<slug>.mp4 --approved
 ```
+
+Tanggal eksplisit dapat ditambahkan dengan
+`--schedule-at 2026-10-05T09:00:00+07:00` (atau `now`). Timestamp wajib
+berzona dan minimal satu menit mendatang. Tanpa flag, metadata tetap berlaku.
 
 Script akan: cek `--approved` → load env → baca metadata/description → susun target
 account → partisi riwayat per target → poll ulang schedule pending yang digunakan

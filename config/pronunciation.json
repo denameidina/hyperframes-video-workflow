@@ -1,6 +1,7 @@
 {
   "version": 1,
   "entries": [
+    { "term": "badiblum.com", "say": "badiblum dot com", "only": ["supertonic"] },
     { "term": "CRM", "say": "si ar em", "only": ["supertonic"] },
     { "term": "ERP", "say": "i ar pi", "only": ["supertonic"] },
     { "term": "API", "say": "ei pi ai", "only": ["supertonic"] },

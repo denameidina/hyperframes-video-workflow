@@ -1025,3 +1025,31 @@ test('storyboardRows reads the bars column from the header, not from the column 
   assert.deepEqual([item.format, item.status.phase], [null, 'error']);
   assert.equal((await app.call('GET', '/api/generate/post-bad')).status, 500);
 });
+
+test('Studio calendar route validates months, exposes offline events and stays behind login', async (t) => {
+  const root = studioRoot();
+  writeFileSync(join(root, 'videos/vid-a/repliz-publish.json'), JSON.stringify({ post: { title: 'Jadwal' }, schedules: [{ scheduleId: 's1', platform: 'instagram', status: 'pending', scheduleAt: '2026-10-02T02:00:00Z' }] }));
+  const { server, call } = await startApp(root);
+  t.after(() => server.close());
+  assert.equal((await call('GET', '/api/calendar?month=wrong')).status, 400);
+  assert.equal((await call('GET', '/api/calendar?month=2026-10&sync=true')).status, 400);
+  const result = await call('GET', '/api/calendar?month=2026-10');
+  assert.equal(result.status, 200); assert.equal(result.body.events[0].title, 'Jadwal');
+  const guarded = await startApp(root, { token: 's3cret' });
+  t.after(() => guarded.server.close());
+  assert.equal((await guarded.call('GET', '/api/calendar?month=2026-10')).status, 401);
+});
+
+test('Studio publish forwards a zoned future date, rejects invalid bodies before starting a process', async (t) => {
+  const root = studioRoot(); const spawned = [];
+  const publisher = new Publisher({ root, env: {}, spawnImpl: (cmd, args) => { spawned.push(args); return fakeChild(); } });
+  const { server, call } = await startApp(root, { publisher });
+  t.after(() => server.close());
+  for (const body of [null, [], 7, { file: 'vid-a.mp4', scheduleAt: null }, { file: 'vid-a.mp4', scheduleAt: '2020-01-01T09:00:00+07:00' }, { file: 'vid-a.mp4', scheduleAt: '2099-01-01T09:00' }]) assert.equal((await call('POST', '/api/results/vid-a/publish', body)).status, 400);
+  assert.equal(spawned.length, 0);
+  const result = await call('POST', '/api/results/vid-a/publish', { file: 'vid-a.mp4', scheduleAt: '2099-01-01T09:00:00+07:00' });
+  assert.equal(result.status, 200);
+  assert.deepEqual(spawned[0].slice(-2), ['--schedule-at', '2099-01-01T02:00:00.000Z']);
+  assert.ok(spawned[0].includes('--approved'));
+  assert.equal((await call('POST', '/api/results/vid-a/publish', { file: 'vid-a.mp4', scheduleAt: 'now' })).status, 409);
+});

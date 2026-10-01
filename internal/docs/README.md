@@ -107,7 +107,11 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 73. [adr/0030-motion-quality-delivery.md](adr/0030-motion-quality-delivery.md) - Actual storyboard evidence, normalized creative fingerprints, validated atomic render/audio delivery, dan satu pilot rich-motion; [implementation plan](../../docs/superpowers/plans/2026-09-30-motion-quality-remediation.md).
 74. [operations/motion-quality-remediation.md](operations/motion-quality-remediation.md) - Peta penutupan sepuluh temuan audit, regresi tooling/source, dan satu proof explainer untuk review.
 75. [research/threads-motion-reference-2026-09-30.md](research/threads-motion-reference-2026-09-30.md) - Analisis video referensi pengguna, mekanik karakter/causal assembly, dan revisi atas pilot yang ditolak karena kaku.
-
+76. [research/studio-usability-audit-2026-10-01.md](research/studio-usability-audit-2026-10-01.md) - Audit kegunaan Studio, temuan berbukti, dan perbaikan navigasi/publish/kalender.
+77. [adr/0031-studio-calendar.md](adr/0031-studio-calendar.md) - Kalender WIB dari receipt + sinkronisasi Repliz, jadwal eksplisit melalui Publisher tanpa repost paksa.
+78. [requirements/rd-08-mcp.md](requirements/rd-08-mcp.md) - EARS server MCP lokal: tool typed, resource/prompt, job, path, approval dan kompatibilitas client.
+79. [adr/0032-local-project-mcp.md](adr/0032-local-project-mcp.md) - MCP stdio Node tanpa dependency lokal, adapter CLI dengan job sesi, lintas Claude/Codex/Hermes.
+80. [operations/mcp-runbook.md](operations/mcp-runbook.md) - Setup client, katalog tool, contoh parameter, alur kerja dan batas MCP.
 81. [adr/0033-studio-launchagent.md](adr/0033-studio-launchagent.md) - Studio sebagai layanan launchd per akun macOS: autostart saat login dan restart otomatis.
 82. [operations/studio-service.md](operations/studio-service.md) - Instalasi LaunchAgent, status/restart/stop, log dan verifikasi Studio selalu berjalan saat akun aktif.
 
@@ -129,7 +133,8 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Studio background service macOS | [operations/studio-service](operations/studio-service.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
 | Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0030, 0033) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0033) |
+| MCP agent lintas client | [requirements/rd-08-mcp](requirements/rd-08-mcp.md), [operations/mcp-runbook](operations/mcp-runbook.md) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |

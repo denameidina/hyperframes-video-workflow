@@ -8,39 +8,56 @@
 <link rel="stylesheet" href="/app.css">
 </head>
 <body>
-<header>
-  <h1>Studio</h1>
-  <nav>
-    <button data-tab="projects" class="active">Projects</button>
-    <button data-tab="generate">Generate</button>
-    <button data-tab="shared">Shared</button>
-    <button data-tab="sessions">Sessions</button>
-    <button data-tab="results">Results</button>
-    <button data-tab="voice">Suara</button>
-    <button data-tab="music">Musik</button>
+<a class="skip-link" href="#main">Lewati navigasi</a>
+<header class="studio-nav">
+  <div class="brand"><h1>Studio<span class="brand-dot" aria-hidden="true"></span></h1><p>Ruang kerja konten</p></div>
+  <nav aria-label="Navigasi Studio">
+    <div class="nav-group" role="group" aria-label="Produksi">
+      <span class="nav-label">Produksi</span>
+      <button data-tab="projects" class="active" aria-current="page">Proyek</button>
+      <button data-tab="generate">Generate</button>
+      <button data-tab="results">Hasil</button>
+      <button data-tab="calendar">Kalender</button>
+    </div>
+    <div class="nav-group" role="group" aria-label="Peralatan">
+      <span class="nav-label">Peralatan</span>
+      <button data-tab="sessions">Sesi agen</button>
+      <button data-tab="shared">Pustaka</button>
+      <button data-tab="voice">Suara</button>
+      <button data-tab="music">Musik</button>
+    </div>
   </nav>
+  <p class="nav-foot">Dari ide sampai terjadwal.</p>
 </header>
-<p id="banner" hidden></p>
-<main>
+<main id="main" tabindex="-1">
+  <p id="banner" role="alert" hidden></p>
+  <div class="page-heading"><h2 id="page-title">Proyek</h2><p id="page-description">Mulai dari bahan video, lalu lanjutkan proses editing.</p></div>
   <section id="tab-projects">
     <div id="project-home">
-      <form id="project-create" class="bar">
-        <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="slug-project-baru" autocapitalize="off" autocomplete="off">
-        <button class="primary">Buat project</button>
-      </form>
+      <div class="page-tools">
+        <label class="search-field">Cari proyek<input id="project-search" type="search" placeholder="Nama proyek…" autocomplete="off"></label>
+        <details class="create-project"><summary class="btn primary">Buat proyek</summary>
+          <form id="project-create" class="bar">
+            <label>Nama proyek<input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="misalnya tips-ai" autocapitalize="off" autocomplete="off" aria-describedby="slug-help"></label>
+            <button class="primary">Buat</button><span id="slug-help" class="muted">Huruf kecil, angka, dan tanda hubung.</span>
+          </form>
+        </details>
+      </div>
+      <p id="project-count" class="list-count" aria-live="polite"></p>
       <ul id="project-list" class="list"></ul>
+      <p id="project-no-match" class="empty-state" hidden>Tidak ada proyek yang cocok. <button data-clear-search="project-search">Hapus pencarian</button></p>
     </div>
     <div id="project-detail" hidden>
       <div class="bar">
-        <button id="project-back">← Projects</button>
+        <button id="project-back">Kembali ke proyek</button>
         <strong id="project-title"></strong>
       </div>
       <div class="bar">
-        <label class="btn primary">Upload video/gambar<input id="source-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp" hidden></label>
-        <button id="project-attach">Tambah dari Shared</button>
+        <label class="file-field">Upload video/gambar<input id="source-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp"></label>
+        <button id="project-attach">Tambah dari pustaka</button>
         <button id="project-session" class="primary">Mulai sesi</button>
-        <button id="project-delete" class="danger">Hapus project</button>
-        <progress id="source-progress" max="1" value="0" hidden></progress>
+        <button id="project-delete" class="danger">Hapus proyek</button>
+        <progress id="source-progress" aria-label="Progres upload sumber" max="1" value="0" hidden></progress>
       </div>
       <ul id="source-list" class="list"></ul>
     </div>
@@ -59,13 +76,42 @@
   </section>
   <section id="tab-shared" hidden>
     <div class="bar">
-      <label class="btn primary">Upload ke Shared<input id="shared-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp" hidden></label>
-      <progress id="shared-progress" max="1" value="0" hidden></progress>
+      <label class="file-field">Upload ke pustaka<input id="shared-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp"></label>
+      <progress id="shared-progress" aria-label="Progres upload pustaka" max="1" value="0" hidden></progress>
     </div>
     <ul id="shared-list" class="list"></ul>
   </section>
   <section id="tab-sessions" hidden><ul id="session-list" class="list"></ul></section>
-  <section id="tab-results" hidden><ul id="result-list" class="list"></ul></section>
+  <section id="tab-results" hidden>
+    <label class="search-field">Cari hasil<input id="result-search" type="search" placeholder="Nama proyek atau file…" autocomplete="off"></label>
+    <p id="result-count" class="list-count" aria-live="polite"></p>
+    <ul id="result-list" class="list"></ul>
+    <p id="result-no-match" class="empty-state" hidden>Tidak ada hasil yang cocok. <button data-clear-search="result-search">Hapus pencarian</button></p>
+  </section>
+  <section id="tab-calendar" hidden>
+    <div class="calendar-toolbar">
+      <div class="month-nav"><button id="calendar-prev" aria-label="Bulan sebelumnya">Sebelumnya</button><h3 id="calendar-month"></h3><button id="calendar-next" aria-label="Bulan berikutnya">Berikutnya</button></div>
+      <div class="actions"><button id="calendar-today">Hari ini</button><button id="calendar-sync">Sinkronkan Repliz</button></div>
+    </div>
+    <p id="calendar-status" class="muted" role="status"></p>
+    <p id="calendar-warning" class="notice" role="alert" hidden></p>
+    <div class="calendar-layout">
+      <div class="calendar-month-view">
+        <div class="calendar-weekdays" aria-hidden="true"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span></div>
+        <div id="calendar-grid" class="calendar-grid" role="group" aria-label="Pilih tanggal. Gunakan tombol panah untuk berpindah tanggal."></div>
+        <p class="calendar-legend muted">Titik biru menandai tanggal dengan konten. Semua jam dalam WIB.</p>
+      </div>
+      <aside class="calendar-agenda" aria-label="Agenda tanggal terpilih">
+        <div class="agenda-head"><h3 id="calendar-day-title" aria-live="polite"></h3><button id="calendar-plan" class="primary">Jadwalkan konten</button></div>
+        <ul id="calendar-events" class="agenda-list"></ul>
+        <form id="calendar-render-form" hidden>
+          <label>Pilih hasil render<select id="calendar-render" required></select></label>
+          <p id="calendar-render-hint" class="muted"></p>
+          <menu><button type="button" id="calendar-plan-cancel">Batal</button><button class="primary" id="calendar-render-go">Lanjut</button></menu>
+        </form>
+      </aside>
+    </div>
+  </section>
   <section id="tab-voice" hidden>
     <div id="voice-home"><ul id="voice-list" class="list"></ul></div>
     <div id="voice-detail" hidden>
@@ -82,49 +128,57 @@
   <section id="tab-music" hidden><ul id="music-list" class="list"></ul></section>
 </main>
 
-<dialog id="edit-dialog">
+<dialog id="edit-dialog" aria-labelledby="edit-dialog-title">
   <form method="dialog" id="edit-form">
-    <h2>Sesi agen <span id="edit-slug"></span></h2>
+    <h2 id="edit-dialog-title">Sesi agen <span id="edit-slug"></span></h2>
+    <label>Catatan <textarea name="notes" rows="4" placeholder="Arahan opsional untuk agen"></textarea></label>
+    <details class="agent-settings"><summary>Pengaturan agen</summary>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
     <label>Model <select name="model" required></select></label>
     <label>Effort <select name="effort"></select></label>
-    <label>Catatan <textarea name="notes" rows="4" placeholder="Arahan opsional untuk agen"></textarea></label>
-    <p class="error" id="edit-error"></p>
+    </details>
+    <p class="error" id="edit-error" role="alert"></p>
     <menu><button value="cancel" formnovalidate>Batal</button><button value="start" class="primary">Mulai sesi</button></menu>
   </form>
 </dialog>
 
-<dialog id="attach-dialog">
+<dialog id="attach-dialog" aria-labelledby="attach-dialog-title">
   <form method="dialog" id="attach-form">
-    <h2>Tambah dari Shared</h2>
+    <h2 id="attach-dialog-title">Tambah dari pustaka</h2>
     <ul id="attach-list" class="checks"></ul>
-    <p class="error" id="attach-error"></p>
+    <p class="error" id="attach-error" role="alert"></p>
     <menu><button value="cancel" formnovalidate>Batal</button><button value="attach" class="primary">Tambahkan</button></menu>
   </form>
 </dialog>
 
-<dialog id="publish-dialog">
+<dialog id="publish-dialog" aria-labelledby="publish-dialog-title">
   <form method="dialog" id="publish-form">
-    <h2>Publish ke Repliz</h2>
+    <h2 id="publish-dialog-title">Jadwalkan ke Repliz</h2>
     <p><strong id="publish-file"></strong></p>
     <p id="publish-targets" class="muted"></p>
-    <pre id="publish-caption"></pre>
-    <pre id="publish-log" hidden></pre>
-    <p class="error" id="publish-error"></p>
-    <menu><button value="cancel" formnovalidate>Tutup</button><button value="publish" class="primary" id="publish-go">Konfirmasi publish</button></menu>
+    <div id="publish-settings">
+      <label>Waktu tayang<select id="publish-mode"><option value="scheduled">Pilih tanggal &amp; jam</option><option value="now">Publish sekarang</option></select></label>
+      <div id="publish-date-fields" class="date-fields"><label>Tanggal (WIB)<input id="publish-date" type="date" required></label><label>Jam (WIB)<input id="publish-time" type="time" required value="09:00"></label></div>
+      <p id="publish-time-summary" class="muted" aria-live="polite"></p>
+    </div>
+    <details><summary>Lihat caption</summary><pre id="publish-caption"></pre></details>
+    <p class="notice">Pastikan video dan caption sudah sesuai. Target yang sudah terjadwal akan dilewati untuk mencegah duplikasi.</p>
+    <pre id="publish-log" role="log" hidden></pre>
+    <p class="error" id="publish-error" role="alert"></p>
+    <menu><button value="cancel" formnovalidate>Tutup</button><button value="publish" class="primary" id="publish-go">Konfirmasi jadwal</button></menu>
   </form>
 </dialog>
 
-<dialog id="gen-dialog">
+<dialog id="gen-dialog" aria-labelledby="gen-dialog-title">
   <form method="dialog" id="gen-form">
-    <h2>Buat video generate</h2>
+    <h2 id="gen-dialog-title">Buat video generate</h2>
     <label>Format <select name="format">
       <option value="explainer">explainer · narasi, 30–90 dtk</option>
       <option value="kinetic-post">kinetic-post · teks, 8–20 dtk, loop</option>
       <option value="motion-short">motion-short · 15–40 dtk, kartu CTA</option>
     </select></label>
     <label>Brief (wajib) <textarea name="brief" rows="5" maxlength="4000" required placeholder="Topik, sudut pandang, poin yang wajib ada"></textarea></label>
-    <label>Slug <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off"></label>
+    <label>Nama proyek <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off" placeholder="misalnya tips-ai"></label>
     <label id="gen-text-field" hidden>Teks persis (opsional, dipakai kata demi kata) <textarea name="text" rows="3" maxlength="1000" placeholder="BUKAN AI-NYA YANG BODOH"></textarea></label>
     <details><summary>Opsional (kosong = agent yang pilih)</summary>
       <label>URL sumber (satu per baris, maks 5) <textarea name="urls" rows="2" autocapitalize="off"></textarea></label>
@@ -134,19 +188,21 @@
       <label>Style utama <select name="style"></select></label>
       <label>Musik <select name="music"></select></label>
     </details>
+    <details class="agent-settings"><summary>Pengaturan agen</summary>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
     <label>Model <select name="model" required></select></label>
     <label>Effort <select name="effort"></select></label>
-    <p class="error" id="gen-error"></p>
+    </details>
+    <p class="error" id="gen-error" role="alert"></p>
     <menu><button value="cancel" formnovalidate>Batal</button><button value="create" class="primary">Buat &amp; mulai agent</button></menu>
   </form>
 </dialog>
 
-<dialog id="gen-note-dialog">
+<dialog id="gen-note-dialog" aria-labelledby="gen-note-title">
   <form method="dialog" id="gen-note-form">
     <h2 id="gen-note-title"></h2>
     <label id="gen-note-label">Catatan <textarea name="note" rows="4" maxlength="2000"></textarea></label>
-    <p class="error" id="gen-note-error"></p>
+    <p class="error" id="gen-note-error" role="alert"></p>
     <menu><button value="cancel" formnovalidate>Batal</button><button value="send" class="primary">Kirim</button></menu>
   </form>
 </dialog>
@@ -164,5 +220,6 @@
 <script src="/vendor/xterm/addon-fit.js"></script>
 <script src="/app.js"></script>
 <script src="/generate.js"></script>
+<script src="/calendar.js"></script>
 </body>
 </html>

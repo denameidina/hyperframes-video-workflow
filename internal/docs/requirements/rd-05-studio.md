@@ -143,6 +143,42 @@ sesi agen tmux, dan publish. Owner:
   incomplete status without attempting to read/preview it as a valid artifact;
   Generate audio/sheet media requests for such paths shall return 404.
 
+- **RD-05-36** (Ubiquitous) — Studio shall group navigation into production
+  (Proyek, Generate, Hasil, Kalender) and supporting tools (Sesi, Pustaka, Suara,
+  Musik), mark the active page, provide a heading and next-step description for
+  each page, and support 390 px width without horizontal document scrolling.
+- **RD-05-37** (Event-driven) — When Dena searches Proyek or Hasil, Studio shall
+  filter by slug/filename without fetching again or replacing a playing video;
+  zero matches shall offer a clear-search action.
+- **RD-05-38** (Event-driven) — When Dena opens Kalender, Studio shall display a
+  Monday-first month and selected-day agenda in Asia/Jakarta (WIB), with each
+  schedule's title, platform, status and source; month navigation and Hari ini
+  shall work with mouse, touch and keyboard.
+- **RD-05-39** (Event-driven) — When Dena selects Sinkronkan Repliz, Studio shall
+  read GET `/public/schedule` for the selected month and configured accounts,
+  paginate at 100 entries/page up to 10 pages with a 30 s total timeout, merge
+  remote entries with local receipts by scheduleId, and display sync time.
+  Opening/polling other tabs shall not call Repliz.
+- **RD-05-40** (Unwanted) — If Repliz is not configured or synchronization fails,
+  then Kalender shall retain local receipts and the last successful in-memory
+  snapshot, label their source and stale status, and offer retry. Invalid month
+  queries shall return 400 before network access; undated legacy receipts shall
+  be counted explicitly instead of placed on an invented date. A truncated
+  remote result shall be identified as partial.
+- **RD-05-41** (Event-driven) — When Dena selects Jadwalkan konten on a calendar
+  date, Studio shall offer existing renders and open their publish preview with
+  that date and a WIB time, caption, configured platforms and confirmation.
+  Both calendar and Hasil shall offer explicit scheduling or publish now.
+- **RD-05-42** (Unwanted) — If a supplied scheduleAt is not `now` or an ISO
+  timestamp with an explicit zone at least 60 s in the future, then Studio shall
+  reject publish with 400 before starting a job. A missing scheduleAt preserves
+  the existing metadata behavior. Successful jobs keep existing per-target
+  duplicate protection; choosing a date does not authorize reposting.
+- **RD-05-43** (Ubiquitous) — Studio shall label all form controls, keep visible
+  keyboard focus, use at least 44 px touch targets, announce asynchronous errors
+  and calendar loading, and preserve light/dark palette and reduced-motion
+  preferences. Upload controls shall be keyboard accessible.
+
 ## macOS background service
 
 - **RD-05-44** (Optional) — Where the per-user macOS Studio LaunchAgent is

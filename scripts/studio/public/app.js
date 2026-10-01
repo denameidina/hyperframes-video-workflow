@@ -4,7 +4,7 @@ const enc = encodeURIComponent;
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const mb = (n) => `${(n / 1048576).toFixed(1)} MB`;
 const dur = (s) => (s ? `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}` : '–');
-const when = (t) => (t ? new Date(t).toLocaleString('id-ID') : '');
+const when = (t) => (t ? `${new Date(t).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB` : '');
 // crypto.randomUUID needs a secure context; the Tailscale URL is plain http.
 const viewer = Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => b.toString(16).padStart(2, '0')).join('');
 
@@ -24,20 +24,37 @@ let state = { tools: {}, models: {} };
 let tab = 'projects';
 let openSlug = '';
 let openRun = '';
+const PAGES = {
+  projects: ['Proyek', 'Mulai dari bahan video, lalu lanjutkan proses editing.'],
+  generate: ['Generate', 'Ubah ide menjadi video, lalu review naskah, storyboard, dan hasilnya.'],
+  results: ['Hasil', 'Tonton hasil render, cek caption, lalu tentukan tanggal tayang.'],
+  calendar: ['Kalender konten', 'Lihat tanggal tayang dan atur jadwal konten ke Repliz.'],
+  sessions: ['Sesi agen', 'Lanjutkan pekerjaan atau buka terminal agen yang sedang berjalan.'],
+  shared: ['Pustaka', 'Bahan video dan gambar yang bisa dipakai di beberapa proyek.'],
+  voice: ['Suara', 'Dengarkan dan bandingkan sampel untuk menemukan suara yang sesuai.'],
+  music: ['Musik', 'Dengarkan musik latar dan kelola pilihan untuk video berikutnya.'],
+};
 
 function banner(msg) {
   $('#banner').textContent = msg || '';
   $('#banner').hidden = !msg;
 }
 
-function showTab(name) {
+function showTab(name, { refreshPage = true } = {}) {
+  if (!Object.hasOwn(PAGES, name)) return;
   if (name === 'generate' && tab === 'generate') window.studioGenerate?.home();
   if (name === 'projects' && tab === 'projects') openSlug = '';
   if (name === 'voice' && tab === 'voice') openRun = '';
   tab = name;
-  for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === name);
-  for (const t of ['projects', 'generate', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== name;
-  refresh();
+  for (const b of document.querySelectorAll('nav button')) {
+    b.classList.toggle('active', b.dataset.tab === name);
+    if (b.dataset.tab === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  }
+  for (const t of Object.keys(PAGES)) $(`#tab-${t}`).hidden = t !== name;
+  $('#page-title').textContent = PAGES[name][0];
+  $('#page-description').textContent = PAGES[name][1];
+  if (name !== 'generate') history.replaceState(null, '', `#${name}`);
+  if (refreshPage) refresh();
 }
 document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
@@ -52,6 +69,7 @@ async function refresh() {
     if (tab === 'shared') renderShared(await api('/api/shared'));
     if (tab === 'sessions') renderSessions(await api('/api/sessions'));
     if (tab === 'results') renderResults(await api('/api/results'));
+    if (tab === 'calendar') await window.studioCalendar.refresh();
     if (tab === 'voice') {
       if (openRun) renderVoiceTest(await api(`/api/voice-tests/${enc(openRun)}`));
       else renderVoiceTests(await api('/api/voice-tests'));
@@ -104,11 +122,12 @@ function renderProjects(items, sessions) {
   $('#project-home').hidden = false;
   const live = new Map(sessions.map((s) => [s.slug, s.status]));
   $('#project-list').innerHTML = items.length ? items.map((p) => `
-    <li>
+    <li data-search="${esc(p.slug.toLowerCase())}">
       <div class="meta"><strong>${esc(p.slug)}</strong>${live.has(p.slug) ? `<span class="status ${esc(live.get(p.slug))}">${esc(live.get(p.slug))}</span>` : ''}
         <span class="muted">${esc(countText(p.counts))} · ${p.renders.length} render</span></div>
-      <div class="actions"><button class="primary" data-open-project="${esc(p.slug)}">Buka</button></div>
-    </li>`).join('') : '<li class="muted">Belum ada project.</li>';
+      <div class="actions"><button data-open-project="${esc(p.slug)}" aria-label="Buka proyek ${esc(p.slug)}">Buka proyek</button></div>
+    </li>`).join('') : '<li class="empty-state"><strong>Mulai proyek pertama</strong><p>Buat proyek, upload bahan video, lalu mulai sesi editing.</p></li>';
+  filterList('project');
 }
 $('#project-list').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-open-project]');
@@ -122,6 +141,8 @@ $('#project-create').addEventListener('submit', async (e) => {
   try {
     await post('/api/projects', { slug });
     e.target.reset();
+    $('#project-search').value = '';
+    document.querySelector('.create-project').open = false;
     openSlug = slug;
     refresh();
   } catch (err) {
@@ -133,13 +154,13 @@ const ROLE_OPTIONS = { video: [['', 'Auto'], ['speech', 'Speech'], ['broll', 'B-
 function renderProject(p, sessions) {
   $('#project-home').hidden = true;
   $('#project-detail').hidden = false;
-  $('#project-title').textContent = `videos/${p.slug}/`;
+  $('#project-title').textContent = p.slug;
   const live = sessions.find((x) => x.slug === p.slug && x.status !== 'exited');
   $('#project-session').textContent = live ? 'Buka terminal' : 'Mulai sesi';
   $('#project-session').dataset.live = live ? '1' : '';
   $('#source-list').innerHTML = p.sources.length ? p.sources.map((x) => {
     const url = `/api/projects/${enc(p.slug)}/sources/${enc(x.id)}/file`;
-    const preview = x.kind === 'image' ? `<img src="${url}" alt="" loading="lazy">` : `<video src="${url}#t=0.5" preload="metadata" muted playsinline></video>`;
+    const preview = x.kind === 'image' ? `<img src="${url}" alt="" loading="lazy">` : `<video src="${url}#t=0.5" preload="none" muted playsinline></video>`;
     const opts = ROLE_OPTIONS[x.kind].map(([v, l]) => `<option value="${v}"${(x.role ?? '') === v ? ' selected' : ''}>${l}</option>`).join('');
     const size = x.kind === 'video' ? dur(x.probe?.duration) : `${x.probe?.width ?? '?'}×${x.probe?.height ?? '?'}`;
     return `<li class="source" data-id="${esc(x.id)}">
@@ -291,7 +312,7 @@ function renderSessions(items) {
     <li>
       <div class="meta"><strong>${esc(s.slug)}</strong><span class="status ${esc(s.status)}">${esc(s.status)}</span>
         <span class="muted">${esc(s.runtime)} · ${esc(s.model)} · ${esc(s.effort)}</span></div>
-      <div class="actions"><button class="primary" data-open="${esc(s.slug)}">Show terminal</button><button data-esc="${esc(s.slug)}">Esc</button><button class="danger" data-kill="${esc(s.slug)}">Kill</button></div>
+      <div class="actions"><button data-open="${esc(s.slug)}">Buka terminal</button><button data-esc="${esc(s.slug)}">Esc</button><button class="danger" data-kill="${esc(s.slug)}">Akhiri sesi</button></div>
     </li>`).join('') : '<li class="muted">Tidak ada sesi.</li>';
 }
 $('#session-list').addEventListener('click', async (e) => {
@@ -398,39 +419,84 @@ document.querySelector('.keys').addEventListener('click', (e) => {
 // ---- Results ----
 function renderResults(items) {
   $('#result-list').innerHTML = items.length ? items.map((r) => `
-    <li>
+    <li data-search="${esc(`${r.slug} ${r.file}`.toLowerCase())}">
       <div class="meta"><strong>${esc(r.slug)}</strong><span class="muted">${esc(r.file)} · ${mb(r.size)} · ${when(r.mtime)}</span>
         ${r.publish ? `<span class="muted">Publish ${esc(when(r.publish.createdAt))}: ${r.publish.platforms.map((p) => `${esc(p.platform)} ${esc(p.status)}`).join(', ')}</span>` : ''}</div>
-      <video controls preload="metadata" playsinline src="/media/${enc(r.slug)}/${enc(r.file)}"></video>
-      <div class="actions"><button class="primary" data-publish="${esc(r.slug)}" data-file="${esc(r.file)}">Publish to Repliz</button></div>
-    </li>`).join('') : '<li class="muted">Belum ada render.</li>';
+      <video controls preload="none" playsinline aria-label="Hasil video ${esc(r.slug)}" src="/media/${enc(r.slug)}/${enc(r.file)}"></video>
+      <div class="actions"><button data-publish="${esc(r.slug)}" data-file="${esc(r.file)}">Atur jadwal</button><a class="btn" href="/media/${enc(r.slug)}/${enc(r.file)}" target="_blank" rel="noopener">Buka video</a></div>
+    </li>`).join('') : '<li class="empty-state"><strong>Hasil video akan muncul di sini</strong><p>Selesaikan editing atau Generate, lalu review render sebelum menjadwalkan.</p></li>';
+  filterList('result');
 }
 
+function filterList(kind) {
+  const query = $(`#${kind}-search`).value.trim().toLowerCase();
+  const rows = [...document.querySelectorAll(`#${kind}-list > li[data-search]`)];
+  let count = 0;
+  for (const row of rows) { row.hidden = !row.dataset.search.includes(query); if (!row.hidden) count++; }
+  $(`#${kind}-count`).textContent = `${count}${query ? ` dari ${rows.length}` : ''} ${kind === 'project' ? 'proyek' : 'hasil render'}`;
+  $(`#${kind}-no-match`).hidden = !query || count > 0 || rows.length === 0;
+}
+for (const kind of ['project', 'result']) $(`#${kind}-search`).addEventListener('input', () => filterList(kind));
+document.querySelectorAll('[data-clear-search]').forEach((b) => b.addEventListener('click', () => {
+  const input = $(`#${b.dataset.clearSearch}`); input.value = ''; input.dispatchEvent(new Event('input')); input.focus();
+}));
+
+const wibDate = (d = new Date()) => new Date(d.getTime() + 7 * 3600_000).toISOString().slice(0, 10);
+function updatePublishTime() {
+  const scheduled = $('#publish-mode').value === 'scheduled';
+  $('#publish-date-fields').hidden = !scheduled;
+  $('#publish-date').required = $('#publish-time').required = scheduled;
+  $('#publish-date').disabled = $('#publish-time').disabled = !scheduled;
+  $('#publish-go').textContent = scheduled ? 'Konfirmasi jadwal' : 'Konfirmasi publish';
+  const value = `${$('#publish-date').value}T${$('#publish-time').value}:00+07:00`;
+  $('#publish-time-summary').textContent = scheduled && Number.isFinite(new Date(value).getTime()) ? `Tayang ${when(value)}` : scheduled ? 'Pilih tanggal dan jam tayang.' : 'Upload dan pengiriman ke Repliz dimulai setelah konfirmasi.';
+}
+for (const id of ['publish-mode', 'publish-date', 'publish-time']) $(`#${id}`).addEventListener('change', updatePublishTime);
+
 let publishTarget = null;
+let publishBusy = false;
+async function openPublish(slug, file, date) {
+  if (publishBusy) { $('#publish-dialog').showModal(); return; }
+  const target = { slug, file };
+  try {
+    const p = await api(`/api/results/${enc(slug)}/publish-preview?file=${enc(file)}`);
+    publishTarget = target;
+    $('#publish-file').textContent = `${p.slug} · ${p.file}`;
+    $('#publish-targets').textContent = p.targets.length ? `Target: ${p.targets.join(', ')}` : 'Target akun belum dikonfigurasi.';
+    $('#publish-caption').textContent = `${p.title || ''}\n\n${p.description || '(Caption belum ada. Lengkapi publish-captions.md dulu.)'}`;
+    $('#publish-settings').querySelectorAll('input, select').forEach((el) => { el.disabled = false; });
+    $('#publish-date').min = wibDate();
+    $('#publish-date').value = date || wibDate(new Date(Date.now() + 86400_000));
+    $('#publish-time').value = '09:00';
+    if (date === wibDate()) {
+      const soon = new Date(Date.now() + 10 * 60_000 + 7 * 3600_000).toISOString();
+      $('#publish-date').value = soon.slice(0, 10); $('#publish-time').value = soon.slice(11, 16);
+    }
+    $('#publish-mode').value = 'scheduled';
+    updatePublishTime();
+    $('#publish-log').hidden = true; $('#publish-log').textContent = '';
+    $('#publish-error').textContent = !p.targets.length ? 'Target akun belum dikonfigurasi.' : !p.description ? 'Caption belum tersedia. Lengkapi caption sebelum menjadwalkan.' : '';
+    $('#publish-go').disabled = !p.targets.length || !p.description;
+    $('#publish-dialog').showModal();
+  } catch (err) { banner(err.message); }
+}
 $('#result-list').addEventListener('click', async (e) => {
   const b = e.target.closest('button[data-publish]');
   if (!b) return;
-  publishTarget = { slug: b.dataset.publish, file: b.dataset.file };
-  try {
-    const p = await api(`/api/results/${enc(publishTarget.slug)}/publish-preview?file=${enc(publishTarget.file)}`);
-    $('#publish-file').textContent = `videos/${p.slug}/renders/${p.file}`;
-    $('#publish-targets').textContent = p.targets.length ? `Target: ${p.targets.join(', ')}` : 'Tidak ada target akun di .env';
-    $('#publish-caption').textContent = `${p.title || ''}\n\n${p.description || '(deskripsi kosong — isi publish-captions.md dulu)'}`;
-    $('#publish-log').hidden = true;
-    $('#publish-log').textContent = '';
-    $('#publish-error').textContent = '';
-    $('#publish-go').disabled = !p.targets.length || !p.description;
-    $('#publish-dialog').showModal();
-  } catch (err) {
-    banner(err.message);
-  }
+  await openPublish(b.dataset.publish, b.dataset.file);
 });
 $('#publish-form').addEventListener('submit', async (e) => {
   if (e.submitter?.value !== 'publish') return;
   e.preventDefault();
+  if (publishBusy || !publishTarget) return;
   $('#publish-go').disabled = true;
+  $('#publish-error').textContent = '';
   try {
-    await post(`/api/results/${enc(publishTarget.slug)}/publish`, { file: publishTarget.file });
+    const scheduleAt = $('#publish-mode').value === 'now' ? 'now' : new Date(`${$('#publish-date').value}T${$('#publish-time').value}:00+07:00`).toISOString();
+    if (scheduleAt !== 'now' && new Date(scheduleAt).getTime() < Date.now() + 60_000) throw new Error('Pilih tanggal dan jam setidaknya satu menit dari sekarang.');
+    publishBusy = true;
+    await post(`/api/results/${enc(publishTarget.slug)}/publish`, { file: publishTarget.file, scheduleAt });
+    $('#publish-settings').querySelectorAll('input, select').forEach((el) => { el.disabled = true; });
     const log = $('#publish-log');
     log.hidden = false;
     const es = new EventSource(`/api/results/${enc(publishTarget.slug)}/publish/stream`);
@@ -441,9 +507,12 @@ $('#publish-form').addEventListener('submit', async (e) => {
     es.addEventListener('done', (ev) => {
       log.textContent += `\n[selesai, exit ${JSON.parse(ev.data).code}]\n`;
       es.close();
+      publishBusy = false;
+      $('#publish-error').textContent = JSON.parse(ev.data).code ? 'Proses belum berhasil. Periksa log di atas sebelum mencoba lagi.' : '';
       refresh();
     });
   } catch (err) {
+    publishBusy = false;
     $('#publish-error').textContent = err.message;
     $('#publish-go').disabled = false;
   }
@@ -541,7 +610,7 @@ $('#music-list').addEventListener('click', async (e) => {
 });
 
 // Helpers for generate.js (ADR-0026).
-window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, state: () => state, tab: () => tab, termOpen: () => !$('#term-panel').hidden };
+window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, openPublish, showTab, state: () => state, tab: () => tab, termOpen: () => !$('#term-panel').hidden };
 
 // ---- Boot ----
 (async () => {
@@ -554,11 +623,9 @@ window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, state
   if (missing.length) banner(`Tidak ditemukan di PATH: ${missing.join(', ')}`);
   const deep = /^#generate(?:\/([a-z0-9][a-z0-9-]*))?$/.exec(location.hash);
   if (deep) {
-    tab = 'generate';
-    for (const b of document.querySelectorAll('nav button')) b.classList.toggle('active', b.dataset.tab === 'generate');
-    for (const t of ['projects', 'generate', 'shared', 'sessions', 'results', 'voice', 'music']) $(`#tab-${t}`).hidden = t !== 'generate';
+    showTab('generate', { refreshPage: false });
     window.studioGenerate.open(deep[1] || '');
-  } else refresh();
+  } else showTab(Object.hasOwn(PAGES, location.hash.slice(1)) ? location.hash.slice(1) : 'projects');
   // Only the Sessions tab polls; re-rendering Results would reset playing videos.
   setInterval(() => { if (tab === 'sessions' && $('#term-panel').hidden) refresh(); }, 2000);
 })();

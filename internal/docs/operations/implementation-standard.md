@@ -36,6 +36,8 @@ dengan STANDAR DOCS repo (docs-driven) dan aturan HyperFrames.
   `npm run check` (lint + validate + inspect); fix semua error.
 - Edit `scripts/video.mjs` → `npm run test:video`.
 - Edit `scripts/repliz-publish.mjs` → `npm run test:repliz`.
+- Edit `scripts/mcp.mjs` / `scripts/mcp/` → `npm run test:mcp`; adapter lintas
+  domain → `npm test`. Jangan menguji endpoint cloud live tanpa permintaan user.
 - Edit gates/Studio → `npm run test:video` / `npm run test:studio` sesuai area;
   hook Python → `npm run test:hooks`; perubahan lintas area → `npm test`.
 - Edit murni docs (`internal/docs/**`, `docs/agents/*.md`, `AGENTS.md`,

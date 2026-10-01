@@ -9,6 +9,7 @@ import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJso
 import { createGenerate, decide, generateDetail, generateDir, generateMediaPath, generateOptions, lastDecisionNote, listGenerate, saveScript } from './generate.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
+import { ReplizCalendar } from './calendar.mjs';
 import { listMusic, musicFile, rejectMusic } from './music.mjs';
 import { deleteShared, listShared, receiveShared } from './shared.mjs';
 import { interruptSession, killSession, listSessions, startSession } from './sessions.mjs';
@@ -17,7 +18,7 @@ import { getVoiceTest, listVoiceTests, saveVoiceRatings, voiceTestFile } from '.
 
 const PUBLIC = join(import.meta.dirname, 'public');
 const XTERM = join(import.meta.dirname, '..', '..', 'vendor', 'xterm');
-const STATIC = { '/': 'index.html', '/login': 'login.html', '/app.js': 'app.js', '/generate.js': 'generate.js', '/app.css': 'app.css' };
+const STATIC = { '/': 'index.html', '/login': 'login.html', '/app.js': 'app.js', '/generate.js': 'generate.js', '/calendar.js': 'calendar.js', '/app.css': 'app.css' };
 const VENDOR = new Set(['xterm.js', 'xterm.css', 'addon-fit.js']);
 const RAW = Symbol('handled');
 const OPEN = new Set(['/login', '/app.css']); // reachable before login
@@ -38,7 +39,7 @@ function decode(part) {
   }
 }
 
-export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia }) {
+export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia, calendar = new ReplizCalendar({ root, env }) }) {
   const opt = run ? { run } : {};
   // generate routes take a JSON object; null, arrays, and scalars are a 400, not a TypeError (500)
   const readObject = async (req, limit) => {
@@ -182,14 +183,19 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       return RAW;
     }],
     ['GET', /^\/api\/results$/, async () => listResults(root)],
+    ['GET', /^\/api\/calendar$/, async (req, url) => {
+      const sync = url.searchParams.get('sync');
+      if (sync !== null && sync !== '1') throw new HttpError(400, 'sync must be 1');
+      return calendar.read(url.searchParams.get('month'), { sync: sync === '1' });
+    }],
     ['GET', /^\/media\/([^/]+)\/([^/]+)$/, async (req, url, [slug, file], res) => {
       sendFile(req, res, renderPath(root, slugParam(slug), file));
       return RAW;
     }],
     ['GET', /^\/api\/results\/([^/]+)\/publish-preview$/, async (req, url, [slug]) => publishPreview(root, slugParam(slug), url.searchParams.get('file'), env)],
     ['POST', /^\/api\/results\/([^/]+)\/publish$/, async (req, url, [slug]) => {
-      const b = await readJson(req);
-      publisher.start(slugParam(slug), b.file);
+      const b = await readObject(req);
+      publisher.start(slugParam(slug), b.file, b.scheduleAt);
       return { ok: true };
     }],
     ['GET', /^\/api\/results\/([^/]+)\/publish\/stream$/, async (req, url, [slug], res) => {

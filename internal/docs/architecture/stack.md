@@ -11,9 +11,9 @@ dari `package.json`, `.github/workflows/ci.yml`, `.gitmodules`, `index.html`,
 Repo ini adalah **workspace HyperFrames** untuk memproduksi video sosial vertikal
 (9:16, 1080x1920) milik Dena Meidina, plus satu CLI Node untuk auto-publish
 render final ke social media lewat Cloudflare R2 + Repliz. Tidak ada database
-dan tidak ada frontend web ter-deploy; satu-satunya server aplikasi adalah
-Studio lokal (`npm run studio`, ADR-0020). "Aplikasi" = komposisi HTML yang
-dirender jadi MP4, sebuah CLI publish, dan Studio.
+dan tidak ada frontend web ter-deploy. Server aplikasi adalah Studio lokal
+(`npm run studio`, ADR-0020) dan MCP stdio lokal (`scripts/mcp.mjs`, ADR-0032).
+"Aplikasi" = komposisi HTML yang dirender jadi MP4, CLI, Studio, dan adapter MCP.
 
 ## Runtime & bahasa
 
@@ -46,6 +46,7 @@ dirender jadi MP4, sebuah CLI publish, dan Studio.
 | render-blur | Pass motion blur opsional: render 4× fps → ffmpeg `tmix` → fps asal, audio disalin | `npm run render:blur -- --slug <slug>` | `scripts/render-blur.mjs` |
 | video CLI | Scaffold + jalankan proyek HyperFrames per video; `cutout` me-matte segmen `processed.mp4` untuk mix-media; `layers` menyiapkan sumber + subjek parallax; mode generate: `new --generate`, `voice`, `bgm`, `storyboard` ([ADR-0025](../adr/0025-generate-mode-explainer.md)) | `npm run video -- new\|check\|dev\|snapshot\|render\|cutout\|layers <slug>` | `scripts/video.mjs` |
 | Studio | Web UI lokal (localhost + Tailscale): upload/hapus raw, sesi agen Claude/Codex di tmux dengan terminal xterm.js, tab Generate (form + panel review gate, ADR-0026), daftar render, publish Repliz, tab Suara (uji dengar blind) dan Musik (dengar/tolak BGM) | `npm run studio` | `scripts/studio.mjs`, [ADR-0020](../adr/0020-studio-web-ui.md) |
+| Project MCP | Server stdio lintas client, tool typed + dokumen/prompt, adapter CLI/jobs, approval dan I/O artefak | `node scripts/mcp.mjs`; `--print-config claude\|codex\|hermes\|vscode` | `scripts/mcp/`, [ADR-0032](../adr/0032-local-project-mcp.md), [runbook](../operations/mcp-runbook.md) |
 | xterm.js 6.0.0 | Terminal browser untuk Studio (di-vendor, MIT) | `vendor/xterm/` di-`<script>` oleh `scripts/studio/public/index.html` | `THIRD_PARTY_NOTICES.md` |
 | Voice adapter | Voiceover TTS per paragraf (cache sha256, −16 LUFS), clone/design suara, uji dengar blind | `npm run voice -- say\|ref\|clone\|design\|voices\|test` | `scripts/voice.mjs`, `scripts/lib/voice/`, [ADR-0023](../adr/0023-voice-adapter-tts.md) |
 | Gemini 3.8 Flash TTS | TTS cloud bahasa Indonesia, voice design, voice replication | `fetch` ke `generativelanguage.googleapis.com/v1beta` dengan `GEMINI_TTS_API_KEY` | `scripts/lib/voice/providers/gemini.mjs` |

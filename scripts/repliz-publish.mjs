@@ -7,6 +7,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { normalizePublishTime } from './lib/publish-time.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -47,6 +48,8 @@ export function parseArgs(argv) {
       args.slug = argv[++i] || "";
     } else if (arg === "--file") {
       args.file = argv[++i] || "";
+    } else if (arg === "--schedule-at") {
+      args.scheduleAt = argv[++i] || "";
     } else {
       throw new Error(`Unknown argument: ${arg}`);
     }
@@ -468,6 +471,7 @@ export async function createSchedules({ config, targetAccounts, post, videoUrl, 
         accountId: target.accountId,
         platform: target.platform,
         scheduleId: response.scheduleId,
+        scheduleAt: payload.scheduleAt,
         status: "pending",
       });
     } catch (error) {
@@ -574,6 +578,7 @@ export async function runPublish({
   if (!targetAccounts.length) throw new Error("No target account IDs configured");
 
   const post = await readPostMetadata(args.slug);
+  if (args.scheduleAt !== undefined) post.scheduleAt = normalizePublishTime(args.scheduleAt, now);
   try {
     requireDescription(post.description);
   } catch {
@@ -630,7 +635,8 @@ export async function runPublish({
 
   // A reused entry that never reached a terminal status (still `pending`/`process` from an
   // earlier run) is worth refreshing even when nothing new needs scheduling.
-  const nonTerminalReused = reused.filter((schedule) => schedule.status !== "success" && schedule.status !== "error" && schedule.scheduleId);
+  const nonTerminalReused = reused.filter((schedule) => schedule.status !== "success" && schedule.status !== "error" && schedule.scheduleId &&
+    (!schedule.scheduleAt || new Date(schedule.scheduleAt).getTime() <= now.getTime() + 60_000));
   const refreshedReused = nonTerminalReused.length
     ? await pollSchedules({ config, schedules: nonTerminalReused, fetchImpl, sleep })
     : [];
@@ -689,12 +695,14 @@ export async function runPublish({
     fetchImpl,
     onSchedule: checkpoint,
   });
-  const polledNew = await pollSchedules({
+  const immediate = newSchedules.filter((s) => !s.scheduleAt || new Date(s.scheduleAt).getTime() <= now.getTime() + 60_000);
+  const polledImmediate = await pollSchedules({
     config,
-    schedules: newSchedules,
+    schedules: immediate,
     fetchImpl,
     sleep,
   });
+  const polledNew = newSchedules.map((s) => polledImmediate.find((p) => p.accountId === s.accountId && p.platform === s.platform) || s);
   const receipt = await checkpoint(polledNew);
   return { skipped: false, receipt, blocked };
 }
@@ -708,6 +716,7 @@ Options:
   --file <mp4>   Rendered MP4 file to upload to Cloudflare R2
   --approved     Required after user review; unlocks R2 upload and Repliz scheduling
   --force        Re-upload to R2 and create new Repliz schedules
+  --schedule-at <ISO|now>  Override the publish date (ISO must include a timezone)
   --help         Show this help
 `);
 }

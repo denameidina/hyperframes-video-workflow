@@ -62,6 +62,20 @@ pulihkan `videos/<slug>/`, lalu cek media yang dirujuk oleh HTML proyek itu,
 
 ## How To Run
 
+MCP lokal untuk Claude, Codex, Hermes, dan client stdio lain:
+
+```bash
+node scripts/mcp.mjs --print-config claude
+node scripts/mcp.mjs --print-config codex
+node scripts/mcp.mjs --print-config hermes
+npm run test:mcp
+```
+
+Gabungkan entry hasil generator ke konfigurasi client. Tool mencakup proyek,
+artefak, sumber, produksi video/audio, aset, gate, preview, render, publish dan
+job/log. Tidak perlu install dependency npm. Panduan dan seluruh tool:
+[MCP runbook](internal/docs/operations/mcp-runbook.md).
+
 Preview satu video:
 
 ```bash
@@ -134,6 +148,11 @@ upload/hapus raw video, memulai sesi edit Claude/Codex interaktif di tmux dan
 men-steer terminalnya dari browser, memutar render, lalu publish render ke
 Repliz setelah konfirmasi. Isi `STUDIO_TOKEN` di `.env` untuk mewajibkan login.
 Khusus macOS + tmux. Lihat `internal/docs/adr/0020-studio-web-ui.md`.
+
+Untuk berjalan terus tanpa Terminal dan otomatis menyala setelah restart +
+login macOS, pasang [layanan Studio](internal/docs/operations/studio-service.md).
+Setelah layanan aktif, langsung buka `http://127.0.0.1:4777`; tidak perlu
+menjalankan `npm run studio` lagi. launchd menjalankan ulang proses yang berhenti.
 
 ## Project Layout
 
