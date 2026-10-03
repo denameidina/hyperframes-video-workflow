@@ -268,3 +268,13 @@ sesi agen tmux, dan publish. Owner:
   of that exact render (`GET /api/results/<slug>/poster?file=<render>`, auth-guarded, 404 unless the file
   is one of the project's renders), made by ffmpeg on first request with at most three runs at once,
   cached as `renders/.<file>.poster.jpg` until the render is newer, and never listed as a render.
+- **RD-05-60** (Event-driven) — When a render's publish preview has no caption (no Instagram or
+  TikTok block in `publish-captions.md`), the schedule dialog shall offer "Buat caption otomatis":
+  `POST /api/results/<slug>/captions` runs one headless agent (`claude -p` or `codex exec`, the
+  Studio default model at medium effort) with a prompt naming the render, the target accounts, the
+  style guide and the Platform Publish Caption Rules, streams its log to the dialog
+  (`GET …/captions/stream`), and on exit reloads the preview so scheduling can continue.
+- **RD-05-61** (Unwanted) — If a caption already exists, a caption job for the project is running, or
+  the render is not one of the project's renders, then Studio shall refuse the request (409, 409, 404)
+  and shall never overwrite an existing caption; the prompt tells the agent not to touch other files,
+  not to render, and not to publish to Repliz or R2.

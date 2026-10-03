@@ -583,15 +583,20 @@ for (const id of ['publish-mode', 'publish-date', 'publish-time']) $(`#${id}`).a
 
 let publishTarget = null;
 let publishBusy = false;
-async function openPublish(slug, file, date) {
-  if (publishBusy) { $('#publish-dialog').showModal(); return; }
-  const target = { slug, file };
-  try {
-    const p = await api(`/api/results/${enc(slug)}/publish-preview?file=${enc(file)}`);
-    publishTarget = target;
-    $('#publish-file').textContent = `${p.slug} · ${p.file}`;
-    $('#publish-targets').textContent = p.targets.length ? `Target: ${p.targets.join(', ')}` : 'Target akun belum dikonfigurasi.';
-    $('#publish-caption').textContent = `${p.title || ''}\n\n${p.description || '(Caption belum ada. Lengkapi publish-captions.md dulu.)'}`;
+let captionFollowing = '';
+
+// Fill the dialog from the server's preview; also called again after a caption has been generated.
+async function loadPreview(target, date) {
+  const p = await api(`/api/results/${enc(target.slug)}/publish-preview?file=${enc(target.file)}`);
+  publishTarget = target;
+  $('#publish-file').textContent = `${p.slug} · ${p.file}`;
+  $('#publish-targets').textContent = p.targets.length ? `Target: ${p.targets.join(', ')}` : 'Target akun belum dikonfigurasi.';
+  $('#publish-caption').textContent = `${p.title || ''}\n\n${p.description || '(Caption belum ada. Buat caption otomatis di atas, atau lengkapi publish-captions.md.)'}`;
+  $('#publish-caption-missing').hidden = Boolean(p.description);
+  $('#publish-caption-gen').disabled = Boolean(p.captionRunning);
+  $('#publish-error').textContent = !p.targets.length ? 'Target akun belum dikonfigurasi.' : !p.description ? 'Caption belum tersedia. Buat caption otomatis atau lengkapi publish-captions.md sebelum menjadwalkan.' : '';
+  $('#publish-go').disabled = !p.targets.length || !p.description;
+  if (date !== undefined) {
     $('#publish-settings').querySelectorAll('input, select').forEach((el) => { el.disabled = false; });
     $('#publish-date').min = wibDate();
     $('#publish-date').value = date || wibDate(new Date(Date.now() + 86400_000));
@@ -603,11 +608,68 @@ async function openPublish(slug, file, date) {
     $('#publish-mode').value = 'scheduled';
     updatePublishTime();
     $('#publish-log').hidden = true; $('#publish-log').textContent = '';
-    $('#publish-error').textContent = !p.targets.length ? 'Target akun belum dikonfigurasi.' : !p.description ? 'Caption belum tersedia. Lengkapi caption sebelum menjadwalkan.' : '';
-    $('#publish-go').disabled = !p.targets.length || !p.description;
+  }
+  return p;
+}
+
+async function openPublish(slug, file, date) {
+  if (publishBusy) { $('#publish-dialog').showModal(); return; }
+  try {
+    const p = await loadPreview({ slug, file }, date ?? '');
     $('#publish-dialog').showModal();
+    if (p.captionRunning) followCaption(slug, file);
   } catch (err) { banner(err.message); }
 }
+
+// One headless agent run writes publish-captions.md (RD-05-60); its log streams into the dialog.
+async function captionAgent() {
+  const st = await api('/api/state');
+  const runtime = st.tools.claude === false ? 'codex' : 'claude';
+  const m = st.models[runtime] || { models: [] };
+  const model = m.default || m.models[0]?.value;
+  const efforts = m.models.find((x) => x.value === model)?.efforts || [];
+  return { runtime, model, effort: efforts.includes('medium') ? 'medium' : efforts[0] };
+}
+
+function followCaption(slug, file) {
+  if (captionFollowing === slug) return;
+  captionFollowing = slug;
+  const log = $('#publish-log');
+  log.hidden = false;
+  log.textContent = '';
+  $('#publish-caption-gen').disabled = true;
+  $('#publish-caption-gen').textContent = 'Agent sedang menulis caption…';
+  const es = new EventSource(`/api/results/${enc(slug)}/captions/stream`);
+  es.addEventListener('log', (ev) => {
+    log.textContent += JSON.parse(ev.data);
+    log.scrollTop = log.scrollHeight;
+  });
+  es.addEventListener('done', async (ev) => {
+    es.close();
+    captionFollowing = '';
+    $('#publish-caption-gen').textContent = 'Buat caption otomatis';
+    const code = JSON.parse(ev.data).code;
+    try {
+      const p = await loadPreview({ slug, file });
+      if (p.description) { $('#publish-error').textContent = ''; log.hidden = true; return; }
+    } catch (err) { $('#publish-error').textContent = err.message; return; }
+    $('#publish-caption-gen').disabled = false;
+    $('#publish-error').textContent = code ? 'Agent gagal menulis caption. Periksa log, lalu coba lagi.' : 'Agent selesai tetapi publish-captions.md belum berisi caption Instagram atau TikTok. Coba lagi.';
+  });
+}
+$('#publish-caption-gen').addEventListener('click', async () => {
+  if (!publishTarget) return;
+  const { slug, file } = publishTarget;
+  $('#publish-caption-gen').disabled = true;
+  $('#publish-error').textContent = '';
+  try {
+    await post(`/api/results/${enc(slug)}/captions`, { file, ...(await captionAgent()) });
+    followCaption(slug, file);
+  } catch (err) {
+    $('#publish-error').textContent = err.message;
+    $('#publish-caption-gen').disabled = false;
+  }
+});
 $('#result-list').addEventListener('click', async (e) => {
   const b = e.target.closest('button[data-publish]');
   if (!b) return;

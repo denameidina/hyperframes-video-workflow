@@ -41,7 +41,7 @@ function decode(part) {
   }
 }
 
-export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia, thumbMaker, calendar = new ReplizCalendar({ root, env }) }) {
+export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, captionJobs, probe = async () => null, probeSource = probeMedia, thumbMaker, calendar = new ReplizCalendar({ root, env }) }) {
   const opt = run ? { run } : {};
   // generate routes take a JSON object; null, arrays, and scalars are a 400, not a TypeError (500)
   const readObject = async (req, limit) => {
@@ -208,7 +208,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       sendFile(req, res, renderPath(root, slugParam(slug), file));
       return RAW;
     }],
-    ['GET', /^\/api\/results\/([^/]+)\/publish-preview$/, async (req, url, [slug]) => publishPreview(root, slugParam(slug), url.searchParams.get('file'), env)],
+    ['GET', /^\/api\/results\/([^/]+)\/publish-preview$/, async (req, url, [slug]) => publishPreview(root, slugParam(slug), url.searchParams.get('file'), env, { captionJobs })],
     ['POST', /^\/api\/results\/([^/]+)\/publish$/, async (req, url, [slug]) => {
       const b = await readObject(req);
       publisher.start(slugParam(slug), b.file, b.scheduleAt);
@@ -218,6 +218,22 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       if (!publisher.has(slugParam(slug))) throw new HttpError(404, 'no publish job');
       const sse = openSse(res);
       const unfollow = publisher.follow(slug, (event, data) => {
+        sse.send(event, data);
+        if (event === 'done') sse.end();
+      });
+      sse.onClose(unfollow);
+      return RAW;
+    }],
+    ['POST', /^\/api\/results\/([^/]+)\/captions$/, async (req, url, [slug]) => {
+      const b = await readObject(req);
+      await checkModel(b);
+      await captionJobs.start(slugParam(slug), b.file, { runtime: b.runtime, model: b.model, effort: b.effort });
+      return { ok: true };
+    }],
+    ['GET', /^\/api\/results\/([^/]+)\/captions\/stream$/, async (req, url, [slug], res) => {
+      if (!captionJobs.has(slugParam(slug))) throw new HttpError(404, 'no caption job');
+      const sse = openSse(res);
+      const unfollow = captionJobs.follow(slug, (event, data) => {
         sse.send(event, data);
         if (event === 'done') sse.end();
       });

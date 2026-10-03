@@ -14,7 +14,7 @@ import { claudeModels, codexModels } from './studio/agent.mjs';
 import { createApp } from './studio/app.mjs';
 import { allowedHosts } from './studio/http.mjs';
 import { VoiceJobs } from './studio/generate.mjs';
-import { Publisher } from './studio/results.mjs';
+import { CaptionJobs, Publisher } from './studio/results.mjs';
 import { Terminals } from './studio/terminal.mjs';
 import { probeDuration } from './video.mjs';
 
@@ -91,6 +91,7 @@ function main(argv) {
     terminals,
     publisher: new Publisher({ root, env }),
     voiceJobs: new VoiceJobs({ root, env }),
+    captionJobs: new CaptionJobs({ root, env }),
     probe,
   });
   for (const address of addresses) {

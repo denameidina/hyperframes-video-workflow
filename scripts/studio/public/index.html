@@ -197,6 +197,10 @@
     <h2 id="publish-dialog-title">Jadwalkan ke Repliz</h2>
     <p><strong id="publish-file"></strong></p>
     <p id="publish-targets" class="muted"></p>
+    <div id="publish-caption-missing" class="notice caption-missing" hidden>
+      <p><strong>Belum ada caption.</strong> <code>publish-captions.md</code> belum dibuat untuk video ini. Agent bisa menulisnya dari isi videonya, lalu kamu lanjut menjadwalkan.</p>
+      <button type="button" id="publish-caption-gen" class="primary">Buat caption otomatis</button>
+    </div>
     <div id="publish-settings">
       <label>Waktu tayang<select id="publish-mode"><option value="scheduled">Pilih tanggal &amp; jam</option><option value="now">Publish sekarang</option></select></label>
       <div id="publish-date-fields" class="date-fields"><label>Tanggal (WIB)<input id="publish-date" type="date" required></label><label>Jam (WIB)<input id="publish-time" type="time" required value="09:00"></label></div>

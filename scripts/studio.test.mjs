@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { SCENE_PNG as DESIGN_PNG, SHEET_JPG } from './storyboard-fixtures.mjs';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
-import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, checkMotion, paneCommand } from './studio/agent.mjs';
+import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, captionCommand, captionPrompt, claudeModels, codexDefaults, codexModels, checkMotion, paneCommand } from './studio/agent.mjs';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,7 +16,7 @@ import { stageOf, attachShared, createProject, deleteProject, deleteSource, getP
 import { posterPath, thumbSource, thumbnailPath, thumbVersion } from './studio/thumbs.mjs';
 import { syncManifest } from './lib/video-sources.mjs';
 import { EventEmitter } from 'node:events';
-import { ratioLabel, Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
+import { CaptionJobs, ratioLabel, Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
 import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
 import { createServer } from 'node:http';
 import { createApp } from './studio/app.mjs';
@@ -243,7 +243,7 @@ test('listResults and renderPath', () => {
 test('publishPreview reads caption and configured targets', async () => {
   const root = studioRoot();
   writeFileSync(join(root, 'videos/vid-a/repliz-publish.json'), JSON.stringify({ post: { title: 'Judul', description: 'Deskripsi' } }));
-  assert.deepEqual(await publishPreview(root, 'vid-a', 'vid-a.mp4', { REPLIZ_YOUTUBE_ACCOUNT_ID: 'y1' }), { slug: 'vid-a', file: 'vid-a.mp4', title: 'Judul', description: 'Deskripsi', targets: ['youtube'] });
+  assert.deepEqual(await publishPreview(root, 'vid-a', 'vid-a.mp4', { REPLIZ_YOUTUBE_ACCOUNT_ID: 'y1' }), { slug: 'vid-a', file: 'vid-a.mp4', title: 'Judul', description: 'Deskripsi', targets: ['youtube'], captionRunning: false });
 });
 
 test('Publisher runs repliz-publish with --approved and locks per slug', () => {
@@ -322,6 +322,7 @@ async function startApp(root, overrides = {}, responses = {}) {
     terminals: new Terminals({ spawnImpl: () => fakeChild(), killImpl: () => {} }),
     publisher: new Publisher({ root, env: {}, spawnImpl: () => fakeChild() }),
     voiceJobs: new VoiceJobs({ root, env: {}, spawnImpl: () => fakeChild() }),
+    captionJobs: new CaptionJobs({ root, env: {}, spawnImpl: () => fakeChild() }),
     probeSource: PROBE,
     ...overrides,
   }));
@@ -1147,4 +1148,41 @@ test('poster: a 720 px frame of that exact render, cached beside it and not list
   }));
   assert.equal(burst.length, 5);
   assert.equal(calls2.length, 5);
+});
+
+test('caption job: headless agent run writes publish-captions.md only when it is missing (RD-05-60)', async () => {
+  assert.deepEqual(captionCommand({ runtime: 'claude', model: 'opus', effort: 'medium', prompt: 'P' }), ['claude', ['-p', 'P', '--model', 'opus', '--effort', 'medium', '--dangerously-skip-permissions']]);
+  assert.deepEqual(captionCommand({ runtime: 'codex', model: 'gpt-6-sol', effort: 'low', prompt: 'P' })[1].slice(0, 2), ['exec', '-m']);
+  assert.throws(() => captionCommand({ runtime: 'claude', model: 'opus', effort: 'bogus', prompt: 'P' }), { status: 400 });
+  const prompt = captionPrompt({ slug: 'vid-a', file: 'vid-a.mp4', targets: ['instagram', 'threads'] });
+  assert.match(prompt, /videos\/vid-a\/publish-captions\.md/);
+  assert.match(prompt, /instagram, threads/);
+  assert.match(prompt, /jangan publish ke Repliz atau R2/);
+
+  const root = studioRoot();
+  const spawned = [];
+  const children = [];
+  const jobs = new CaptionJobs({ root, env: {}, spawnImpl: (cmd, args, opts) => { const c = fakeChild(); children.push(c); spawned.push({ cmd, args, cwd: opts.cwd }); return c; } });
+  const { server, call, base } = await startApp(root, { captionJobs: jobs });
+  try {
+    assert.equal((await call('GET', '/api/results/vid-a/publish-preview?file=vid-a.mp4')).body.captionRunning, false);
+    assert.equal((await call('POST', '/api/results/vid-a/captions', { file: 'nope.mp4', runtime: 'claude', model: 'opus', effort: 'medium' })).status, 404);
+    assert.equal((await call('POST', '/api/results/vid-a/captions', { file: 'vid-a.mp4', runtime: 'claude', model: 'opus', effort: 'bogus' })).status, 400);
+    assert.equal((await call('GET', '/api/results/vid-a/captions/stream')).status, 404, 'no job yet');
+    const ok = await call('POST', '/api/results/vid-a/captions', { file: 'vid-a.mp4', runtime: 'claude', model: 'opus', effort: 'medium' });
+    assert.equal(ok.status, 200);
+    assert.equal(spawned.length, 1);
+    assert.equal(spawned[0].cmd, 'claude');
+    assert.equal(spawned[0].cwd, root);
+    assert.match(spawned[0].args[1], /publish-captions\.md/);
+    assert.equal((await call('GET', '/api/results/vid-a/publish-preview?file=vid-a.mp4')).body.captionRunning, true);
+    assert.equal((await call('POST', '/api/results/vid-a/captions', { file: 'vid-a.mp4', runtime: 'claude', model: 'opus', effort: 'medium' })).status, 409, 'one job per project');
+    children[0].emit('close', 0);
+    assert.equal((await call('GET', '/api/results/vid-a/publish-preview?file=vid-a.mp4')).body.captionRunning, false);
+    writeFileSync(join(root, 'videos/vid-a/publish-captions.md'), '## Instagram\n```text\nHalo dunia\n```\n');
+    assert.equal((await call('POST', '/api/results/vid-a/captions', { file: 'vid-a.mp4', runtime: 'claude', model: 'opus', effort: 'medium' })).status, 409, 'an existing caption is never overwritten');
+    assert.equal((await call('GET', '/api/results/vid-a/publish-preview?file=vid-a.mp4')).body.description, 'Halo dunia');
+  } finally {
+    server.close();
+  }
 });

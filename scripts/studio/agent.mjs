@@ -31,6 +31,23 @@ export function agentCommand({ runtime, model, effort }) {
   return ['codex', '-m', model, '-c', `model_reasoning_effort="${effort}"`, '--dangerously-bypass-approvals-and-sandbox', '--no-alt-screen'];
 }
 
+// One-shot, non-interactive run of the same runtimes (caption generation, RD-05-60): claude -p / codex exec.
+export function captionCommand({ runtime, model, effort, prompt }) {
+  agentCommand({ runtime, model, effort }); // same validation as an interactive session
+  if (runtime === 'claude') return ['claude', ['-p', prompt, '--model', model, '--effort', effort, '--dangerously-skip-permissions']];
+  return ['codex', ['exec', '-m', model, '-c', `model_reasoning_effort="${effort}"`, '--dangerously-bypass-approvals-and-sandbox', prompt]];
+}
+
+export function captionPrompt({ slug, file, targets = [] }) {
+  const where = targets.length ? ` Target akun: ${targets.join(', ')}.` : '';
+  return [
+    `Tulis \`videos/${slug}/publish-captions.md\` untuk render \`videos/${slug}/renders/${file}\`.${where}`,
+    'Baca dulu: `docs/dena-social-video-style-guide.md`, bagian "Platform Publish Caption Rules" di `docs/agents/references/caption-artifacts.md` (format dan batas karakter wajib diikuti: ## Instagram, ## TikTok, ## YouTube Title, ## YouTube Shorts, ## Threads bila targetnya ada), lalu isi videonya dari artefak proyek yang ada: `processed-transcript.json`, `caption-plan.md`, `creative-brief.md`, `research/brief.md`, `script.md`.',
+    'Pakai suara Dena (Indonesia, langsung, praktis), satu CTA non-promissory, hashtag relevan secukupnya, dan tulis hitungan karakter judul YouTube serta caption.',
+    'Hanya buat file itu: jangan ubah file lain, jangan menjalankan render, dan jangan publish ke Repliz atau R2. Selesai setelah file tertulis.',
+  ].join('\n');
+}
+
 export const shellQuote = (s) => `'${String(s).replace(/'/g, `'\\''`)}'`;
 
 // The prompt stays in a file so Dena's notes never pass through shell parsing.

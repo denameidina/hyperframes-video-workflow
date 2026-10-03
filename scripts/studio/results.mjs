@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { buildTargetAccounts, readPostMetadata } from '../repliz-publish.mjs';
 import { normalizePublishTime } from '../lib/publish-time.mjs';
 import { probeMedia } from '../lib/video-sources.mjs';
+import { captionCommand, captionPrompt } from './agent.mjs';
 import { HttpError } from './http.mjs';
 import { JobRunner } from './jobs.mjs';
 import { projectSlugs } from './files.mjs';
@@ -71,10 +72,40 @@ export function renderPath(root, slug, file) {
   return join(root, 'videos', slug, 'renders', file);
 }
 
-export async function publishPreview(root, slug, file, env) {
+export async function publishPreview(root, slug, file, env, { captionJobs } = {}) {
   renderPath(root, slug, file);
   const post = await readPostMetadata(join(root, 'videos', slug));
-  return { slug, file, title: post.title, description: post.description, targets: buildTargetAccounts(env).map((t) => t.platform) };
+  return { slug, file, title: post.title, description: post.description, targets: buildTargetAccounts(env).map((t) => t.platform), captionRunning: Boolean(captionJobs?.running(slug)) };
+}
+
+// RD-05-60: when a render has no caption yet, one headless agent run writes publish-captions.md so scheduling can go on.
+export class CaptionJobs {
+  constructor({ root, env = process.env, spawnImpl = spawn }) {
+    this.root = root;
+    this.env = env;
+    this.runner = new JobRunner({ spawnImpl, label: 'caption' });
+  }
+
+  has(slug) {
+    return this.runner.has(slug);
+  }
+
+  running(slug) {
+    return this.runner.running(slug);
+  }
+
+  async start(slug, file, agent) {
+    renderPath(this.root, slug, file);
+    const existing = await readPostMetadata(join(this.root, 'videos', slug));
+    if (existing.description) throw new HttpError(409, 'publish-captions.md sudah ada');
+    const targets = buildTargetAccounts(this.env).map((t) => t.platform);
+    const [cmd, args] = captionCommand({ ...agent, prompt: captionPrompt({ slug, file, targets }) });
+    return this.runner.start(slug, cmd, args, { cwd: this.root, env: this.env });
+  }
+
+  follow(slug, listener) {
+    return this.runner.follow(slug, listener);
+  }
 }
 
 export class Publisher {
