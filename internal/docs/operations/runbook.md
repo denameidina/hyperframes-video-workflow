@@ -194,6 +194,12 @@ npm run music -- check
 
 ## Troubleshooting cepat
 
+- `whisper-cli` gagal `dyld: Library not loaded` setelah folder repo dipindah
+  di macOS → binary hasil build lama dapat menyimpan rpath absolut ke lokasi
+  sebelumnya. Untuk transkripsi saat itu, jalankan command dengan prefix
+  `DYLD_LIBRARY_PATH="$PWD/vendor/whisper.cpp/build/bin"` dari root repo;
+  pastikan direktori tersebut berisi dylib hasil build. Build ulang pada lokasi
+  baru untuk memperbaiki instalasi permanen.
 - Preview blank / render gagal setelah clone → cek media lokal yang dirujuk
   `videos/<slug>/index.html` sudah ada (proyek video tidak ikut ter-clone).
 - `npm run video -- check <slug>` error → perbaiki semua error sebelum handoff/render.
