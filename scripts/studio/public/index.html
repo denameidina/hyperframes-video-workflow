@@ -60,12 +60,7 @@
     <div id="project-home">
       <div class="page-tools">
         <label class="search-field">Cari proyek<input id="project-search" type="search" placeholder="Nama proyek…" autocomplete="off"></label>
-        <details class="create-project"><summary class="btn primary">Edit video baru</summary>
-          <form id="project-create" class="bar">
-            <label>Beri nama proyek<input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="misalnya tips-ai" autocapitalize="off" autocomplete="off" aria-describedby="slug-help"></label>
-            <button class="primary">Buat &amp; upload bahan →</button><span id="slug-help" class="muted">Huruf kecil, angka, dan tanda hubung. Langkah berikutnya: upload rekaman.</span>
-          </form>
-        </details>
+        <button id="project-new" class="primary" type="button">Edit video baru</button>
       </div>
       <p id="project-count" class="list-count" aria-live="polite"></p>
       <ul id="project-list" class="list"></ul>
@@ -74,7 +69,7 @@
     <div id="project-detail" hidden>
       <div class="bar detail-bar">
         <button id="project-back">← Semua proyek</button>
-        <strong id="project-title"></strong>
+        <strong id="project-title"></strong><span id="project-ratio" class="chip ratio" title="Rasio video proyek"></span>
         <button id="project-delete" class="danger quiet">Hapus proyek</button>
       </div>
       <ol id="project-steps" class="stepper" aria-label="Tahap proyek"></ol>
@@ -160,6 +155,18 @@
   <section id="tab-music" hidden><ul id="music-list" class="list"></ul></section>
 </main>
 
+<dialog id="create-dialog" aria-labelledby="create-dialog-title">
+  <form method="dialog" id="project-create">
+    <h2 id="create-dialog-title">Edit video baru</h2>
+    <p class="muted">Beri nama proyek, lalu upload rekamanmu di langkah berikutnya.</p>
+    <label>Nama proyek<input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="misalnya tips-ai" autocapitalize="off" autocomplete="off" aria-describedby="slug-help"></label>
+    <span id="slug-help" class="muted">Huruf kecil, angka, dan tanda hubung.</span>
+    <fieldset class="ratio-group"><legend>Rasio video</legend><div class="ratio-grid"><label class="ratio-choice"><input type="radio" name="ratio" value="9:16" checked><span class="ratio-shape" style="aspect-ratio: 9 / 16" aria-hidden="true"></span><span class="ratio-text"><strong>9:16</strong><small>Vertikal · Reels, TikTok, Shorts</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="4:5"><span class="ratio-shape" style="aspect-ratio: 4 / 5" aria-hidden="true"></span><span class="ratio-text"><strong>4:5</strong><small>Portrait feed · Feed Instagram/Facebook</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="1:1"><span class="ratio-shape" style="aspect-ratio: 1 / 1" aria-hidden="true"></span><span class="ratio-text"><strong>1:1</strong><small>Persegi · Feed, carousel</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="16:9"><span class="ratio-shape" style="aspect-ratio: 16 / 9" aria-hidden="true"></span><span class="ratio-text"><strong>16:9</strong><small>Lanskap · YouTube, LinkedIn, web</small></span></label></div></fieldset>
+    <p class="error" id="create-error" role="alert"></p>
+    <menu><button value="cancel" formnovalidate>Batal</button><button value="create" class="primary">Buat &amp; upload bahan →</button></menu>
+  </form>
+</dialog>
+
 <dialog id="edit-dialog" aria-labelledby="edit-dialog-title">
   <form method="dialog" id="edit-form">
     <h2 id="edit-dialog-title">Mulai edit <span id="edit-slug"></span></h2>
@@ -216,6 +223,7 @@
         <label class="choice"><input type="radio" name="format" value="kinetic-post"><span><strong>Kinetic post</strong><small>Teks bergerak mengikuti musik, 8–20 detik, loop.</small></span></label>
         <label class="choice"><input type="radio" name="format" value="motion-short"><span><strong>Motion short</strong><small>Visual + musik, 15–40 detik, ditutup kartu CTA.</small></span></label>
       </div>
+      <fieldset class="ratio-group"><legend>Rasio video</legend><div class="ratio-grid"><label class="ratio-choice"><input type="radio" name="ratio" value="9:16" checked><span class="ratio-shape" style="aspect-ratio: 9 / 16" aria-hidden="true"></span><span class="ratio-text"><strong>9:16</strong><small>Vertikal · Reels, TikTok, Shorts</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="4:5"><span class="ratio-shape" style="aspect-ratio: 4 / 5" aria-hidden="true"></span><span class="ratio-text"><strong>4:5</strong><small>Portrait feed · Feed Instagram/Facebook</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="1:1"><span class="ratio-shape" style="aspect-ratio: 1 / 1" aria-hidden="true"></span><span class="ratio-text"><strong>1:1</strong><small>Persegi · Feed, carousel</small></span></label><label class="ratio-choice"><input type="radio" name="ratio" value="16:9"><span class="ratio-shape" style="aspect-ratio: 16 / 9" aria-hidden="true"></span><span class="ratio-text"><strong>16:9</strong><small>Lanskap · YouTube, LinkedIn, web</small></span></label></div></fieldset>
     </fieldset>
     <fieldset class="wizard-step" data-step="2" hidden>
       <legend>Ceritakan idenya</legend>

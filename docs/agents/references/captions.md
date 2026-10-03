@@ -244,7 +244,7 @@ For cinematic manifesto:
 
 ## Safe Area Rules
 
-Default vertical 9:16 safe zones:
+Default vertical 9:16 safe zones (other canvas: safe areas in [aspect-ratios](aspect-ratios.md)):
 
 - Avoid top UI area: first `120px` unless using a hook card placed intentionally.
 - Avoid bottom platform UI area: last `220px` for TikTok/Reels controls.

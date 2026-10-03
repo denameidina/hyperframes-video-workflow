@@ -1,7 +1,7 @@
 // Studio tab Generate (ADR-0026, ADR-0027, RD-05-21..33): start a generate-mode video, then answer its gates.
 // Plain JS, no build step; helpers come from app.js (window.studio).
 (() => {
-  const { $, api, post, esc, enc, banner, dur, openTerminal } = window.studio;
+  const { $, api, post, esc, enc, banner, dur, openTerminal, thumbHtml, thumbFallback } = window.studio;
   const PHASE = { story: 'Story berjalan', 'screen-plan': 'Screen Plan berjalan', build: 'Build berjalan', done: 'Selesai', error: 'Error' };
   const STATE = { waiting: 'Menunggu', revising: 'Agent merevisi', qa: 'QA dulu' };
   let openSlug = '';
@@ -70,12 +70,14 @@
       const n = nextOf(p);
       return `
       <li>
-        <div class="meta"><span class="row-kind">${esc(p.format || '?')}</span><strong>${esc(p.slug)}</strong>
+        ${thumbHtml(p.slug, p.thumb)}
+        <div class="meta"><span class="row-kind">${esc(p.format || '?')} · ${esc(p.ratio || '9:16')}</span><strong>${esc(p.slug)}</strong>
           <span class="muted">${esc(n.hint)}</span><span class="muted clip-line">${esc(p.brief)}</span></div>
         <div class="row-side"><span class="chip ${esc(n.tone)}">${esc(n.chip)}</span><button class="${n.tone === 'ask' || n.tone === 'ready' ? 'primary' : ''}" data-gen-open="${esc(p.slug)}">${esc(n.cta)}</button></div>
       </li>`;
     }).join('') : '<li class="empty-state"><strong>Belum ada video generate</strong><p>Tekan "Buat video dari ide", tulis brief, lalu agent mulai bekerja.</p></li>';
   }
+  thumbFallback($('#gen-list'));
   $('#gen-list').addEventListener('click', (e) => {
     const b = e.target.closest('button[data-gen-open]');
     if (b) open(b.dataset.genOpen);
@@ -158,7 +160,7 @@
     $('#gen-detail').hidden = false;
     const s = d.status;
     const live = d.session && d.session.status !== 'exited';
-    $('#gen-head').innerHTML = `<button data-gen="back">← Semua video</button><strong>${esc(d.slug)}</strong><span class="row-kind">${esc(d.format)}</span>
+    $('#gen-head').innerHTML = `<button data-gen="back">← Semua video</button><strong>${esc(d.slug)}</strong><span class="row-kind">${esc(d.format)}</span><span class="chip ratio" title="Rasio video">${esc(d.ratio || '9:16')}</span>
       <span class="spacer"></span>${live ? '<button data-gen="terminal">Terminal agent</button>' : '<button data-gen="session">Mulai sesi lanjut</button>'}`;
     $('#gen-steps').innerHTML = window.stepperHtml(isMusic(d.format) ? STEPS.music : STEPS.explainer, stepAt(d.format, s));
     const n = nextOf(d);
@@ -394,7 +396,7 @@
     const urls = f.urls.value.split('\n').map((u) => u.trim()).filter(Boolean);
     try {
       const r = await post('/api/generate', {
-        format: f.format.value, text: isMusic(f.format.value) ? f.text.value : '',
+        format: f.format.value, ratio: f.ratio.value, text: isMusic(f.format.value) ? f.text.value : '',
         brief: f.brief.value, slug: f.slug.value.trim(), urls, repurpose: f.repurpose.value, voice: isMusic(f.format.value) ? '' : f.voice.value,
         duration: f.duration.value, style: f.style.value, music: f.music.value,
         runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, motion: f.motion.value,

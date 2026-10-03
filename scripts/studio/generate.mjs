@@ -9,8 +9,9 @@ import { GateError, editedSinceDecision, finalRender, gateStatus, isGenerate, re
 import { readCatalog } from '../lib/music.mjs';
 import { loadVoices } from '../lib/voice/presets.mjs';
 import { scriptBody, splitParagraphs } from '../lib/voice/script.mjs';
+import { DEFAULT_RATIO, RATIO_LIST, canvasOf } from '../lib/ratio.mjs';
 import { checkSlug, scaffold } from '../video.mjs';
-import { projectSlugs } from './files.mjs';
+import { projectSlugs, projectsByCreated } from './files.mjs';
 import { HttpError } from './http.mjs';
 import { JobRunner } from './jobs.mjs';
 import { checkMotion } from './agent.mjs';
@@ -85,6 +86,8 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
   if (brief.length > 4000) bad('brief', 'maksimal 4000 karakter');
   const format = empty(b.format) ? 'explainer' : b.format;
   if (!FORMATS.includes(format)) bad('format', `harus salah satu dari ${FORMATS.join(', ')}`);
+  const ratio = empty(b.ratio) ? DEFAULT_RATIO : b.ratio;
+  if (!RATIO_LIST.includes(ratio)) bad('ratio', `harus salah satu dari ${RATIO_LIST.join(', ')}`);
   const music = isMusicFormat(format);
   let text = null;
   if (!empty(b.text)) {
@@ -127,6 +130,7 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
   const request = {
     version: 1,
     format,
+    ratio,
     brief,
     text: text || null,
     urls: urls.map(String),
@@ -143,7 +147,7 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
 
 export function createGenerate(root, body, { now } = {}) {
   const { slug, request } = validateRequest(root, body, { now });
-  const { dir } = scaffold({ slug, root, generate: true, format: request.format, motion: request.motion });
+  const { dir } = scaffold({ slug, root, generate: true, format: request.format, motion: request.motion, ratio: request.ratio });
   const locked = request.text ? `\n## Teks persis (wajib dipakai kata demi kata)\n\n${request.text}\n` : '';
   writeFileSync(join(dir, 'research', 'brief.md'), `# Brief (verbatim dari Dena, ${request.createdAt.slice(0, 10)})\n\n${request.brief}\n${locked}`);
   writeFileSync(join(dir, 'research', 'request.json'), `${JSON.stringify(request, null, 2)}\n`);
@@ -172,6 +176,13 @@ export function storyboardRows(md) {
     });
 }
 
+const ratioOfSafe = (dir) => {
+  try {
+    return canvasOf(dir).ratio;
+  } catch {
+    return DEFAULT_RATIO;
+  }
+};
 const briefLine = (dir) => {
   const line = readText(join(dir, 'research', 'brief.md')).split('\n').map((l) => l.trim()).find((l) => l && !l.startsWith('#')) || '';
   return line.length > 140 ? `${line.slice(0, 139)}…` : line;
@@ -194,10 +205,10 @@ const beatsSummary = (dir) => {
 };
 
 export function listGenerate(root, sessions = []) {
-  return projectSlugs(root)
-    .map((slug) => ({ slug, dir: join(root, 'videos', slug) }))
+  return projectsByCreated(root)
+    .map(({ slug, createdAt }) => ({ slug, createdAt, dir: join(root, 'videos', slug) }))
     .filter(({ dir }) => isGenerate(dir))
-    .map(({ slug, dir }) => {
+    .map(({ slug, createdAt, dir }) => {
       let status;
       let format = null; // unknown when the format line is broken (the status says why)
       try {
@@ -207,7 +218,7 @@ export function listGenerate(root, sessions = []) {
       } catch (e) {
         status = { phase: 'error', gate: null, state: null, error: e.message };
       }
-      return { slug, format, brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
+      return { slug, createdAt, format, ratio: ratioOfSafe(dir), brief: briefLine(dir), status, session: sessionOf(sessions, slug) };
     });
 }
 
@@ -237,6 +248,7 @@ export function generateDetail(root, slug, sessions = [], { voiceJobs } = {}) {
     request: readRequest(dir),
     status,
     format: status.format,
+    ratio: ratioOfSafe(dir),
     beats: beatsSummary(dir),
     session: sessionOf(sessions, slug),
     voiceJob: { running: Boolean(voiceJobs?.running(slug)) },

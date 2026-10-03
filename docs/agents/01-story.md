@@ -146,7 +146,7 @@ A bad cut creates:
    order. When a line was recorded more than once, keep one take and log the
    others as `cut-retake` with the reason.
 7. **Build the base video.** Run `npm run video -- cut <slug>`: it validates the
-   cut-list, normalizes every take (1080×1920, 30 fps, −16 LUFS per source,
+   cut-list, normalizes every take (canvas size from `canvas.json`, 1080×1920 by default; 30 fps, −16 LUFS per source,
    15 ms fades) and writes `processed.mp4` and `cut-map.json`. Do not write your
    own ffmpeg cut. Check orientation with a frame grab of `processed.mp4`. Audio
    cleanup beyond that follows sections Processed Base Video and Audio Cleanup

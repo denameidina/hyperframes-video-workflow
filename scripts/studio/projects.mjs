@@ -3,8 +3,9 @@
 import { existsSync, readdirSync, rmSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import { SOURCES_DIR, readManifest, removeSource, setSource, sourceFile, syncManifest } from '../lib/video-sources.mjs';
+import { DEFAULT_RATIO, RATIO_LIST, canvasOf } from '../lib/ratio.mjs';
 import { checkSlug, scaffold } from '../video.mjs';
-import { projectSlugs, receiveFile } from './files.mjs';
+import { projectsByCreated, receiveFile } from './files.mjs';
 import { HttpError } from './http.mjs';
 
 // Manifest and slug errors are the caller's input problems: 400.
@@ -46,8 +47,17 @@ export function stageOf(dir, sources, renders) {
   return sources.length ? 'edit' : 'sources';
 }
 
+// A broken canvas.json must not take the project list down; it reads as the default until the project page is opened.
+const ratioOfSafe = (dir) => {
+  try {
+    return canvasOf(dir).ratio;
+  } catch {
+    return DEFAULT_RATIO;
+  }
+};
+
 export function listProjects(root) {
-  return projectSlugs(root).map((slug) => {
+  return projectsByCreated(root).map(({ slug, createdAt }) => {
     let sources = [];
     try {
       sources = readManifest(join(root, 'videos', slug)).sources;
@@ -55,22 +65,23 @@ export function listProjects(root) {
       // an unreadable manifest shows as no sources; the project page reports the error
     }
     const renders = rendersOf(root, slug);
-    return { slug, counts: roleCounts(sources), renders, stage: stageOf(join(root, 'videos', slug), sources, renders) };
+    return { slug, createdAt, ratio: ratioOfSafe(join(root, 'videos', slug)), counts: roleCounts(sources), renders, stage: stageOf(join(root, 'videos', slug), sources, renders) };
   });
 }
 
-export function createProject(root, slug) {
+export function createProject(root, slug, ratio = DEFAULT_RATIO) {
   asBadRequest(() => checkSlug(slug));
+  if (!RATIO_LIST.includes(ratio)) throw new HttpError(400, `ratio harus salah satu dari ${RATIO_LIST.join(', ')}`);
   if (existsSync(join(root, 'videos', slug))) throw new HttpError(409, `videos/${slug} already exists`);
-  scaffold({ slug, root });
-  return { slug };
+  scaffold({ slug, root, ratio });
+  return { slug, ratio };
 }
 
 export function getProject(root, slug) {
   const dir = projectPath(root, slug);
   const sources = asBadRequest(() => readManifest(dir)).sources;
   const renders = rendersOf(root, slug);
-  return { slug, sources, renders, stage: stageOf(dir, sources, renders) };
+  return { slug, ratio: ratioOfSafe(dir), sources, renders, stage: stageOf(dir, sources, renders) };
 }
 
 export async function uploadSource(root, slug, name, stream, { probe }) {

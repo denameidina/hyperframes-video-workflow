@@ -1,4 +1,5 @@
 // Studio agent sessions: runtime options, command line, and first prompt (ADR-0020).
+import { DEFAULT_RATIO, RATIOS } from '../lib/ratio.mjs';
 import { HttpError } from './http.mjs';
 
 export const RUNTIMES = ['claude', 'codex'];
@@ -46,7 +47,7 @@ export const checkMotion = (v) => {
 
 const GENERATE_DOC = '`docs/agents/references/generate-mode.md`';
 
-export function buildPrompt({ mode, slug, notes, format = 'explainer', motion = 'rich' }) {
+export function buildPrompt({ mode, slug, notes, format = 'explainer', motion = 'rich', ratio = DEFAULT_RATIO }) {
   const note = String(notes ?? '').trim() || '-';
   const first = {
     continue: `Lanjutkan proyek \`videos/${slug}/\` (sumber di \`sources.json\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`,
@@ -59,7 +60,10 @@ export function buildPrompt({ mode, slug, notes, format = 'explainer', motion = 
   const richness = motion === 'standard'
     ? 'motion_design: standard (Dena memilih standar; catat override di creative-brief.md Workflow Settings)'
     : 'motion_design: rich (default; tulis di creative-brief.md Workflow Settings dan ikuti RD-03-113–116 + docs/agents/references/motion-craft.md)';
-  return `${first}\n${richness}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
+  // 9:16 is what every workflow doc assumes, so only another canvas is announced (ADR-0035)
+  const canvas = ratio === DEFAULT_RATIO || !RATIOS[ratio] ? ''
+    : `Canvas: rasio ${ratio} (${RATIOS[ratio].width}×${RATIOS[ratio].height}) — baca \`canvas.json\` dan \`docs/agents/references/aspect-ratios.md\`; angka 1080×1920 dan "9:16" di dokumen workflow berlaku untuk 9:16 saja, sesuaikan ke canvas ini.\n`;
+  return `${first}\n${canvas}${richness}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
 }
 
 export function codexDefaults(text = '') {

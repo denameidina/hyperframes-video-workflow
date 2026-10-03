@@ -31,6 +31,7 @@ import { formatGateStatus, gateStatus, recordDecision } from './lib/gates.mjs';
 import { applyMigration, formatPlan, planMigration } from './lib/migrate-sources.mjs';
 import { runStoryboard } from './lib/storyboard.mjs';
 import { deliverRender, projectRenderExpectation, selectAudioProfile } from './lib/render-quality.mjs';
+import { applyCanvas, canvasOf, checkRatio, writeCanvas, DEFAULT_RATIO } from './lib/ratio.mjs';
 import { buildCutPlan, loudnessArgs, parseLoudnorm, validateCutList } from './lib/cut-plan.mjs';
 import { SOURCES_DIR, formatSources, probeMedia, readManifest, removeSource, setSource, sourceFile, syncManifest, writeManifest } from './lib/video-sources.mjs';
 
@@ -70,7 +71,8 @@ export function resolveDuration({ duration, dir, probe = probeDuration, media = 
 
 const hasEntry = (p) => { try { lstatSync(p); return true; } catch { return false; } };
 
-export function scaffold({ slug, root = '.', duration, probe, generate = false, format, motion = 'rich' }) {
+export function scaffold({ slug, root = '.', duration, probe, generate = false, format, motion = 'rich', ratio = DEFAULT_RATIO }) {
+  checkRatio(ratio, '--ratio');
   if (format !== undefined && !generate) throw new Error('--format needs --generate (formats belong to generate mode)');
   const fmt = generate ? checkFormat(format ?? 'explainer') : null; // before anything is created
   const dir = projectDir(slug, root);
@@ -87,11 +89,12 @@ export function scaffold({ slug, root = '.', duration, probe, generate = false, 
   }
   const d = resolveDuration({ duration, dir, probe, media: generate ? 'processed-audio.wav' : 'processed.mp4' });
   const tpl = join(root, generate ? GENERATE_TEMPLATE : TEMPLATE);
-  const html = fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d });
+  const html = applyCanvas(fillTemplate(readFileSync(join(tpl, 'index.html'), 'utf8'), { slug, duration: d }), ratio);
+  writeCanvas(dir, ratio);
   writeFileSync(index, generate && isMusicFormat(fmt) ? musicStarter(html, fmt) : html);
   cpSync(join(tpl, 'hyperframes.json'), join(dir, 'hyperframes.json'));
   if (!hasEntry(join(dir, 'vendor'))) symlinkSync('../../vendor', join(dir, 'vendor'));
-  return { dir, duration: d, format: fmt };
+  return { dir, duration: d, format: fmt, ratio };
 }
 
 const hf = (...args) => ['npx', ['--yes', HYPERFRAMES, ...args]];
@@ -186,7 +189,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
       'add-shared': { type: 'string' }, set: { type: 'string' }, role: { type: 'string' }, note: { type: 'string' },
       detected: { type: 'boolean', default: false }, remove: { type: 'string' }, apply: { type: 'boolean', default: false },
       generate: { type: 'boolean', default: false }, preset: { type: 'string' }, track: { type: 'string' },
-      format: { type: 'string' }, bars: { type: 'string' },
+      format: { type: 'string' }, bars: { type: 'string' }, ratio: { type: 'string' },
       reference: { type: 'boolean', default: false },
     },
   });
@@ -203,8 +206,8 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     return;
   }
   if (cmd === 'new') {
-    const { dir, duration, format } = scaffold({ slug, root, duration: values.duration, generate: values.generate, format: values.format });
-    console.log(`created ${dir} (${duration} s${values.generate ? `, generate mode, ${format}` : ''})`);
+    const { dir, duration, format, ratio } = scaffold({ slug, root, duration: values.duration, generate: values.generate, format: values.format, ratio: values.ratio });
+    console.log(`created ${dir} (${duration} s, ${ratio}${values.generate ? `, generate mode, ${format}` : ''})`);
     return;
   }
   if (cmd === 'gate') {
@@ -285,7 +288,7 @@ export function main(argv, { run = spawnSync, env = process.env, root = '.', fet
     }
     const out = join(dir, 'processed.mp4');
     const part = `${out}.part`;
-    const { args, cutMap } = buildCutPlan({ manifest, cutList, dir, loudness, out: part });
+    const { args, cutMap } = buildCutPlan({ manifest, cutList, dir, loudness, out: part, canvas: canvasOf(dir) });
     rmSync(part, { force: true });
     const r = run('ffmpeg', args, { stdio: 'inherit', env });
     if (r.status !== 0) {

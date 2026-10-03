@@ -31,7 +31,7 @@ export function validateCutList(cutList, manifest) {
     if (!(typeof g.sourceStart === 'number' && typeof g.sourceEnd === 'number' && g.sourceStart >= 0 && g.sourceStart < g.sourceEnd)) errors.push(`${at} needs 0 <= sourceStart < sourceEnd`);
     else if (s.kind === 'video' && !(d > 0)) errors.push(`${at}.source ${s.id} has no probed duration; run npm run video -- sources`);
     else if (d > 0 && g.sourceEnd > d + 1e-3) errors.push(`${at}.sourceEnd ${g.sourceEnd} is past the end of ${s.id} (${d} s)`);
-    if (g.cropX !== undefined && !(typeof g.cropX === 'number' && g.cropX >= 0 && g.cropX <= 1)) errors.push(`${at}.cropX must be a number from 0 to 1`);
+    for (const k of ['cropX', 'cropY']) if (g[k] !== undefined && !(typeof g[k] === 'number' && g[k] >= 0 && g[k] <= 1)) errors.push(`${at}.${k} must be a number from 0 to 1`);
   });
   if (!segs.some((g) => RENDERED.includes(g.action))) errors.push(`no segment to render (action ${RENDERED.join('|')})`);
   if (errors.length) throw new Error(`cut-list.json is invalid:\n- ${errors.join('\n- ')}`);
@@ -62,11 +62,12 @@ export function parseLoudnorm(stderr) {
 
 export const gainDb = (inputI) => (inputI === null ? 0 : ms(Math.max(-20, Math.min(20, LOUDNESS.target - inputI))));
 
-export function buildCutPlan({ manifest, cutList, dir, loudness, out }) {
+export function buildCutPlan({ manifest, cutList, dir, loudness, out, canvas = OUT }) {
   const segs = validateCutList(cutList, manifest);
   const speed = cutList.speed ?? DEFAULT_SPEED;
   const byId = new Map(manifest.sources.map((s) => [s.id, s]));
-  const { width: W, height: H, fps, rate } = OUT;
+  const { fps, rate } = OUT;
+  const { width: W, height: H } = canvas;
   const inputs = [];
   const chains = [];
   segs.forEach((g, k) => {
@@ -74,7 +75,7 @@ export function buildCutPlan({ manifest, cutList, dir, loudness, out }) {
     const d = ms(g.sourceEnd - g.sourceStart);
     // Input seeking re-encodes, so -ss/-t are frame accurate. ffmpeg auto-rotates (DJI rotation=-90): no transpose.
     inputs.push('-ss', String(g.sourceStart), '-t', String(d), '-i', join(dir, s.path));
-    chains.push(`[${k}:v:0]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H}:(iw-${W})*${g.cropX ?? 0.5}:(ih-${H})/2,setsar=1,fps=${fps},format=yuv420p[v${k}]`);
+    chains.push(`[${k}:v:0]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H}:(iw-${W})*${g.cropX ?? 0.5}:${g.cropY === undefined ? `(ih-${H})/2` : `(ih-${H})*${g.cropY}`},setsar=1,fps=${fps},format=yuv420p[v${k}]`);
     chains.push(`[${k}:a:0]aresample=${rate},aformat=sample_fmts=fltp:channel_layouts=stereo,volume=${gainDb(loudness[s.id] ?? null)}dB,alimiter=limit=${LOUDNESS.peak}:level=0:latency=1,afade=t=in:d=${FADE},afade=t=out:st=${ms(Math.max(0, d - FADE))}:d=${FADE}[a${k}]`);
   });
   chains.push(`${segs.map((_, k) => `[v${k}][a${k}]`).join('')}concat=n=${segs.length}:v=1:a=1[vc][ac]`);

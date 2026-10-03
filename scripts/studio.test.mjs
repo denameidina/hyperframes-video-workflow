@@ -13,9 +13,10 @@ import { Readable } from 'node:stream';
 import { safeMediaName, receiveFile, projectSlugs } from './studio/files.mjs';
 import { deleteShared, listShared, sharedPath, sharedUsage } from './studio/shared.mjs';
 import { stageOf, attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, rendersOf, updateSource, uploadSource } from './studio/projects.mjs';
+import { thumbSource, thumbnailPath, thumbVersion } from './studio/thumbs.mjs';
 import { syncManifest } from './lib/video-sources.mjs';
 import { EventEmitter } from 'node:events';
-import { Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
+import { ratioLabel, Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
 import { Terminals, VIEWER_RE, attachCommand } from './studio/terminal.mjs';
 import { createServer } from 'node:http';
 import { createApp } from './studio/app.mjs';
@@ -385,19 +386,25 @@ test('shared library lists usage and refuses to delete a used file', async () =>
 
 test('projects: list, create, sources, delete', async () => {
   const root = studioRoot();
-  assert.deepEqual(listProjects(root).map((p) => [p.slug, p.counts, p.renders]), [
+  const bySlug = (a, b) => (a.slug < b.slug ? -1 : 1);
+  assert.deepEqual(listProjects(root).sort(bySlug).map((p) => [p.slug, p.counts, p.renders]), [
     ['vid-a', { speech: 0, broll: 0, image: 0, auto: 2 }, ['vid-a.mp4']],
     ['vid-b', { speech: 0, broll: 0, image: 1, auto: 1 }, []],
   ]);
   assert.deepEqual(rendersOf(root, 'vid-a'), ['vid-a.mp4']);
-  assert.deepEqual(listProjects(root).map((p) => [p.slug, p.stage]), [['vid-a', 'review'], ['vid-b', 'edit']]);
+  assert.deepEqual(listProjects(root).sort(bySlug).map((p) => [p.slug, p.stage]), [['vid-a', 'review'], ['vid-b', 'edit']]);
   assert.equal(stageOf(join(root, 'videos/vid-b'), [], []), 'sources');
   writeFileSync(join(root, 'videos/vid-b/processed.mp4'), 'x');
   assert.equal(getProject(root, 'vid-b').stage, 'plan');
   writeFileSync(join(root, 'videos/vid-b/visual-plan.md'), 'x');
   assert.equal(getProject(root, 'vid-b').stage, 'build');
 
-  assert.deepEqual(createProject(root, 'baru'), { slug: 'baru' });
+  assert.deepEqual(createProject(root, 'baru'), { slug: 'baru', ratio: '9:16' });
+  assert.deepEqual(createProject(root, 'persegi', '1:1'), { slug: 'persegi', ratio: '1:1' });
+  assert.throws(() => createProject(root, 'aneh', '3:7'), { status: 400, message: /ratio/ });
+  assert.equal(listProjects(root).find((p) => p.slug === 'persegi').ratio, '1:1');
+  assert.equal(getProject(root, 'baru').ratio, '9:16');
+  assert.deepEqual(JSON.parse(readFileSync(join(root, 'videos/persegi/canvas.json'), 'utf8')), { ratio: '1:1', width: 1080, height: 1080 });
   assert.ok(existsSync(join(root, 'videos/baru/index.html')));
   assert.deepEqual(getProject(root, 'baru').sources, []);
   assert.throws(() => createProject(root, 'baru'), { status: 409 });
@@ -432,7 +439,7 @@ test('app projects, sources, shared, and sessions routes', async (t) => {
   const root = studioRoot();
   const { server, call, calls, base } = await startApp(root);
   t.after(() => server.close());
-  assert.deepEqual((await call('GET', '/api/projects')).body.map((p) => p.slug), ['vid-a', 'vid-b']);
+  assert.deepEqual((await call('GET', '/api/projects')).body.map((p) => p.slug).sort(), ['vid-a', 'vid-b']);
   assert.equal((await call('POST', '/api/projects', { slug: 'baru' })).status, 200);
   assert.equal((await call('POST', '/api/projects', { slug: 'baru' })).status, 409);
 
@@ -624,8 +631,10 @@ test('validateRequest names the bad field and creates nothing', () => {
   assert.match(err({ ...ok, style: 'mix-media' }), /^400 style:/);
   assert.match(err({ ...ok, music: 'm02-loud' }), /^400 music:/);
   const v = validateRequest(root, { ...ok, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: '60', style: 'stop-motion', music: 'm01-quiet' }, { now: () => new Date('2026-09-29T08:00:00Z') });
-  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, format: 'explainer', brief: 'Kenapa AI agent gagal', text: null, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', motion: 'rich', createdAt: '2026-09-29T08:00:00.000Z' } });
+  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, format: 'explainer', ratio: '9:16', brief: 'Kenapa AI agent gagal', text: null, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', motion: 'rich', createdAt: '2026-09-29T08:00:00.000Z' } });
   assert.equal(validateRequest(root, { ...ok, motion: 'standard' }).request.motion, 'standard');
+  assert.equal(validateRequest(root, { ...ok, ratio: '4:5' }).request.ratio, '4:5');
+  assert.match(err({ ...ok, ratio: '21:9' }), /^400 ratio:/);
   assert.match(err({ ...ok, motion: 'wild' }), /^400 motion must be/);
   assert.equal(existsSync(join(root, 'videos/ai-baru')), false);
 });
@@ -1069,4 +1078,53 @@ test('Studio publish forwards a zoned future date, rejects invalid bodies before
   assert.deepEqual(spawned[0].slice(-2), ['--schedule-at', '2099-01-01T02:00:00.000Z']);
   assert.ok(spawned[0].includes('--approved'));
   assert.equal((await call('POST', '/api/results/vid-a/publish', { file: 'vid-a.mp4', scheduleAt: 'now' })).status, 409);
+});
+
+test('project and generate lists put the newest project first (RD-05-54)', async () => {
+  const root = studioRoot();
+  createProject(root, 'older');
+  await new Promise((r) => setTimeout(r, 25));
+  createProject(root, 'newer');
+  const slugs = listProjects(root).map((p) => p.slug);
+  assert.ok(slugs.indexOf('newer') < slugs.indexOf('older'));
+  assert.ok(listProjects(root).every((p, i, all) => i === 0 || all[i - 1].createdAt >= p.createdAt));
+});
+
+test('thumbnails: newest render first, cached until the source changes, none without media (RD-05-55)', async () => {
+  const root = studioRoot();
+  assert.match(thumbSource(root, 'vid-a').file, /renders\/vid-a\.mp4$/);
+  assert.equal(typeof thumbVersion(root, 'vid-a'), 'number');
+  createProject(root, 'empty');
+  assert.equal(thumbSource(root, 'empty'), null);
+  assert.equal(thumbVersion(root, 'empty'), null);
+  assert.equal(await thumbnailPath(root, 'empty', { make: async () => assert.fail('no media, no ffmpeg') }), null);
+  const calls = [];
+  const make = async (input, out, seek) => { calls.push(seek); writeFileSync(out, 'jpg'); };
+  const file = await thumbnailPath(root, 'vid-a', { make });
+  assert.match(file, /vid-a\/\.studio-thumb\.jpg$/);
+  await thumbnailPath(root, 'vid-a', { make });
+  assert.deepEqual(calls, [1], 'second call is served from the cache');
+  const later = new Date(Date.now() + 5000);
+  utimesSync(join(root, 'videos/vid-a/renders/vid-a.mp4'), later, later);
+  await thumbnailPath(root, 'vid-a', { make });
+  assert.equal(calls.length, 2, 'a newer render regenerates the thumbnail');
+  const retry = [];
+  utimesSync(file, new Date(0), new Date(0));
+  await thumbnailPath(root, 'vid-a', { make: async (i, o, seek) => { retry.push(seek); if (seek) throw new Error('past end'); writeFileSync(o, 'jpg'); } });
+  assert.deepEqual(retry, [1, 0], 'a clip shorter than the seek point retries at frame 0');
+  await assert.rejects(thumbnailPath(root, '../x', { make }), { status: 400 });
+});
+
+test('results report the displayed size and ratio of each render, rotation-aware (RD-05-56)', () => {
+  assert.equal(ratioLabel(1080, 1920), '9:16');
+  assert.equal(ratioLabel(1080, 1350), '4:5');
+  assert.equal(ratioLabel(1920, 1080), '16:9');
+  assert.equal(ratioLabel(1080, 1080), '1:1');
+  assert.equal(ratioLabel(2350, 1000), '2.35:1');
+  assert.equal(ratioLabel(0, 10), null);
+  const root = studioRoot();
+  const rows = listResults(root, { probe: () => ({ width: 1920, height: 1080, rotation: 90, duration: 12.5 }) });
+  assert.deepEqual(rows.find((r) => r.slug === 'vid-a').video, { width: 1080, height: 1920, ratio: '9:16', duration: 12.5 });
+  const broken = listResults(studioRoot(), { probe: () => { throw new Error('no ffprobe'); } });
+  assert.ok(broken.length && broken.every((r) => r.video === null), 'unreadable media still lists, without a size');
 });

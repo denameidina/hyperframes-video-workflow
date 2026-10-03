@@ -259,7 +259,7 @@ Use render review to catch issues that source inspection misses:
 
 Check:
 
-- vertical `9:16`
+- the project's canvas ratio (`canvas.json`; vertical `9:16` by default) and its safe areas
 - readable on phone
 - no key text behind Reels/TikTok bottom controls
 - first frame works as a scroll-stopper

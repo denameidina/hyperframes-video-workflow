@@ -115,6 +115,8 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 81. [adr/0033-studio-launchagent.md](adr/0033-studio-launchagent.md) - Studio sebagai layanan launchd per akun macOS: autostart saat login dan restart otomatis.
 82. [operations/studio-service.md](operations/studio-service.md) - Instalasi LaunchAgent, status/restart/stop, log dan verifikasi Studio selalu berjalan saat akun aktif.
 83. [adr/0034-rich-motion-default.md](adr/0034-rich-motion-default.md) - `motion_design` rich sebagai default setiap sesi edit/generate; override `standard` lewat form Studio.
+84. [adr/0035-aspect-ratio-canvas.md](adr/0035-aspect-ratio-canvas.md) - Rasio canvas per proyek (9:16, 4:5, 1:1, 16:9) lewat `canvas.json`; default 9:16, starter + cut + Studio mengikutinya.
+85. [../docs/agents/references/aspect-ratios.md](../docs/agents/references/aspect-ratios.md) - Tabel canvas, safe area, dan aturan per fase untuk rasio selain 9:16.
 
 ## Canonical Files
 
@@ -134,8 +136,9 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Studio background service macOS | [operations/studio-service](operations/studio-service.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
 | Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0034) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0035) |
 | MCP agent lintas client | [requirements/rd-08-mcp](requirements/rd-08-mcp.md), [operations/mcp-runbook](operations/mcp-runbook.md) |
+| Rasio video (canvas) | [adr/0035-aspect-ratio-canvas](adr/0035-aspect-ratio-canvas.md), [aspect-ratios](../docs/agents/references/aspect-ratios.md) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |
 | Operasi harian | [operations/runbook](operations/runbook.md) |

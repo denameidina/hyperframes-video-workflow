@@ -51,17 +51,11 @@ button:disabled, select:disabled { opacity: .55; cursor: default; }
 .page-tools { justify-content: space-between; align-items: flex-end; }
 .search-field { width: min(360px, 100%); }
 .list-count { font-size: 13px; color: var(--muted); margin: 16px 0 12px; font-variant-numeric: tabular-nums; }
-.create-project { max-width: 100%; }
-.create-project summary { list-style: none; }
-.create-project summary::-webkit-details-marker { display: none; }
-.create-project[open] { flex-basis: 100%; }
-.create-project form { margin: 16px 0 0; align-items: flex-end; }
-.create-project form label { flex: 1; min-width: 160px; }
-.create-project form span { flex-basis: 100%; }
 progress { flex: 1; accent-color: var(--primary); }
 .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .list > li { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: grid; gap: 16px; min-width: 0; }
-#project-list > li, #session-list > li, #gen-list > li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+#session-list > li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+#project-list > li, #gen-list > li, #home-list > li { grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; }
 .meta { display: grid; gap: 4px; overflow-wrap: anywhere; min-width: 0; }
 .meta strong { font-weight: 600; }
 .muted { color: var(--muted); font-size: 13px; }
@@ -76,7 +70,11 @@ progress { flex: 1; accent-color: var(--primary); }
 .empty-state p { margin: 4px 0 0; }
 #result-list { grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); }
 #result-list > li { align-content: start; }
-#result-list video { height: 320px; object-fit: contain; }
+#result-list video { object-fit: contain; }
+#result-list video.wide { width: 100%; height: auto; }
+#result-list video.tall { height: 420px; width: auto; max-width: 100%; margin: 0 auto; }
+.spec { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 8px; }
+.chip.ratio { background: var(--selected); color: var(--primary); }
 video { display: block; width: 100%; max-height: 60vh; background: #000; border-radius: 8px; }
 #banner, .notice { margin: 0 0 20px; padding: 12px 16px; border-radius: 8px; background: var(--notice); color: var(--fg); font-size: 13px; overflow-wrap: anywhere; }
 dialog { width: min(580px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--card); color: var(--fg); padding: 24px; }
@@ -181,7 +179,7 @@ img.sheet { display: block; width: 100%; height: auto; border-radius: 8px; }
   .page-tools { align-items: stretch; }
   .search-field { flex: 1 1 100%; }
   .list > li, .gen-card { padding: 16px; }
-  #project-list > li, #session-list > li, #gen-list > li { grid-template-columns: minmax(0, 1fr); }
+  #session-list > li { grid-template-columns: minmax(0, 1fr); }
   .calendar-toolbar { gap: 12px; }
   .month-nav { width: 100%; justify-content: space-between; }
   .month-nav button { font-size: 12px; padding: 10px 8px; }
@@ -211,7 +209,6 @@ img.sheet { display: block; width: 100%; height: auto; border-radius: 8px; }
 .row-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .row-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; }
 .clip-line { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-#home-list > li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
 #home-list > li.ask { border-color: var(--ask); }
 .chip { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 1.6; white-space: nowrap; background: var(--hover); color: var(--muted); }
 .chip.ask { background: var(--ask-bg); color: var(--ask); }
@@ -268,9 +265,32 @@ img.sheet { display: block; width: 100%; height: auto; border-radius: 8px; }
   .nav-tools > summary { display: block; padding: 10px 8px; font-size: 13px; }
   nav button { white-space: nowrap; flex: 0 0 auto; }
   .start-card { padding: 20px; }
-  #home-list > li { grid-template-columns: minmax(0, 1fr); }
-  .row-side { justify-content: space-between; }
+  .row-side { grid-column: 1 / -1; justify-content: space-between; }
   .next-card { padding: 16px; }
   .stepper li { min-width: 56px; font-size: 11px; }
   nav { scrollbar-width: none; }
 }
+
+/* list thumbnails: a 9:16 frame, so a project is recognised by its picture before its slug */
+.thumb { width: 56px; height: 100px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--line); display: block; flex: none; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb.empty { background: repeating-linear-gradient(135deg, var(--hover) 0 8px, var(--bg) 8px 16px); }
+@media (max-width: 760px) {
+  #project-list > li, #gen-list > li, #home-list > li { grid-template-columns: 56px minmax(0, 1fr); }
+}
+.list > li.empty-state { display: block; }
+
+/* ratio picker: each option draws its own frame shape */
+.ratio-group { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ratio-group legend { padding: 0; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+.ratio-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.ratio-choice { position: relative; display: grid; justify-items: center; align-content: start; gap: 8px; padding: 12px 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); cursor: pointer; text-align: center; min-height: 44px; }
+.ratio-choice input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; cursor: pointer; }
+.ratio-choice:has(input:checked) { border-color: var(--primary); background: var(--selected); }
+.ratio-choice:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; }
+.ratio-shape { display: block; height: 44px; border: 2px solid var(--muted); border-radius: 4px; background: var(--card); }
+.ratio-choice:has(input:checked) .ratio-shape { border-color: var(--primary); background: var(--primary); opacity: .85; }
+.ratio-text { display: grid; gap: 2px; }
+.ratio-text strong { font-size: 14px; }
+.ratio-text small { color: var(--muted); font-size: 11px; line-height: 1.3; }
+@media (max-width: 480px) { .ratio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -108,7 +108,7 @@ motion, match Dena default style, reuse existing project structure).
    Timeline ID in `handoff`), and add a Capture And Privacy Record to
    `assembly-notes.md` under `## Asset Production`. For a Source Inventory entry
    (Dena's own B-roll/image), trim or copy from its `sources.json` path into
-   `assets/` (videos: `ffmpeg -ss <in> -t <dur>` re-encoded to 1080-wide H.264
+   `assets/` (videos: `ffmpeg -ss <in> -t <dur>` re-encoded to the canvas width (1080 for 9:16) H.264
    without audio; images: `npm run asset-lib -- process`) and record
    `provenance: "user-supplied"` with `sourceId`. Prepare a local, trimmed SFX
    file for every SFX cue in the Timeline, sourced from a local project library or

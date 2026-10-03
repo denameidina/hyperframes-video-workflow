@@ -9,6 +9,8 @@ import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJso
 import { createGenerate, decide, generateDetail, generateDir, generateMediaPath, generateOptions, lastDecisionNote, listGenerate, saveScript } from './generate.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
+import { canvasOf } from '../lib/ratio.mjs';
+import { thumbVersion, thumbnailPath } from './thumbs.mjs';
 import { ReplizCalendar } from './calendar.mjs';
 import { listMusic, musicFile, rejectMusic } from './music.mjs';
 import { deleteShared, listShared, receiveShared } from './shared.mjs';
@@ -39,7 +41,7 @@ function decode(part) {
   }
 }
 
-export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia, calendar = new ReplizCalendar({ root, env }) }) {
+export function createApp({ root, env = {}, hosts, token = '', tools = {}, models = async () => ({}), run, terminals, publisher, voiceJobs, probe = async () => null, probeSource = probeMedia, thumbMaker, calendar = new ReplizCalendar({ root, env }) }) {
   const opt = run ? { run } : {};
   // generate routes take a JSON object; null, arrays, and scalars are a 400, not a TypeError (500)
   const readObject = async (req, limit) => {
@@ -57,8 +59,17 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     ['GET', /^\/api\/shared$/, async () => listShared(root, { probe })],
     ['POST', /^\/api\/shared$/, async (req, url) => ({ name: await receiveShared(root, url.searchParams.get('name'), req) })],
     ['DELETE', /^\/api\/shared\/([^/]+)$/, async (req, url, [name]) => deleteShared(root, name)],
-    ['GET', /^\/api\/projects$/, async () => listProjects(root)],
-    ['POST', /^\/api\/projects$/, async (req) => createProject(root, (await readJson(req)).slug)],
+    ['GET', /^\/api\/projects$/, async () => listProjects(root).map((p) => ({ ...p, thumb: thumbVersion(root, p.slug) }))],
+    ['POST', /^\/api\/projects$/, async (req) => {
+      const b = await readJson(req);
+      return createProject(root, b.slug, b.ratio || undefined);
+    }],
+    ['GET', /^\/api\/projects\/([^/]+)\/thumb$/, async (req, url, [slug], res) => {
+      const file = await thumbnailPath(root, slug, thumbMaker ? { make: thumbMaker } : {});
+      if (!file) throw new HttpError(404, 'no media to preview');
+      sendFile(req, res, file, { cache: 'private, max-age=86400' });
+      return RAW;
+    }],
     ['GET', /^\/api\/projects\/([^/]+)$/, async (req, url, [slug]) => getProject(root, slug)],
     ['DELETE', /^\/api\/projects\/([^/]+)$/, async (req, url, [slug]) => {
       projectPath(root, slug);
@@ -85,7 +96,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       const mode = isGenerate(dir) ? 'generate-continue' : existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);
-      const prompt = buildPrompt({ mode, slug, notes: b.notes, motion: checkMotion(b.motion) });
+      const prompt = buildPrompt({ mode, slug, notes: b.notes, motion: checkMotion(b.motion), ratio: canvasOf(dir).ratio });
       return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt, ...opt });
     }],
     ['POST', /^\/api\/sessions\/([^/]+)\/interrupt$/, async (req, url, [slug]) => {
@@ -131,7 +142,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       return RAW;
     }],
     ['POST', /^\/api\/music\/([^/]+)\/reject$/, async (req, url, [id]) => rejectMusic(root, id, (await readJson(req)).rejected)],
-    ['GET', /^\/api\/generate$/, async () => listGenerate(root, await listSessions(opt))],
+    ['GET', /^\/api\/generate$/, async () => listGenerate(root, await listSessions(opt)).map((p) => ({ ...p, thumb: thumbVersion(root, p.slug) }))],
     ['GET', /^\/api\/generate\/options$/, async () => generateOptions(root)],
     ['POST', /^\/api\/generate$/, async (req, url, m, res) => {
       const b = await readObject(req);
@@ -141,7 +152,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       const { slug, request } = createGenerate(root, b);
       let session = { started: true, error: null };
       try {
-        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug, format: request.format, motion: request.motion }), ...opt });
+        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug, format: request.format, motion: request.motion, ratio: request.ratio }), ...opt });
       } catch (e) {
         session = { started: false, error: e.message }; // the project stays; the panel offers "Mulai sesi"
       }
@@ -177,13 +188,13 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       await checkModel(b);
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);
-      return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate-continue', slug, notes: lastDecisionNote(dir) }), ...opt });
+      return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate-continue', slug, notes: lastDecisionNote(dir), ratio: canvasOf(dir).ratio }), ...opt });
     }],
     ['GET', /^\/media\/([^/]+)\/(processed-audio\.wav|preview\/storyboard-sheet(?:-\d+)?\.jpg)$/, async (req, url, [slug, file], res) => {
       sendFile(req, res, generateMediaPath(root, slugParam(slug), file));
       return RAW;
     }],
-    ['GET', /^\/api\/results$/, async () => listResults(root)],
+    ['GET', /^\/api\/results$/, async () => listResults(root, { probe: probeSource })],
     ['GET', /^\/api\/calendar$/, async (req, url) => {
       const sync = url.searchParams.get('sync');
       if (sync !== null && sync !== '1') throw new HttpError(400, 'sync must be 1');

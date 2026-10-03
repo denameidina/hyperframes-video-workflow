@@ -114,14 +114,14 @@ export function parseRange(header, size) {
   return { start, end };
 }
 
-export function sendFile(req, res, file) {
+export function sendFile(req, res, file, { cache = 'no-store' } = {}) {
   let st;
   try {
     st = statSync(file);
   } catch {
     throw new HttpError(404, 'not found');
   }
-  const headers = { 'content-type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'accept-ranges': 'bytes', 'cache-control': 'no-store' };
+  const headers = { 'content-type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'accept-ranges': 'bytes', 'cache-control': cache };
   const range = parseRange(req.headers.range, st.size);
   if (range === 'invalid') {
     res.writeHead(416, { 'content-range': `bytes */${st.size}` });

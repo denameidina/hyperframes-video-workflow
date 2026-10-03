@@ -300,8 +300,8 @@ Recommended JSON shape:
 Built only by `npm run video -- cut <slug>` (ADR-0022); the bullets below are what
 it guarantees. Segments render in array order; `cut-*` segments are skipped.
 
-- Vertical `9:16`
-- `1080x1920`; a wider take is scaled to fill and center-cropped (`cropX` 0–1 per segment shifts the crop)
+- Canvas from `canvas.json`: `9:16` (default), `4:5`, `1:1` or `16:9` ([aspect-ratios](aspect-ratios.md))
+- `1080x1920` for `9:16`; a take of another shape is scaled to fill and center-cropped (`cropX` and `cropY`, 0–1 per segment, shift the crop window)
 - 30fps
 - Loudness normalized per source to −16 LUFS, 15 ms fades at every join
 - Audio cleaned but not overprocessed

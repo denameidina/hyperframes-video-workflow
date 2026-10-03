@@ -116,6 +116,16 @@ async function uploadFiles(input, url, bar) {
   refresh();
 }
 
+// ---- Thumbnails (RD-05-55) ----
+// A frame of the project's newest render/cut/source; a plain tile when there is no media or the frame fails.
+const thumbHtml = (slug, v) => (v ? `<span class="thumb"><img src="/api/projects/${enc(slug)}/thumb?v=${enc(v)}" alt="" loading="lazy" decoding="async"></span>` : '<span class="thumb empty" aria-hidden="true"></span>');
+const thumbFallback = (list) => list.addEventListener('error', (e) => {
+  const img = e.target;
+  if (img?.tagName !== 'IMG' || !img.parentElement?.classList?.contains('thumb')) return;
+  img.parentElement.classList.add('empty');
+  img.remove();
+}, true);
+
 // ---- Home ----
 // One list of everything in flight, each row naming the single thing Dena should do next.
 const FOOTAGE_STEPS = ['Bahan', 'Potong & cerita', 'Caption & visual', 'Render', 'Review'];
@@ -137,19 +147,19 @@ function genNext(p) {
   return { tone: 'work', chip: 'Agent bekerja', hint: 'Agent menyusun video. Kamu akan diminta review.', cta: 'Buka' };
 }
 
-const TONE_ORDER = { ask: 0, ready: 1, todo: 2, work: 3 };
 async function renderHome() {
   const [projects, sessions, gens] = await Promise.all([api('/api/projects'), api('/api/sessions'), api('/api/generate').catch(() => [])]);
   const live = new Set(sessions.filter((x) => x.status !== 'exited').map((x) => x.slug));
   const genSlugs = new Set(gens.map((g) => g.slug));
   const rows = [
-    ...gens.map((g) => ({ kind: 'generate', slug: g.slug, label: `Generate · ${g.format || '?'}`, note: g.brief, ...genNext(g) })),
-    ...projects.filter((p) => !genSlugs.has(p.slug)).map((p) => ({ kind: 'projects', slug: p.slug, label: 'Edit rekaman', note: countText(p.counts), ...footageNext(p.stage, live.has(p.slug)) })),
-  ].sort((a, b) => TONE_ORDER[a.tone] - TONE_ORDER[b.tone]);
+    ...gens.map((g) => ({ kind: 'generate', slug: g.slug, createdAt: g.createdAt, thumb: g.thumb, label: `Generate · ${g.format || '?'} · ${g.ratio || '9:16'}`, note: g.brief, ...genNext(g) })),
+    ...projects.filter((p) => !genSlugs.has(p.slug)).map((p) => ({ kind: 'projects', slug: p.slug, createdAt: p.createdAt, thumb: p.thumb, label: `Edit rekaman · ${p.ratio || '9:16'}`, note: countText(p.counts), ...footageNext(p.stage, live.has(p.slug)) })),
+  ].sort((a, b) => b.createdAt - a.createdAt);
   const ask = rows.filter((r) => r.tone === 'ask' || r.tone === 'ready').length;
   $('#home-summary').textContent = rows.length ? (ask ? `${ask} menunggu kamu` : `${rows.length} video`) : '';
   $('#home-list').innerHTML = rows.length ? rows.map((r) => `
     <li class="home-row ${esc(r.tone)}">
+      ${thumbHtml(r.slug, r.thumb)}
       <div class="meta"><span class="row-kind">${esc(r.label)}</span><strong>${esc(r.slug)}</strong>
         <span class="muted">${esc(r.hint)}</span>${r.note ? `<span class="muted clip-line">${esc(r.note)}</span>` : ''}</div>
       <div class="row-side"><span class="chip ${esc(r.tone)}">${esc(r.chip)}</span>
@@ -167,11 +177,10 @@ $('#home-list').addEventListener('click', (e) => {
     showTab('projects');
   }
 });
+for (const id of ['#home-list', '#project-list']) thumbFallback($(id));
 $('#start-edit').addEventListener('click', () => {
   showTab('projects');
-  const d = document.querySelector('.create-project');
-  d.open = true;
-  $('#project-create').slug.focus();
+  openCreate();
 });
 $('#start-generate').addEventListener('click', () => {
   showTab('generate', { refreshPage: false });
@@ -189,9 +198,10 @@ function renderProjects(items, sessions) {
     const n = footageNext(p.stage, live.has(p.slug) && live.get(p.slug) !== 'exited');
     return `
     <li data-search="${esc(p.slug.toLowerCase())}">
+      ${thumbHtml(p.slug, p.thumb)}
       <div class="meta"><strong>${esc(p.slug)}</strong>
         <span class="muted">${esc(n.hint)}</span>
-        <span class="muted">${esc(countText(p.counts))} · ${p.renders.length} render</span></div>
+        <span class="muted">${esc(p.ratio || '9:16')} · ${esc(countText(p.counts))} · ${p.renders.length} render</span></div>
       <div class="row-side"><span class="chip ${esc(n.tone)}">${esc(n.chip)}</span><button data-open-project="${esc(p.slug)}" aria-label="${esc(n.cta)}: proyek ${esc(p.slug)}">${esc(n.cta)}</button></div>
     </li>`;
   }).join('') : '<li class="empty-state"><strong>Mulai proyek pertama</strong><p>Tekan "Edit video baru", beri nama, lalu upload rekamanmu.</p></li>';
@@ -203,18 +213,25 @@ $('#project-list').addEventListener('click', (e) => {
   openSlug = b.dataset.openProject;
   refresh();
 });
+function openCreate() {
+  $('#project-create').reset();
+  $('#create-error').textContent = '';
+  $('#create-dialog').showModal();
+  $('#project-create').slug.focus();
+}
+$('#project-new').addEventListener('click', openCreate);
 $('#project-create').addEventListener('submit', async (e) => {
+  if (e.submitter?.value !== 'create') return;
   e.preventDefault();
   const slug = e.target.slug.value.trim();
   try {
-    await post('/api/projects', { slug });
-    e.target.reset();
+    await post('/api/projects', { slug, ratio: e.target.ratio?.value || '9:16' });
+    $('#create-dialog').close();
     $('#project-search').value = '';
-    document.querySelector('.create-project').open = false;
     openSlug = slug;
     refresh();
   } catch (err) {
-    banner(err.message);
+    $('#create-error').textContent = err.message;
   }
 });
 
@@ -232,6 +249,7 @@ function renderProject(p, sessions) {
   $('#project-home').hidden = true;
   $('#project-detail').hidden = false;
   $('#project-title').textContent = p.slug;
+  $('#project-ratio').textContent = p.ratio || '9:16';
   const live = sessions.find((x) => x.slug === p.slug && x.status !== 'exited');
   $('#project-session').textContent = live ? 'Buka terminal' : 'Mulai sesi';
   $('#project-session').dataset.live = live ? '1' : '';
@@ -530,8 +548,9 @@ function renderResults(items) {
   $('#result-list').innerHTML = items.length ? items.map((r) => `
     <li data-search="${esc(`${r.slug} ${r.file}`.toLowerCase())}">
       <div class="meta"><div class="row-top"><strong>${esc(r.slug)}</strong><span class="chip ${r.publish ? 'ready' : 'todo'}">${r.publish ? 'Sudah dijadwalkan' : 'Belum dijadwalkan'}</span></div><span class="muted">${esc(r.file)} · ${mb(r.size)} · ${when(r.mtime)}</span>
+        ${r.video ? `<span class="spec"><span class="chip ratio">${esc(r.video.ratio)}</span> ${r.video.width}×${r.video.height}${r.video.duration ? ` · ${dur(r.video.duration)}` : ''}</span>` : ''}
         ${r.publish ? `<span class="muted">Publish ${esc(when(r.publish.createdAt))}: ${r.publish.platforms.map((p) => `${esc(p.platform)} ${esc(p.status)}`).join(', ')}</span>` : ''}</div>
-      <video controls preload="none" playsinline aria-label="Hasil video ${esc(r.slug)}" src="/media/${enc(r.slug)}/${enc(r.file)}"></video>
+      <video controls preload="none" playsinline${r.video ? ` class="${r.video.width >= r.video.height ? 'wide' : 'tall'}" style="aspect-ratio: ${r.video.width} / ${r.video.height}"` : ''} aria-label="Hasil video ${esc(r.slug)}" src="/media/${enc(r.slug)}/${enc(r.file)}"></video>
       <div class="actions"><button class="${r.publish ? '' : 'primary'}" data-publish="${esc(r.slug)}" data-file="${esc(r.file)}">${r.publish ? 'Atur ulang jadwal' : 'Jadwalkan'}</button><a class="btn" href="/media/${enc(r.slug)}/${enc(r.file)}" target="_blank" rel="noopener">Buka video</a></div>
     </li>`).join('') : '<li class="empty-state"><strong>Hasil video akan muncul di sini</strong><p>Selesaikan editing atau Generate dulu. Render yang jadi bisa kamu tonton dan jadwalkan dari sini.</p></li>';
   filterList('result');
@@ -719,7 +738,7 @@ $('#music-list').addEventListener('click', async (e) => {
 });
 
 // Helpers for generate.js (ADR-0026).
-window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, openPublish, showTab, state: () => state, tab: () => tab, termOpen: () => !$('#term-panel').hidden };
+window.studio = { thumbHtml, thumbFallback, $, api, post, esc, enc, banner, dur, when, openTerminal, openPublish, showTab, state: () => state, tab: () => tab, termOpen: () => !$('#term-panel').hidden };
 
 // ---- Boot ----
 (async () => {

@@ -242,3 +242,25 @@ sesi agen tmux, dan publish. Owner:
   keeps all agent/detail options optional on step 3; the Generate panel shall show
   a gate tracker and a next-action card that says whether Dena's review is needed,
   the agent is working, or its session has stopped (offering to resume it).
+- **RD-05-54** (Ubiquitous) — Studio shall list projects (`GET /api/projects`, `GET /api/generate`)
+  and Beranda's "Lanjutkan pekerjaan" newest first by `createdAt` (the project directory's
+  creation time, `ctime` where the filesystem reports none), ties broken by slug.
+- **RD-05-55** (Ubiquitous) — Studio shall show a 9:16 thumbnail on every Edit rekaman,
+  Generate, and Beranda row: one JPEG frame (`GET /api/projects/<slug>/thumb`, auth-guarded)
+  taken from the newest render, else `processed.mp4`, else the first video source, else the
+  first image source, cached as `videos/<slug>/.studio-thumb.jpg` and regenerated only when
+  that source is newer. A project without media, or a frame that fails to load, shows a plain
+  tile; list rows carry `thumb` (the source's mtime) as the cache-busting version.
+- **RD-05-56** (Ubiquitous) — Hasil & review shall show each render's displayed size and ratio
+  (`GET /api/results` → `video: { width, height, ratio, duration }`, from ffprobe, with a 90/270
+  degree rotation swapping the sides, cached per file version; `null` when the media is
+  unreadable) and shall draw its player in that ratio — tall renders at a fixed height, wide
+  renders at full card width — instead of a fixed box with black bars.
+- **RD-05-57** (Event-driven) — When Dena creates an edit project or submits the Generate
+  form, Studio shall offer the ratios `9:16` (default), `4:5`, `1:1` and `16:9`, each drawn as its
+  own frame shape, send the choice as `ratio`, write `canvas.json` (and `ratio` in
+  `research/request.json` for Generate), and reject any other value with 400 before creating anything.
+- **RD-05-58** (Ubiquitous) — Studio shall show each project's ratio in the Beranda, Edit rekaman and
+  Generate lists and on the project and Generate pages (`ratio` on `GET /api/projects`,
+  `/api/projects/<slug>`, `/api/generate`, `/api/generate/<slug>`), and the agent prompt of a
+  non-9:16 project shall name its canvas and `docs/agents/references/aspect-ratios.md`.

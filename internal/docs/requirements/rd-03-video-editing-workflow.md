@@ -476,6 +476,22 @@ extends RD-03-89/95; RD-03-108 strengthens RD-03-100/101 beyond file existence.
 
 ## Referensi
 
+- **RD-03-117** (Ubiquitous) — Each project shall have one canvas ratio from `9:16`
+  (default, 1080×1920), `4:5` (1080×1350), `1:1` (1080×1080) or `16:9`
+  (1920×1080), stored in `videos/<slug>/canvas.json`; a project without it is `9:16`
+  ([ADR-0035](../adr/0035-aspect-ratio-canvas.md)).
+- **RD-03-118** (Event-driven) — When `npm run video -- new <slug> --ratio <r>` runs,
+  the scaffold shall write `canvas.json` and size the starter's viewport, root,
+  stage and media layers to that canvas; an unknown ratio shall be rejected before
+  anything is created.
+- **RD-03-119** (Event-driven) — When `npm run video -- cut <slug>` runs, it shall
+  scale every take to fill the project's canvas and centre-crop it, with optional
+  per-segment `cropX` and `cropY` (0–1) moving the window.
+- **RD-03-120** (State-driven) — While a project's canvas is not `9:16`, the phase
+  documents' `1080×1920` and `9:16` values shall be read as this canvas per
+  `docs/agents/references/aspect-ratios.md` (safe areas, `W`/`H` in motion clips, no
+  hard-coded sizes), and Story shall note any heavy crop in `edit-decision-notes.md`.
+
 - Operasional detail: [operations/video-editing-workflow](../operations/video-editing-workflow.md)
 - Keputusan: [ADR-0008](../adr/0008-four-phase-workflow.md) (menggantikan
   [ADR-0005](../adr/0005-seven-agent-workflow-discipline.md)); mode generate:

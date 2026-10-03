@@ -34,3 +34,14 @@ export function projectSlugs(root) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir).filter((d) => SLUG_RE.test(d) && statSync(join(dir, d)).isDirectory()).sort();
 }
+
+// Newest first (RD-05-54). birthtime is the directory's creation time; where a filesystem reports none, ctime stands in.
+export function projectsByCreated(root) {
+  const dir = join(root, 'videos');
+  return projectSlugs(root)
+    .map((slug) => {
+      const st = statSync(join(dir, slug));
+      return { slug, createdAt: st.birthtimeMs > 0 ? st.birthtimeMs : st.ctimeMs };
+    })
+    .sort((a, b) => b.createdAt - a.createdAt || (a.slug < b.slug ? -1 : 1));
+}

@@ -14,7 +14,7 @@ Root composition:
 
 - Use a stable `data-composition-id`.
 - Set explicit `data-width`, `data-height`, and `data-duration`.
-- Default social video size is `1080x1920` for Reels, TikTok, and Shorts unless the project specifies otherwise.
+- Default social video size is `1080x1920` for Reels, TikTok, and Shorts; the project's canvas (`canvas.json`, see [aspect-ratios](aspect-ratios.md)) wins when it names another ratio.
 - Keep the root deterministic and self-contained.
 
 Timed elements:
@@ -83,7 +83,7 @@ Set:
 
 For Dena default social videos:
 
-- size: `1080x1920`
+- size: `1080x1920` (9:16; use the canvas table in [aspect-ratios](aspect-ratios.md) for another ratio)
 - safe top: at least `120px`
 - safe bottom: at least `220px`
 - caption zone: lower-middle or lower-center, not platform-bottom
