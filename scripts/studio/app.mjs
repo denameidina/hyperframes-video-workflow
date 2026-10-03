@@ -10,7 +10,7 @@ import { createGenerate, decide, generateDetail, generateDir, generateMediaPath,
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
 import { listResults, publishPreview, renderPath } from './results.mjs';
 import { canvasOf } from '../lib/ratio.mjs';
-import { thumbVersion, thumbnailPath } from './thumbs.mjs';
+import { posterPath, thumbVersion, thumbnailPath } from './thumbs.mjs';
 import { ReplizCalendar } from './calendar.mjs';
 import { listMusic, musicFile, rejectMusic } from './music.mjs';
 import { deleteShared, listShared, receiveShared } from './shared.mjs';
@@ -192,6 +192,10 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     }],
     ['GET', /^\/media\/([^/]+)\/(processed-audio\.wav|preview\/storyboard-sheet(?:-\d+)?\.jpg)$/, async (req, url, [slug, file], res) => {
       sendFile(req, res, generateMediaPath(root, slugParam(slug), file));
+      return RAW;
+    }],
+    ['GET', /^\/api\/results\/([^/]+)\/poster$/, async (req, url, [slug], res) => {
+      sendFile(req, res, await posterPath(root, slugParam(slug), url.searchParams.get('file') || '', thumbMaker ? { make: thumbMaker } : {}), { cache: 'private, max-age=86400' });
       return RAW;
     }],
     ['GET', /^\/api\/results$/, async () => listResults(root, { probe: probeSource })],

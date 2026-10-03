@@ -13,7 +13,7 @@ import { Readable } from 'node:stream';
 import { safeMediaName, receiveFile, projectSlugs } from './studio/files.mjs';
 import { deleteShared, listShared, sharedPath, sharedUsage } from './studio/shared.mjs';
 import { stageOf, attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, rendersOf, updateSource, uploadSource } from './studio/projects.mjs';
-import { thumbSource, thumbnailPath, thumbVersion } from './studio/thumbs.mjs';
+import { posterPath, thumbSource, thumbnailPath, thumbVersion } from './studio/thumbs.mjs';
 import { syncManifest } from './lib/video-sources.mjs';
 import { EventEmitter } from 'node:events';
 import { ratioLabel, Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
@@ -1127,4 +1127,24 @@ test('results report the displayed size and ratio of each render, rotation-aware
   assert.deepEqual(rows.find((r) => r.slug === 'vid-a').video, { width: 1080, height: 1920, ratio: '9:16', duration: 12.5 });
   const broken = listResults(studioRoot(), { probe: () => { throw new Error('no ffprobe'); } });
   assert.ok(broken.length && broken.every((r) => r.video === null), 'unreadable media still lists, without a size');
+});
+
+test('poster: a 720 px frame of that exact render, cached beside it and not listed as a render (RD-05-59)', async () => {
+  const root = studioRoot();
+  const calls = [];
+  const make = async (input, out, seek, height) => { calls.push([input.split('/').pop(), seek, height]); writeFileSync(out, 'jpg'); };
+  const file = await posterPath(root, 'vid-a', 'vid-a.mp4', { make });
+  assert.match(file, /videos\/vid-a\/renders\/\.vid-a\.mp4\.poster\.jpg$/);
+  await posterPath(root, 'vid-a', 'vid-a.mp4', { make });
+  assert.deepEqual(calls, [['vid-a.mp4', 1, 720]], 'second request is served from the cache');
+  assert.deepEqual(rendersOf(root, 'vid-a'), ['vid-a.mp4'], 'the poster is not a render');
+  await assert.rejects(posterPath(root, 'vid-a', 'nope.mp4', { make }), { status: 404 });
+  await assert.rejects(posterPath(root, 'vid-a', '../index.html', { make }), { status: 404 });
+  const calls2 = [];
+  const burst = await Promise.all(['a', 'b', 'c', 'd', 'e'].map(async (n) => {
+    writeFileSync(join(root, `videos/vid-a/renders/${n}.mp4`), 'x');
+    return posterPath(root, 'vid-a', `${n}.mp4`, { make: async (i, o) => { calls2.push(n); await new Promise((r) => setTimeout(r, 5)); writeFileSync(o, 'jpg'); } });
+  }));
+  assert.equal(burst.length, 5);
+  assert.equal(calls2.length, 5);
 });

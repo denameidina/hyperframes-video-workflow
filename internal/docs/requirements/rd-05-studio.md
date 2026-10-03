@@ -264,3 +264,7 @@ sesi agen tmux, dan publish. Owner:
   Generate lists and on the project and Generate pages (`ratio` on `GET /api/projects`,
   `/api/projects/<slug>`, `/api/generate`, `/api/generate/<slug>`), and the agent prompt of a
   non-9:16 project shall name its canvas and `docs/agents/references/aspect-ratios.md`.
+- **RD-05-59** (Ubiquitous) — Each player in Hasil & review shall carry a poster, a 720 px-high frame
+  of that exact render (`GET /api/results/<slug>/poster?file=<render>`, auth-guarded, 404 unless the file
+  is one of the project's renders), made by ffmpeg on first request with at most three runs at once,
+  cached as `renders/.<file>.poster.jpg` until the render is newer, and never listed as a render.
