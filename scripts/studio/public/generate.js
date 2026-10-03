@@ -17,6 +17,27 @@
   const media = (slug, file, fp) => `/media/${enc(slug)}/${file}${fp ? `?v=${enc(fp.slice(0, 12))}` : ''}`;
   const setHash = (h) => { if (location.hash !== h) history.replaceState(null, '', h); };
 
+  // ---- what the person should do now (one answer per project) ----
+  const STEPS = { explainer: ['Agent riset', 'Naskah & suara', 'Storyboard', 'Render', 'Selesai'], music: ['Agent menyiapkan', 'Teks, musik & storyboard', 'Render', 'Selesai'] };
+  const stepAt = (format, s) => {
+    if (s.phase === 'done') return isMusic(format) ? 3 : 4;
+    if (isMusic(format)) return s.phase === 'gate' ? s.gate : s.phase === 'build' ? 2 : s.phase === 'screen-plan' ? 1 : 0;
+    if (s.phase === 'gate') return s.gate;
+    return { story: 0, 'screen-plan': 2, build: 3 }[s.phase] ?? 0;
+  };
+  const gateName = (format, g) => (isMusic(format) ? ['', 'teks, musik & storyboard', 'render'] : ['', 'naskah & suara', 'storyboard', 'render'])[g];
+  function nextOf(p) {
+    const st = p.status || {};
+    const busy = p.session?.status === 'running';
+    if (st.phase === 'done') return { tone: 'ready', chip: 'Selesai', hint: 'Video disetujui. Tonton lagi atau jadwalkan.', cta: 'Buka' };
+    if (st.phase === 'error') return { tone: 'todo', chip: 'Error', hint: 'Ada masalah di proses agent. Buka untuk melihat.', cta: 'Buka' };
+    if (st.phase === 'gate' && st.state === 'qa') return { tone: 'work', chip: 'QA berjalan', hint: 'Tunggu laporan QA, lalu putuskan.', cta: 'Buka' };
+    if (st.phase === 'gate' && !busy) return { tone: 'ask', chip: 'Giliran kamu', hint: `Review ${gateName(p.format, st.gate)}, lalu Setuju atau Revisi.`, cta: 'Review sekarang' };
+    if (st.phase === 'gate') return { tone: 'work', chip: 'Agent merevisi', hint: 'Agent sedang mengerjakan revisimu.', cta: 'Buka' };
+    if (!(p.session && p.session.status !== 'exited')) return { tone: 'todo', chip: 'Agent berhenti', hint: `${PHASE[st.phase] || 'Proses'}, tetapi sesi agent tidak berjalan. Lanjutkan sesi agar proses berlanjut.`, cta: 'Buka' };
+    return { tone: 'work', chip: 'Agent bekerja', hint: `${PHASE[st.phase] || 'Agent bekerja'}. Kamu akan diminta review di gate berikutnya.`, cta: 'Buka' };
+  }
+
   async function refresh() {
     if (openSlug) renderDetail(await api(`/api/generate/${enc(openSlug)}`));
     else renderList(await api('/api/generate'));
@@ -45,12 +66,15 @@
   function renderList(items) {
     $('#gen-detail').hidden = true;
     $('#gen-home').hidden = false;
-    $('#gen-list').innerHTML = items.length ? items.map((p) => `
+    $('#gen-list').innerHTML = items.length ? items.map((p) => {
+      const n = nextOf(p);
+      return `
       <li>
-        <div class="meta"><strong>${esc(p.slug)}</strong><span class="status ${esc(p.session?.status || '')}">${esc(`${p.format || '?'} · ${statusText(p.status)}`)}</span>
-          <span class="muted">${esc(p.brief)}</span><span class="muted">Sesi: ${esc(sessionText(p.session))}</span></div>
-        <div class="actions"><button class="primary" data-gen-open="${esc(p.slug)}">Buka</button></div>
-      </li>`).join('') : '<li class="muted">Belum ada video generate. Tekan "Buat video".</li>';
+        <div class="meta"><span class="row-kind">${esc(p.format || '?')}</span><strong>${esc(p.slug)}</strong>
+          <span class="muted">${esc(n.hint)}</span><span class="muted clip-line">${esc(p.brief)}</span></div>
+        <div class="row-side"><span class="chip ${esc(n.tone)}">${esc(n.chip)}</span><button class="${n.tone === 'ask' || n.tone === 'ready' ? 'primary' : ''}" data-gen-open="${esc(p.slug)}">${esc(n.cta)}</button></div>
+      </li>`;
+    }).join('') : '<li class="empty-state"><strong>Belum ada video generate</strong><p>Tekan "Buat video dari ide", tulis brief, lalu agent mulai bekerja.</p></li>';
   }
   $('#gen-list').addEventListener('click', (e) => {
     const b = e.target.closest('button[data-gen-open]');
@@ -124,9 +148,8 @@
 
   function running(d) {
     const s = d.status;
-    if (s.phase === 'done') return `<section class="gen-card"><p>Selesai. Publish lewat <button data-gen="results">tab Results</button>.</p></section>${gate3(d)}`;
-    return `<section class="gen-card"><p>Agent sedang mengerjakan: ${esc(PHASE[s.phase] || s.phase)}…</p>
-      <p class="muted">Buka Terminal untuk melihat prosesnya.</p></section>`;
+    if (s.phase === 'done') return `<section class="gen-card"><p>Selesai. Jadwalkan lewat <button data-gen="results">Hasil &amp; review</button>.</p></section>${gate3(d)}`;
+    return ''; // the next-action card above already says who is working
   }
 
   function renderDetail(d) {
@@ -135,9 +158,14 @@
     $('#gen-detail').hidden = false;
     const s = d.status;
     const live = d.session && d.session.status !== 'exited';
-    $('#gen-head').innerHTML = `<button data-gen="back">← Generate</button><strong>${esc(d.slug)}</strong>
-      <span class="status ${esc(d.session?.status || '')}">${esc(`${d.format} · ${statusText(s)}`)}</span><span class="muted">Sesi: ${esc(sessionText(d.session))}</span>
-      ${live ? '<button data-gen="terminal">Terminal</button>' : '<button data-gen="session" class="primary">Mulai sesi lanjut</button>'}`;
+    $('#gen-head').innerHTML = `<button data-gen="back">← Semua video</button><strong>${esc(d.slug)}</strong><span class="row-kind">${esc(d.format)}</span>
+      <span class="spacer"></span>${live ? '<button data-gen="terminal">Terminal agent</button>' : '<button data-gen="session">Mulai sesi lanjut</button>'}`;
+    $('#gen-steps').innerHTML = window.stepperHtml(isMusic(d.format) ? STEPS.music : STEPS.explainer, stepAt(d.format, s));
+    const n = nextOf(d);
+    const title = n.tone === 'ask' ? `Giliranmu: review ${gateName(d.format, s.gate)}` : n.tone === 'ready' ? 'Video sudah selesai' : n.chip;
+    const body = n.tone === 'ask' ? 'Periksa isinya di bawah. Kalau sudah pas tekan Setuju; kalau belum, tulis apa yang harus diubah lewat Revisi.' : n.hint;
+    $('#gen-next').className = `next-card ${n.tone}`;
+    $('#gen-next').innerHTML = window.nextCard(n.tone, title, body, n.tone === 'ready' ? '<button class="primary" data-gen="results">Review &amp; jadwalkan</button>' : n.tone === 'work' && live ? '<button data-gen="terminal">Lihat proses</button>' : n.tone === 'todo' && !live ? '<button class="primary" data-gen="session">Mulai sesi lanjut</button>' : '');
     // redraw the body only when what it shows changed: a playing player survives polling, an open editor is never
     // redrawn under Dena's typing (RD-05-29)
     const voiceBusy = Boolean(d.voiceJob?.running);
@@ -315,7 +343,7 @@
       f.runtime.value = st.tools.claude === false ? 'codex' : 'claude';
       fillModels(f);
       applyFormat(f);
-      $('#gen-error').textContent = '';
+      showStep(1);
       $('#gen-dialog').showModal();
     } catch (e) {
       banner(e.message);
@@ -323,15 +351,41 @@
   }
   $('#gen-new').addEventListener('click', openForm);
   const form = $('#gen-form');
+  // 3-step wizard: Jenis -> Brief -> Mulai. Only the current step's fields are validated before moving on.
+  let step = 1;
+  function showStep(n) {
+    step = n;
+    for (const fs of document.querySelectorAll('#gen-form .wizard-step')) fs.hidden = Number(fs.dataset.step) !== n;
+    for (const li of document.querySelectorAll('#gen-form [data-step-dot]')) {
+      const i = Number(li.dataset.stepDot);
+      li.className = i < n ? 'done' : i === n ? 'current' : '';
+    }
+    $('#gen-back').hidden = n === 1;
+    $('#gen-next-step').hidden = n === 3;
+    $('#gen-create').hidden = n !== 3;
+    $('#gen-error').textContent = '';
+  }
+  $('#gen-next-step').addEventListener('click', () => {
+    if (step === 2) {
+      if (!form.brief.value.trim()) { $('#gen-error').textContent = 'Tulis brief dulu, minimal satu kalimat.'; form.brief.focus(); return; }
+      if (!form.slug.value.trim() || !form.slug.checkValidity()) { $('#gen-error').textContent = 'Nama proyek: huruf kecil, angka, dan tanda hubung.'; form.slug.focus(); return; }
+    }
+    showStep(step + 1);
+  });
+  $('#gen-back').addEventListener('click', () => showStep(step - 1));
   form.brief.addEventListener('input', () => { if (!slugTouched) form.slug.value = slugify(form.brief.value); });
   form.slug.addEventListener('input', () => { slugTouched = true; });
   form.runtime.addEventListener('change', () => fillModels(form));
-  form.format.addEventListener('change', () => applyFormat(form));
+  form.addEventListener('change', (e) => { if (e.target.name === 'format') applyFormat(form); });
   form.model.addEventListener('change', () => {
     const rt = window.studio.state().models[form.runtime.value] || { models: [] };
     const efforts = rt.models.find((m) => m.value === form.model.value)?.efforts || [];
     form.effort.innerHTML = efforts.map((x) => opt(x, x)).join('');
     form.effort.value = efforts.includes('high') ? 'high' : efforts[0] || '';
+  });
+  // Enter inside step 1-2 moves forward instead of submitting half a form
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && step < 3 && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); $('#gen-next-step').click(); }
   });
   form.addEventListener('submit', async (e) => {
     if (e.submitter?.value !== 'create') return;

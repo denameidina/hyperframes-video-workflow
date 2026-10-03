@@ -47,3 +47,13 @@ Requirements: [RD-05](../requirements/rd-05-studio.md),
 
 Updated documentation: RD-05 Studio, RD-01 publish, API contract, data model,
 publish runbook, ADR-0031, this audit, and the internal docs index.
+
+## Follow-up: guided flow redesign (2026-10-03)
+
+Request: make the path from "start an edit" or "generate a video" to a scheduled
+post obvious. Changes: Beranda with two start cards and a single "Lanjutkan
+pekerjaan" list (RD-05-49), navigation in flow order (RD-05-50), project `stage`
+from handoff artifacts (RD-05-51), step trackers and next-action cards for
+footage and Generate (RD-05-52, RD-05-53), a three-step Generate wizard, drag and
+drop upload, and render rows labelled scheduled / not scheduled. Visual check:
+headless Chrome via DevTools at 1280 px and 390 px (no horizontal scroll at 390).

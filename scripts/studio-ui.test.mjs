@@ -123,7 +123,7 @@ test('search filters existing result nodes without resetting media HTML or reque
   nodes.get('#result-search').value = 'none'; await nodes.get('#result-search').emit('input');
   assert.equal(nodes.get('#result-no-match').hidden, false);
   window.studio.showTab('projects'); await new Promise((r) => setImmediate(r));
-  assert.equal(nodes.get('#page-title').textContent, 'Proyek');
+  assert.equal(nodes.get('#page-title').textContent, 'Edit rekaman');
 });
 
 test('newer calendar month wins when an earlier request resolves late', async () => {
@@ -140,7 +140,16 @@ test('newer calendar month wins when an earlier request resolves late', async ()
 
 test('a Generate project deep link opens once without a racing list refresh', async () => {
   const { nodes, generateCalls } = await ui({ hash: '#generate/one' });
-  assert.equal(nodes.get('#page-title').textContent, 'Generate');
+  assert.equal(nodes.get('#page-title').textContent, 'Generate dari ide');
   assert.equal(nodes.get('#tab-generate').hidden, false);
   assert.deepEqual(generateCalls, ['open:one']);
+});
+
+test('home is the default page and lists every video with one next action, escaped', async () => {
+  const app = await ui({ hash: '' });
+  const { nodes } = app;
+  assert.equal(nodes.get('#page-title').textContent, 'Beranda');
+  assert.equal(nodes.get('#tab-home').hidden, false);
+  assert.equal(nodes.get('#tab-projects').hidden, true);
+  assert.match(nodes.get('#home-list').innerHTML, /data-home="projects" data-slug="one"/);
 });

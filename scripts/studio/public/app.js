@@ -21,13 +21,14 @@ async function api(path, opts = {}) {
 const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(body || {}) });
 
 let state = { tools: {}, models: {} };
-let tab = 'projects';
+let tab = 'home';
 let openSlug = '';
 let openRun = '';
 const PAGES = {
-  projects: ['Proyek', 'Mulai dari bahan video, lalu lanjutkan proses editing.'],
-  generate: ['Generate', 'Ubah ide menjadi video, lalu review naskah, storyboard, dan hasilnya.'],
-  results: ['Hasil', 'Tonton hasil render, cek caption, lalu tentukan tanggal tayang.'],
+  home: ['Beranda', 'Mau bikin video apa hari ini? Pilih cara mulai, atau lanjutkan yang sedang berjalan.'],
+  projects: ['Edit rekaman', 'Upload rekaman, biarkan agent mengedit, lalu review hasilnya.'],
+  generate: ['Generate dari ide', 'Tulis ide, setujui naskah dan storyboard, lalu review render.'],
+  results: ['Hasil & review', 'Tonton hasil render, cek caption, lalu tentukan tanggal tayang.'],
   calendar: ['Kalender konten', 'Lihat tanggal tayang dan atur jadwal konten ke Repliz.'],
   sessions: ['Sesi agen', 'Lanjutkan pekerjaan atau buka terminal agen yang sedang berjalan.'],
   shared: ['Pustaka', 'Bahan video dan gambar yang bisa dipakai di beberapa proyek.'],
@@ -60,6 +61,7 @@ document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click
 
 async function refresh() {
   try {
+    if (tab === 'home') await renderHome();
     if (tab === 'projects') {
       const sessions = await api('/api/sessions');
       if (openSlug) renderProject(await api(`/api/projects/${enc(openSlug)}`), sessions);
@@ -114,6 +116,68 @@ async function uploadFiles(input, url, bar) {
   refresh();
 }
 
+// ---- Home ----
+// One list of everything in flight, each row naming the single thing Dena should do next.
+const FOOTAGE_STEPS = ['Bahan', 'Potong & cerita', 'Caption & visual', 'Render', 'Review'];
+const FOOTAGE_AT = { sources: 0, edit: 1, plan: 2, build: 3, review: 4 };
+const footageNext = (stage, live) => ({
+  sources: { tone: 'todo', chip: 'Butuh bahan', hint: 'Upload rekaman video dulu.', cta: 'Upload bahan' },
+  edit: live ? { tone: 'work', chip: 'Agent bekerja', hint: 'Agent sedang memotong dan menyusun cerita.', cta: 'Buka terminal' } : { tone: 'todo', chip: 'Siap diedit', hint: 'Bahan sudah ada. Mulai sesi edit.', cta: 'Mulai edit' },
+  plan: live ? { tone: 'work', chip: 'Agent bekerja', hint: 'Memotong selesai; caption dan visual sedang disusun.', cta: 'Buka terminal' } : { tone: 'todo', chip: 'Edit terhenti', hint: 'Potongan selesai, caption dan visual belum. Lanjutkan sesi.', cta: 'Lanjutkan edit' },
+  build: live ? { tone: 'work', chip: 'Agent bekerja', hint: 'Merakit dan merender video.', cta: 'Buka terminal' } : { tone: 'todo', chip: 'Edit terhenti', hint: 'Visual sudah direncanakan, render belum ada. Lanjutkan sesi.', cta: 'Lanjutkan edit' },
+  review: { tone: 'ready', chip: 'Siap direview', hint: 'Render sudah jadi. Tonton, lalu jadwalkan.', cta: 'Review hasil' },
+}[stage] || { tone: 'todo', chip: stage, hint: '', cta: 'Buka' });
+
+function genNext(p) {
+  const st = p.status || {};
+  const busy = p.session?.status === 'running';
+  if (st.phase === 'done') return { tone: 'ready', chip: 'Selesai', hint: 'Video sudah disetujui. Jadwalkan penayangan.', cta: 'Lihat hasil' };
+  if (st.phase === 'gate' && !busy && st.state !== 'qa') return { tone: 'ask', chip: 'Giliran kamu', hint: `Review dan putuskan Gate ${st.gate}.`, cta: 'Review sekarang' };
+  if (st.phase === 'gate') return { tone: 'work', chip: st.state === 'qa' ? 'QA berjalan' : 'Agent merevisi', hint: 'Agent sedang bekerja; tunggu sampai selesai.', cta: 'Buka' };
+  return { tone: 'work', chip: 'Agent bekerja', hint: 'Agent menyusun video. Kamu akan diminta review.', cta: 'Buka' };
+}
+
+const TONE_ORDER = { ask: 0, ready: 1, todo: 2, work: 3 };
+async function renderHome() {
+  const [projects, sessions, gens] = await Promise.all([api('/api/projects'), api('/api/sessions'), api('/api/generate').catch(() => [])]);
+  const live = new Set(sessions.filter((x) => x.status !== 'exited').map((x) => x.slug));
+  const genSlugs = new Set(gens.map((g) => g.slug));
+  const rows = [
+    ...gens.map((g) => ({ kind: 'generate', slug: g.slug, label: `Generate · ${g.format || '?'}`, note: g.brief, ...genNext(g) })),
+    ...projects.filter((p) => !genSlugs.has(p.slug)).map((p) => ({ kind: 'projects', slug: p.slug, label: 'Edit rekaman', note: countText(p.counts), ...footageNext(p.stage, live.has(p.slug)) })),
+  ].sort((a, b) => TONE_ORDER[a.tone] - TONE_ORDER[b.tone]);
+  const ask = rows.filter((r) => r.tone === 'ask' || r.tone === 'ready').length;
+  $('#home-summary').textContent = rows.length ? (ask ? `${ask} menunggu kamu` : `${rows.length} video`) : '';
+  $('#home-list').innerHTML = rows.length ? rows.map((r) => `
+    <li class="home-row ${esc(r.tone)}">
+      <div class="meta"><span class="row-kind">${esc(r.label)}</span><strong>${esc(r.slug)}</strong>
+        <span class="muted">${esc(r.hint)}</span>${r.note ? `<span class="muted clip-line">${esc(r.note)}</span>` : ''}</div>
+      <div class="row-side"><span class="chip ${esc(r.tone)}">${esc(r.chip)}</span>
+        <button class="${r.tone === 'ask' || r.tone === 'ready' ? 'primary' : ''}" data-home="${esc(r.kind)}" data-slug="${esc(r.slug)}">${esc(r.cta)}</button></div>
+    </li>`).join('') : '<li class="empty-state"><strong>Belum ada video</strong><p>Pilih salah satu cara mulai di atas. Videomu akan muncul di sini beserta langkah berikutnya.</p></li>';
+}
+$('#home-list').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-home]');
+  if (!b) return;
+  if (b.dataset.home === 'generate') {
+    showTab('generate', { refreshPage: false });
+    window.studioGenerate.open(b.dataset.slug);
+  } else {
+    openSlug = b.dataset.slug;
+    showTab('projects');
+  }
+});
+$('#start-edit').addEventListener('click', () => {
+  showTab('projects');
+  const d = document.querySelector('.create-project');
+  d.open = true;
+  $('#project-create').slug.focus();
+});
+$('#start-generate').addEventListener('click', () => {
+  showTab('generate', { refreshPage: false });
+  window.studioGenerate.open('new');
+});
+
 // ---- Projects ----
 const countText = (c) => Object.entries(c).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(' · ') || 'belum ada sumber';
 
@@ -121,12 +185,16 @@ function renderProjects(items, sessions) {
   $('#project-detail').hidden = true;
   $('#project-home').hidden = false;
   const live = new Map(sessions.map((s) => [s.slug, s.status]));
-  $('#project-list').innerHTML = items.length ? items.map((p) => `
+  $('#project-list').innerHTML = items.length ? items.map((p) => {
+    const n = footageNext(p.stage, live.has(p.slug) && live.get(p.slug) !== 'exited');
+    return `
     <li data-search="${esc(p.slug.toLowerCase())}">
-      <div class="meta"><strong>${esc(p.slug)}</strong>${live.has(p.slug) ? `<span class="status ${esc(live.get(p.slug))}">${esc(live.get(p.slug))}</span>` : ''}
+      <div class="meta"><strong>${esc(p.slug)}</strong>
+        <span class="muted">${esc(n.hint)}</span>
         <span class="muted">${esc(countText(p.counts))} · ${p.renders.length} render</span></div>
-      <div class="actions"><button data-open-project="${esc(p.slug)}" aria-label="Buka proyek ${esc(p.slug)}">Buka proyek</button></div>
-    </li>`).join('') : '<li class="empty-state"><strong>Mulai proyek pertama</strong><p>Buat proyek, upload bahan video, lalu mulai sesi editing.</p></li>';
+      <div class="row-side"><span class="chip ${esc(n.tone)}">${esc(n.chip)}</span><button data-open-project="${esc(p.slug)}" aria-label="${esc(n.cta)}: proyek ${esc(p.slug)}">${esc(n.cta)}</button></div>
+    </li>`;
+  }).join('') : '<li class="empty-state"><strong>Mulai proyek pertama</strong><p>Tekan "Edit video baru", beri nama, lalu upload rekamanmu.</p></li>';
   filterList('project');
 }
 $('#project-list').addEventListener('click', (e) => {
@@ -151,6 +219,15 @@ $('#project-create').addEventListener('submit', async (e) => {
 });
 
 const ROLE_OPTIONS = { video: [['', 'Auto'], ['speech', 'Speech'], ['broll', 'B-roll']], image: [['image', 'Image']] };
+
+// Shared with Generate: a numbered rail showing what is done, what is happening, what is left.
+function stepperHtml(steps, at) {
+  return steps.map((label, i) => `<li class="${i < at ? 'done' : i === at ? 'current' : ''}"${i === at ? ' aria-current="step"' : ''}><span class="step-dot" aria-hidden="true">${i < at ? '✓' : i + 1}</span><span class="step-label">${esc(label)}</span></li>`).join('');
+}
+const nextCard = (tone, title, body, actions = '') => `<div class="next-body"><span class="chip ${tone}">Langkah berikutnya</span><h3>${esc(title)}</h3><p>${esc(body)}</p></div><div class="next-actions">${actions}</div>`;
+window.stepperHtml = stepperHtml;
+window.nextCard = nextCard;
+
 function renderProject(p, sessions) {
   $('#project-home').hidden = true;
   $('#project-detail').hidden = false;
@@ -158,6 +235,19 @@ function renderProject(p, sessions) {
   const live = sessions.find((x) => x.slug === p.slug && x.status !== 'exited');
   $('#project-session').textContent = live ? 'Buka terminal' : 'Mulai sesi';
   $('#project-session').dataset.live = live ? '1' : '';
+  const at = FOOTAGE_AT[p.stage] ?? 0;
+  $('#project-steps').innerHTML = stepperHtml(FOOTAGE_STEPS, at);
+  const n = footageNext(p.stage, Boolean(live));
+  const cta = {
+    sources: '<button class="primary" data-next="upload">Pilih file rekaman</button>',
+    edit: live ? '<button class="primary" data-next="terminal">Buka terminal</button>' : '<button class="primary" data-next="session">Mulai edit</button>',
+    plan: live ? '<button class="primary" data-next="terminal">Buka terminal</button>' : '<button class="primary" data-next="session">Lanjutkan edit</button>',
+    build: live ? '<button class="primary" data-next="terminal">Buka terminal</button>' : '<button class="primary" data-next="session">Lanjutkan edit</button>',
+    review: '<button class="primary" data-next="results">Review &amp; jadwalkan</button>',
+  }[p.stage] || '';
+  const title = { sources: 'Upload rekamanmu', edit: live ? 'Agent sedang mengedit' : 'Mulai edit dengan agent', plan: live ? 'Agent sedang bekerja' : 'Lanjutkan edit', build: live ? 'Agent sedang merender' : 'Lanjutkan edit', review: 'Tonton hasilnya' }[p.stage] || 'Lanjut';
+  $('#project-next').className = `next-card ${n.tone}`;
+  $('#project-next').innerHTML = nextCard(n.tone, title, n.hint, cta);
   $('#source-list').innerHTML = p.sources.length ? p.sources.map((x) => {
     const url = `/api/projects/${enc(p.slug)}/sources/${enc(x.id)}/file`;
     const preview = x.kind === 'image' ? `<img src="${url}" alt="" loading="lazy">` : `<video src="${url}#t=0.5" preload="none" muted playsinline></video>`;
@@ -165,14 +255,33 @@ function renderProject(p, sessions) {
     const size = x.kind === 'video' ? dur(x.probe?.duration) : `${x.probe?.width ?? '?'}×${x.probe?.height ?? '?'}`;
     return `<li class="source" data-id="${esc(x.id)}">
       ${preview}
-      <div class="meta"><strong>${esc(x.id)} · ${esc(x.path.split('/').pop())}</strong>
-        <span class="muted">${x.origin === 'shared' ? 'shared' : 'project'} · ${esc(size)}${x.roleSource === 'detected' ? ' · deteksi agen' : ''}</span>
+      <div class="meta"><strong>${esc(x.path.split('/').pop())}</strong>
+        <span class="muted">${esc(x.id)} · ${x.origin === 'shared' ? 'dari pustaka' : 'proyek'} · ${esc(size)}${x.roleSource === 'detected' ? ' · peran terdeteksi agent' : ''}</span>
+        <details class="source-opts"><summary>Peran &amp; catatan</summary>
         <label>Peran <select data-role${x.kind === 'image' ? ' disabled' : ''}>${opts}</select></label>
-        <label>Catatan <input data-note value="${esc(x.note)}" maxlength="500" placeholder="mis. pakai waktu bahas harga"></label></div>
-      <div class="actions"><button class="danger" data-remove="${esc(x.id)}">${x.origin === 'shared' ? 'Lepas' : 'Hapus'}</button></div>
+        <label>Catatan <input data-note value="${esc(x.note)}" maxlength="500" placeholder="mis. pakai waktu bahas harga"></label></details></div>
+      <div class="actions"><button class="danger quiet" data-remove="${esc(x.id)}">${x.origin === 'shared' ? 'Lepas' : 'Hapus'}</button></div>
     </li>`;
-  }).join('') : '<li class="muted">Belum ada sumber. Upload video/gambar atau tambah dari Shared.</li>';
+  }).join('') : '<li class="empty-state"><strong>Belum ada bahan</strong><p>Seret rekaman ke kotak di atas, atau tambah dari pustaka.</p></li>';
 }
+
+$('#project-next').addEventListener('click', (e) => {
+  const act = e.target.closest('button[data-next]')?.dataset.next;
+  if (act === 'upload') $('#source-upload').click();
+  if (act === 'session') openEdit(openSlug);
+  if (act === 'terminal') openTerminal(openSlug);
+  if (act === 'results') { $('#result-search').value = openSlug; showTab('results'); }
+});
+// drag & drop onto the upload box
+const drop = $('#source-drop');
+for (const ev of ['dragenter', 'dragover']) drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); });
+for (const ev of ['dragleave', 'drop']) drop.addEventListener(ev, () => drop.classList.remove('over'));
+drop.addEventListener('drop', (e) => {
+  e.preventDefault();
+  if (!e.dataTransfer?.files?.length) return;
+  $('#source-upload').files = e.dataTransfer.files;
+  $('#source-upload').dispatchEvent(new Event('change'));
+});
 
 $('#project-back').addEventListener('click', () => { openSlug = ''; refresh(); });
 $('#source-upload').addEventListener('change', () => uploadFiles($('#source-upload'), `/api/projects/${enc(openSlug)}/sources`, $('#source-progress')));
@@ -420,11 +529,11 @@ document.querySelector('.keys').addEventListener('click', (e) => {
 function renderResults(items) {
   $('#result-list').innerHTML = items.length ? items.map((r) => `
     <li data-search="${esc(`${r.slug} ${r.file}`.toLowerCase())}">
-      <div class="meta"><strong>${esc(r.slug)}</strong><span class="muted">${esc(r.file)} · ${mb(r.size)} · ${when(r.mtime)}</span>
+      <div class="meta"><div class="row-top"><strong>${esc(r.slug)}</strong><span class="chip ${r.publish ? 'ready' : 'todo'}">${r.publish ? 'Sudah dijadwalkan' : 'Belum dijadwalkan'}</span></div><span class="muted">${esc(r.file)} · ${mb(r.size)} · ${when(r.mtime)}</span>
         ${r.publish ? `<span class="muted">Publish ${esc(when(r.publish.createdAt))}: ${r.publish.platforms.map((p) => `${esc(p.platform)} ${esc(p.status)}`).join(', ')}</span>` : ''}</div>
       <video controls preload="none" playsinline aria-label="Hasil video ${esc(r.slug)}" src="/media/${enc(r.slug)}/${enc(r.file)}"></video>
-      <div class="actions"><button data-publish="${esc(r.slug)}" data-file="${esc(r.file)}">Atur jadwal</button><a class="btn" href="/media/${enc(r.slug)}/${enc(r.file)}" target="_blank" rel="noopener">Buka video</a></div>
-    </li>`).join('') : '<li class="empty-state"><strong>Hasil video akan muncul di sini</strong><p>Selesaikan editing atau Generate, lalu review render sebelum menjadwalkan.</p></li>';
+      <div class="actions"><button class="${r.publish ? '' : 'primary'}" data-publish="${esc(r.slug)}" data-file="${esc(r.file)}">${r.publish ? 'Atur ulang jadwal' : 'Jadwalkan'}</button><a class="btn" href="/media/${enc(r.slug)}/${enc(r.file)}" target="_blank" rel="noopener">Buka video</a></div>
+    </li>`).join('') : '<li class="empty-state"><strong>Hasil video akan muncul di sini</strong><p>Selesaikan editing atau Generate dulu. Render yang jadi bisa kamu tonton dan jadwalkan dari sini.</p></li>';
   filterList('result');
 }
 
@@ -625,7 +734,7 @@ window.studio = { $, api, post, esc, enc, banner, dur, when, openTerminal, openP
   if (deep) {
     showTab('generate', { refreshPage: false });
     window.studioGenerate.open(deep[1] || '');
-  } else showTab(Object.hasOwn(PAGES, location.hash.slice(1)) ? location.hash.slice(1) : 'projects');
+  } else showTab(Object.hasOwn(PAGES, location.hash.slice(1)) ? location.hash.slice(1) : 'home');
   // Only the Sessions tab polls; re-rendering Results would reset playing videos.
   setInterval(() => { if (tab === 'sessions' && $('#term-panel').hidden) refresh(); }, 2000);
 })();

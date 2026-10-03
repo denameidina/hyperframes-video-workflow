@@ -37,6 +37,15 @@ export function roleCounts(sources) {
   return c;
 }
 
+// Where a footage project stands, from the artifacts each phase leaves (docs/agents/ handoff chain):
+// sources -> edit (Story) -> plan (Screen Plan) -> build -> review (render exists).
+export function stageOf(dir, sources, renders) {
+  if (renders.length) return 'review';
+  if (existsSync(join(dir, 'visual-plan.md')) || existsSync(join(dir, 'overlay-timeline.json'))) return 'build';
+  if (existsSync(join(dir, 'processed.mp4'))) return 'plan';
+  return sources.length ? 'edit' : 'sources';
+}
+
 export function listProjects(root) {
   return projectSlugs(root).map((slug) => {
     let sources = [];
@@ -45,7 +54,8 @@ export function listProjects(root) {
     } catch {
       // an unreadable manifest shows as no sources; the project page reports the error
     }
-    return { slug, counts: roleCounts(sources), renders: rendersOf(root, slug) };
+    const renders = rendersOf(root, slug);
+    return { slug, counts: roleCounts(sources), renders, stage: stageOf(join(root, 'videos', slug), sources, renders) };
   });
 }
 
@@ -58,7 +68,9 @@ export function createProject(root, slug) {
 
 export function getProject(root, slug) {
   const dir = projectPath(root, slug);
-  return { slug, sources: asBadRequest(() => readManifest(dir)).sources, renders: rendersOf(root, slug) };
+  const sources = asBadRequest(() => readManifest(dir)).sources;
+  const renders = rendersOf(root, slug);
+  return { slug, sources, renders, stage: stageOf(dir, sources, renders) };
 }
 
 export async function uploadSource(root, slug, name, stream, { probe }) {

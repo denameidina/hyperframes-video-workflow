@@ -12,7 +12,7 @@ import { FORMAT, hasSession, interruptSession, killSession, listSessions, parseS
 import { Readable } from 'node:stream';
 import { safeMediaName, receiveFile, projectSlugs } from './studio/files.mjs';
 import { deleteShared, listShared, sharedPath, sharedUsage } from './studio/shared.mjs';
-import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, rendersOf, updateSource, uploadSource } from './studio/projects.mjs';
+import { stageOf, attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, rendersOf, updateSource, uploadSource } from './studio/projects.mjs';
 import { syncManifest } from './lib/video-sources.mjs';
 import { EventEmitter } from 'node:events';
 import { Publisher, listResults, publishPreview, receiptStatus, renderPath } from './studio/results.mjs';
@@ -390,6 +390,12 @@ test('projects: list, create, sources, delete', async () => {
     ['vid-b', { speech: 0, broll: 0, image: 1, auto: 1 }, []],
   ]);
   assert.deepEqual(rendersOf(root, 'vid-a'), ['vid-a.mp4']);
+  assert.deepEqual(listProjects(root).map((p) => [p.slug, p.stage]), [['vid-a', 'review'], ['vid-b', 'edit']]);
+  assert.equal(stageOf(join(root, 'videos/vid-b'), [], []), 'sources');
+  writeFileSync(join(root, 'videos/vid-b/processed.mp4'), 'x');
+  assert.equal(getProject(root, 'vid-b').stage, 'plan');
+  writeFileSync(join(root, 'videos/vid-b/visual-plan.md'), 'x');
+  assert.equal(getProject(root, 'vid-b').stage, 'build');
 
   assert.deepEqual(createProject(root, 'baru'), { slug: 'baru' });
   assert.ok(existsSync(join(root, 'videos/baru/index.html')));

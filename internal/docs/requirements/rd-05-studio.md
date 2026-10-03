@@ -219,3 +219,26 @@ sesi agen tmux, dan publish. Owner:
 - **RD-05-53** (Event-driven) — When a generate project is created, the server
   shall store `motion` in `research/request.json` and write `motion_design` in the
   brief stub's Workflow Settings.
+
+## Guided flow (Beranda, steppers, wizard)
+
+- **RD-05-49** (Ubiquitous) — Studio shall open on Beranda, which offers two ways to
+  start (Edit video dari rekaman, Buat video dari ide) and one list of every
+  footage and generate project, each with a status chip and exactly one next
+  action; projects waiting for Dena's decision or review list first.
+- **RD-05-50** (Ubiquitous) — Studio shall group navigation in flow order — Buat
+  video (Edit rekaman, Generate dari ide), Tayangkan (Hasil & review, Kalender) —
+  and fold supporting tools (Sesi agen, Pustaka, Suara, Musik) under Peralatan.
+- **RD-05-51** (Ubiquitous) — `GET /api/projects` and `GET /api/projects/<slug>`
+  shall report a `stage` derived only from handoff artifacts: `sources` (no
+  sources), `edit` (sources, no `processed.mp4`), `plan` (`processed.mp4`),
+  `build` (`visual-plan.md` or `overlay-timeline.json`), `review` (a render exists).
+- **RD-05-52** (State-driven) — While a footage project is open, Studio shall show
+  a five-step tracker (Bahan, Potong & cerita, Caption & visual, Render, Review) and
+  a next-action card whose button matches the stage and whether a session is live;
+  upload shall accept drag and drop as well as the file picker.
+- **RD-05-53** (Ubiquitous) — The Generate form shall be a three-step wizard (Jenis,
+  Brief, Mulai) that validates brief and project name before leaving step 2 and
+  keeps all agent/detail options optional on step 3; the Generate panel shall show
+  a gate tracker and a next-action card that says whether Dena's review is needed,
+  the agent is working, or its session has stopped (offering to resume it).

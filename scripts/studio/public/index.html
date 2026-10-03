@@ -12,34 +12,58 @@
 <header class="studio-nav">
   <div class="brand"><h1>Studio<span class="brand-dot" aria-hidden="true"></span></h1><p>Ruang kerja konten</p></div>
   <nav aria-label="Navigasi Studio">
-    <div class="nav-group" role="group" aria-label="Produksi">
-      <span class="nav-label">Produksi</span>
-      <button data-tab="projects" class="active" aria-current="page">Proyek</button>
-      <button data-tab="generate">Generate</button>
-      <button data-tab="results">Hasil</button>
+    <button data-tab="home" class="active nav-home" aria-current="page">Beranda</button>
+    <div class="nav-group" role="group" aria-label="Buat video">
+      <span class="nav-label"><i>1</i>Buat video</span>
+      <button data-tab="projects">Edit rekaman</button>
+      <button data-tab="generate">Generate dari ide</button>
+    </div>
+    <div class="nav-group" role="group" aria-label="Tayangkan">
+      <span class="nav-label"><i>2</i>Tayangkan</span>
+      <button data-tab="results">Hasil &amp; review</button>
       <button data-tab="calendar">Kalender</button>
     </div>
-    <div class="nav-group" role="group" aria-label="Peralatan">
-      <span class="nav-label">Peralatan</span>
+    <details class="nav-group nav-tools">
+      <summary class="nav-label">Peralatan</summary>
       <button data-tab="sessions">Sesi agen</button>
       <button data-tab="shared">Pustaka</button>
       <button data-tab="voice">Suara</button>
       <button data-tab="music">Musik</button>
-    </div>
+    </details>
   </nav>
-  <p class="nav-foot">Dari ide sampai terjadwal.</p>
+  <p class="nav-foot">Bahan → video → jadwal tayang.</p>
 </header>
 <main id="main" tabindex="-1">
   <p id="banner" role="alert" hidden></p>
   <div class="page-heading"><h2 id="page-title">Proyek</h2><p id="page-description">Mulai dari bahan video, lalu lanjutkan proses editing.</p></div>
-  <section id="tab-projects">
+  <section id="tab-home">
+    <div class="start-grid">
+      <button class="start-card" id="start-edit" type="button">
+        <span class="start-kicker">Punya rekaman</span>
+        <strong>Edit video dari rekaman</strong>
+        <span class="start-desc">Upload video talking-head. Agent memotong, memberi caption, dan menambah visual.</span>
+        <ol class="start-steps"><li>Upload</li><li>Agent edit</li><li>Review</li></ol>
+        <span class="start-go">Mulai edit →</span>
+      </button>
+      <button class="start-card" id="start-generate" type="button">
+        <span class="start-kicker">Baru punya ide</span>
+        <strong>Buat video dari ide</strong>
+        <span class="start-desc">Tulis topik atau brief. Agent menyusun naskah, suara, dan motion design tanpa footage.</span>
+        <ol class="start-steps"><li>Tulis brief</li><li>Setujui naskah</li><li>Setujui render</li></ol>
+        <span class="start-go">Mulai generate →</span>
+      </button>
+    </div>
+    <div class="section-head"><h3>Lanjutkan pekerjaan</h3><p class="muted" id="home-summary"></p></div>
+    <ul id="home-list" class="list"></ul>
+  </section>
+  <section id="tab-projects" hidden>
     <div id="project-home">
       <div class="page-tools">
         <label class="search-field">Cari proyek<input id="project-search" type="search" placeholder="Nama proyek…" autocomplete="off"></label>
-        <details class="create-project"><summary class="btn primary">Buat proyek</summary>
+        <details class="create-project"><summary class="btn primary">Edit video baru</summary>
           <form id="project-create" class="bar">
-            <label>Nama proyek<input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="misalnya tips-ai" autocapitalize="off" autocomplete="off" aria-describedby="slug-help"></label>
-            <button class="primary">Buat</button><span id="slug-help" class="muted">Huruf kecil, angka, dan tanda hubung.</span>
+            <label>Beri nama proyek<input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" placeholder="misalnya tips-ai" autocapitalize="off" autocomplete="off" aria-describedby="slug-help"></label>
+            <button class="primary">Buat &amp; upload bahan →</button><span id="slug-help" class="muted">Huruf kecil, angka, dan tanda hubung. Langkah berikutnya: upload rekaman.</span>
           </form>
         </details>
       </div>
@@ -48,27 +72,35 @@
       <p id="project-no-match" class="empty-state" hidden>Tidak ada proyek yang cocok. <button data-clear-search="project-search">Hapus pencarian</button></p>
     </div>
     <div id="project-detail" hidden>
-      <div class="bar">
-        <button id="project-back">Kembali ke proyek</button>
+      <div class="bar detail-bar">
+        <button id="project-back">← Semua proyek</button>
         <strong id="project-title"></strong>
+        <button id="project-delete" class="danger quiet">Hapus proyek</button>
       </div>
+      <ol id="project-steps" class="stepper" aria-label="Tahap proyek"></ol>
+      <div id="project-next" class="next-card"></div>
+      <div class="section-head"><h3>Bahan video</h3><p class="muted">Rekaman utama dan B-roll yang boleh dipakai agent.</p></div>
       <div class="bar">
-        <label class="file-field">Upload video/gambar<input id="source-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp"></label>
+        <label class="dropzone" id="source-drop">
+          <span><strong>Pilih atau seret file ke sini</strong><small>MP4, MOV, PNG, JPG, WebP</small></span>
+          <input id="source-upload" type="file" multiple accept="video/mp4,video/quicktime,.mp4,.mov,.m4v,image/png,image/jpeg,image/webp" aria-label="Upload video atau gambar">
+        </label>
         <button id="project-attach">Tambah dari pustaka</button>
-        <button id="project-session" class="primary">Mulai sesi</button>
-        <button id="project-delete" class="danger">Hapus proyek</button>
         <progress id="source-progress" aria-label="Progres upload sumber" max="1" value="0" hidden></progress>
       </div>
       <ul id="source-list" class="list"></ul>
+      <button id="project-session" class="primary" hidden>Mulai sesi</button>
     </div>
   </section>
   <section id="tab-generate" hidden>
     <div id="gen-home">
-      <div class="bar"><button id="gen-new" class="primary">Buat video</button></div>
+      <div class="bar"><button id="gen-new" class="primary">Buat video dari ide</button></div>
       <ul id="gen-list" class="list"></ul>
     </div>
     <div id="gen-detail" class="gen-panel" hidden>
       <div id="gen-head" class="gen-head"></div>
+      <ol id="gen-steps" class="stepper" aria-label="Tahap video"></ol>
+      <div id="gen-next" class="next-card"></div>
       <div id="gen-body" class="gen-body"></div>
       <details id="gen-history" class="gen-card"><summary>Riwayat keputusan</summary><ol id="gen-history-list"></ol></details>
       <div id="gen-actions" class="gen-actions"></div>
@@ -130,8 +162,9 @@
 
 <dialog id="edit-dialog" aria-labelledby="edit-dialog-title">
   <form method="dialog" id="edit-form">
-    <h2 id="edit-dialog-title">Sesi agen <span id="edit-slug"></span></h2>
-    <label>Catatan <textarea name="notes" rows="4" placeholder="Arahan opsional untuk agen"></textarea></label>
+    <h2 id="edit-dialog-title">Mulai edit <span id="edit-slug"></span></h2>
+    <p class="muted">Agent akan memotong, memberi caption, dan menambah visual, lalu berhenti saat video siap kamu review.</p>
+    <label>Arahan untuk agent (opsional) <textarea name="notes" rows="4" placeholder="Misalnya: fokus ke bagian harga, jangan terlalu cepat"></textarea></label>
     <label>Motion design <select name="motion"><option value="rich" selected>Rich (default) · motion visual di tiap penjelasan</option><option value="standard">Standar · tanpa tambahan rich motion</option></select></label>
     <details class="agent-settings"><summary>Pengaturan agen</summary>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
@@ -139,7 +172,7 @@
     <label>Effort <select name="effort"></select></label>
     </details>
     <p class="error" id="edit-error" role="alert"></p>
-    <menu><button value="cancel" formnovalidate>Batal</button><button value="start" class="primary">Mulai sesi</button></menu>
+    <menu><button value="cancel" formnovalidate>Batal</button><button value="start" class="primary">Mulai edit</button></menu>
   </form>
 </dialog>
 
@@ -172,31 +205,44 @@
 
 <dialog id="gen-dialog" aria-labelledby="gen-dialog-title">
   <form method="dialog" id="gen-form">
-    <h2 id="gen-dialog-title">Buat video generate</h2>
-    <label>Format <select name="format">
-      <option value="explainer">explainer · narasi, 30–90 dtk</option>
-      <option value="kinetic-post">kinetic-post · teks, 8–20 dtk, loop</option>
-      <option value="motion-short">motion-short · 15–40 dtk, kartu CTA</option>
-    </select></label>
-    <label>Brief (wajib) <textarea name="brief" rows="5" maxlength="4000" required placeholder="Topik, sudut pandang, poin yang wajib ada"></textarea></label>
-    <label>Nama proyek <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off" placeholder="misalnya tips-ai"></label>
-    <label id="gen-text-field" hidden>Teks persis (opsional, dipakai kata demi kata) <textarea name="text" rows="3" maxlength="1000" placeholder="BUKAN AI-NYA YANG BODOH"></textarea></label>
-    <details><summary>Opsional (kosong = agent yang pilih)</summary>
-      <label>URL sumber (satu per baris, maks 5) <textarea name="urls" rows="2" autocapitalize="off"></textarea></label>
-      <label>Repurpose dari proyek <select name="repurpose"></select></label>
-      <label id="gen-voice-field">Preset suara <select name="voice"></select></label>
-      <label><span>Durasi (detik, <span id="gen-duration-range">30–90</span>)</span> <input name="duration" type="number" min="30" max="90" step="1" placeholder="otomatis"></label>
-      <label>Style utama <select name="style"></select></label>
-      <label>Musik <select name="music"></select></label>
-    </details>
-    <label>Motion design <select name="motion"><option value="rich" selected>Rich (default) · motion visual di tiap penjelasan</option><option value="standard">Standar · tanpa tambahan rich motion</option></select></label>
-    <details class="agent-settings"><summary>Pengaturan agen</summary>
-    <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
-    <label>Model <select name="model" required></select></label>
-    <label>Effort <select name="effort"></select></label>
-    </details>
+    <div class="wizard-head">
+      <h2 id="gen-dialog-title">Buat video dari ide</h2>
+      <ol class="wizard-steps" aria-label="Langkah"><li data-step-dot="1">Jenis</li><li data-step-dot="2">Brief</li><li data-step-dot="3">Mulai</li></ol>
+    </div>
+    <fieldset class="wizard-step" data-step="1">
+      <legend>Video seperti apa yang kamu mau?</legend>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="format" value="explainer" checked><span><strong>Explainer</strong><small>Narasi suara, 30–90 detik. Cocok untuk menjelaskan topik.</small></span></label>
+        <label class="choice"><input type="radio" name="format" value="kinetic-post"><span><strong>Kinetic post</strong><small>Teks bergerak mengikuti musik, 8–20 detik, loop.</small></span></label>
+        <label class="choice"><input type="radio" name="format" value="motion-short"><span><strong>Motion short</strong><small>Visual + musik, 15–40 detik, ditutup kartu CTA.</small></span></label>
+      </div>
+    </fieldset>
+    <fieldset class="wizard-step" data-step="2" hidden>
+      <legend>Ceritakan idenya</legend>
+      <label>Brief <textarea name="brief" rows="5" maxlength="4000" required placeholder="Topik, sudut pandang, poin yang wajib ada"></textarea></label>
+      <label id="gen-text-field" hidden>Teks persis di layar (opsional, dipakai kata demi kata) <textarea name="text" rows="3" maxlength="1000" placeholder="BUKAN AI-NYA YANG BODOH"></textarea></label>
+      <label>Nama proyek <input name="slug" required pattern="[a-z0-9][a-z0-9\-]*" autocapitalize="off" autocomplete="off" placeholder="terisi otomatis dari brief"></label>
+    </fieldset>
+    <fieldset class="wizard-step" data-step="3" hidden>
+      <legend>Siap dimulai</legend>
+      <p class="muted">Agent akan mulai dari riset dan naskah, lalu berhenti untuk minta persetujuanmu. Semua di bawah ini opsional; kosong berarti agent yang memilih.</p>
+      <label>Motion design <select name="motion"><option value="rich" selected>Rich (default) · motion visual di tiap penjelasan</option><option value="standard">Standar · tanpa tambahan rich motion</option></select></label>
+      <details><summary>Atur lebih detail</summary>
+        <label>URL sumber (satu per baris, maks 5) <textarea name="urls" rows="2" autocapitalize="off"></textarea></label>
+        <label>Repurpose dari proyek <select name="repurpose"></select></label>
+        <label id="gen-voice-field">Preset suara <select name="voice"></select></label>
+        <label><span>Durasi (detik, <span id="gen-duration-range">30–90</span>)</span> <input name="duration" type="number" min="30" max="90" step="1" placeholder="otomatis"></label>
+        <label>Style utama <select name="style"></select></label>
+        <label>Musik <select name="music"></select></label>
+      </details>
+      <details class="agent-settings"><summary>Pengaturan agen</summary>
+        <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
+        <label>Model <select name="model" required></select></label>
+        <label>Effort <select name="effort"></select></label>
+      </details>
+    </fieldset>
     <p class="error" id="gen-error" role="alert"></p>
-    <menu><button value="cancel" formnovalidate>Batal</button><button value="create" class="primary">Buat &amp; mulai agent</button></menu>
+    <menu><button value="cancel" formnovalidate>Batal</button><button type="button" id="gen-back" hidden>← Kembali</button><button type="button" id="gen-next-step" class="primary">Lanjut →</button><button value="create" class="primary" id="gen-create" hidden>Buat &amp; mulai agent</button></menu>
   </form>
 </dialog>
 
