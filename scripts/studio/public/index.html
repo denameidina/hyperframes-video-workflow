@@ -132,6 +132,7 @@
   <form method="dialog" id="edit-form">
     <h2 id="edit-dialog-title">Sesi agen <span id="edit-slug"></span></h2>
     <label>Catatan <textarea name="notes" rows="4" placeholder="Arahan opsional untuk agen"></textarea></label>
+    <label>Motion design <select name="motion"><option value="rich" selected>Rich (default) · motion visual di tiap penjelasan</option><option value="standard">Standar · tanpa tambahan rich motion</option></select></label>
     <details class="agent-settings"><summary>Pengaturan agen</summary>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
     <label>Model <select name="model" required></select></label>
@@ -188,6 +189,7 @@
       <label>Style utama <select name="style"></select></label>
       <label>Musik <select name="music"></select></label>
     </details>
+    <label>Motion design <select name="motion"><option value="rich" selected>Rich (default) · motion visual di tiap penjelasan</option><option value="standard">Standar · tanpa tambahan rich motion</option></select></label>
     <details class="agent-settings"><summary>Pengaturan agen</summary>
     <label>Runtime <select name="runtime"><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
     <label>Model <select name="model" required></select></label>

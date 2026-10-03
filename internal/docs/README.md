@@ -114,6 +114,7 @@ Baca dulu `AGENTS.md` (root) → file ini → hanya doc yang relevan dengan task
 80. [operations/mcp-runbook.md](operations/mcp-runbook.md) - Setup client, katalog tool, contoh parameter, alur kerja dan batas MCP.
 81. [adr/0033-studio-launchagent.md](adr/0033-studio-launchagent.md) - Studio sebagai layanan launchd per akun macOS: autostart saat login dan restart otomatis.
 82. [operations/studio-service.md](operations/studio-service.md) - Instalasi LaunchAgent, status/restart/stop, log dan verifikasi Studio selalu berjalan saat akun aktif.
+83. [adr/0034-rich-motion-default.md](adr/0034-rich-motion-default.md) - `motion_design` rich sebagai default setiap sesi edit/generate; override `standard` lewat form Studio.
 
 ## Canonical Files
 
@@ -133,7 +134,7 @@ Doc mana yang kanonik untuk area apa (perbaiki di sini dulu bila ada konflik):
 | Studio background service macOS | [operations/studio-service](operations/studio-service.md) |
 | Audio: suara TTS, uji dengar, musik (EARS) | [requirements/rd-06-audio](requirements/rd-06-audio.md) |
 | Hook dokumentasi (EARS) | [requirements/rd-07-documentation-hooks](requirements/rd-07-documentation-hooks.md) |
-| Keputusan arsitektur | [adr/](adr/) (0001–0033) |
+| Keputusan arsitektur | [adr/](adr/) (0001–0034) |
 | MCP agent lintas client | [requirements/rd-08-mcp](requirements/rd-08-mcp.md), [operations/mcp-runbook](operations/mcp-runbook.md) |
 | Sistem visual video | [design-system/visual-system](design-system/visual-system.md) |
 | Implementasi komposisi | [frontend/composition-implementation](frontend/composition-implementation.md) |

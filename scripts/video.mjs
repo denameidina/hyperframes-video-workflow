@@ -70,7 +70,7 @@ export function resolveDuration({ duration, dir, probe = probeDuration, media = 
 
 const hasEntry = (p) => { try { lstatSync(p); return true; } catch { return false; } };
 
-export function scaffold({ slug, root = '.', duration, probe, generate = false, format }) {
+export function scaffold({ slug, root = '.', duration, probe, generate = false, format, motion = 'rich' }) {
   if (format !== undefined && !generate) throw new Error('--format needs --generate (formats belong to generate mode)');
   const fmt = generate ? checkFormat(format ?? 'explainer') : null; // before anything is created
   const dir = projectDir(slug, root);
@@ -83,7 +83,7 @@ export function scaffold({ slug, root = '.', duration, probe, generate = false, 
   if (!hasEntry(join(dir, 'sources.json'))) writeManifest(dir, { version: 1, sources: [] });
   if (generate) {
     mkdirSync(join(dir, 'research'), { recursive: true });
-    writeFileSync(join(dir, 'creative-brief.md'), briefStub(slug, fmt));
+    writeFileSync(join(dir, 'creative-brief.md'), briefStub(slug, fmt, motion));
   }
   const d = resolveDuration({ duration, dir, probe, media: generate ? 'processed-audio.wav' : 'processed.mp4' });
   const tpl = join(root, generate ? GENERATE_TEMPLATE : TEMPLATE);

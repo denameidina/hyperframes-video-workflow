@@ -48,6 +48,14 @@ caption rail/beats, or separate BGM is required. kinetic-post loops, motion-shor
 ends on a CTA card; the render is Gate 2 (ADR-0027). These inputs replace the
 edit-mode Inputs and Readiness below.
 
+## Motion Design Setting
+
+Read `motion_design` in `creative-brief.md` (default `rich`, ADR-0034). While it
+is `rich`, implement the planned motion visuals with staged entrances, linked
+transitions and secondary response, and before Gate 3 inspect the action
+sequences at phone size (anticipation, transit, contact, settle; RD-03-112). A
+caption-only assembly is not complete. `standard` skips this extra review.
+
 ## Core Principle
 
 Assembly must be faithful, inspectable, and deterministic.

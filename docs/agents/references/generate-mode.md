@@ -155,6 +155,7 @@ Payoff (output timestamp + line):
 - mode: generate
 - format: <explainer | kinetic-post | motion-short> (keep the value the scaffold wrote; the gates follow it)
 - visual_density: <light|medium|heavy> (default medium)
+- motion_design: <rich|standard> (default rich; the scaffold wrote it from `research/request.json` `motion`)
 
 ## User Approvals
 

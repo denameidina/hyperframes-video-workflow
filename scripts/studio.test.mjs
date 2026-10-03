@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { SCENE_PNG as DESIGN_PNG, SHEET_JPG } from './storyboard-fixtures.mjs';
 import { allowedHosts, guardRequest, hasToken, parseRange, tokenCookie, tokenMatches } from './studio/http.mjs';
-import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, paneCommand } from './studio/agent.mjs';
+import { CLAUDE_ALIASES, EFFORTS, agentCommand, buildPrompt, claudeModels, codexDefaults, codexModels, checkMotion, paneCommand } from './studio/agent.mjs';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -82,6 +82,15 @@ test('buildPrompt points the agent at the project and its sources.json', () => {
   const c = buildPrompt({ mode: 'continue', slug: 'a' });
   assert.match(c, /^Lanjutkan proyek `videos\/a\/` \(sumber di `sources\.json`\)/);
   assert.match(c, /Catatan dari Dena: -\n/);
+});
+
+test('buildPrompt states motion_design: rich by default, standard only when chosen (RD-05-52)', () => {
+  assert.match(buildPrompt({ mode: 'new', slug: 'a' }), /\nmotion_design: rich /);
+  assert.match(buildPrompt({ mode: 'generate', slug: 'a', motion: 'rich' }), /\nmotion_design: rich /);
+  assert.match(buildPrompt({ mode: 'continue', slug: 'a', motion: 'standard' }), /\nmotion_design: standard /);
+  assert.throws(() => checkMotion('wild'), /motion must be/);
+  assert.equal(checkMotion(undefined), 'rich');
+  assert.equal(checkMotion(''), 'rich');
 });
 
 test('codexDefaults reads top-level model and effort only', () => {
@@ -609,7 +618,9 @@ test('validateRequest names the bad field and creates nothing', () => {
   assert.match(err({ ...ok, style: 'mix-media' }), /^400 style:/);
   assert.match(err({ ...ok, music: 'm02-loud' }), /^400 music:/);
   const v = validateRequest(root, { ...ok, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: '60', style: 'stop-motion', music: 'm01-quiet' }, { now: () => new Date('2026-09-29T08:00:00Z') });
-  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, format: 'explainer', brief: 'Kenapa AI agent gagal', text: null, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', createdAt: '2026-09-29T08:00:00.000Z' } });
+  assert.deepEqual(v, { slug: 'ai-baru', request: { version: 1, format: 'explainer', brief: 'Kenapa AI agent gagal', text: null, urls: ['https://a.id/x'], repurpose: 'vid-a', voice: 'gm-a', duration: 60, style: 'stop-motion', music: 'm01-quiet', motion: 'rich', createdAt: '2026-09-29T08:00:00.000Z' } });
+  assert.equal(validateRequest(root, { ...ok, motion: 'standard' }).request.motion, 'standard');
+  assert.match(err({ ...ok, motion: 'wild' }), /^400 motion must be/);
   assert.equal(existsSync(join(root, 'videos/ai-baru')), false);
 });
 

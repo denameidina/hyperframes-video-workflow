@@ -13,6 +13,7 @@ import { checkSlug, scaffold } from '../video.mjs';
 import { projectSlugs } from './files.mjs';
 import { HttpError } from './http.mjs';
 import { JobRunner } from './jobs.mjs';
+import { checkMotion } from './agent.mjs';
 import { projectPath } from './projects.mjs';
 import { listSessions, runFile, sessionName } from './sessions.mjs';
 
@@ -134,6 +135,7 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
     duration,
     style: pick('style', b.style, STYLES),
     music: pick('music', b.music, opts.music.map((m) => m.id)),
+    motion: checkMotion(b.motion),
     createdAt: now().toISOString(),
   };
   return { slug, request };
@@ -141,7 +143,7 @@ export function validateRequest(root, b = {}, { now = () => new Date() } = {}) {
 
 export function createGenerate(root, body, { now } = {}) {
   const { slug, request } = validateRequest(root, body, { now });
-  const { dir } = scaffold({ slug, root, generate: true, format: request.format });
+  const { dir } = scaffold({ slug, root, generate: true, format: request.format, motion: request.motion });
   const locked = request.text ? `\n## Teks persis (wajib dipakai kata demi kata)\n\n${request.text}\n` : '';
   writeFileSync(join(dir, 'research', 'brief.md'), `# Brief (verbatim dari Dena, ${request.createdAt.slice(0, 10)})\n\n${request.brief}\n${locked}`);
   writeFileSync(join(dir, 'research', 'request.json'), `${JSON.stringify(request, null, 2)}\n`);

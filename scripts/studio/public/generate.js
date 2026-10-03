@@ -343,7 +343,7 @@
         format: f.format.value, text: isMusic(f.format.value) ? f.text.value : '',
         brief: f.brief.value, slug: f.slug.value.trim(), urls, repurpose: f.repurpose.value, voice: isMusic(f.format.value) ? '' : f.voice.value,
         duration: f.duration.value, style: f.style.value, music: f.music.value,
-        runtime: f.runtime.value, model: f.model.value, effort: f.effort.value,
+        runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, motion: f.motion.value,
       });
       $('#gen-dialog').close();
       banner(r.session.started ? '' : `Proyek dibuat, tapi sesi agent gagal dimulai: ${r.session.error}`);

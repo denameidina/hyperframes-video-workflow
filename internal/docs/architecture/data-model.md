@@ -280,7 +280,7 @@ Element: `id`, `type`, `track`, `start`, `duration`, `contentRef`, `assetRef`, `
 ## `creative-brief.md` — Workflow Settings (Story)
 
 Bagian `## Workflow Settings`: `visual_density` ∈ `light | medium | heavy`
-(default `medium`), `gate_cut` ∈ `on | off` (default `off`). Hook `Status` selalu
+(default `medium`), `gate_cut` ∈ `on | off` (default `off`), `motion_design` ∈ `rich | standard` (default `rich`, ADR-0034). Hook `Status` selalu
 `locked-from-transcript` dan mencatat jendela hook `00:00.00-<hook_end>` + alasan panjangnya. Bagian `## User Approvals` mencatat fakta dari user,
 janji CTA yang disetujui, dan hook visual yang boleh menutup wajah (dipakai Gate 2).
 
@@ -380,7 +380,7 @@ Penulis tunggal: `scripts/lib/music.mjs` (`npm run music`, Studio).
   Render final dipilih bersama oleh gate dan Studio: file terbaru menurut mtime
   dari `renders/<slug>.mp4`/`renders/<slug>-blur.mp4` yang lolos probe + decode;
   normal menang jika seri. File pending/invalid tidak dipilih.
-- `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, createdAt }`
+- `research/request.json` (ADR-0026, ADR-0027): `{ version: 1, format, brief, text, urls: [], repurpose, voice, duration, style, music, motion, createdAt }`
   (`text` = Teks persis atau `null`; `voice` selalu `null` untuk format musik);
   ditulis form Generate Studio; `null`/`[]` = agent yang memilih.
 - `beats.json` (format musik, ADR-0027): `{ version: 1, track, file, sha256, meter: "4/4", bpm, downbeatConfidence, from, bars, duration, loop, warnings: [text], beats: [s], downbeats: [s], barList: [{ n, start, end, energy }] }`

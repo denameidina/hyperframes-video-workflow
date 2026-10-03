@@ -456,6 +456,20 @@ berlaku dalam bentuk RD-03-82, dan subagent QA (RD-03-12) juga menerima
   at phone size; technical validation and isolated reading-pose frames shall not
   be reported as proof of aesthetic acceptance.
 
+- **RD-03-113** (Ubiquitous) — Story shall record `motion_design: rich | standard`
+  in `creative-brief.md` Workflow Settings for every edit and generate project;
+  a missing value shall be read as `rich` (ADR-0034).
+- **RD-03-114** (State-driven) — While `motion_design` is `rich`, Screen Plan
+  shall give every line that explains, shows, compares or sequences a motion visual
+  (or a real capture when the moment needs proof), keep an art direction with
+  linked transitions between assets, and plan speech-safe SFX cues.
+- **RD-03-115** (State-driven) — While `motion_design` is `rich`, Build shall
+  review the action sequences at phone size per RD-03-112 before offering the
+  render, and shall not report a caption-only assembly as complete.
+- **RD-03-116** (Optional) — Where the user chooses `standard` in the session
+  form, the agents shall follow the earlier behavior without the RD-03-114/115
+  additions, and Story shall record that the user overrode the default.
+
 RD-03-103 reinforces the actual-frame production-sheet behavior in RD-03-86;
 library examples remain supported only for a labelled reference sheet. RD-03-106
 extends RD-03-89/95; RD-03-108 strengthens RD-03-100/101 beyond file existence.

@@ -37,9 +37,16 @@ export function paneCommand(argv, promptPath) {
   return `${argv.map(shellQuote).join(' ')} "$(cat ${shellQuote(promptPath)})"`;
 }
 
+export const MOTION = ['rich', 'standard'];
+export const checkMotion = (v) => {
+  if (v === undefined || v === null || v === '') return 'rich'; // ADR-0034: rich is the default
+  if (!MOTION.includes(v)) throw new HttpError(400, `motion must be one of ${MOTION.join(', ')}`);
+  return v;
+};
+
 const GENERATE_DOC = '`docs/agents/references/generate-mode.md`';
 
-export function buildPrompt({ mode, slug, notes, format = 'explainer' }) {
+export function buildPrompt({ mode, slug, notes, format = 'explainer', motion = 'rich' }) {
   const note = String(notes ?? '').trim() || '-';
   const first = {
     continue: `Lanjutkan proyek \`videos/${slug}/\` (sumber di \`sources.json\`). Baca artefak yang sudah ada, tentukan fase terakhir yang selesai, lalu lanjutkan sesuai ${SKILL}.`,
@@ -49,7 +56,10 @@ export function buildPrompt({ mode, slug, notes, format = 'explainer' }) {
     'generate-continue': `Lanjutkan proyek mode generate \`videos/${slug}/\`. Jalankan \`npm run video -- gate ${slug}\` untuk posisi dan keputusan terakhir, baca artefak yang sudah ada, lalu lanjutkan sesuai ${SKILL} dan ${GENERATE_DOC}. Keputusan Dena dari Studio sudah tercatat di \`gates.json\`.`,
   }[mode];
   if (!first) throw new Error(`unknown prompt mode ${mode}`);
-  return `${first}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
+  const richness = motion === 'standard'
+    ? 'motion_design: standard (Dena memilih standar; catat override di creative-brief.md Workflow Settings)'
+    : 'motion_design: rich (default; tulis di creative-brief.md Workflow Settings dan ikuti RD-03-113–116 + docs/agents/references/motion-craft.md)';
+  return `${first}\n${richness}\nCatatan dari Dena: ${note}\nJangan publish ke Repliz — publish dilakukan Dena dari Studio.\n`;
 }
 
 export function codexDefaults(text = '') {

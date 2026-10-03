@@ -208,3 +208,14 @@ sesi agen tmux, dan publish. Owner:
   before the Node executable directory; before starting a session, service
   verification shall run `claude --version` and `codex --version` with the
   installed plist PATH and require exit status 0 for the runtime being used.
+
+- **RD-05-51** (Ubiquitous) — The "Mulai sesi" form and the Generate form shall
+  each offer a "Motion design" control with `Rich (default)` and `Standar`, preselected
+  to `Rich`, labelled per RD-05-43.
+- **RD-05-52** (Event-driven) — When `POST /api/sessions` or `POST /api/generate`
+  receives `motion`, the server shall accept only `rich` or `standard` (else 400),
+  treat an absent value as `rich`, and state `motion_design: <value>` in the first
+  agent prompt.
+- **RD-05-53** (Event-driven) — When a generate project is created, the server
+  shall store `motion` in `research/request.json` and write `motion_design` in the
+  brief stub's Workflow Settings.

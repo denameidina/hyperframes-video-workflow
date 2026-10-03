@@ -298,7 +298,7 @@ $('#edit-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = e.target;
   try {
-    const s = await post('/api/sessions', { slug: editSlug, runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, notes: f.notes.value });
+    const s = await post('/api/sessions', { slug: editSlug, runtime: f.runtime.value, model: f.model.value, effort: f.effort.value, notes: f.notes.value, motion: f.motion.value });
     $('#edit-dialog').close();
     openTerminal(s.slug);
   } catch (err) {

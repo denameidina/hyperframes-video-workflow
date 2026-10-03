@@ -13,6 +13,8 @@ const REPO = process.cwd();
 test('briefStub starts a generate-mode brief', () => {
   assert.match(briefStub('x'), /^# Creative Brief - x\n/);
   assert.match(briefStub('x'), /- mode: generate\n/);
+  assert.match(briefStub('x'), /- motion_design: rich\n/);
+  assert.match(briefStub('x', 'explainer', 'standard'), /- motion_design: standard\n/);
 });
 
 test('syncDuration rewrites data-duration only on elements marked data-voice-duration', () => {

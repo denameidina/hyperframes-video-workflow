@@ -390,6 +390,7 @@ not decide placement (Screen Plan does).
 
 - visual_density: <light|medium|heavy> (default medium)
 - gate_cut: <on|off> (default off)
+- motion_design: <rich|standard> (default rich; copy the value from the Studio prompt, ADR-0034)
 
 ## User Approvals
 

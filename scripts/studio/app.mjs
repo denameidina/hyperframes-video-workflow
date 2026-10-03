@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { checkSlug } from '../video.mjs';
 import { gateStatus, isGenerate } from '../lib/gates.mjs';
 import { probeMedia } from '../lib/video-sources.mjs';
-import { agentCommand, buildPrompt } from './agent.mjs';
+import { agentCommand, buildPrompt, checkMotion } from './agent.mjs';
 import { HttpError, guardRequest, hasToken, openSse, readJson, sendFile, sendJson, tokenCookie, tokenMatches } from './http.mjs';
 import { createGenerate, decide, generateDetail, generateDir, generateMediaPath, generateOptions, lastDecisionNote, listGenerate, saveScript } from './generate.mjs';
 import { attachShared, createProject, deleteProject, deleteSource, getProject, listProjects, projectPath, sourcePathOf, updateSource, uploadSource } from './projects.mjs';
@@ -85,7 +85,7 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
       const mode = isGenerate(dir) ? 'generate-continue' : existsSync(join(dir, 'creative-brief.md')) ? 'continue' : 'new';
       const prior = (await listSessions(opt)).find((s) => s.slug === slug);
       if (prior?.status === 'exited') await killSession(slug, opt);
-      const prompt = buildPrompt({ mode, slug, notes: b.notes });
+      const prompt = buildPrompt({ mode, slug, notes: b.notes, motion: checkMotion(b.motion) });
       return startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt, ...opt });
     }],
     ['POST', /^\/api\/sessions\/([^/]+)\/interrupt$/, async (req, url, [slug]) => {
@@ -136,11 +136,12 @@ export function createApp({ root, env = {}, hosts, token = '', tools = {}, model
     ['POST', /^\/api\/generate$/, async (req, url, m, res) => {
       const b = await readObject(req);
       agentCommand(b); // runtime, model, and effort are checked before anything is created (RD-05-23)
+      checkMotion(b.motion);
       await checkModel(b);
       const { slug, request } = createGenerate(root, b);
       let session = { started: true, error: null };
       try {
-        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug, format: request.format }), ...opt });
+        await startSession({ root, slug, runtime: b.runtime, model: b.model, effort: b.effort, prompt: buildPrompt({ mode: 'generate', slug, format: request.format, motion: request.motion }), ...opt });
       } catch (e) {
         session = { started: false, error: e.message }; // the project stays; the panel offers "Mulai sesi"
       }

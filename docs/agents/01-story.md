@@ -138,7 +138,7 @@ A bad cut creates:
    and ask the user; never fabricate or splice speech.
 5. **Write the brief.** Use the Output Template in
    `docs/agents/references/hook-and-angle.md` to write `creative-brief.md`,
-   including Workflow Settings `visual_density` and `gate_cut`. Check it against
+   including Workflow Settings `visual_density`, `gate_cut` and `motion_design`. Check it against
    Quality Bar and Dena-Specific Guardrails in the same reference.
 6. **Cut.** Read `docs/agents/references/cut-and-pacing.md` sections Cut
    Categories through Speed Rules and Edit Decision List. Write `cut-list.json`.
@@ -163,7 +163,7 @@ A bad cut creates:
 
 All in `videos/<slug>/`:
 
-- `creative-brief.md` (hook `locked-from-transcript` with `hook_end`, `visual_density`, `gate_cut`)
+- `creative-brief.md` (hook `locked-from-transcript` with `hook_end`, `visual_density`, `gate_cut`, `motion_design`)
 - `metadata.json`
 - `sources.json` (roles settled) and `transcripts/<id>.json` (source timelines)
 - `processed-transcript.json` (processed timeline)

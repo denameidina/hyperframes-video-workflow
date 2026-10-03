@@ -12,13 +12,14 @@ import { scriptBody } from './voice/script.mjs';
 
 export const GENERATE_TEMPLATE = join('templates', 'dena-generate');
 
-export const briefStub = (slug, format = 'explainer') => `# Creative Brief - ${slug}
+export const briefStub = (slug, format = 'explainer', motion = 'rich') => `# Creative Brief - ${slug}
 
 ## Workflow Settings
 
 - mode: generate
 - format: ${format}
 - visual_density: medium
+- motion_design: ${motion}
 
 <!-- Story (mode generate) fills the rest from the Brief Template in docs/agents/references/generate-mode.md. -->
 `;

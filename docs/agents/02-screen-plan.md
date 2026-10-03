@@ -47,6 +47,18 @@ carry `text`, and Gate 1 shows text + music + storyboard together (ADR-0027).
 Use Screen Plan (music formats) in that reference instead of the caption steps
 below; record approval in `## Gate 1 Result` of `visual-plan.md` and in `gates.json`.
 
+## Motion Design Setting
+
+Read `motion_design` in `creative-brief.md` Workflow Settings (default `rich`,
+ADR-0034, RD-03-113–116). While it is `rich`: every line that explains, shows,
+compares or sequences gets a motion visual from the menu in
+`docs/agents/references/styles/README.md` (or a real capture when the moment
+needs proof); `## Art Direction` names linked transitions between assets
+(`docs/agents/references/motion-craft.md`); SFX cues are planned for each
+visual; and the Visual Decision Log justifies every explaining line left
+without a visual. Quiet reading holds stay valid. `standard` keeps the earlier
+behavior.
+
 ## Core Principles
 
 ### Captions
